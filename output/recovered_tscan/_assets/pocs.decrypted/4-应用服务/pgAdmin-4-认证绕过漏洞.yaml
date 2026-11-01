@@ -1,0 +1,52 @@
+id: CVE-2024-9014
+
+info:
+  name: "pgAdmin 4 认证绕过漏洞"
+  author: s4e-io
+  severity: critical
+  description: |
+    pgAdmin 4 versions 8.11 and earlier are vulnerable to a security flaw in OAuth2 authentication. This vulnerability allows an attacker to potentially obtain the client ID and secret, leading to unauthorized access to user data.
+  reference:
+    - https://github.com/EQSTLab/CVE-2024-9014
+    - https://github.com/pgadmin-org/pgadmin4/issues/7945
+    - https://nvd.nist.gov/vuln/detail/CVE-2024-9014
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H
+    cvss-score: 9.9
+    cve-id: CVE-2024-9014
+    cwe-id: CWE-522
+    epss-score: 0.87314
+    epss-percentile: 0.9954
+  metadata:
+    verified: true
+    max-request: 1
+    vendor: pgadmin-org
+    product: pgadmin4
+    fofa-query: "pgadmin4"
+  tags: pgadmin
+
+http:
+  - raw:
+      - |
+        GET /login?next=/ HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: body
+        negative: true
+        regex:
+          - 'OAUTH2_CLIENT_SECRET": null'
+
+      - type: word
+        part: body
+        words:
+          - '<title>pgAdmin 4</title>'
+          - 'OAUTH2_CLIENT_SECRET'
+        condition: and
+
+      - type: status
+        status:
+          - 200
+# digest: 490a0046304402202eff678ecf78f4e7aa054272f7c5d98627900b93f906d0f8fa262444dede457502207ea87a4943a82aef9048fb109b57c897375a1a77bd763152144d7fcc7a79cde8:922c64590222798bb761d5b6d8e72950

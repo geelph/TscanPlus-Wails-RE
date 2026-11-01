@@ -1,0 +1,58 @@
+id: alfresco-default-admin-credentials-risk
+
+info:
+  name: Alfresco 默认管理员凭据可致未授权访问
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 Alfresco Content Services 使用了默认管理员凭据（admin:admin）。攻击者可借此获取完全管理权限，进而管理内容、用户及仓库配置，构成严重未授权访问风险。
+  reference:
+    - https://docs.alfresco.com/content-services/community/admin/admin-console/
+    - https://docs.alfresco.com/community5.0/references/RESTful-RepositoryLoginPost.html
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: alfresco
+    product: alfresco-content-services
+    shodan-query: 'http.title:"Alfresco" http.html:"alfresco"'
+    fofa-query: 'title="Alfresco" || body="/share/res/js/alfresco"'
+  tags: Alfresco
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+  password: "admin"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /alfresco/ HTTP/1.1
+        Host: {{Hostname}}
+        Accept: text/html
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200 || status_code == 302'
+          - 'contains_any(body, "Alfresco", "alfresco") || contains_any(to_lower(header), "alfresco", "/share")'
+        condition: and
+  - raw:
+      - |
+        POST /alfresco/service/api/login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+        Accept: application/json
+
+        {"username":"{{username}}","password":"{{password}}"}
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains(content_type, "application/json")'
+          - 'contains_all(body, "ticket", "TICKET_")'
+        condition: and
+
+# digest: 4b0a004830460221009c4adf804541d95dffc55d6101f59bd97ac324537638ec8924c95de305e92b8802210095896d6fd69e62e97de8ee66ba022b6e6f72357fe5d50460eb66cc77abb1db3e:922c64590222798bb761d5b6d8e72950

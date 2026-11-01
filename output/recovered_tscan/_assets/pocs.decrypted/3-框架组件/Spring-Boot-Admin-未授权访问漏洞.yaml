@@ -1,0 +1,19 @@
+id: spring-boot-admin-unauth-access
+info:
+  name: "Spring Boot Admin 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: spring-boot-admin
+  description: |
+    Detects unauthorized access to the Spring Boot Admin dashboard by checking for specific indicators in the response body.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/instances/events"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "[{\"instance"
+          - "\"managementUrl"
+        part: body

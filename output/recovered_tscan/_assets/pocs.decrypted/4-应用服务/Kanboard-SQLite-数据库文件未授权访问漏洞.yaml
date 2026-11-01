@@ -1,0 +1,38 @@
+id: kanboard-sqlite-database-unauthorized-access
+
+info:
+  name: Kanboard SQLite 数据库文件未授权访问漏洞
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 Kanboard 的 SQLite 数据库文件可被公开访问，该文件存储了用户凭据、项目数据、任务及评论等敏感信息，可能导致信息泄露。
+  reference:
+    - https://docs.kanboard.org/v1/admin/sqlite/
+    - https://kanboard.org/
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+    cvss-score: 7.5
+    cwe-id: CWE-200
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: http.title:"Kanboard"
+    fofa-query: title="Kanboard"
+  tags: Kanboard
+  remediation: >-
+    升级到已修复版本，在受影响端点实施身份认证和授权，移除响应及调试输出中的敏感数据，限制管理接口的暴露范围，并轮换可能已泄露的凭据或密钥。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/data/db.sqlite"
+      - "{{BaseURL}}/kanboard/data/db.sqlite"
+    stop-at-first-match: true
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "SQLite format 3", "CREATE TABLE", "INTEGER PRIMARY KEY")'
+        condition: and
+
+# digest: 490a004630440220243aadc0d57b76872dbefb93cdbb06202ab4c8e57931a52788f59e5e36ef4a1502205a98de48a233070bbac853f8efef8068c148f2979604d70d8582c659dd49ffe4:922c64590222798bb761d5b6d8e72950

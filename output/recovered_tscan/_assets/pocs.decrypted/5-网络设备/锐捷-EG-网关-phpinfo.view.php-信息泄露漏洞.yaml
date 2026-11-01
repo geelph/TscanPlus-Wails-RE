@@ -1,0 +1,22 @@
+id: ruijie-eg-gateway-phpinfo-info-leak
+info:
+  name: "锐捷 EG 网关 phpinfo.view.php 信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: ruijie-eg-gateway
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/tool/view/phpinfo.view.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "PHP Version"
+          - "PHP API"
+      - type: regex
+        regex:
+          - "<title>phpinfo\\(\\)</title>"

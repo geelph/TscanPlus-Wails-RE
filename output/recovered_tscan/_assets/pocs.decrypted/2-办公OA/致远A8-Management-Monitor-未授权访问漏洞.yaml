@@ -1,0 +1,24 @@
+id: poc-yaml-seeyon-a8-management-monitor-auth
+info:
+  name: "致远A8 Management Monitor 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Seeyon
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/seeyon/management/index.jsp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "A8 Management Monitor"
+      - type: word
+        part: header
+        words:
+          - "text/html"

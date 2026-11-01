@@ -1,0 +1,31 @@
+id: weaver-e-cology-getemdslist-info-disclosure
+info:
+  name: 泛微E-cology 接口信息泄露
+  author: DhiyaneshDk
+  severity: high
+  description: 泛微 E-cology10 系统的 /papi/em/transform/getEmDsList 接口存在敏感信息泄露漏洞。未授权攻击者可通过访问该接口获取数据源相关敏感信息，包括
+    dsKey、dsValue 以及 deleteType 等字段。
+  reference:
+  - https://mp.weixin.qq.com/s/tZvq6vlbDO1_eQHvX-bQbQ
+  metadata:
+    verified: true
+    vendor: weaver
+    product: ecology
+    fofa-query: icon_hash="-1619753057"
+  tags: ecology, ecology10
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/papi/em/transform/getEmDsList'
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"dsKey":'
+    - '"deleteType":'
+    - '"dsValue":'
+    condition: and
+  - type: status
+    status:
+    - 200

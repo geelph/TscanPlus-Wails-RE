@@ -1,0 +1,23 @@
+id: sapido-router-syscmd-rce
+info:
+  name: "Sapido Router syscmd.htm 未授权命令执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Sapido Router
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/syscmd.htm"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "System Command"
+      - type: word
+        part: body
+        words:
+          - "This page can be used to run target system command"

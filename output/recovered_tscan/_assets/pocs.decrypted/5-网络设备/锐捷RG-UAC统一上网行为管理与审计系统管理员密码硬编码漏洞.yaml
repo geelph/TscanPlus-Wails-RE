@@ -1,0 +1,28 @@
+id: ruijie-rg-uac-admin-password-leak
+
+info:
+  name: "锐捷RG-UAC统一上网行为管理与审计系统管理员密码硬编码漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="RG-UAC登录页面" && body="admin"
+      锐捷RG UAC统一上网行为管理与审计系统存在管理员密码信息暴露漏洞，攻击者可通过分析前端代码中的硬编码凭证获取系统访问权限。通过前端代码审计定位硬编码的admin账户MD5哈希值并进行解密，可绕过身份验证机制实现未授权系统控制。
+  tags: 锐捷RG-UAC
+
+http:
+- raw:
+  - |
+    GET / HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'super_admin'
+  - type: word
+    part: body
+    words:
+    - 'password'

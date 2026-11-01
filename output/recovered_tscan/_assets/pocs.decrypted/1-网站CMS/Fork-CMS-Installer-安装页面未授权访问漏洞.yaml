@@ -1,0 +1,32 @@
+id: fork-cms-installer-unauthorized-access
+
+info:
+  name: Fork CMS Installer 安装页面未授权访问漏洞
+  author: DhiyaneshDk
+  severity: critical
+  description: |
+    目标站点暴露了 Fork CMS 的 Installer 页面，攻击者可借此访问安装向导，在未授权情况下重新配置系统或植入恶意代码。
+  metadata:
+    verified: true
+    max-request: 1
+    fofa-query: body="Install Fork CMS"
+  tags: Fork-CMS
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/install/2'
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "Install Fork CMS"
+          - "Settings"
+        condition: and
+      - type: status
+        status:
+          - 200
+        # digest: 4a0a0047304502204ae7edea7f981d558c6419abe98b670d19df80e008188a08111ef0db3549cd0702210084aca7bb0a17ebb23970c5781355c5d64ec3485ef23641aaf2af998e2858f02c:922c64590222798bb761d5b6d8e72950

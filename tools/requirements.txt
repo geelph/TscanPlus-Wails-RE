@@ -1,0 +1,11 @@
+# 核心依赖：只用于 AES-GCM / AES-CBC 解密
+cryptography>=42
+
+# 可选：goembed_extract.py 的大文件扫描加速（没有也能跑，纯标准库路径）
+numpy>=1.24
+
+# 可选：--selftest 与 POC 明文自检时做 YAML 解析
+PyYAML>=6.0
+
+# 可选：动态取证（tools/frida_capture_poc_key.py）
+# frida-tools>=12.0

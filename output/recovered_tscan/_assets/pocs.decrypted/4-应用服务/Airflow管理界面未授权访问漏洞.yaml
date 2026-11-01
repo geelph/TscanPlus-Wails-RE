@@ -1,0 +1,19 @@
+id: Airflow-unauthorized
+
+info:
+  name: "Airflow管理界面未授权访问漏洞"
+  author: Str1am    
+  severity: high
+  reference: http://www.str1am.top
+  tags: Airflow
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/admin/"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Airflow - DAGs"
+        condition: and

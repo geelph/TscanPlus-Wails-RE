@@ -1,0 +1,25 @@
+id: vben-admin-hardcoded-credentials
+
+info:
+  name: "Vben-Admin 前端资源中 createFakeUserList 函数明文凭据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="-317536629"
+          Vue Vben Admin 是一个基于 Vue3、Vite 和 TypeScript 的开源中后台管理模板。在 /assets/index-xxx.js 文件中，通过 createFakeUserList 函数可提取静态嵌入的账户凭证信息。
+          该漏洞允许攻击者通过逆向分析前端资源文件获取系统预置的明文账号密码组合。
+  tags: Vben-Admin
+
+http:
+- raw:
+  - |
+    GET /login HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'crossorigin src=\"/assets/index-(.+?)\.js\"'

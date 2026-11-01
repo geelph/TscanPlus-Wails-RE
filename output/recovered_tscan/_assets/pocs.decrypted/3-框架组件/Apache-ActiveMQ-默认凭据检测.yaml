@@ -1,0 +1,38 @@
+id: apache-activemq-default-credentials
+
+info:
+  name: Apache ActiveMQ 默认凭据检测
+  author: pdteam
+  severity: high
+  description: |-
+    检测到 Apache ActiveMQ 存在默认登录凭据，攻击者可能利用该缺陷获取未授权访问权限。
+  reference:
+    - https://knowledge.broadcom.com/external/article/142813/vulnerability-apache-activemq-admin-con.html
+  metadata:
+    max-request: 2
+  tags: APACHE-ActiveMQ
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        GET /admin/ HTTP/1.1
+        Host: {{Hostname}}
+        Authorization: Basic {{base64(username + ':' + password)}}
+    payloads:
+      username:
+        - user
+        - admin
+      password:
+        - user
+        - admin
+    attack: pitchfork
+    matchers:
+      - type: word
+        words:
+          - 'Welcome to the Apache ActiveMQ Console of <b>'
+          - '<h2>Broker</h2>'
+        condition: and
+
+# digest: 490a004630440220741c1a7d7e83241b05c9a57b30ecad056f586b75c74f674988e33c74fbb4aad902206da81acaff714d5a42f458eeffa9593486cd2d9dacddf906950315ead2666f50:922c64590222798bb761d5b6d8e72950

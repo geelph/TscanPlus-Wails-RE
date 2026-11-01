@@ -1,0 +1,33 @@
+id: atlassian-bamboo-setup
+
+info:
+  name: "Atlassian Bamboo Setup Wizard 配置向导信息泄露"
+  author: pussycat0x
+  severity: info
+  metadata:
+    max-request: 1
+    verified: true
+    shodan-query: title:"Bamboo setup wizard"
+  tags: Atlassian,Bamboo
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/setup/setupLicense.action"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Bamboo setup wizard - Atlassian Bamboo"
+          - "Bamboo evaluation license"
+        condition: and
+
+      - type: word
+        part: header
+        words:
+          - "text/html"
+
+      - type: status
+        status:
+          - 200

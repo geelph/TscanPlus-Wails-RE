@@ -1,0 +1,20 @@
+id: marathon-web-ui-unauthorized-access
+info:
+  name: "Marathon Web UI 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Marathon
+http:
+  - method: GET
+    path:
+      - "/v2/apps"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "tasksStaged"
+      - type: word
+        part: header
+        words:
+          - "X-Marathon-Leader"

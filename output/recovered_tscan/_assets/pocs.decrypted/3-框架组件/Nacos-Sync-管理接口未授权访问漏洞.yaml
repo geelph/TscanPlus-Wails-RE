@@ -1,0 +1,24 @@
+id: nacos-sync-unauthorized-access
+
+info:
+  name: Nacos Sync 管理接口未授权访问漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="nacos" && title=="Nacos-Sync"
+      该漏洞源于Nacos Sync系统在管理接口的访问控制机制中存在缺陷，攻击者可通过构造未经身份验证的请求直接访问后台管理端点，从而获取敏感系统信息或执行管理操作。此漏洞无需身份凭证即可触发，建议通过部署身份验证中间件或限制接口访问来源进行缓解。
+  tags: Nacos
+
+http:
+- raw:
+  - |
+    GET /#/serviceSync HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'nacos'

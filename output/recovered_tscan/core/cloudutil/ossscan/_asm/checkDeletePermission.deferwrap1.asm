@@ -1,0 +1,26 @@
+# TscanGui/core/cloudutil/ossscan.(*vulnScanner).checkDeletePermission.deferwrap1
+# 0x1425d4ee0..0x1425d4f40 (96 bytes)
+# source TscanGui/core/cloudutil/ossscan/vuln_scanner.go:202
+
+0x1425d4ee0	49 3b 66 10             	cmp rsp, qword ptr [r14 + 0x10]
+0x1425d4ee4	76 25                   	jbe 0x1425d4f0b
+0x1425d4ee6	55                      	push rbp
+0x1425d4ee7	48 89 e5                	mov rbp, rsp
+0x1425d4eea	48 83 ec 08             	sub rsp, 8
+0x1425d4eee	4d 8b 66 20             	mov r12, qword ptr [r14 + 0x20]
+0x1425d4ef2	4d 85 e4                	test r12, r12
+0x1425d4ef5	75 1b                   	jne 0x1425d4f12
+0x1425d4ef7	48 8b 4a 08             	mov rcx, qword ptr [rdx + 8]
+0x1425d4efb	48 8b 42 10             	mov rax, qword ptr [rdx + 0x10]
+0x1425d4eff	48 8b 49 18             	mov rcx, qword ptr [rcx + 0x18]
+0x1425d4f03	ff d1                   	call rcx
+0x1425d4f05	48 83 c4 08             	add rsp, 8
+0x1425d4f09	5d                      	pop rbp
+0x1425d4f0a	c3                      	ret
+0x1425d4f0b	e8 b0 e4 aa fd          	call 0x1400833c0
+0x1425d4f10	eb ce                   	jmp 0x1425d4ee0
+0x1425d4f12	4c 8d 6c 24 18          	lea r13, [rsp + 0x18]
+0x1425d4f17	4d 39 2c 24             	cmp qword ptr [r12], r13
+0x1425d4f1b	75 da                   	jne 0x1425d4ef7
+0x1425d4f1d	49 89 24 24             	mov qword ptr [r12], rsp
+0x1425d4f21	eb d4                   	jmp 0x1425d4ef7

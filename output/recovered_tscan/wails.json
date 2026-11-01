@@ -1,0 +1,12 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "TscanPlus",
+  "outputfilename": "TscanPlus_Win_Amd64",
+  "info": {
+    "companyName": "TscanPlus",
+    "productName": "TscanPlus",
+    "productVersion": "3.5.5",
+    "copyright": "@重剑无锋",
+    "comments": "Built using Wails (https://wails.io)"
+  }
+}

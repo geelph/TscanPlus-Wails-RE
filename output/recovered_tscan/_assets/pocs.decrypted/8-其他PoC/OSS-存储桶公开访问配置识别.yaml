@@ -1,0 +1,25 @@
+id: poc-yaml-oss-read-identify
+info:
+  name: "OSS 存储桶公开访问配置识别"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: aliyun,oss
+
+variables:
+  paths:
+    - /static/
+    - /file/
+    - /
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}{{paths}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - (contains(body, '\"StorageClass\"') && contains(body, '\"Key\"') && contains(body, '\"LastModified\"')) || ((contains(body, '<MaxKeys>1000</MaxKeys>') || contains(body, '<MaxKeys>100</MaxKeys>')) && contains(body, 'StorageClass'))

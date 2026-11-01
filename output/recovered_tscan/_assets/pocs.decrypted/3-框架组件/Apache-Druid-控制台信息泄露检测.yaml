@@ -1,0 +1,19 @@
+id: apache-druid-identify
+info:
+  name: "Apache Druid 控制台信息泄露检测"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Apache Druid
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/unified-console.html"
+    headers:
+      User-Agent: Mozilla/5.0
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "Apache Druid"

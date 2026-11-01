@@ -1,0 +1,65 @@
+id: ilias-lms-admin-default-password-risk
+
+info:
+  name: ILIAS LMS 管理员默认口令风险
+  author: 0x_Akoko
+  severity: high
+  description: |
+    ILIAS LMS 被发现使用了默认管理员凭据（root:homer）。攻击者可借此获得完全管理权限，从而管理课程、用户及系统配置。
+  reference:
+    - https://www.ilias.de/
+    - https://www.securityspace.com/smysecure/catid.html?id=1.3.6.1.4.1.25623.1.0.107313
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: ilias
+    product: ilias
+    shodan-query: 'http.title:"Login to ILIAS"'
+    fofa-query: 'title="Login to ILIAS"'
+  tags: ILIAS
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "root"
+  password: "homer"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /login.php HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "ILIAS", "username", "password")'
+        condition: and
+    extractors:
+      - type: regex
+        name: client_id
+        part: body
+        group: 1
+        internal: true
+        regex:
+          - 'client_id=([a-zA-Z0-9_-]+)'
+  - raw:
+      - |
+        POST /ilias.php?baseClass=ilStartUpGUI&cmd=post&fallbackCmd=doStandardAuthentication&client_id={{client_id}} HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        username={{username}}&password={{password}}&cmd%5BdoStandardAuthentication%5D=Login
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 302'
+          - '!contains(to_lower(header), "login.php")'
+          - 'contains(to_lower(header), "ilias.php")'
+        condition: and
+
+# digest: 4a0a00473045022009e23de5660fe4a7ccfda929130648d911a796b0f7df7401bf4b711ec560435e022100a8bd86c5d887eca036e0dd99ca2fcf82544d9f22a52c9377ae5a3702fa57441c:922c64590222798bb761d5b6d8e72950

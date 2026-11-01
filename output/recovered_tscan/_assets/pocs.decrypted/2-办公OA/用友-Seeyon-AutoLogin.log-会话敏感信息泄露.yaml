@@ -1,0 +1,31 @@
+id: seeyon-autologin-log-info-leak
+info:
+  name: "Seeyon AutoLogin.log 会话敏感信息泄露"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Seeyon
+  description: |
+    This template detects sensitive information disclosure in the autoLogin.log file of the Seeyon OA Mobile Smart Office platform.
+  metadata:
+    finger: Seeyon OA Mobile Smart Office Platform
+    fofa-query: title="M3-Server"
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mobile_portal/logs/autoLogin.log"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "loginToken:"
+          - "User Session"
+          - "AUTOLOGIN"
+        condition: and
+      - type: word
+        words:
+          - "<"
+        negative: true

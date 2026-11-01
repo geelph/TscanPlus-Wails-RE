@@ -1,0 +1,22 @@
+id: messagesolution-email-archiving-info-leak
+info:
+  name: "MessageSolution Email Archiving 管理员凭证信息泄露"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: messagesolution
+  description: |
+    Detects an information leakage vulnerability in MessageSolution Email Archiving where administrator credentials might be exposed.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/authenticationserverservlet/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<administratorusername"
+          - "<administratorpassword>"
+        part: body

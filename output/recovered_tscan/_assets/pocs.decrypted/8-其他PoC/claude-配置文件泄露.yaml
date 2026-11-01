@@ -1,0 +1,44 @@
+id: claude-code-project-settings-exposure
+info:
+  name: .claude 配置文件泄露
+  author: shadowhunter-92
+  severity: medium
+  description: 检测到 Web 服务器存在 Claude Code 项目配置文件（.claude/settings.json 或 .claude/settings.local.json）。该文件包含
+    Claude Code 的运行配置，如权限规则（Bash 允许/拒绝列表、文件访问控制）、环境变量、生命周期钩子（执行 Shell 命令）及 MCP 服务器配置。泄露此类文件可能导致敏感权限规则、环境变量（含
+    API 密钥）及项目内部自动化架构信息暴露。
+  reference:
+  - https://docs.claude.com/en/docs/claude-code/settings
+  - https://docs.claude.com/en/docs/claude-code/permissions
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+    cvss-score: 7.5
+    cwe-id: CWE-200,CWE-538
+  metadata:
+    verified: true
+    max-request: 3
+    shodan-query: http.html:"claude"
+  tags: claude, claude-code, anthropic, ai
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/.claude/settings.json'
+  - '{{BaseURL}}/.claude/settings.local.json'
+  - '{{BaseURL}}/.mcp.json'
+  stop-at-first-match: false
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - contains_any(body, "\"permissions\"", "\"hooks\"", "\"env\"", "\"mcpServers\"",
+      "\"additionalDirectories\"", "\"enableAllProjectMcpServers\"", "\"defaultMode\"")
+  - type: word
+    part: content_type
+    words:
+    - application/json
+    - text/json
+    - text/plain
+    - application/octet-stream
+    condition: or
+  - type: status
+    status:
+    - 200

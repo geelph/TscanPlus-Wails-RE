@@ -1,0 +1,28 @@
+id: weaver-e-office-v10-upload
+
+info:
+  name: "泛微E-Office v10 welink move组件任意文件上传远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    泛微E-Office 10.0_20230821版本及之前版本中，welink move模块存在远程代码执行安全隐患。该漏洞通过文件上传接口与文件包含功能的组合利用实现，攻击者可上传恶意代码文件并获得服务器控制权限。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    POST /eoffice10/server/public/api/welink/welink-move HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'code'
+  - type: word
+    part: body
+    words:
+    - '0x000013'

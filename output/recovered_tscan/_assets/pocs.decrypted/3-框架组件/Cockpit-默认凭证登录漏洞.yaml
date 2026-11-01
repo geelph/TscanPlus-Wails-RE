@@ -1,0 +1,39 @@
+id: cockpit-default-login
+info:
+  name: "Cockpit 默认凭证登录漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: cockpit
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/auth/login?to=/"
+    matchers:
+      - type: regex
+        regex:
+          - "csrf\\s*:\\s*\\\"(.*?)\\\""
+    extractors:
+      - type: regex
+        name: csrf_token
+        regex:
+          - "csrf\\s*:\\s*\\\"(.*?)\\\""
+        group: 1
+        internal: true
+  - method: POST
+    path:
+      - "{{BaseURL}}/auth/check"
+    headers:
+      Content-Type: application/json; charset=UTF-8
+    body: |
+      {"auth":{"user":"admin","password":"admin"},"csrf":"{{csrf_token}}"}
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "\"success\":true"
+      - type: word
+        words:
+          - "\"group\":\"admin\",\"name\":\"Admin\",\"active\":true"

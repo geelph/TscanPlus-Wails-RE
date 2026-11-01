@@ -1,0 +1,25 @@
+id: gogs-install-exposure
+
+info:
+  name: "Gogs 安装页面未授权访问"
+  author: dhiyaneshDk
+  severity: high
+  tags: Gogs
+
+requests:
+  - method: GET
+    path:
+      - '{{BaseURL}}/install'
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "General Settings"
+          - "Database Settings"
+        part: body
+        condition: and
+
+      - type: status
+        status:
+          - 200

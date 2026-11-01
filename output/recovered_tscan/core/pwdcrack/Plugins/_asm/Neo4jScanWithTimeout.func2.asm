@@ -1,0 +1,38 @@
+# TscanGui/core/pwdcrack/Plugins.Neo4jScanWithTimeout.func2
+# 0x142062fc0..0x142063060 (160 bytes)
+# source TscanGui/core/pwdcrack/Plugins/neo4j.go:175
+
+0x142062fc0	49 3b 66 10             	cmp rsp, qword ptr [r14 + 0x10]
+0x142062fc4	76 74                   	jbe 0x14206303a
+0x142062fc6	55                      	push rbp
+0x142062fc7	48 89 e5                	mov rbp, rsp
+0x142062fca	48 83 ec 30             	sub rsp, 0x30
+0x142062fce	66 44 0f d6 7c 24 28    	movq qword ptr [rsp + 0x28], xmm15
+0x142062fd5	c6 44 24 0f 00          	mov byte ptr [rsp + 0xf], 0
+0x142062fda	48 8b 4a 08             	mov rcx, qword ptr [rdx + 8]
+0x142062fde	48 8b 42 10             	mov rax, qword ptr [rdx + 0x10]
+0x142062fe2	48 8b 52 18             	mov rdx, qword ptr [rdx + 0x18]
+0x142062fe6	48 89 54 24 10          	mov qword ptr [rsp + 0x10], rdx
+0x142062feb	48 8d 15 6e 00 00 00    	lea rdx, [rip + 0x6e]
+0x142062ff2	48 89 54 24 18          	mov qword ptr [rsp + 0x18], rdx
+0x142062ff7	48 89 4c 24 20          	mov qword ptr [rsp + 0x20], rcx
+0x142062ffc	48 8d 4c 24 18          	lea rcx, [rsp + 0x18]
+0x142063001	48 89 4c 24 28          	mov qword ptr [rsp + 0x28], rcx
+0x142063006	c6 44 24 0f 01          	mov byte ptr [rsp + 0xf], 1
+0x14206300b	e8 f0 08 03 fe          	call 0x140093900
+0x142063010	48 8b 44 24 10          	mov rax, qword ptr [rsp + 0x10]
+0x142063015	e8 86 05 fb fd          	call 0x1400135a0
+0x14206301a	c6 44 24 0f 00          	mov byte ptr [rsp + 0xf], 0
+0x14206301f	48 8b 54 24 28          	mov rdx, qword ptr [rsp + 0x28]
+0x142063024	48 8b 0a                	mov rcx, qword ptr [rdx]
+0x142063027	ff d1                   	call rcx
+0x142063029	48 83 c4 30             	add rsp, 0x30
+0x14206302d	5d                      	pop rbp
+0x14206302e	c3                      	ret
+0x14206302f	e8 ac 37 fe fd          	call 0x1400467e0
+0x142063034	48 83 c4 30             	add rsp, 0x30
+0x142063038	5d                      	pop rbp
+0x142063039	c3                      	ret
+0x14206303a	e8 81 03 02 fe          	call 0x1400833c0
+0x14206303f	90                      	nop
+0x142063040	e9 7b ff ff ff          	jmp 0x142062fc0

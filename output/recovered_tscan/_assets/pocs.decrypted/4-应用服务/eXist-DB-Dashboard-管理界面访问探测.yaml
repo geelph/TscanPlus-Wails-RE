@@ -1,0 +1,45 @@
+id: exist-db-dashboard-access-detection
+
+info:
+  name: eXist-DB Dashboard 管理界面访问探测
+  author: ritikchaddha
+  severity: high
+  description: |-
+    检测 eXist DB Dashboard 登录端点的访问行为。eXist DB 是一种面向文档的数据库，支持 XML 数据的存储与查询。Dashboard 为其 Web 管理界面，用于数据库管理及数据查看。
+  reference:
+    - https://exist-db.org/
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: title:"eXist db"
+    fofa-query: title="eXist db"
+  tags: eXist-db
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+
+http:
+  - raw:
+      - |
+        POST /exist/apps/dashboard/login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        user={{username}}&password=
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - 'user"\s*:\s*"admin"'
+          - 'dba"\s*:\s*"true"'
+        condition: and
+      - type: word
+        part: content_type
+        words:
+          - "application/xml"
+      - type: status
+        status:
+          - 200
+        # digest: 4b0a00483046022100fddba794b09ce14b35e7470b22966cd09e888b75175b83bfa08de63754ab238f022100916b037ae20c98038517e77b4abd1c9576183628c556590cdcc80f9df34e7e1f:922c64590222798bb761d5b6d8e72950

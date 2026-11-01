@@ -1,0 +1,26 @@
+id: dahua-icc-info-leak-logic-vuln
+
+info:
+  name: "大华智能物联综合管理平台 ICC 默认凭证绕过认证及敏感信息暴露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    该系统存在认证机制缺陷，允许使用默认用户凭证（justForTest/xxxxx）绕过身份验证访问管理后台
+      暴露的敏感接口可能被利用获取系统控制权限
+      reference: https://example.com/advisory/icc-auth-bypass
+  tags: 大华智能物联综合管理平台
+
+http:
+- raw:
+  - |
+    GET /api/ HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: name=value
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '文档目录'

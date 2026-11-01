@@ -1,0 +1,27 @@
+id: jolokia_logback_jndi_rce
+
+info:
+  name: "Jolokia Logback 组件 JNDI 注入远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    - 漏洞影响 Jolokia 与 Logback 集成组件中的 JNDI 处理逻辑
+      - 攻击者可构造恶意 LDAP 请求触发远程代码执行
+      - 该漏洞利用链涉及 Logback 日志框架的 JNDI 解析特性
+      - reference: https://nvd.nist.gov/vuln/detail/CVE-2023-45678
+  tags: jolokia,logback
+
+http:
+- raw:
+  - |
+    GET /jolokia/list HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'JMXConfigurator'
+    - 'reloadByURL'

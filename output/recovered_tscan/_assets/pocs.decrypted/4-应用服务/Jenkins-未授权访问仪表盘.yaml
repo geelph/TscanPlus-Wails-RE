@@ -1,0 +1,23 @@
+id: unauthenticated-jenkin
+
+info:
+  name: "Jenkins 未授权访问仪表盘"
+  author: dhiyaneshDK
+  severity: high
+  tags: Jenkins
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - Dashboard [Jenkins]
+        condition: and
+
+      - type: status
+        status:
+          - 200

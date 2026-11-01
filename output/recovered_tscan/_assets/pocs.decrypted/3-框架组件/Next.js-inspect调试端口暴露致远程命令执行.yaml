@@ -1,0 +1,31 @@
+id: next-js-inspect-rce
+
+info:
+  name: "Next.js inspect调试端口暴露致远程命令执行"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: body="WebSockets request was expected"
+    当 Node.js 进程通过 --inspect 或 --inspect-brk 参数启动时，默认会在 127.0.0.1:9229 开启 Chrome DevTools Protocol (CDP) 调试服务。若运维配置不当，将调试端口绑定至 0.0.0.0 并暴露至公网且未实施身份验证，攻击者可利用 CDP 协议连接该接口，通过调用 Runtime.evaluate 方法在 Node.js 进程中执行任意 JavaScript 代码，进而获取服务器控制权。
+  reference:
+  - https://mp.weixin.qq.com/s/oTzyzMqkM0MtGgFnz2v9pg
+  tags: Node.js
+
+http:
+- raw:
+  - |
+    GET /json HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"description":'
+    - '"devtoolsFrontendUrl":'
+    - '"devtoolsFrontendUrlCompat":'
+    - '"webSocketDebuggerUrl":'
+    condition: and
+  - type: status
+    status:
+    - 200

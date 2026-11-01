@@ -1,0 +1,57 @@
+id: phpmyadmin-management-panel-unauthorized-access
+
+info:
+  name: PhpMyAdmin 管理面板未授权访问
+  author: pwnhxl
+  severity: high
+  description: |-
+    攻击者可在未提供任何凭据的情况下直接访问 PhpMyAdmin 管理面板，可能导致数据库信息泄露或遭受未授权操作。
+  reference:
+    - https://www.phpmyadmin.net
+  metadata:
+    verified: true
+    max-request: 6
+    shodan-query: html:"server_databases.php"
+    fofa-query: body="server_databases.php"
+  tags: phpMyAdmin
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        GET {{path}} HTTP/1.1
+        Host: {{Hostname}}
+    payloads:
+      path:
+        - "/index.php"
+        - "/pma/index.php"
+        - "/pmd/index.php"
+        - "/phpMyAdmin/index.php"
+        - "/phpmyadmin/index.php"
+        - "/_phpmyadmin/index.php"
+    attack: batteringram
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'server_sql.php'
+          - 'server_status.php'
+          - 'server_variables.php'
+          - 'server_databases.php'
+        condition: and
+      - type: word
+        part: header
+        words:
+          - 'Set-Cookie: phpMyAdmin='
+      - type: word
+        part: header
+        words:
+          - 'text/html'
+      - type: status
+        status:
+          - 200
+
+# digest: 4b0a00483046022100f148d3a4543cbbe95e69b1ab8831ec6307974affb8c6c94dc6a5dd5169a54f08022100f20348ed33d7e10c8c5fcbff2e1821a1b18e377eb0da77b40390923edc9e1bb9:922c64590222798bb761d5b6d8e72950

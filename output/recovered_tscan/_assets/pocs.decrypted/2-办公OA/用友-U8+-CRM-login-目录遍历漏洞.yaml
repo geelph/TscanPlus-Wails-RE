@@ -1,0 +1,23 @@
+id: yongyou-u8plus-crm-directory-traversal
+
+info:
+  name: "用友 U8+ CRM login/ 目录遍历漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Yongyou-U8-Plus-CRM
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/login/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "changepswd.php"
+          - "Index of /login"
+          - "login.php"

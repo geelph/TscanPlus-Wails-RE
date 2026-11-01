@@ -1,0 +1,16 @@
+# 全仓库按二进制处理：还原结果是"字节级复现"，git 绝不能做换行/编码转换
+* -text
+
+# 需要 diff 的文本照旧能 diff（-text 只关闭换行转换，不影响按行比较）
+
+# 大块还原产物：标记为生成物，减少 GitHub 语言统计噪音
+output/recovered_tscan/**/_asm/**                linguist-generated
+output/recovered_tscan/_meta/functions.json      linguist-generated
+output/recovered_tscan/_meta/types.json          linguist-generated
+output/recovered_tscan/_assets/pocs/**           linguist-generated
+output/recovered_tscan/_assets/pocs.decrypted/** linguist-generated
+output/recovered_tscan/_assets/technologies.json* linguist-generated
+
+# 厂商前端构建产物
+output/recovered_tscan/frontend/dist/assets/index.*.js  linguist-vendored
+output/recovered_tscan/frontend/dist/assets/index.*.css linguist-vendored

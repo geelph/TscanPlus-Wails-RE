@@ -1,0 +1,28 @@
+id: unauthenticated-airflow-instance
+
+info:
+  name: "Airflow 未授权访问实例"
+  author: dhiyaneshDK
+  severity: high
+  metadata:
+    max-request: 2
+    shodan-query: title:"Airflow - DAGs"
+  tags: Airflow
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+      - "{{BaseURL}}/admin/"
+
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "<title>Airflow - DAGs</title>"
+
+      - type: status
+        status:
+          - 200

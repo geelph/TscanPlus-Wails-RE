@@ -1,0 +1,38 @@
+id: laravel-sessions-folder-exposure
+
+info:
+  name: Laravel 会话存储目录未授权访问漏洞
+  author: DhiyaneshDk
+  severity: high
+  description: |
+    检测到对 Laravel 会话存储目录的未授权访问，攻击者可浏览并下载其中可能包含有效认证令牌、CSRF 令牌及序列化用户数据的会话文件。
+  metadata:
+    max-request: 2
+    verified: true
+    shodan-query: http.html:"Index of" http.html:"sessions"
+    fofa-query: body="Index of" && body="sessions"
+  tags: Laravel-Framework
+  remediation: >-
+    升级到已修复版本，在受影响端点实施身份认证和授权，移除响应及调试输出中的敏感数据，限制管理接口的暴露范围，并轮换可能已泄露的凭据或密钥。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/storage/framework/sessions/"
+      - "{{BaseURL}}/storage/sessions/"
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "Index of"
+          - "Parent Directory"
+          - "<title>Index of"
+          - "Directory listing for"
+        condition: or
+      - type: status
+        status:
+          - 200
+
+# digest: 490a0046304402202c960c38bbbb683f6bd3c418b60e6fa1f1d98fc9279552b95531daf7c66e2ce602201ff9647bf59704de6176a562bc3ec0c489652e1544d5e5171adcd9fb2c9917ed:922c64590222798bb761d5b6d8e72950

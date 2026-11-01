@@ -1,0 +1,21 @@
+id: e-message-unauthorized-access
+info:
+  name: "E-message setup-datasource-standard.jsp 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: e-message
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/setup/setup-datasource-standard.jsp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "数据库设置 - 标准连接"
+          - "用户名："
+          - "数据库驱动选项"

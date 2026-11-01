@@ -1,0 +1,85 @@
+{
+  "version": {
+    "Comments": "Built using Wails (https://wails.io)",
+    "CompanyName": "TscanPlus",
+    "FileDescription": "TscanPlus",
+    "LegalCopyright": "@重剑无锋",
+    "ProductName": "TscanPlus",
+    "ProductVersion": "3.5.5"
+  },
+  "icon_sizes": [
+    [
+      256,
+      256
+    ],
+    [
+      128,
+      128
+    ],
+    [
+      64,
+      64
+    ],
+    [
+      48,
+      48
+    ],
+    [
+      32,
+      32
+    ],
+    [
+      16,
+      16
+    ]
+  ],
+  "icon_recovered": true,
+  "manifest_recovered": true,
+  "resources": [
+    {
+      "type": 3,
+      "name": 1,
+      "size": 98922
+    },
+    {
+      "type": 3,
+      "name": 2,
+      "size": 29648
+    },
+    {
+      "type": 3,
+      "name": 3,
+      "size": 8951
+    },
+    {
+      "type": 3,
+      "name": 4,
+      "size": 5506
+    },
+    {
+      "type": 3,
+      "name": 5,
+      "size": 2837
+    },
+    {
+      "type": 3,
+      "name": 6,
+      "size": 929
+    },
+    {
+      "type": 14,
+      "name": 3,
+      "size": 90
+    },
+    {
+      "type": 16,
+      "name": 1,
+      "size": 580
+    },
+    {
+      "type": 24,
+      "name": 1,
+      "size": 1448
+    }
+  ]
+}

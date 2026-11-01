@@ -1,0 +1,28 @@
+id: chinaunicom-modem-default-password
+info:
+  name: "Chinaunicom Modem 默认凭据漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Chinaunicom,Modem
+  description: |
+    Potential default credentials vulnerability in Chinaunicom Modem.
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/cu.html"
+    body: |
+      frashnum=&action=login&Frm_Logintoken=1&Username=CUAdmin&Password=CUAdmin&Username=&Password=
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 302
+      - type: word
+        part: header
+        words:
+          - "location"
+      - type: regex
+        part: header
+        regex:
+          - "\\/menu\\.gch"

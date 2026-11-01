@@ -1,0 +1,25 @@
+id: dubbo-admin-unauth-access
+info:
+  name: "Dubbo-Admin 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Dubbo
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.html"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "dubbo"
+      - type: word
+        part: body
+        words:
+          - "<a href=\"services.html\">Services</a>"

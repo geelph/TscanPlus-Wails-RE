@@ -1,0 +1,29 @@
+id: poc-yaml-weaver-e-office10-schema-mysql-sql-sensitive-info-leak
+info:
+  name: "Weaver E-Office10 empty_scene 敏感信息泄露"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: weaver-e-office
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/eoffice10/empty_scene/db/schema_mysql.sql"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "CREATE TABLE"
+          - "mysql,sqlsrv,oracle"
+        part: body
+      - type: regex
+        regex:
+          - "application/x-sql"
+        part: header
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

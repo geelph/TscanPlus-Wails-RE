@@ -1,0 +1,28 @@
+id: graphql-api-introspection
+info:
+  name: "GraphQL API 接口查询类型信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: graphql
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/graphql"
+      - "{{BaseURL}}/graphiql"
+      - "{{BaseURL}}/graphql.php"
+      - "{{BaseURL}}/graphql/console"
+      - "{{BaseURL}}/api/graphql"
+    headers:
+      Content-Type: application/json
+    body: |
+      {"query":"query IntrospectionQuery{__schema {queryType { name }}}"}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "{\"data\":{\"__schema\":{\"queryType\":"

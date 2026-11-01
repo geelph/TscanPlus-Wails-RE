@@ -1,0 +1,28 @@
+id: poc-yaml-nexus-default-password
+info:
+  name: "Nexus 默认口令认证漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: nexus
+  description: |
+    Detects default password vulnerability in Nexus by checking the login endpoint with default credentials.
+http:
+  - raw:
+      - |
+        GET /service/local/authentication/login HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json
+        Authorization: Basic YWRtaW46YWRtaW4xMjM=
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "content-type: application/json"
+      - type: word
+        part: body
+        words:
+          - "loggedIn"

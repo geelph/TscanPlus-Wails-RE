@@ -1,0 +1,23 @@
+id: weaver-e-cology-messager-users-info-leak
+info:
+  name: "泛微 E-Cology 信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Weaver_E-Cology
+http:
+  - method: GET
+    path:
+      - "/messager/users.data"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - '!contains(body, "<")'
+          - 'len(body) > 15'
+      - type: dsl
+        dsl:
+          - 'contains(base64_decode(body), "<users>")'
+          - 'contains(base64_decode(body), "<id>")'

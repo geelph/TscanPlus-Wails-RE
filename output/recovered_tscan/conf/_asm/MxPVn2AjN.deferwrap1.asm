@@ -1,0 +1,26 @@
+# TscanGui/conf.MxPVn2AjN.deferwrap1
+# 0x14048f540..0x14048f5a0 (96 bytes)
+# source TscanGui/conf/SvipPocDownload.go:293
+
+0x14048f540	49 3b 66 10             	cmp rsp, qword ptr [r14 + 0x10]
+0x14048f544	76 25                   	jbe 0x14048f56b
+0x14048f546	55                      	push rbp
+0x14048f547	48 89 e5                	mov rbp, rsp
+0x14048f54a	48 83 ec 08             	sub rsp, 8
+0x14048f54e	4d 8b 66 20             	mov r12, qword ptr [r14 + 0x20]
+0x14048f552	4d 85 e4                	test r12, r12
+0x14048f555	75 1b                   	jne 0x14048f572
+0x14048f557	48 8b 4a 08             	mov rcx, qword ptr [rdx + 8]
+0x14048f55b	48 8b 42 10             	mov rax, qword ptr [rdx + 0x10]
+0x14048f55f	48 8b 49 18             	mov rcx, qword ptr [rcx + 0x18]
+0x14048f563	ff d1                   	call rcx
+0x14048f565	48 83 c4 08             	add rsp, 8
+0x14048f569	5d                      	pop rbp
+0x14048f56a	c3                      	ret
+0x14048f56b	e8 50 3e bf ff          	call 0x1400833c0
+0x14048f570	eb ce                   	jmp 0x14048f540
+0x14048f572	4c 8d 6c 24 18          	lea r13, [rsp + 0x18]
+0x14048f577	4d 39 2c 24             	cmp qword ptr [r12], r13
+0x14048f57b	75 da                   	jne 0x14048f557
+0x14048f57d	49 89 24 24             	mov qword ptr [r12], rsp
+0x14048f581	eb d4                   	jmp 0x14048f557

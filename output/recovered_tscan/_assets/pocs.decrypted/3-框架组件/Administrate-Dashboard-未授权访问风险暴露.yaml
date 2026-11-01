@@ -1,0 +1,35 @@
+id: administrate-dashboard-unauthorized-access
+
+info:
+  name: Administrate Dashboard 未授权访问风险暴露
+  author: DhiyaneshDk
+  severity: high
+  description: |
+    检测到 Administrate Dashboard 管理后台存在未授权访问，攻击者可能无需认证即可查看或操作管理功能，导致敏感数据泄露或系统配置被篡改。
+  reference:
+    - https://github.com/thoughtbot/administrate
+  metadata:
+    verified: true
+    max-request: 1
+    fofa-query: body="Administrate"
+  tags: Administrate
+  remediation: >-
+    升级到已修复版本，在受影响端点实施身份认证和授权，移除响应及调试输出中的敏感数据，限制管理接口的暴露范围，并轮换可能已泄露的凭据或密钥。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/admin"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'Search Customers'
+          - 'Administrate'
+          - 'New customer</a>'
+        condition: and
+      - type: status
+        status:
+          - 200
+        # digest: 4b0a004830460221009731cccf1c88e5a1c56dbf83d90110d901edc38fc27be7678eb789e822fa9a060221009d7c75ddde9c11b8ae24703e26cec5defc71ddd048c1eab2b052719739249882:922c64590222798bb761d5b6d8e72950

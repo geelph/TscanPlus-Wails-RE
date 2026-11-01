@@ -1,0 +1,383 @@
+{
+  "extractor": "goembed_extract.py",
+  "meta": {
+    "go": "go1.25.10",
+    "wails": "v2",
+    "module": "TscanGui"
+  },
+  "tables": 23,
+  "files": 9597,
+  "bytes": 23886808,
+  "detail": [
+    {
+      "index": 0,
+      "section": ".rdata",
+      "file_off": 110263072,
+      "count": 9069,
+      "files": 9060,
+      "root": "pocs",
+      "has_index": false,
+      "bytes": 8023689,
+      "hash": {
+        "exact": 0,
+        "loose15": 6794,
+        "bad": 2266,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 1,
+      "section": ".rdata",
+      "file_off": 97999968,
+      "count": 258,
+      "files": 257,
+      "root": "embedded",
+      "has_index": false,
+      "bytes": 1792791,
+      "hash": {
+        "exact": 0,
+        "loose15": 6,
+        "bad": 251,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 2,
+      "section": ".rdata",
+      "file_off": 97615424,
+      "count": 108,
+      "files": 105,
+      "root": "frontend/dist",
+      "has_index": true,
+      "bytes": 8272548,
+      "hash": {
+        "exact": 0,
+        "loose15": 55,
+        "bad": 50,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 3,
+      "section": ".rdata",
+      "file_off": 97420352,
+      "count": 67,
+      "files": 67,
+      "root": "",
+      "has_index": false,
+      "bytes": 130171,
+      "hash": {
+        "exact": 0,
+        "loose15": 17,
+        "bad": 50,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 4,
+      "section": ".rdata",
+      "file_off": 97352480,
+      "count": 56,
+      "files": 46,
+      "root": "data",
+      "has_index": false,
+      "bytes": 298357,
+      "hash": {
+        "exact": 0,
+        "loose15": 1,
+        "bad": 45,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 5,
+      "section": ".rdata",
+      "file_off": 96196416,
+      "count": 28,
+      "files": 19,
+      "root": "metaschemas",
+      "has_index": false,
+      "bytes": 27426,
+      "hash": {
+        "exact": 0,
+        "loose15": 8,
+        "bad": 11,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 6,
+      "section": ".rdata",
+      "file_off": 96140704,
+      "count": 24,
+      "files": 23,
+      "root": "bbscan",
+      "has_index": false,
+      "bytes": 50808,
+      "hash": {
+        "exact": 0,
+        "loose15": 17,
+        "bad": 6,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 7,
+      "section": ".rdata",
+      "file_off": 95498496,
+      "count": 5,
+      "files": 4,
+      "root": "skillpack",
+      "has_index": false,
+      "bytes": 56139,
+      "hash": {
+        "exact": 0,
+        "loose15": 1,
+        "bad": 3,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 8,
+      "section": ".rdata",
+      "file_off": 95467008,
+      "count": 4,
+      "files": 2,
+      "root": "data",
+      "has_index": false,
+      "bytes": 2631,
+      "hash": {
+        "exact": 0,
+        "loose15": 1,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 9,
+      "section": ".rdata",
+      "file_off": 95254560,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 3201639,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 10,
+      "section": ".rdata",
+      "file_off": 95254656,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 112049,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 11,
+      "section": ".rdata",
+      "file_off": 95254752,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 182102,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 12,
+      "section": ".rdata",
+      "file_off": 95254848,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 49665,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 13,
+      "section": ".rdata",
+      "file_off": 95254944,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 380406,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 14,
+      "section": ".rdata",
+      "file_off": 95255040,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 48028,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 15,
+      "section": ".rdata",
+      "file_off": 95255136,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 64483,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 16,
+      "section": ".rdata",
+      "file_off": 95255232,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 100591,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 17,
+      "section": ".rdata",
+      "file_off": 95255328,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 65279,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 18,
+      "section": ".rdata",
+      "file_off": 95255424,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 1816,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 19,
+      "section": ".rdata",
+      "file_off": 95255520,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 100678,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 20,
+      "section": ".rdata",
+      "file_off": 95255616,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 24814,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 21,
+      "section": ".rdata",
+      "file_off": 95255712,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 893366,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    },
+    {
+      "index": 22,
+      "section": ".rdata",
+      "file_off": 95255808,
+      "count": 1,
+      "files": 1,
+      "root": "",
+      "has_index": false,
+      "bytes": 7332,
+      "hash": {
+        "exact": 0,
+        "loose15": 0,
+        "bad": 1,
+        "unchecked": 0
+      }
+    }
+  ],
+  "location": "frontend/ at the project root, everything else under _assets/",
+  "note": "Non-frontend roots are the literal //go:embed paths, which are relative to their declaring package; that package is not recorded in the binary, so they are kept together instead of being guessed into src/."
+}

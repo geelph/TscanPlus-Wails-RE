@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>TscanPlus</title>
+    
+    <!-- 必须是普通脚本：Wails 把 runtime 插在 head 最前，本段紧随其后执行，早于 type=module -->
+    <script>
+      (function () {
+        function isStaleCallbackMessage(value) {
+          var text = value && (value.message || value);
+          return typeof text === 'string' && text.indexOf("Callback '") !== -1 && text.indexOf('not registered!!!') !== -1;
+        }
+
+        function guard(bridge) {
+          if (!bridge || typeof bridge.Callback !== 'function' || bridge.Callback.__staleCallbackGuard) {
+            return;
+          }
+          var orig = bridge.Callback;
+          var wrapped = function (incoming) {
+            var message = null;
+            try {
+              message = typeof incoming === 'string' ? JSON.parse(incoming) : incoming;
+            } catch (e) { /* 交给原始 Callback 报 JSON 错误 */ }
+            var id = message && message.callbackid;
+            if (id && bridge.callbacks && !Object.prototype.hasOwnProperty.call(bridge.callbacks, id)) {
+              return;
+            }
+            var origError = console.error;
+            console.error = function () {
+              if (arguments.length && isStaleCallbackMessage(arguments[0])) return;
+              return origError.apply(console, arguments);
+            };
+            try {
+              return orig(incoming);
+            } catch (err) {
+              if (isStaleCallbackMessage(err)) return;
+              throw err;
+            } finally {
+              console.error = origError;
+            }
+          };
+          wrapped.__staleCallbackGuard = true;
+          bridge.Callback = wrapped;
+        }
+
+        function install() {
+          guard(window.wails);
+        }
+
+        install();
+        if (!window.__wailsCallbackGuardHook) {
+          window.__wailsCallbackGuardHook = true;
+          var current = window.wails;
+          try {
+            Object.defineProperty(window, 'wails', {
+              configurable: true,
+              enumerable: true,
+              get: function () { return current; },
+              set: function (next) {
+                current = next;
+                guard(next);
+              }
+            });
+          } catch (e) {}
+          window.addEventListener('error', function (event) {
+            if (!isStaleCallbackMessage(event && event.message)) return;
+            event.preventDefault();
+          });
+        }
+        window.__installWailsCallbackGuard = install;
+      })();
+    </script>
+    <!-- 仅 ?mock=1 时启用：无 Wails 后端时预览前端布局，正式桌面壳不受影响 -->
+    <script>
+      (function () {
+        if (!/([?&]mock=1(?:&|$))/.test(location.search) || window.go) return;
+        var stub = new Proxy({}, {
+          get: function (_t, prop) {
+            if (prop === 'then') return undefined;
+            return function () {
+              var args = arguments;
+              if (prop === 'GetUiLanguage') return Promise.resolve('zh');
+              if (prop === 'GetConfig' || prop === 'GetYamlConfig' || prop === 'GetAppSettings') return Promise.resolve({
+                CfgUiMode: 'light',
+                AgreePolicy: true,
+                CurrentVersion: '3.5.2',
+                NewVersion: '3.5.2',
+                PocVersion: '1.4.0',
+                PocNewVersion: '1.4.0',
+                CfgGlobalProxy: false,
+                FloatingMenu: window.__floatingMenuYaml || '',
+                MenuConfig: window.__menuConfigYaml || ''
+              });
+              if (prop === 'UpdateYamlConfig') {
+                window.__yamlUpdates = window.__yamlUpdates || [];
+                window.__yamlUpdates.push({ field: args[0], value: args[1], bool: args[2] });
+                if (args[0] === 'FloatingMenu') window.__floatingMenuYaml = args[1];
+                if (args[0] === 'MenuConfig') window.__menuConfigYaml = args[1];
+                return Promise.resolve();
+              }
+              if (prop === 'GetAppLic' || prop === 'CheckAppLic' || prop === 'Ucj_OVu49GHpX1' || prop === 'WailsGetAppLicenses_replace') return Promise.resolve({
+                Expired: true,
+                expired: true,
+                ExpiredDateStr: '2028.01.01',
+                expiredDateStr: '2028.01.01',
+                UpdateNotes: '',
+                PocUpdate: ''
+              });
+              if (prop === 'ListUiTabs' || prop === 'ListEmptyUiTabIDs') return Promise.resolve([]);
+              if (prop === 'NetworkCardInfo') return Promise.resolve([]);
+              if (prop === 'hasPoc2Feature' || prop === 'HasPoc2Feature') return Promise.resolve(false);
+              if (prop === 'ListFeatureOpenCounts') {
+                return Promise.resolve(window.__openCounts || {});
+              }
+              if (prop === 'OpenUiTab') {
+                var feature = args[1] || 'IpScan';
+                var shortMap = { IpScan: '端口', UrlScan: '指纹', SubDomain: '域名', DirEnum: '目录', JsFinder: 'JsFinder', ToolHost: 'Host', PocCheck: 'PoC', PwdCrack: '爆破', ToolBypass: '40x', Swagger: 'Swagger' };
+                window.__mockTabSeq = window.__mockTabSeq || {};
+                window.__mockTabSeq[feature] = (window.__mockTabSeq[feature] || 0) + 1;
+                window.__openCounts = window.__openCounts || {};
+                window.__openCounts[feature] = (window.__openCounts[feature] || 0) + 1;
+                var seq = window.__mockTabSeq[feature];
+                return Promise.resolve({ id: 'mock-' + feature + '-' + seq, project: 'Default', featureKey: feature, title: (shortMap[feature] || feature) + '-' + seq, sortOrder: Date.now(), active: true, formJson: '', resumeJson: '' });
+              }
+              if (String(prop).indexOf('TabData') >= 0 || String(prop).indexOf('Page') >= 0) return Promise.resolve([]);
+              if (String(prop).indexOf('Counts') >= 0) return Promise.resolve({ total: 0, filtered: 0 });
+              if (prop === 'GetTabTarget') return Promise.resolve({ tabtarget: '', tabresume: '' });
+              if (prop === 'GetBypassModuleTarget') return Promise.resolve('');
+              if (String(prop).indexOf('Progress') >= 0 || String(prop).indexOf('Config') >= 0) return Promise.resolve({});
+              if (prop === 'CheckTaskRuning') return Promise.resolve(false);
+              if (prop === 'FocusUiTab' || prop === 'SaveUiTabForm' || prop === 'CloseUiTab' || prop === 'UpdateProject') return Promise.resolve('success');
+              if (prop === 'GetMenuConfig') return Promise.resolve('');
+              return Promise.resolve(null);
+            };
+          }
+        });
+        window.go = { main: { App: stub } };
+        window.runtime = new Proxy({
+          EventsOn: function () { return function () {}; },
+          EventsOff: function () {},
+          EventsOnMultiple: function () { return function () {}; },
+          EventsEmit: function () {},
+          EventsOnce: function () { return function () {}; },
+          BrowserOpenURL: function () {},
+          Environment: function () { return { platform: 'browser' }; },
+          Quit: function () {},
+          WindowMinimise: function () {},
+          WindowMaximise: function () {},
+          WindowUnmaximise: function () {},
+          WindowIsMaximised: function () { return false; },
+          WindowSetDarkTheme: function () {},
+          WindowSetLightTheme: function () {},
+          ClipboardGetText: function () { return Promise.resolve(''); },
+          ClipboardSetText: function () { return Promise.resolve(); }
+        }, {
+          get: function (t, prop) {
+            if (prop in t) return t[prop];
+            if (String(prop).indexOf('Log') === 0) return function () {};
+            if (String(prop).indexOf('Window') === 0) return function () { return false; };
+            return function () { return Promise.resolve(null); };
+          }
+        });
+      })();
+    </script>
+  <script type="module" crossorigin src="/assets/index.b800a9f7.js"></script>
+  <link rel="stylesheet" href="/assets/index.0d9cbed2.css">
+</head>
+<body>
+<div id="app"></div>
+
+</body>
+</html>

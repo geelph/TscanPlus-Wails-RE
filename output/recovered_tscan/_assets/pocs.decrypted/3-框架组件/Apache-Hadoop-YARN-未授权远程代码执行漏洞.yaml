@@ -1,0 +1,32 @@
+id: apache-hadoop-yarn-unauthenticated-rce
+
+info:
+  name: "Apache Hadoop YARN 未授权远程代码执行漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: Apache,Hadoop
+  description: |-
+    This vulnerability enables remote code execution by exploiting an unauthenticated RPC endpoint in Apache Hadoop YARN.
+  reference:
+  - https://github.com/cckuailong/YarnRpcRCE
+
+http:
+- raw:
+  - |
+    POST /ws/v1/cluster/apps/new-application HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - "application-id"
+  - type: word
+    part: body
+    words:
+    - "memory"

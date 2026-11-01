@@ -1,0 +1,27 @@
+id: horde-unauthenticated
+
+info:
+  name: "Horde Groupware 未授权访问漏洞"
+  author: pikpikcu
+  severity: critical
+  tags: Horde
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/horde/admin/user.php"
+      - "{{BaseURL}}/admin/user.php"
+    headers:
+      Content-Type: text/html
+
+    matchers-condition: and
+    matchers:
+
+      - type: word
+        words:
+          - "<title>Horde :: User Administration</title>"
+        condition: and
+
+      - type: status
+        status:
+          - 200

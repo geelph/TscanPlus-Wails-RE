@@ -1,0 +1,34 @@
+id: haproxy-exporter-metrics
+
+info:
+  name: "Haproxy Exporter 指标探测"
+  author: pussycat0x
+  severity: low
+  metadata:
+    max-request: 1
+    verified: true
+    shodan-query: title:"haproxy exporter"
+  tags: haproxy_exporter
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/metrics"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "HELP haproxy_"
+
+      - type: word
+        part: body
+        words:
+          - "haproxy_exporter"
+          - "haproxy_backend"
+        condition: or
+
+      - type: status
+        status:
+          - 200

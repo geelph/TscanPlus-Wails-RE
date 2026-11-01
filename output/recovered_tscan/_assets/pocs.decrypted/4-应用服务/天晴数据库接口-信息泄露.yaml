@@ -1,0 +1,21 @@
+id: poc-tianqing-database-info-leak
+info:
+  name: "天晴数据库接口 信息泄露"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 天晴
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/dbstat/gettablessize"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "schema_name"
+          - "table_name"
+          - "table_size"

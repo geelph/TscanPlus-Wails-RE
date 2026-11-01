@@ -1,0 +1,29 @@
+id: opencode-web-unauthenticated-access
+info:
+  name: OpenCode Web 未授权访问漏洞
+  author: Kazgangap
+  severity: medium
+  description: 检测到 OpenCode Web 接口存在未授权访问风险。当 OpenCode Web 服务器在启动时未设置 OPENCODE_SERVER_PASSWORD
+    环境变量，服务器将处于完全未受保护状态。
+  reference:
+  - https://opencode.ai/docs/tr/web/
+  metadata:
+    verified: true
+    max-request: 1
+    vendor: opencode
+    product: opencode
+    shodan-query: http.html:"opencode"
+    fofa-query: body="opencode"
+  tags: opencode
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/Lw/session/'
+  redirects: true
+  max-redirects: 2
+  matchers:
+  - type: dsl
+    dsl:
+    - contains_all(body, "<title>OpenCode</title>", "opencode-theme-id")
+    - status_code == 200
+    condition: and

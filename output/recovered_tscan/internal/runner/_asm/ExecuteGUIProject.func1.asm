@@ -1,0 +1,35 @@
+# TscanGui/internal/runner.ExecuteGUIProject.func1
+# 0x1421c2820..0x1421c28c0 (160 bytes)
+# source TscanGui/internal/runner/gui_project.go:103
+
+0x1421c2820	49 3b 66 10             	cmp rsp, qword ptr [r14 + 0x10]
+0x1421c2824	76 68                   	jbe 0x1421c288e
+0x1421c2826	55                      	push rbp
+0x1421c2827	48 89 e5                	mov rbp, rsp
+0x1421c282a	48 83 ec 48             	sub rsp, 0x48
+0x1421c282e	48 89 44 24 58          	mov qword ptr [rsp + 0x58], rax
+0x1421c2833	44 0f 11 7c 24 38       	movups xmmword ptr [rsp + 0x38], xmm15
+0x1421c2839	e8 e2 76 eb fd          	call 0x140079f20
+0x1421c283e	48 8d 0d 5b da e5 00    	lea rcx, [rip + 0xe5da5b]
+0x1421c2845	48 89 4c 24 38          	mov qword ptr [rsp + 0x38], rcx
+0x1421c284a	48 89 44 24 40          	mov qword ptr [rsp + 0x40], rax
+0x1421c284f	48 8d 05 bc 52 6e 01    	lea rax, [rip + 0x16e52bc]
+0x1421c2856	bb 58 00 00 00          	mov ebx, 0x58
+0x1421c285b	48 8d 4c 24 38          	lea rcx, [rsp + 0x38]
+0x1421c2860	bf 01 00 00 00          	mov edi, 1
+0x1421c2865	48 89 fe                	mov rsi, rdi
+0x1421c2868	e8 13 3b f9 fd          	call 0x140156380
+0x1421c286d	48 89 44 24 28          	mov qword ptr [rsp + 0x28], rax
+0x1421c2872	48 89 5c 24 30          	mov qword ptr [rsp + 0x30], rbx
+0x1421c2877	48 8b 05 4a 28 04 06    	mov rax, qword ptr [rip + 0x604284a]
+0x1421c287e	48 8d 5c 24 28          	lea rbx, [rsp + 0x28]
+0x1421c2883	e8 18 03 e5 fd          	call 0x140012ba0
+0x1421c2888	48 83 c4 48             	add rsp, 0x48
+0x1421c288c	5d                      	pop rbp
+0x1421c288d	c3                      	ret
+0x1421c288e	48 89 44 24 08          	mov qword ptr [rsp + 8], rax
+0x1421c2893	48 89 5c 24 10          	mov qword ptr [rsp + 0x10], rbx
+0x1421c2898	e8 c3 0b ec fd          	call 0x140083460
+0x1421c289d	48 8b 44 24 08          	mov rax, qword ptr [rsp + 8]
+0x1421c28a2	48 8b 5c 24 10          	mov rbx, qword ptr [rsp + 0x10]
+0x1421c28a7	e9 74 ff ff ff          	jmp 0x1421c2820

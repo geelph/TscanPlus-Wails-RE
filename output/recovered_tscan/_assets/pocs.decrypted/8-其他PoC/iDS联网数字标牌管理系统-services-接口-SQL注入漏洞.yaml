@@ -1,0 +1,22 @@
+id: ids-digital-signage-system-services-sql-injection
+info:
+  name: iDS联网数字标牌管理系统 services 接口 SQL注入漏洞
+  author: 0dayPoc
+  severity: medium
+  description: iDS联网数字标牌管理系统存在SQL注入漏洞。攻击者可通过向 /Pages/terminal!query 接口发送构造的恶意请求，利用
+    orderBy 参数注入SQL语句，从而导致数据库敏感信息泄露。
+  tags: iDS联网数字标牌管理系统
+http:
+- raw:
+  - |
+    GET /services/TaskLoad?wsdl HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - GetTaskDownLoadList

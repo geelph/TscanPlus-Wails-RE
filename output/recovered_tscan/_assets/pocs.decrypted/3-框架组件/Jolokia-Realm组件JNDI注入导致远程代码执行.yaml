@@ -1,0 +1,27 @@
+id: jolokia_realm_jndi_rce
+
+info:
+  name: "Jolokia Realm组件JNDI注入导致远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Jolokia组件在Realm认证模块中存在JNDI注入缺陷
+      允许攻击者通过构造恶意JNDI请求在目标系统执行任意代码
+      影响范围覆盖默认开启JMX暴露功能的Jolokia实例
+      reference: https://example.com/cve-2023-xxxx
+  tags: Jolokia
+
+http:
+- raw:
+  - |
+    GET /jolokia/list HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'MBeanFactory'
+    - 'createJNDIRealm'

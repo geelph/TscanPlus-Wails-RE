@@ -1,0 +1,35 @@
+id: gude-2301-2302-default-admin-login
+
+info:
+  name: GUDE 2301 默认管理员凭据登录漏洞
+  author: Bretss
+  severity: high
+  description: |-
+    检测到GUDE 2301及2302设备使用默认管理员登录凭据（admin:admin），攻击者可借此直接登录设备管理接口，获取完全控制权限。
+  reference:
+    - https://media.distrelec.com/Web/Downloads/_m/an/Gude_2302-1_ger_man.pdf
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+    cvss-score: 8.3
+    cwe-id: CWE-522
+  metadata:
+    max-request: 1
+    shodan-query: http.html:"Expert Net Control"
+    fofa-query: body="Expert Net Control"
+  tags: GUDE
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/ov.html?"
+    headers:
+      Authorization: "Basic YWRtaW46YWRtaW4="
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains(body, "Control Panel")'
+          - 'status_code == 200'
+        condition: and
+        # digest: 4a0a004730450220504ccf3d1762a9465975fd96a4f6c6246097255281fd1a85ef109b132bb82afa022100e81c412b19e12779813e46492c32058b811bbb1f9565b53fbd7742492cc7eb9d:922c64590222798bb761d5b6d8e72950

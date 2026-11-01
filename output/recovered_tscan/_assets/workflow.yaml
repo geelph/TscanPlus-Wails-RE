@@ -1,0 +1,4826 @@
+Gurock-TestRail:
+- CVE-2021-40875
+- testrail-install
+安恒明御安全网关:
+- dbappsecurity-aaa-portal-auth-config-reset-suffix-rce
+- dbappsecurity-aaa-portal-auth-config-reset-type-rce
+- dbappsecurity-mingyu-aaa-portal-auth-local-submit-rce
+OpenStack:
+- openstack-config
+PHICOMM-FIR302B:
+- CVE-2022-27373
+IP-Guard:
+- ip-guard-webserver-rce
+Powertek-Firmware:
+- CVE-2022-33174
+PHPDebugBar:
+- php-debugbar-exposure
+HuaWei-Home-Gateway:
+- huawei-router-auth-bypass
+Spring-Hibernate-SpringMVC-整合框架:
+- CVE-2018-1271
+McAfee-ePolicy-Orchestrator:
+- mcafee-epo-rce
+泛微-EMobile:
+- CNVD-2017-03561
+- weaver-e-mobile-rce
+- weaver-e-office-mobile-upload-save-arbitrary-file-upload
+WebLogic:
+- CVE-2020-14882
+- CVE-2016-3510
+- weblogic-ssrf
+- weblogic-panel
+- CVE-2017-3506
+- weblogic-cve-2019-2729-2
+- weblogic-uddiexplorer
+- CVE-2020-14883
+- CVE-2018-2893
+- CVE-2021-2109
+- weblogic-t3-detect
+- CVE-2014-4210
+- CVE-2017-10271
+- CVE-2017-10271-2
+- weblogic-iiop-detect
+- weblogic-weak-login
+- weblogic-login
+- CVE-2019-2725
+- CVE-2020-2551
+- CVE-2018-2894
+- CVE-2018-2628
+- CVE-2020-2733
+- CVE-2020-14750
+- CVE-2022-21371
+- CVE-2019-2729
+mojoPortal:
+- CVE-2023-24322
+Zyxel-USG-FLEX-50:
+- CVE-2022-30525
+SonicWALL-Company Products:
+- CVE-2021-20038
+- sonicwall-management-panel
+- sonicwall-sslvpn-shellshock
+- CVE-2019-7481
+- sonic-wall-application
+- CVE-2021-20031
+- sonicwall-email-security-detect
+- sonicwall-sslvpn-panel
+- sonicwall-analyzer-login
+CirCarLife-Scada:
+- CVE-2018-16670
+- CVE-2018-16671
+- CVE-2018-16668
+- circarlife-setup
+- CVE-2018-12634
+Pypiserver:
+- CVE-2019-6802
+广联达-Linkworks办公OA:
+- glodon-linkworks-service-disclosure
+- glodon-linkworks-getdeptbydeptcode-sqli
+- glodon-linkworks-getimdirectionary-sqli
+- glodon-linkworks-getuserbyusercode-sqli
+- CVD-2023-2868
+Apache CouchDB:
+- couchdb-admin-party
+- CVE-2017-12635
+- couchdb-unauthorized
+网神SecGate防火墙:
+- secgate-3600-file-upload
+myucms:
+- myucms-lfr
+ZFsoft:
+- zfsoft-createcafile-rce
+NETGEAR-Product:
+- CVE-2016-5649
+- CVE-2017-5521
+- CVE-2021-20167
+- netgear-router-auth-bypass
+- netgear-wac124-router-auth-bypass
+- CVE-2016-6277
+- CVE-2020-27866
+- netgear-router-exposure
+- CVE-2016-1555
+- CVE-2020-26919
+- CVE-2022-29383
+NETGEAR-R6400:
+- CVE-2017-5521
+Struts2:
+- CVE-2012-0394
+- CVE-2007-4556
+- CVE-2013-1965
+- CVE-2021-31805
+- struts-problem-report
+- CVE-2017-12611
+- CVE-2013-2251
+- CVE-2019-0230
+- struts-debug-mode
+- CVE-2016-3081
+- CVE-2017-9805
+- CVE-2012-0392
+- CVE-2020-17530
+- CVE-2017-9791
+- CVE-2017-5638
+- CVE-2013-2248
+- CVE-2018-11776
+Lucee-Default-Page:
+- lucee-stack-trace
+- lucee-xss
+- CVE-2021-21307
+D_Link-DNS-ShareCenter:
+- dlink-sharecenter-dns-320-rce
+Lexmark companies products:
+- CVE-2023-26067
+APACHE-Axis2:
+- axis-happyaxis
+- CVE-2010-0219
+muhttpd:
+- CVE-2022-31793
+phpstydy:
+- phpstudy-backdoor-rce
+Free5GC-Web-Console:
+- CVE-2022-38870
+Jorani:
+- CVE-2023-26469
+- jorani-benjamin-xss
+Spring-Framework:
+- springboot-conditions
+- CVE-2020-5405
+- CVE-2021-31602
+- CVE-2018-1273
+- jolokia-unauthenticated-lfi
+- springboot-log4j-rce
+- springboot-features
+- springboot-logfile
+- springboot-loggerconfig
+- springboot-loggers
+- CVE-2022-22963
+- swagger-api
+- CVE-2020-5412
+- CVE-2020-5410
+- springboot-caches
+- springboot-jolokia
+- springboot-metrics
+- CVE-2022-22965
+- jolokia-realm-jndi-rce
+- jolokia-list
+- springboot-actuators-jolokia-xxe
+- springboot-scheduledtasks
+- springboot-threaddump
+- CVE-2022-22947
+- springboot-auditevents
+- CVE-2021-22053
+- springboot-status
+- exposed-alps-spring
+- springboot-autoconfig
+- springboot-env
+- springboot-h2-db-rce
+- CVE-2018-1271
+- springboot-gateway
+- springboot-info
+- springboot-flyway
+- CVE-2019-3799
+- jolokia-mbean-search
+- springboot-liquidbase
+- jolokia-logback-jndi-rce
+- CVE-2016-4977
+- jolokia-info-disclosure
+- springboot-mappings
+- springboot-beans
+- springboot-heapdump
+- springboot-health
+- springboot-httptrace
+- springboot-configprops
+- springboot-dump
+- springboot-trace
+- spring-eureka
+- springboot-env-all-check
+- CVE-2021-21234
+Crestron-HD-MD4x2-4K-E:
+- CVE-2022-23178
+Cisco-RV132W:
+- CVE-2018-0127
+AIC智能校园系统:
+- aic-intelligent-password-exposure
+ZTE-router:
+- backdoored-zte
+FIT2CLOUD-JUMPSERVER-堡垒机:
+- CVE-2023-42442
+- jumpserver-unauth-rce
+SpaceLogic-C-Bus:
+- CVE-2022-34753
+Jolokia:
+- jolokia-info-disclosure
+- CVE-2018-1000130
+- CVE-2018-1000129
+- springboot-h2-db-rce
+- jolokia-unauthenticated-lfi
+- jolokia-realm-jndi-rce
+- springboot-actuators-jolokia-xxe
+- jolokia-logback-jndi-rce
+- jolokia-heap-info-disclosure
+- jolokia-list
+- jolokia-mbean-search
+Boa-WebServer:
+- CVE-2017-9833
+PBOOTCMS:
+- pbootcms-v3.1.2-rce
+- pbootcms-database-file-download
+- pbootcms-search-sql-injection
+- pbootcms-ext-price-sql-injection
+SteVe:
+- steve-default-login
+- steve-xss
+Casdoor:
+- CVE-2022-24124
+- casdoor-static-fileread
+- casbin-get-users-account-password-disclosure
+- casdoor-users-password
+Oliver-Server:
+- oliver-library-lfi
+DuomiCms:
+- duomicms-sql-injection
+- duomicms-sqli
+Flatnux-CMS:
+- CVE-2012-4878
+Dahua-ICC:
+- dahua-icc-default-login
+- dahua-icc-readpic-fileread
+Carel-Data-Server:
+- carel-pcoweb-hvac-bacnet-gateway-directory-traversal
+VMware-Horizon:
+- vmware-horizon-log4j-jndi-rce
+- vmware-horizon-panel
+- vmware-horizon-version
+- vmware-horizon-daas
+CACTI-monitoring system:
+- CVE-2023-39361
+- cacti-weathermap-file-write
+- CVE-2022-46169
+- CVE-2021-26247
+- CVE-2020-8813
+- cacti-panel
+FIT2CLOUD-MeterSphere:
+- CVE-2023-25573
+- metersphere-plugin-rce
+- CVE-2022-23544
+OpenAM:
+- openam-panel
+- CVE-2021-35464
+- CVE-2021-29156
+NextGen-Mirth-Connect:
+- CVE-2023-37679
+IceWarp-WebClient:
+- icewarp-webclient-rce
+Apache-APISIX:
+- CVE-2022-24112
+- CVE-2020-13945
+- CVE-2021-45232
+- apache-apisix-panel
+- apisix-default-login
+ManageEngine-Applications-Manager:
+- CVE-2018-12998
+Dell-Remote-Access-Controller:
+- CVE-2018-1207
+Jeecg-Boot:
+- jeecg-boot-ssti-rce
+- jeecg-druid-unauth
+- CVE-2023-1454
+- CVE-2021-37304
+- CVE-2023-33510
+- jeecg-boot-swagger
+- CVE-2021-37305
+- CVE-2023-34659
+- jeecg-boot-unauth
+Spring-Cloud-Netflix:
+- CVE-2021-22053
+天融信-上网行为管理系统:
+- topsec-topacm-rce
+HD-Network-Real-time-Monitoring-System:
+- CVE-2021-45043
+D-Link:
+- CVE-2019-17506
+- CVE-2021-27250
+- CVE-2019-16920
+- dlink-850l-password-leak
+- dlink-default-password
+- CVE-2020-25078
+- CVE-2020-9376
+OpenVPN-Monitor:
+- openvpn-monitor-disclosure
+TOTOLINK:
+- CVE-2023-46574
+- CVE-2022-25084
+Home-Assistant:
+- CVE-2023-27482
+Zimbra:
+- CVE-2022-37042
+Yonyou-GRP-U8:
+- yonyou-grp-u8-upload-file-data
+- seeyon-wooyun-2015-148227
+- yonyou-grp-u8-app-proxy-uploadfile
+- yonyou-grp-u8-obr_zdybxd_check-sqli
+- yonyou-grp-u8-uploadfiledata
+- yonyou-grp-u8-slbmbygr-sqi
+- yonyou-grp-u8-sqli-to-rce
+- yonyou-grp-u8-selectdmje-sqli
+- yonyou-u8-oa-sqli
+- yonyou-grp-u8-license-check-sqli
+- yonyou-grp-u8-sqli
+- CNNVD-201610-923
+- yonyou-grp-u8-bx_historyDataChecks-sqli
+- yongyou-grp-u8-smartupload01-fileupload
+Supershell:
+- supershell-default-login
+PRTG-Network-Monitor:
+- CVE-2020-11547
+- prtg-default-login
+- unauthenticated-prtg
+FUDforum:
+- CVE-2021-27520
+Craft-CMS:
+- CVE-2020-9757
+- CVE-2023-41892
+- CVE-2021-41749
+ATLASSIAN-Confluence:
+- CVE-2023-22518
+- CVE-2018-5230
+- CVE-2015-8399
+- servicedesk-login-panel
+- confluence-ssrf-sharelinks
+- confluence-dashboard
+- CVE-2022-26134
+- confluence-oauth-admin
+- CVE-2019-3398
+- CVE-2022-26138
+- CVE-2019-3396
+- CVE-2023-22515
+- jira-servicedesk-signup
+- CVE-2021-26085
+- CVE-2021-26084
+FDCMS:
+- fdcms-anyfilewrite
+Hortonworks-SmartSense-Tool:
+- smartsense-default-login
+用友-FE协作办公平台:
+- yonyou-fe-directory-traversal
+FlatPress:
+- CVE-2023-0947
+若依-管理系统:
+- ruoyi-shiro-default-key-cbc
+- ruoyi-shiro-default-key-gcm
+- ruoyi-druid-unauth
+Zkeco:
+- CNVD-2020-57264
+Osclass:
+- CVE-2014-6308
+Citrix-ShareFile:
+- CVE-2020-8982
+金和OA:
+- jinher-oa-c6-download-file-read
+- jinher-oa-fileuploadmessage-fileread
+- jinher-oa-default-login
+- jinher-oa-saveasotherformatservlet-upload
+- jinher-oa-c6-fileuploadmessage-fileread
+Adobe-Experience-Manager:
+- aem-offloading-browser
+- aem-crx-search
+- aem-bg-servlet
+- aem-setpreferences-xss
+- aem-default-login
+- aem-custom-script
+- aem-dump-contentnode
+- aem-sling-userinfo
+- aem-acs-common
+- aem-userinfo-servlet
+- aem-gql-servlet
+- aem-disk-usage
+- aem-crx-bypass
+- CVE-2019-8086
+- aem-querybuilder-internal-path-read
+- aem-crx-browser
+- aem-external-link-checker
+- CVE-2016-0957
+- aem-childrenlist-xss
+- aem-osgi-bundles
+- aem-bulkeditor
+- aem-cached-pages
+- aem-merge-metadata-servlet
+- aem-sling-login
+- aem-querybuilder-feed-servlet
+- aem-wcm-suggestions-servlet
+- aem-hash-querybuilder
+- adobe-experience-manager-login
+- aem-crx-package-manager
+- aem-debugging-libraries
+- aem-groovyconsole
+- aem-felix-console
+- aem-login-status
+- aem-jcr-querybuilder
+- aem-querybuilder-json-servlet
+- aem-crx-namespace
+- aem-misc-admin
+- aem-default-get-servlet
+- aem-explorer-nodetypes
+- aem-security-users
+- aem-xss-childlist-selector
+pyLoad:
+- pyload-default-login
+- CVE-2023-0297
+Lighttpd:
+- default-lighttpd-page
+- CVE-2014-2323
+EasyCVR:
+- easycvr-userlist-info-disclosure
+MOFI4500:
+- mofi4500-default-login
+- mofi4500-default-password
+Apache storm:
+- CNVD-2021-46825
+- storm-unauthorized-access
+SugarCRM:
+- sugarcrm-panel
+- CVE-2018-5715
+- CVE-2019-14974
+D-Link-DNS-ShareCenter:
+- dlink-sharecenter-dns-320-rce
+TimeKeeper:
+- timekeeper-default-login
+- CVE-2023-31465
+ThinkPHP:
+- thinkphp-50-rce
+- thinkphp-v6-file-write
+- CVE-2022-47945
+- thinkphp-501-rce
+- thinkphp-5022-rce
+- thinkphp-5-0-23-index-php-method-rce
+- thinkphp-5010-rce
+- thinkphp-30-rce
+- thinkphp-5023-rce
+- CNVD-2022-86535
+- thinkphp5-controller-rce
+- thinkphp-lang-rce
+- thinkphp-509-information-disclosure
+- thinkphp-5022-5129-rce
+- thinkphp6-lang-lfi
+- thinkphp-2-rce
+- CVE-2022-33107
+- thinkphp-3-0-log-rce
+- CVE-2022-25481
+- thinkphp-50x-arbitrary-file-read
+Apache Guacamole:
+- guacamole-default-login
+D-Link-DAR-8000:
+- dlink-dar-8000-rce
+OpenCart:
+- opencart-panel
+- CVE-2018-11231
+Centos Web Panel:
+- CVE-2022-44877
+Symmetricom-SyncServer:
+- CVE-2022-40022
+Tosei-自助洗衣机:
+- tosei-washing-machine-network-test-rce
+Suprema-BioStar:
+- CVE-2020-15050
+Rosariosis:
+- CVE-2021-44427
+Nexus Repository Manager:
+- CVE-2020-10199
+- CVE-2020-10204
+- CVE-2019-7238
+- nexus-default-password
+SmartOA:
+- smartoa-emaildownload-file-read
+Advantech-WebAccess:
+- advantech-webaccess-default-login
+Etherpad-Lite:
+- CVE-2018-9845
+- unauth-etherpad
+泛微-E-message:
+- weaver-e-message-decorator-file-read
+VMware-vCenter:
+- vmware-vcenter-log4j-jndi-rce
+- vmware-vcenter-lfi-linux
+- vmware-vcenter-lfi
+- vmware-vcenter-ssrf
+Apache Cocoon:
+- CVE-2020-11991
+博华网龙防火墙:
+- bohuawanglong-users-xml-password-leak
+- bohuawanglong-cmd-php-rce
+- bohuangwanglong-cmd-php-rce
+齐博-CMS:
+- qibocms-sqli
+- qibo-cms-job-file-read
+- qibocms-file-download
+Supervisor:
+- CVE-2017-11610
+Smanga:
+- smanga-rce
+Sangfor SSLVPN:
+- sangfor-sslvpn-rce
+BrightSign-Digital-Signage-Diagnostic-Web-Server:
+- brightsign-dsdws-ssrf
+uDraw:
+- CVE-2022-0656
+Eclipse-Jetty:
+- default-jetty-page
+- CVE-2021-28164
+- jetty-showcontexts-enable
+- CVE-2021-34429
+- CVE-2015-2080
+- CVE-2021-28169
+Devaldi-FlexPaper:
+- CVE-2018-11686
+Apache-Flink:
+- CVE-2020-17519
+- apache-flink-unauth-rce
+- CVE-2020-17518
+IP网络对讲广播系统:
+- ip-network-intercom-broadcasting-ping-rce
+iSpy-Server:
+- CVE-2022-29775
+天问物业ERP:
+- tianwenwuye-erp-uploadfile-aspx-anyfile-upload
+GitList:
+- CVE-2018-1000533
+- gitlist-disclosure
+feifeicms:
+- feifeicms-lfr
+云时空社会化商业ERP:
+- yunshikong-erp-sql-injection
+Webmin:
+- webmin-default-login
+- webmin-panel
+- CVE-2019-15107
+- CVE-2022-0824
+- CVE-2022-36446
+- CVE-2019-15642
+Total.js:
+- CVE-2019-8903
+MAIPU-ISG1000 security gateway:
+- CNVD-2021-43984
+蓝凌EIS智慧协同平台:
+- landray-eis-saveimg-fileupload
+TEAMPASS:
+- CVE-2020-12478
+Auerswald:
+- CVE-2021-40859
+- CVE-2021-40856
+RocketChat:
+- unauth-message-read
+- CVE-2021-22911
+- CVE-2020-28208
+LiveBOS:
+- livebos-file-read
+dahua-视频监控:
+- CVE-2017-7925
+- CVE-2021-33044
+ArcGIS:
+- arcgis-rest-service-directory-traversal
+X-UI:
+- xui-weak-login
+金盘-微信管理平台:
+- jinpan-weichatcfg-disclosure
+- jp-wechatmanager-unauth
+74CMS:
+- 74cms-sqli-2
+- 74cms-sqli-1
+- CVE-2020-22210
+- 74cms-ajax-personal-controller-class-php-sqlinject
+- CVE-2020-22209
+- CVE-2020-22211
+- CVE-2020-22208
+Aspera-Faspex:
+- CVE-2022-47986
+TYPO3:
+- typo3-debug-mode
+- typo3-composer
+Fortinet-product:
+- CVE-2021-3378
+- fortimail-panel
+- CVE-2016-3978
+- fortios-management-panel
+- fortiweb-panel
+- CVE-2022-40684
+- fortios-panel
+- fortitester-login-panel
+- CVE-2017-14186
+- CVE-2021-43062
+- api-fortitoken-cloud
+- fortinet-fortigate-panel
+- fortiap-panel
+- fortiadc-panel
+- CVE-2018-13380
+- CVE-2018-13379
+- fortinet-panel
+NETGEAR-公司产品:
+- CVE-2016-5649
+- CVE-2017-5521
+- CVE-2021-20167
+- netgear-version-detect
+- netgear-router-auth-bypass
+- netgear-wac124-router-auth-bypass
+- CVE-2016-6277
+- CVE-2020-27866
+- netgear-router-exposure
+- CVE-2016-1555
+- CVE-2020-26919
+- CVE-2022-29383
+万户网络ezEIP:
+- ezeip-info-leakage
+迈普安全网关:
+- h3c-mpsec-isg1000-file-read
+Ampache:
+- ampache-update-exposure
+- ampache-debug
+- ampache-panel
+- ampache-music-installer
+NETGEAR-WNDR3400v3:
+- CVE-2017-5521
+MicroStrategy-Server:
+- CVE-2018-18777
+- CVE-2019-18957
+- microstrategy-ssrf
+- CVE-2018-18775
+- CVE-2020-11450
+Consul-HashiCorp:
+- hashicorp-consul-rce
+- hashicorp-boundary-detect
+- consul-rexec-rce
+- CVE-2022-29153
+- hashicorp-vault-detect
+- consul-service-rce
+- nomad-jobs
+ZOHO-流量管理:
+- CVE-2018-12998
+Laravel-Framework:
+- laravel-log-file
+- laravel-filemanager-lfi
+- laravel-debug-enabled
+- laravel-debug-error
+- CVE-2022-40734
+- laravel-debug-infoleak
+- CVE-2017-16894
+- laravel-telescope
+- laravel-filemanager
+- laravel-env
+- laravel-ignition-xss
+- CVE-2021-3129
+SAP-Web-App-Server:
+- sap-netweaver-portal
+- CVE-2017-12637
+- sap-netweaver-webgui
+- sap-hana-xsengine-panel
+- hmc-hybris-panel
+- sapfiori-panel
+- sap-netweaver-detect
+- fiori-launchpad
+- CVE-2018-2392
+- omni-commerce-connect-detect
+- sap-successfactors-detect
+- CVE-2020-6207
+- sap-netweaver-info-leak
+- CVE-2022-22536
+- sap-web-dispatcher-admin-portal
+- sap-web-dispatcher
+- sap-cloud-analytics
+- sap-router-info-leak
+- CVE-2020-6287
+- sap-directory-listing
+- sap-router
+- sap-igs-detect
+- sap-spartacus-detect
+- CVE-2020-6308
+- CVE-2021-42063
+- CVE-2016-2389
+- sap-redirect
+weiphp:
+- weiphp-path-traversal
+- weiphp-sql
+- weiphp3-sessionid-fileupload
+- CNVD-2020-68596
+- CNVD-2021-09693
+- CVE-2020-20300
+- weiphp-panel
+Alumni-Management-System:
+- alumni-management-sqli
+Apache Tomcat:
+- CVE-2018-11759
+- CVE-2020-1938
+- CVE-2017-12615
+- tomcat-examples-login
+- tomcat-default-login
+Palo-Alto-Network:
+- panos-default-login
+- CVE-2017-15944
+- CVE-2018-10141
+- globalprotect-panel
+- CVE-2020-2036
+SMARTBI:
+- smartbi-address-auth-bypass
+- smartbi-deserialization
+- smartbi-windowunloading-other
+- smartbi-default-login
+- smartbi-default-user-weakpass
+- smartbi-smartbi-bi-readfile
+- smartbi-db2-biconfigservice-rce
+- smartbi-unauthenticated-sqli
+OpenShift:
+- openshift-log4j-rce
+Geutebruck:
+- CVE-2021-33544
+VMware vRealize Operations Manager:
+- CVE-2023-20887
+- CVE-2021-21975
+- vrealize-operations-log4j-rce
+SonicWall-GMS:
+- CVE-2023-34124
+图创软件-图书馆站群管理系统:
+- interlib-fileread
+Responsive-Filemanager:
+- CVE-2018-14728
+- CVE-2018-15535
+GoAnywhere-Web-Client:
+- CVE-2023-0669
+- goanywhere-mft-login
+- goanywhere-mft-log4j-rce
+- go-anywhere-client
+Zyxel-ATP500:
+- CVE-2022-30525
+Mailman:
+- gnu-mailman
+Yonyou-FE协作办公平台:
+- yonyou-fe-templateoftaohong-manager-path-traversal
+NexusDB:
+- CVE-2020-24571
+Ruckus Wireless:
+- CVE-2023-25717
+Apollo:
+- apollo-default-login
+Drupal:
+- drupal-user-enum-redirect
+- drupal-install
+- CVE-2019-6340
+- drupal-user-enum-ajax
+- CVE-2018-9205
+- drupal-avatar-xss
+- CVE-2018-7602
+- CVE-2014-3704
+- drupal-jsonapi-user-listing
+- drupal-login
+- CVE-2018-7600
+Jeecg:
+- jeecg-druid-unauth
+- jeecg-jeecgFormDemoController-fileupload
+Symfony:
+- symfony-properties-ini
+- symfony-debug
+- symfony-fosjrouting-bundle
+- symfony-security
+- symfony-database-config
+- CVE-2015-4050
+- symfony-profiler
+- default-symfony-page
+- symfony-security-config
+Cls-Login:
+- csl-login-unauth-db-leak
+Sapido-router:
+- CNVD-2021-32085
+- sapido-router-rce
+SonicWall-SSLVPN:
+- sonicwall-ssl-vpn-rce
+Aria2-WebUI:
+- CVE-2023-39141
+DVWA:
+- dvwa-default-login
+HFS (HTTP File Server):
+- hfs-rce
+Yii-Framework:
+- yii-debugger
+- CVE-2020-15148
+Hadoop-Hue:
+- hue-default-credential
+TDXK-通达OA:
+- tongda-auth-bypass
+- tongda-meeting-unauth
+- tongda-login-code-authbypass
+- tongda-path-traversal
+- tongda-contact-list-exposure
+- tongda-video-file-read
+- tongda-session-disclosure
+- tongda-api-file-upload
+- tongda-report-func-sqli
+- tongda-action-uploadfile
+- tongda-arbitrary-login
+- tongda-insert-sqli
+- tongda-getway-rfi
+- tongda-getdata-rce
+- tongda-oa-action-crawler-fileupload
+- tongda-oa-swfupload-sqli
+JEECMS:
+- jeecms-flowstatistic-log4j2
+WSO2-API-Manager:
+- CVE-2020-24589
+ECShop:
+- CNVD-2020-58823
+- ecshop-2x-sql-inject
+- CVE-2021-41460
+- ecshop-rce
+- ecshop-cnvd-2020-58823-sqli
+- ecshop-collection-list-sqli
+APACHE-Airflow:
+- airflow-debug
+- CVE-2020-11981
+- airflow-configuration-exposure
+- unauthenticated-airflow
+- CVE-2021-38540
+- CVE-2020-11978
+- CVE-2022-24288
+- airflow-panel
+- CVE-2022-40127
+- CVE-2020-13927
+- CVE-2020-17526
+- airflow-default-login
+Ruby-on-Rails:
+- CVE-2019-5418
+- CVE-2018-3760
+- CVE-2015-3224
+- CVE-2020-8163
+ServiceNow:
+- servicenow-widget-misconfig
+BIG-IP:
+- CVE-2022-1388
+- CVE-2021-22986
+- CVE-2020-5902
+EyesOfNetwork:
+- CVE-2020-8654
+用友-GRP-U8:
+- yonyou-u8-grp-selectdmje-sqli
+- yonyou-u8-grp-slbmbygr-sqli
+- grp-u8-uploadfiledata-fileupload
+- yonyou-u8-sqli
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- yonyou-grp-u8-xxe
+- yonyou-erp-u8-uploadfiledata-arbitrary-file-upload
+- yonyou-nc-bshservlet-full-check
+锐捷网络-EWEB网管系统:
+- CNVD-2021-09650
+FineCMS:
+- CVE-2017-11629
+- finecms-sqli
+- CVE-2017-11586
+HIKVISION-视频编码设备接入网关:
+- hikvision-showfile-file-read
+- hikvision-gateway-data-file-read
+Mida-eFramework:
+- mida-eframework-xss
+- CVE-2020-15920
+Watchguard Fireware:
+- watchguard-credentials-disclosure
+Apache Skywalking:
+- CVE-2020-9483
+VMware vCenter:
+- vmware-vcenter-arbitrary-file-read
+- vmware-vcenter-7-arbitrary-file-read
+- CVE-2021-21985
+- CVE-2021-21972
+OpenCPU:
+- opencpu-rce
+GilaCMS:
+- CVE-2020-5515
+SangFor-Firewall:
+- sangfor-ngaf-login-rce
+- sangfor-ngaf-lfi
+Jboss:
+- jmx-default-password
+- jboss-default-password
+- CVE-2017-7504
+- jmx-default-login
+- CVE-2017-12149
+- jboss-jbpm-default-login
+- CVE-2017-7501
+- CVE-2010-1871
+中新金盾-信息安全管理系统:
+- cnzxsoft-default-login
+金盘-移动图书馆系统:
+- jp-ydtsgxt-filedownload
+UTT艾泰安全网络管理系统:
+- utt-default-password
+Draytek-VigorConnect:
+- CVE-2021-20123
+- CVE-2021-20124
+PaperCut:
+- CVE-2023-27350
+- CVE-2023-39143
+- CVE-2023-4568
+- papercut-log4j-rce
+phpCollab:
+- phpcollab-panel
+- CVE-2017-6090
+ZOHO-ManageEngine-Desktop:
+- CVE-2021-44515
+- CVE-2022-23779
+- manage-engine-dc-log4j-rce
+- CVE-2018-12998
+Cisco-Unified-Communications:
+- cisco-unified-communications-log4j
+- cucm-username-enumeration
+Django:
+- django-admin-panel
+- CVE-2020-9402
+- django-debug-exposure
+- django-variables-exposed
+- CVE-2017-12794
+- django-debug-detect
+- CVE-2018-14574
+- default-django-page
+- django-secret-key
+蜂网企业流控云路由器:
+- CVE-2019-16313
+mini_httpd:
+- CVE-2018-18778
+Umbraco:
+- umbraco-base-ssrf
+- umbraco-login
+- umbraco-installer
+- CVE-2015-8813
+Zyxel:
+- CVE-2022-0342
+Zyxel-ATP100:
+- CVE-2022-30525
+NSFOCUS-UTS综合威胁探针:
+- lvmeng-uts-disclosure
+- nsfocus-uts-password-leak
+Elasticsearch:
+- CVE-2015-3337
+- elasticsearch
+- elasticsearch5-log4j-rce
+- elasticsearch-default-login
+- CVE-2014-3120
+- CVE-2021-22145
+- elasticsearch-sql-client-detect
+- CVE-2015-5531
+- CVE-2015-1427
+D-Link D-View8:
+- CVE-2023-5074
+Apache-Kafka-Center:
+- kafka-center-default-login
+- kafka-manager-unauth
+Dahua ICC:
+- dahua-icc-login-bypass
+- dahua-icc-readpic-fileread
+皓峰防火墙:
+- haofeng-firewall-setdomain-unauth
+ZABBIX-监控系统:
+- CVE-2022-23131
+- zabbix-default-login
+- CVE-2022-26148
+- CVE-2016-10134
+- zabbix-dashboards-access
+- CVE-2019-17382
+- zabbix-server-login
+- zabbix-error
+- CVE-2022-23134
+ClamAV:
+- clamav-unauth
+XWiki:
+- CVE-2023-37462
+PrestaShop:
+- prestashop-installer
+- CVE-2020-26248
+- CVE-2023-30150
+- CVE-2023-39677
+- prestashop-apmarketplace-sqli
+- CVE-2023-39676
+- CVE-2021-37538
+- CVE-2021-3110
+- CVE-2021-36748
+- CVE-2023-27034
+- CVE-2022-22897
+Apache Spark:
+- spark-api-unauth
+- spark-webui-unauth
+HUAWEI-HG532e:
+- huawei-hg532e-default-login
+- huawei-HG532e-default-router-login
+Sonicwall-NSM:
+- sonicwall-nsm-log4j-rce
+Avaya-Aura-Utility-Server:
+- avaya-aura-xss
+- avaya-aura-rce
+碧海威-L7云路由:
+- bithighway-default-login
+SuperSign-EZ:
+- CVE-2018-16288
+科达-MTS转码服务器:
+- kedacom-mts-file-read
+NETGEAR-R7100LG:
+- CVE-2017-5521
+蜂网互联企业级路由器:
+- CVE-2019-16313
+OpenWrt:
+- openwrt-default-login
+MSNSwitch-Firmware:
+- CVE-2022-32429
+LIN-CMS:
+- CVE-2022-32430
+FatWire-Content-Server:
+- oracle-fatwire-lfi
+一米OA:
+- yimi-oa-getfile-file-read
+Monitorr:
+- CVE-2020-28871
+NetSUS-Server:
+- netsus-default-login
+Void-Aural-Rec-Monitor:
+- CVE-2021-25899
+Apache NiFi:
+- nifi-unauth
+- nifi-api-unauthorized-access
+Typecho:
+- typecho-rce
+HIKVISION-综合安防管理平台:
+- hikvision-isecure-center-fastjson-basicdatasource-rce
+- hikvision-isecure-center-files-fileread
+- hikvision-isecure-center-report-upload
+- hikivision-env
+- hikvision-isecure-center-upload
+- hikvision-fastjson-rce
+HuaWei-Router:
+- huawei-router-auth-bypass
+AeroCMS:
+- aerocms-sqli
+紫光档案管理系统:
+- CNVD-2021-41638
+- max-test-command-executor-rce
+H3C SecPath 运维审计系统:
+- h3csecparh-unauthorized-login
+Zarafa-WebApp:
+- CVE-2019-7219
+ZStack:
+- zstack-swaggerui-unauth
+WAYOS-AC集中管理平台:
+- ac-weak-login
+Yonyou-UFIDA-NC:
+- CNVD-2021-30167
+- yonyou-nc-oacontactsfuzzysearchservlet-rce
+- yonyou-nc-icustomerexporttocrmservice-sqli
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- yonyou-nc-monitorservlet-rce
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-jiuqiclientreqdispatch-rce
+- yonyou-nc-info-leak
+- yonyou-nc-api-disclosure
+- yonyou-nc-accept-fileupload
+Panabit智能网关:
+- panabit-gateway-default-password
+- panabit-syaddmount-command-exec
+Apache Airflow:
+- airflow-unauth
+- CVE-2020-17526
+Mitel:
+- CVE-2020-11798
+E-Learning:
+- CVE-2021-3239
+- e-learning-system-authentication-bypass-rce
+DolphinScheduler:
+- dolphinscheduler-default-login
+Juniper Device Manager:
+- CVE-2022-22242
+Ruijie-下一代防火墙:
+- ruijie-excu-shell
+splunk-日志分析:
+- splunk-login
+- splunk-enterprise-panel
+- splunk-enterprise-log4j-rce
+- CVE-2018-11409
+SOPlanning:
+- CVE-2014-8676
+Alerta:
+- CVE-2020-26214
+Hikvision-iVMS:
+- hikvision-ivms-token-bypass-arbitrary-file-upload
+- hikvision-ivms-file-upload-rce
+- hikvision-ivms8700-getpic-fileupload
+Kafdrop:
+- exposed-kafdrop
+- kafdrop-xss
+安恒明御运维审计与风险控制系统:
+- dbappsecurity-mingyu-xmlrpc-sock-adduser
+网康科技·互联网控制网关:
+- netentsec-ngfw-rce
+- netentsec-ns-asg-rce
+- ns-asg-file-read
+- ns-icg-default-password
+- qi-anxin-netkang-next-generation-firewall-rce
+Dapr-Dashboard:
+- CVE-2022-38817
+MySqlDumper:
+- CVE-2012-4253
+AVCON6:
+- avcon6-download.action-download-file-read
+- avcon6-org-execl-file-download
+- avcon6-execl-lfi
+- avcon6-lfi
+M7S:
+- m7s-download-fileread
+Laravel:
+- CVE-2021-3129
+- laravel-improper-webdir
+- CVE-2022-40734R
+- CVE-2017-16894
+Dataiku:
+- dataiku-default-login
+新开普:
+- xinkaipu-fastjson-rce
+HJSoft-HCM:
+- CNVD-2023-08743
+- hjsoft-hcm-loadhistroyorgtree-sqli
+- hjhost-hcm-get-org-tree-sqli
+AppServ:
+- CVE-2008-2398
+VMware-Identity-Manager:
+- CVE-2022-22972
+- CVE-2022-31656
+AMCREST-camera:
+- CVE-2019-3948
+- CVE-2017-8229
+WebPageTest:
+- webpagetest-ssrf
+mobileiron-security-platform:
+- mobileiron-log4j-jndi-rce
+- CVE-2020-15505
+jeewms:
+- jeewms-lfi
+- CNVD-2020-61972
+OpTergy-product:
+- CVE-2019-7275
+Zeroshell-Firewall:
+- CVE-2019-12725
+- zeroshell-login
+- CVE-2009-0545
+AVTECH-Video Monitoring:
+- avtech-dvr-exposure
+- avtech-auth-bypass
+- avtech-dvr-ssrf
+- avtech-verification-bypass
+- avtech-password-disclosure
+- avtech-unauth-file-download
+中科网威防火墙:
+- netpower-download-php-file-read
+- firewall-password-leak
+- netpower-fireWall-npfw-commands-polling-file-read
+深信服公司-产品:
+- sangfor-ngaf-login-rce
+HORDE- Mail System:
+- horde-webmail-login
+- CVE-2009-0932
+- CVE-2005-3344
+- horde-login-panel
+Gophish:
+- gophish-default-login
+PowerCreator-CMS:
+- powercreator-cms-rce
+- powercreator-arbitrary-file-upload
+YAPI:
+- yapi-rce
+Alibaba-Sentinel:
+- CVE-2021-44139
+DASAN-路由器:
+- CVE-2018-10562
+网康科技-下一代防火墙:
+- netentsec-fiewall-heartbeat-php-rce
+- qi-anxin-netkang-next-generation-firewall-rce
+DataTaker:
+- CVE-2017-11165
+Microsoft-Exchange:
+- CVE-2021-31195
+- CVE-2021-34473
+- microsoft-exchange-panel
+- CVE-2021-26855
+- CVE-2021-41349
+- CVE-2022-41040
+Ametys-CMS:
+- CVE-2022-26159
+TopApp-LB-负载均衡系统:
+- topsec-topapplb-auth-bypass
+bloofoxCMS:
+- CVE-2023-34751
+- CVE-2023-34756
+- CVE-2023-34755
+- CVE-2023-34752
+- bloofoxcms-default-login
+- CVE-2023-34753
+ChatGPT-Web:
+- chatgpt-web-unauth
+DoorGets-CMS:
+- doorgets-info-disclosure
+Bifrost:
+- bifrost-user-update-authbypass
+F5-BIGIP:
+- CVE-2022-1388
+- CVE-2020-5902
+- CVE-2023-46747
+- bigip-config-utility-detect
+- bigip-rest-panel
+- CVE-2021-22986
+EGROUPWARE-产品:
+- egroupware-rce
+Uniview-ISC:
+- uniview-isc-logreport-php-rce
+汉得SRM:
+- hand-china-srm-tomcat-jsp-login-bypass
+向日葵:
+- CNVD-2022-03672
+Mi-router:
+- CVE-2019-18371
+- xiaomi-wireless-router-login
+Beward- camera:
+- beward-ipcamera-disclosure
+APACHE-Skywalking:
+- CVE-2020-9483
+Nginx:
+- nginx-auto-installer
+- nginx-config
+- nginx-vhost-traffic-status
+- nginx-module-vts-xss
+- unauthenticated-nginx-dashboard
+- git-config-nginxoffbyslash
+- nginx-merge-slashes-path-traversal
+noVNC:
+- CVE-2021-3654
+宏景eHR人力资源信息管理系统:
+- CNVD-2023-08743
+Intel-AMT:
+- CVE-2017-5689
+Datang AC:
+- datang-ac-default-password
+若依管理系统:
+- CNVD-2021-01931
+- ruoyi-druid-unauth
+新开普-前置服务管理平台:
+- newcapec-deleteFile-anyfile-delete
+- newcapec-service-action-rce
+Kettle:
+- kettle-default-login
+FAUST-iServer:
+- CVE-2021-34805
+NPS:
+- nps-auth-bypass
+- nps-default-login
+TRENDnet-TEW-827DRU:
+- CVE-2021-20158
+- CVE-2021-20150
+ipTIME-Router:
+- iptime-default-login
+Parallels H-Sphere:
+- CVE-2008-6465
+vBulletin:
+- CVE-2019-16759
+- CVE-2020-17496
+- CVE-2018-6200
+- CVE-2016-6195
+- CVE-2023-25135
+- CVE-2020-12720
+Java:
+- CVE-2021-44228
+SolarView-Compact:
+- CVE-2022-29299
+- CVE-2022-29298
+- CVE-2022-40881
+- CVE-2023-23333
+- CVE-2022-29301
+- CVE-2022-29303
+- solarview-compact-xss
+- CVE-2022-31373
+- CVE-2023-29919
+Apache-Cocoon:
+- CVE-2020-11991
+锐捷-NBR路由器:
+- ruijie-nbr1300g-cli-password-leak
+- CNVD-2021-09650
+- ruijie-nbr-fileupload
+孚盟云 CRM:
+- CNVD-2021-25330
+Group_Office-公司产品:
+- groupoffice-lfi
+APACHE-Guacamole:
+- guacamole-default-login
+西迪特-Wi-Fi-Web管理:
+- xidite-wifi-web-cookie-bypass
+Moodle:
+- moodle-filter-jmol-xss
+- CVE-2021-26812
+- CVE-2023-30943
+- moodle-xss
+- moodle-installer
+- moodle-filter-jmol-lfi
+- moodle-changelog
+DbGate:
+- dbgate-unauth-rce
+Dolibarr:
+- dolibarr-panel
+- CVE-2018-10095
+- CVE-2012-1226
+- CVE-2023-33568
+冰峰网络 iceflow:
+- iceflow-vpn-information-leakage
+ManageEngine-ADSelfService:
+- CVE-2021-40539
+- CVE-2018-12998
+eyoucms:
+- CVE-2021-39501
+广联达OA:
+- glodon-linkworks-getimdirectionary-sqli
+- glodon-linkworks-Getuserbyusercode-sqli
+- glodon-linkworks-Service.asmx-disclosure
+ASPCMS:
+- aspcms-commentlist-sql-injection
+- aspcms-commentlist-sqli
+- aspcms-backend-leak
+Landray-EIS智慧协同平台:
+- landary-eis-saveimg-fileupload
+Emqx:
+- emqx-default-login
+- emq-default-password
+Sophos-Web-Appliance:
+- CVE-2023-1671
+Apache Solr:
+- CVE-2019-17558
+- CVE-2019-0193
+- apache-solr-remotestreaming-anyfileread
+- solr-log4j-rce
+- CVE-2017-12629
+- solr-velocity-template-rce
+- solr-file-read
+- solr-admin-query
+- CVE-2021-27905
+Minio Browser:
+- minio-default-password
+- CVE-2023-28432
+- CVE-2021-21287
+D-link-850L:
+- dlink-850L-info-leak
+天融信上网行为管理:
+- topsec-topacm-rce
+Pfsense- product:
+- CVE-2021-41282
+- CVE-2022-31814
+FineReport-V8:
+- CNVD-2018-04757
+Whitton - E-Dip VPN:
+- socks5-vpn-config
+Artica-Web-Proxy:
+- CVE-2020-13158
+- CVE-2020-8497
+- CVE-2022-37153
+- CVE-2020-17506
+- CVE-2020-17505
+TIBCO-Jaspersoft:
+- CVE-2018-18809
+EDUSOHO - Open source network classroom:
+- edusoho-education-open-fileread
+Wavlink:
+- CVE-2020-12127
+- CVE-2022-34049
+- CVE-2022-30489
+- CVE-2022-31846
+- CVE-2022-34045
+- CVE-2022-34576
+- CVE-2022-31847
+- CVE-2020-13117
+- CVE-2022-2488
+- CVE-2022-34047
+- CVE-2022-2486
+- CVE-2022-34046
+- CVE-2022-31845
+- unauth-wavink-panel
+- CVE-2022-2487
+- CVE-2022-34048
+- CVE-2020-10973
+General-Poc-Log4j2:
+- CVE-2021-45046
+- CVE-2021-44228
+Inspur-ClusterEngine:
+- inspur-clusterengine-rce
+- inspur-clusterengine-default-login
+- CVE-2020-21224
+CISCO-UCM:
+- CVE-2011-3315
+- CVE-2013-5528
+HIKVISION-视频监控:
+- hikvision-rce-cve-2021-36260
+- CVE-2021-36260
+- CVE-2017-7921
+- hikvision-info-leak
+大华智慧园区管理系统:
+- dahua-smart-park-deleteftp-rce
+- dahua-smart-park-download-fileread
+- CVE-2023-3836
+- dahua-smart-park-getfacecapture-sqli
+- CVE-2023-3121
+- dahua-smart-park-poi-upload
+- CVD-2023-1870
+- dahua-smart-park-ipms-rce
+- dahua-user-getuserinfobyusername-getpassword
+- dahua-smart-park-video-upload
+POS-Codekop:
+- CVE-2023-36346
+RocketMQ:
+- CVE-2023-37582
+- rocketmq-broker-unauth
+- apache-rocketmq-broker-unauth
+- CVE-2023-33246
+JeecgBoot:
+- CVE-2023-1454
+- CVE-2021-37305
+- CVE-2021-37304
+HBase:
+- apache-hbase-unauth
+Hospital-Management-System:
+- CVE-2022-38637
+- CVE-2020-5192
+- CVE-2020-5191
+- hospital-management-xss
+- CVE-2022-34590
+- hospital-management-xss2
+- CVE-2022-32094
+MantisBT:
+- mantisbt-default-credential
+- CVE-2017-7615
+- mantisbt-panel
+MLflow:
+- CVE-2023-1177
+- CVE-2023-3765
+BSPHP:
+- bsphp-nauthorized-access
+- bsphp-info
+MiCollab:
+- CVE-2020-11798
+OpenERP:
+- openerp-default-password
+Apache ShenYu:
+- apache-shenyu-unauth-adduser
+- CVE-2021-37580
+- CVE-2022-23944
+Coremail:
+- coremail-username-enumeration
+- CNVD-2019-16798
+EuroTel-ETL3100:
+- etl3100-default-login
+APACHE-Unomi:
+- CVE-2020-13942
+Grafana:
+- grafana-file-read
+- CVE-2022-26148
+- CVE-2021-43798
+- CVE-2020-13379
+- grafana-default-password
+Monstra-CMS:
+- CVE-2018-16979
+- CVE-2020-23697
+- CVE-2018-11473
+- CVE-2018-11227
+腾达路由器:
+- tenda-11n-cookie-unauth-access
+- tenda-w15e-routercfm-cfg-config-leak
+phpLDAPadmin:
+- phpldapadmin-xss
+MessageSolution:
+- CNVD-2021-10543
+FortiPortal:
+- fortiportal-log4j-rce
+APACHE-Storm:
+- apache-storm-unauth
+TeslaMate:
+- teslamate-unauth-access
+PulseSecure-SSL-VPN:
+- CVE-2019-11510
+CISCO-vManage:
+- cisco-vmanage-log4j
+天融信防火墙:
+- topsec-maincgi-cookie-rce
+GoAhead:
+- goahead-detected
+- CVE-2017-17562
+IPython-Notebook:
+- jupyter-ipython-unauth
+ZyXEL-NBG2105:
+- CVE-2021-3297
+Apache-Kafka:
+- unauth-apache-kafka-ui
+DrayTek-Vigor-Router:
+- CVE-2020-8515
+Koha:
+- CVE-2015-4632
+APACHE-ActiveMQ:
+- activemq-path-disclosure
+- CVE-2016-3088
+- activemq-panel
+- CVE-2018-8006
+- activemq-default-login
+- activemq-openwire-transport-detect
+Apache Ranger:
+- ranger-default-login
+泛微-云桥e-Bridge:
+- weaver-ebridge-addtaste-sqli
+- weaver-ebridge-lfi
+CISCO-RV345:
+- CVE-2023-20073
+kkFileView:
+- CVE-2022-29349
+- CVE-2022-40879
+- CVE-2022-35151
+- kkfileview-ssrf
+- CVE-2021-43734
+D-LINK-DIR-816L:
+- CVE-2022-28955
+RedisInsight:
+- unauth-redis-insight
+CraftCMS:
+- CVE-2023-41892
+Node-RED:
+- CVE-2021-3223
+- node-red-ui-base-anyfile-read
+宝塔-Linux控制面板:
+- baota-phpmyadmin-unauth
+Dahua Storm (DVR):
+- CVE-2021-33044
+OpenMediaVault:
+- openmediavault-default-login
+Yealink-CTP18:
+- yealink-default-login
+APACHE-Druid:
+- apache-druid-log4j
+- druid-default-login
+- druid-console-exposure
+- apache-druid-unauth
+- CVE-2021-25646
+- apache-druid-kafka-connect-rce
+- CVE-2021-36749
+Laravel-Filemanager:
+- laravel-filemanager-lfi
+- CVE-2022-40734
+APACHE-Tapestry:
+- CVE-2021-27850
+Wazuh:
+- wazuh-default-login
+Sophos Firewall:
+- sophos-xg115w-firewall-mr-10-authentication
+TELESQUARE-TLR-2005KSH:
+- CVE-2021-45428
+- CVE-2021-46424
+Nacos:
+- nacos-config-server-sql-inject
+- nacos-create-user-unauthorized
+- nacos-actuator-unauth
+- nacos-severidentity-bypass
+- nacos-default-password
+- nacos-token-create-user
+- nacos-secret-default-key-unauth
+- nacos-user-list-unauthorized
+- nacos-jraftserver-deserialization-rce
+NUUO-NVR:
+- nuuo-nvrmini2-rce
+- nuuo-file-inclusion
+EMLOG:
+- CVE-2021-3293
+金蝶云星空:
+- kingdee-scpsupreghandler-upload
+- kingdee-commonfileserver-fileread
+- kindee-scpsupreghandler-fileupload
+- kingdee-fileproxyhandler-fileread
+- kingdee-deserialization-rce
+- kingdee-erp-rce
+Citrix-ADC:
+- CVE-2020-8191
+- CVE-2023-3519
+- CVE-2020-8193
+- CVE-2019-19781
+- CVE-2020-8194
+Oracle-E-Business-Suite:
+- CVE-2022-21587
+- CVE-2022-21500
+- CVE-2018-3167
+- oracle-business-intelligence-password
+Redash-Setup-Configuration:
+- CVE-2021-41192
+- redash-installer
+Avantfax-公司产品:
+- avantfax-panel
+- CVE-2017-18024
+Elastic-HD-Dashboard:
+- elastic-hd-dashboard
+NAGIOS:
+- nagiosxi-default-login
+- CVE-2021-25296
+- CVE-2021-25298
+- CVE-2021-25299
+- nagios-status-page
+- CVE-2021-25297
+- nagios-default-login
+- CVE-2022-29272
+Panabit-Panalog:
+- panabit-log-rce
+- CVD-2023-1718
+- panabit-applist-rce
+- panabit-log-useradd
+VoIPmonitor:
+- CVE-2022-24260
+- CVE-2021-30461
+WSO2-Data-Services-Server:
+- CVE-2017-14651
+SQLiteManager:
+- exposed-sqlite-manager
+WUZHICMS:
+- wuzhicms-sqli
+DELL-EMC:
+- dell-emc-ecom-default-login
+Splash-JS-Render-Service:
+- splash-render-ssrf
+xdcms:
+- xdcms-sqli
+ClickHouse-TCP:
+- clickhouse-unauth
+Apache-Karaf:
+- karaf-default-login
+WD-MyCloud:
+- CVE-2018-17153
+- CVE-2016-10108
+MobSF:
+- mobsf-framework-exposure
+Cisco-ASA:
+- CVE-2018-0296
+LandRay-OA:
+- landray-oa-datajson-rce
+- landray-oa-erp-data-rce
+- landray-oa-treexml-rce
+- landary-oa-sysuicomponent-fileupload
+- landray-oa-sysSearchMain-editParam-rce
+- CNVD-2021-28277
+Sitecore:
+- CVE-2021-42237
+- sitecore-version
+- sitecore-debug-page
+- default-sitecore-page
+- CVE-2023-35813
+ProcessWire-CMS:
+- CVE-2020-27467
+- processwire-installer
+- processwire-login
+宏景HCM:
+- potential-hjsoft-hcm-khfieldtree-sqli
+Zhongdi Digital-Mapgis:
+- mapgis-cloud-manager-default-password
+CouchBase-database:
+- couchbase-buckets-api
+Magnolia-CMS:
+- magnolia-default-login
+- magnolia-installer
+和信创天云桌面:
+- core-chuangtian-cloud-rce
+- vesystem-upload-file
+拓尔思-MAS:
+- trs-mas-remote-command-exec
+Zimbra-mail system:
+- CVE-2020-7796
+- zimbra-web-login
+- CVE-2019-9670
+- zimbra-web-client
+- zimbra-preauth-ssrf
+- CVE-2022-37042
+- CVE-2013-7091
+- CVE-2018-14013
+MSA 互联网管理网关:
+- msa-gateway-read-file
+安美数字酒店宽带运营系统:
+- amtt-hiboss-language-sqli
+- amtt-hiboss-server-ping-rce
+Kingsoft-Web-Server:
+- kingsoft-v8-default-password
+Odoo:
+- odoo-manager-disclosure
+- odoo-file-read
+Embedthis-Appweb:
+- CVE-2018-8715
+Vidyo-video conferencing system:
+- vidyo-default-login
+Microsoft-IIS6.0:
+- CVE-2017-7269
+Node.js:
+- CVE-2017-14849
+- CVE-2021-32819
+- CVE-2022-29078
+- CVE-2014-3744
+- CVE-2021-21315
+- CVE-2018-3714
+Hybris-Administration-Console:
+- hybris-default-login
+YouPHPTube-Encoder:
+- CVE-2019-5127
+Nnetgear 路由器:
+- CVE-2017-5521
+佑友防火墙:
+- youyou-firewall-rce
+H3C-iMC:
+- h3c-imc-rce
+源天OA:
+- yuantian-oa-getdata-action-sql-injection
+OpenSNS:
+- opensns-rce
+- CNVD-2021-34590
+portainer:
+- portainer-init-deploy
+锐捷-EG易网关:
+- ruijie-rg-eg-web-mis-rce
+- ruijie-eg-cli-rce
+- ruijie-eg-file-read
+- ruijie-eg-password-leak
+WIFISKY-7层流控路由器:
+- CNVD-2021-39012
+KodiTV:
+- CVE-2017-5982
+Payara-Micro:
+- CVE-2021-41381
+NETGEAR-SSL-VPN:
+- CVE-2022-29383
+安恒信息-明御WEB应用防火墙:
+- das-mingyu-report-user-bypass
+NuxtJS:
+- nuxt-js-xss
+- nuxt-js-semi-lfi
+- nuxt-js-lfi
+奇安信-天擎:
+- tianqing-info-leak
+- qianxin-tianqing-getsimilarlist-sqli
+- CNVD-2021-32799
+TPSHOP:
+- tpshop-directory-traversal
+Icinga-Web-2:
+- CVE-2022-24716
+Yonyou NC:
+- yonyou-nc-uploadservlet-rce
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-monitorservlet-rce
+- yonyou-nc-accept-upload
+- yonyou-nc-arbitrary-file-upload
+- yonyou-nc-bsh-servlet-bshservlet-rce
+- yongyouNc-uploadControl-uploadFile
+CloudPanel:
+- CVE-2023-35885
+vRealize-Operations-Tenant-App:
+- vrealize-operations-log4j-rce
+D-Link-DIR-615:
+- CVE-2021-42627
+Mercurial:
+- mercurial-hgignore
+Squirrelmail- Mail System:
+- CVE-2002-1131
+- squirrelmail-vkeyboard-xss
+- CVE-2004-0519
+- squirrelmail-lfi
+- squirrelmail-add-xss
+- CVE-2006-2842
+Zyxel NBG2105:
+- CVE-2021-3297
+兰德网络-O2OA:
+- o2oa-default-login
+GoAnywhere-Managed-File-Transfer:
+- CVE-2023-0669
+- goanywhere-mft-login
+- goanywhere-mft-log4j-rce
+- go-anywhere-client
+Ueditor:
+- CNVD-2017-20077
+SonicWall-Analytics:
+- CVE-2023-34124
+Zyxel-USG-FLEX-700:
+- CVE-2022-30525
+phpshe 商城系统:
+- phpshe-sqli
+MINIO-Browser:
+- minio-default-login
+- CVE-2021-41266
+- CVE-2021-21287
+明源云 ERP:
+- mingyuanyun-erp-apiupdate-fileupload
+瑞友天翼－应用虚拟化系统:
+- realor-gwt-system-sql-injection
+- realor-getbsappurl-sql-inject
+Deltek Maconomy:
+- CVE-2019-12314
+列目录:
+- dir-listing
+Kentico-CMS:
+- kentico-login
+- CVE-2015-7823
+- CVE-2019-10068
+- CVE-2017-17736
+TENDA-router:
+- tenda-11n-wireless-router-login
+- CVE-2022-40843
+- CVE-2021-31755
+- CVE-2022-42233
+- tenda-web-master
+JavaMelody:
+- CVE-2018-15531
+YApi 可视化接口管理平台:
+- yapi-sql-inject
+- yapi-rce
+PHPWEB:
+- phpweb-appplus-php-upload
+Netsweeper:
+- CVE-2014-9614
+- CVE-2014-9606
+- CVE-2014-9609
+- CVE-2014-9617
+- netsweeper-webadmin-detect
+- CVE-2014-9615
+- CVE-2014-9618
+- netsweeper-rxss
+- CVE-2020-13167
+- CVE-2014-9607
+- netsweeper-open-redirect
+dotNETCMS:
+- dotnetcms-sqli
+LGATE-902:
+- CVE-2018-14918
+- CVE-2018-14916
+Citrix-NetScaler-Gateway:
+- CVE-2020-8191
+- CVE-2020-8193
+- CVE-2023-3519
+联软-安全数据交换系统:
+- leagsoft-uninxg-fileread
+猎鹰安全-金山终端安全系统:
+- kingsoft-v8-default-login
+- kingsoft-v8-file-read
+- kingsoft-get-file-content-file-read
+- kingsoft-v8-rce
+中远麒麟堡垒机:
+- secvpn-admin-commonuser-sqli
+- qilin-bastion-host-rce
+HikVison-iSecure-Center:
+- hikvision-anfang-report-fileupload
+- hikvision-af-env-info-disclosure
+- hikvision-isecure-center-fileread
+- hikvision-files-upload
+- hikvision-fastjson-rce
+shiro:
+- CVE-2020-1957
+- CVE-2020-11989
+Cisco-Router:
+- CVE-2021-1472
+- CVE-2019-1653
+- CVE-2019-1898
+ManageEngine-SupportCenter:
+- CVE-2018-12998
+金蝶 EAS:
+- kingdee-eas-loadtree-jndi
+- kingdee-eas-directory-traversal
+- kingdee-eas-myuploadfile-upload
+Aviatrix-Controller:
+- CVE-2021-40870
+NETGEAR-R8000:
+- CVE-2017-5521
+Symantec-Endpoint-Protection-Manager:
+- symantec-sepm-log4j-rce
+金山终端安全管理系统:
+- kingsoft-v8-file-read
+- kingsoft-v8-get-file-content-file-read
+- kingsoft-v8-rce
+SAP-Memory-Pipes:
+- CVE-2022-22536
+Drawio:
+- CVE-2022-1713
+- CVE-2022-1815
+NETGEAR-R7300:
+- CVE-2017-5521
+Ruckus-Wireless:
+- ruckus-unleashed-panel
+- CVE-2021-33221
+- CVE-2023-25717
+- ruckus-wireless-default-login
+ThinkAdmin:
+- CVE-2020-25540
+- thinkadmin-v6-readfile
+Sony-IPELA-Engine-IP-Camera:
+- CVE-2016-7834
+VMware-Aria-Operations:
+- CVE-2023-20888
+- CVE-2023-20889
+ShopXO电商系统:
+- CNVD-2021-15822
+YesWiki:
+- yeswiki-sql
+- yeswiki-xss
+- yeswiki-stored-xss
+tiki-Wiki-CMS:
+- tikiwiki-cms
+- CVE-2011-4336
+- tikiwiki-reflected-xss
+- CVE-2010-4239
+TELESQUARE-SDT-CW3B1:
+- CVE-2021-46422
+StackStorm:
+- stackstorm-default-login
+DLink-Router:
+- CVE-2020-25506
+- CVE-2019-17506
+- CVE-2018-15517
+- CVE-2020-24579
+- CVE-2019-16920
+- CVE-2021-46379
+- dlink-850L-info-leak
+- CVE-2022-28955
+- CVE-2021-21816
+- CVE-2019-13101
+- CVE-2018-10822
+- CVE-2015-7245
+- CVE-2018-10823
+- d-link-wireless
+- CVE-2021-46381
+- d-link-arbitary-fileread
+- CVE-2020-25078
+- CVE-2020-9376
+GateOne:
+- CVE-2020-35736
+Apache-Tomcat:
+- CVE-2019-0221
+- tomcat-cookie-exposed
+- CVE-2020-1938
+- CVE-2017-12617
+- CVE-2017-12615
+- public-tomcat-manager
+- CVE-2018-11784
+- CVE-2020-9484
+- tomcat-examples-login
+- CVE-2018-11759
+ClickHouse:
+- clickhouse-api-unauth
+- clickhouse-unauth-api
+PANDORAFMS-产品:
+- CVE-2019-20224
+- CVE-2020-8497
+- CVE-2020-13851
+Gitea:
+- gitea-rce
+- CVE-2020-14144
+JupyterHub:
+- jupyterhub-default-login
+ERPNext:
+- erpnext-default-login
+Avtech IP Surveillance (Camera):
+- avtech-dvr-exposure
+APACHE-Spark:
+- unauth-spark-api
+- CVE-2022-33891
+- spark-webui-unauth
+CLOUDERA-Hadoop-Hue:
+- hue-default-credential
+启明星辰-4A统一安全管控平台:
+- venusense-aqgkpt-getMaster-infoleak
+AnyProxy:
+- alibaba-anyproxy-lfi
+SALTSTACK-产品:
+- CVE-2021-25281
+- CVE-2021-25282
+- CVE-2020-16846
+QNAP-NAS:
+- CVE-2022-27593
+- CVE-2019-7192
+SANGFOR-应用交付报表系统:
+- sangfor-sysuser-conf
+- sangfor-download-lfi
+Consul by HashiCorp:
+- consul-service-rce
+- consul-rexec-rce
+Xiuno-BBS:
+- CNVD-2019-01348
+Versa-Networks:
+- versa-default-password
+致远OA:
+- seeyon-a6-config-disclosure
+- seeyon-a8-info-disclosure
+- seeyon-fanruan-report-server-directory-travesal
+- CNVD-2020-62422
+- seeyon-session-leak
+- yyoa-a6-userinfo-disclosure
+- seeyon-a8-management-monitor-default-password
+- seeyon-wooyun-2015-0108235-sqli
+- seeyon-officeservlet-database-info-leak
+- seeyon-wps-assist-servlet-upload
+- seeyon-oa-ajax-anyfile-upload
+- seeyon-a6-employee-info-leak
+- seeyon-a6-createmysql-disclosure
+- seeyon-ajax-unauthorized-access
+- seeyon-resetpassword-anyuser
+- seeyon-oa-cookie-leak-login-bypass
+- CNVD-2019-19299
+- seeyon-a6-setextno-sql-inject
+Cisco产品:
+- CVE-2021-1497
+- CVE-2021-1499
+- CVE-2020-3452
+飞视美-视频会议系统:
+- facemeeting-struts2-rce
+FLIR-FLIR-AX8:
+- flir-ax8-download-read-file
+- flir-ax8-res-php-rce
+- flix-ax8-download-read-file
+- flir-ax8-rce
+- flix-ax8-command-injection
+Oracle-iPlanet:
+- CVE-2020-9315
+H3C-SecPath-运维审计系统:
+- unauthorized-h3csecparh-login
+LISTSERV:
+- CVE-2010-1870
+- CVE-2022-39195
+- CVE-2019-15501
+Dogtag-PKI:
+- CVE-2022-2414
+安恒信息-明御运维审计与风险控制系统:
+- das-usm-arbitrary-user-add
+SuperWebMailer:
+- CVE-2020-11546
+NexusPHP:
+- CVE-2022-46888
+Lutron-Quantum:
+- lutron-default-login
+亿邮电子邮件系统:
+- eyou-mail-moni-detail-rce
+Supervisor-monitoring system:
+- CVE-2017-11610
+SysAid On-Premise:
+- CVE-2023-47246
+Akkadian-Provisioning-Manager:
+- CVE-2020-27361
+- CVE-2021-31581
+Apache Druid:
+- CVE-2021-25646
+- CVE-2021-36749
+- druid-default-login
+Avideo:
+- avideo-install
+APACHE-hadoop-YARN:
+- hadoop-unauth-rce
+Dahua Storm (IP Camera):
+- CVE-2021-33044
+Loan-Management-System:
+- loancms-sqli
+万户网络-ezOFFICE:
+- wanhu-oa-fileupload-controller-arbitrary-file-upload
+- wanhu-documentedit-sqli
+- wanhu-download-old-file-read
+- wanhuoa-officeserverservlet-file-upload
+- wanhu-download-ftp-file-read
+- wanhu-teleconferenceservice-xxe
+- wanhuoa-smartupload-file-upload
+- CVD-2023-2425
+- CNVD-2021-34273
+- wanhu-wpsservlet-fileupload
+EVSE-Web-Interface:
+- CVE-2021-22707
+华测监测预警系统:
+- huace-mews-config-xml-infoleak
+- huace-handler-filedownload
+CMSimple:
+- CVE-2008-2650
+Kibana:
+- kibana-panel
+- CVE-2018-17246
+- exposed-kibana
+- CVE-2019-7609
+- kibana-unauth
+WebSVN:
+- CVE-2021-32305
+APACHE-kylin:
+- kylin-default-login
+- CVE-2020-13937
+- CVE-2020-1956
+- CVE-2020-13925
+CISCO-RV340:
+- CVE-2023-20073
+Pentaho:
+- CVE-2021-31602
+- pentaho-default-login
+HP-System-Management:
+- CVE-2017-12544
+SpiderFlow:
+- spiderflow-save-rce
+Cisco-VPN:
+- CVE-2020-3452
+- CVE-2020-3580
+- CVE-2020-3187
+- CVE-2021-1472
+OE-CMS:
+- CVE-2018-12095
+APACHE-dubbo:
+- apache-dubbo-unauth
+- dubbo-admin-default-login
+Altenergy-Power-Control-Software:
+- CVE-2023-28343
+Dynamicweb:
+- CVE-2022-25369
+Zabbix:
+- CVE-2022-23131
+- CVE-2016-10134
+- zabbix-dashboards-access
+- zabbix-authentication-bypass
+- zabbix-default-password
+- CVE-2022-23134
+奇安信-VPN:
+- secsslvpn-auth-bypass
+- qianxin-userlist-motify-user-password
+锐捷Smartweb:
+- ruijie-smartweb-password-disclosure
+- CNVD-2020-56167
+- CNVD-2021-17369
+Apache-Drill:
+- apache-drill-exposure
+Adobe-Magento:
+- magento-admin-panel
+- CVE-2020-5776
+- CVE-2020-5777
+- magento-2-exposed-api
+- CVE-2015-2067
+- magento-config-disclosure
+- magento-downloader-panel
+- CVE-2015-2068
+- magento-installer
+- magento-unprotected-dev-files
+- magento-cacheleak
+netentsec Technology - Internet Control Gateway:
+- nsicg-default-login
+3Com-NJ2000:
+- 3com-nj2000-default-login
+Logstash:
+- logstash-log4j-rce
+Ivanti-Sentry:
+- CVE-2023-38035
+Nexus-Repository-Manager:
+- nexus-default-login
+- CVE-2019-7238
+- CVE-2009-4679
+Zend-Server:
+- CVE-2018-10230
+- zend-server-test-page
+- zend-config-file
+- zend-v1-xss
+Cisco-BroadWorks:
+- cisco-broadworks-log4j-rce
+飞鱼星企业级智能上网行为管理系统:
+- feiyuxing-info-leak
+- feiyuxing-default-login
+TELESQUARE-TLR-2855KS6:
+- CVE-2021-46418
+- CVE-2021-46419
+VMware-vRealize-Automation-Appliance:
+- CVE-2022-22972
+- vmware-vrealize-detect
+- CVE-2021-21975
+- vrealize-loginsight-panel
+- vrealize-operations-log4j-rce
+- CVE-2022-31656
+Zyxel-USG-FLEX-100:
+- CVE-2022-30525
+- CVE-2020-29583
+DrayTek产品:
+- CVE-2020-8515
+Jitsi-Meet:
+- jitsi-meet-log4j-rce
+Envoy-Admin:
+- envoy-admin-exposure
+APACHE-hadoop-ResourceManager:
+- yarn-resourcemanager-rce
+TerraMaster-TOS:
+- CVE-2020-28188
+- CVE-2022-24990
+- CVE-2020-15568
+- CVE-2020-28185
+- CVE-2020-28187
+金山VGM防毒墙:
+- kingsoft-vgm-lfi
+- kongsoft-vgm-antivirus-wall-rce
+Rosario-Student-Information-System:
+- CVE-2021-44427
+Amazon-EC2:
+- amazon-ec2-ssrf
+Aolynk BR304:
+- aolynk-br304-default-password
+AVEVA-InTouch-Access-Anywhere-Secure-Gateway:
+- CVE-2022-23854
+KubePi:
+- CVE-2023-22463
+- CVE-2023-22478
+ManageEngine-ADAudit:
+- CVE-2022-28219
+- CVE-2018-12998
+GitLab:
+- gitlab-public-signup
+- api-gitlab
+- CVE-2022-0735
+- gitlab-rce
+- CVE-2020-2096
+- gitlab-detect
+- gitlab-user-enum
+- gitlab-public-snippets
+- CVE-2021-4191
+- CVE-2021-22214
+- gitlab-public-registration
+- CVE-2022-1162
+- CVE-2020-26413
+- gitlab-public-repos
+- gitlab-api-user-enum
+- CVE-2021-22205
+- gitlab-uninitialized-password
+- CVE-2023-2825
+- gitlab-weak-login
+- CVE-2022-2185
+Crestron-AirMedia:
+- CVE-2019-3929
+浪潮 ClusterEngineV4.0:
+- inspur-clusterengine-default-login
+- CVE-2020-21224
+Leostream:
+- leostream-default-login
+Riello companies products:
+- netman-default-login
+VMware-VirtualCenter:
+- vmware-vcenter-converter-standalone
+- vmware-vcenter-lfi-linux
+- vmware-vcenter-lfi
+- CVE-2021-21973
+- vmware-vcenter-ssrf
+- vmware-vcenter-log4j-jndi-rce
+- CVE-2021-21972
+- CVE-2021-22005
+- vmware-detect
+- CVE-2021-21985
+TensorBoard:
+- tensorboard-unauth
+FORTINET-FortiNAC:
+- CVE-2022-39952
+YiShaAdmin-快速开发框架:
+- yishaadmin-lfi
+Apache Kafka:
+- kafka-center-default-password
+FortiLogger:
+- CVE-2021-3378
+Everything:
+- everything-listing
+APACHE-tika:
+- CVE-2018-1335
+全程云OA:
+- cloud-oa-system-sqli
+新开普-智慧校园系统:
+- newcape-campus-system-service-rce
+Spectracom:
+- spectracom-default-password
+Secnet - Smart Routing System:
+- secnet-ac-default-password
+- secnet-ac-default-login
+Apache Superset:
+- CVE-2021-44451
+- CVE-2023-27524
+向日葵-SunLogin:
+- CNVD-2022-10270
+- CNVD-2022-03672
+Zyxel-USG-FLEX-500:
+- CVE-2022-30525
+VMware Workspace ONE Access:
+- CVE-2022-22954
+宝塔-BT.cn:
+- bt742-pma-unauthorized-access
+Oracle-GlassFish-Server-OSE-4.1:
+- CVE-2017-1000028
+原创先锋后台管理系统:
+- CNVD-2021-42789
+LanProxy:
+- CVE-2021-3019
+Kyocera-打印机:
+- CVE-2023-34259
+- CVE-2020-23575
+Google-Earth-Enterprise:
+- google-earth-dlogin
+General-Poc-Leak:
+- ds-store-file
+- git-config
+- exposed-svn
+OfficeWeb365:
+- officeweb365-savedraw-fileupload
+- officeweb365-file-upload
+Intelligent-WAPPLES:
+- wapples-firewall-lfi
+- CVE-2022-35413
+Jeeplus:
+- jeeplus-druid-unauth
+- jeeplus-sql-injection
+UPS-Adapter-CS141-SNMP-Module:
+- cs141-default-login
+Orchid-Core-VMS-IPConfigure:
+- CVE-2018-10956
+- orchid-vms-panel
+wordpress-woocommerce:
+- CVE-2022-33901
+- CVE-2014-4558
+- wp-woocommerce-pdf-invoice-listing
+- CVE-2021-32789
+- elex-woocommerce-xss
+- wordpress-woocommerce-listing
+- wp-woocommerce-email-verification
+- CVE-2022-0149
+- woocommerce-pdf-invoices-xss
+- CVE-2022-0412
+- wp-woocommerce-file-download
+- CVE-2018-5316
+- checkout-fields-manager-xss
+Juniper-Web-Device-Manager:
+- CVE-2023-36845
+- CVE-2023-36844
+致远互联-M1移动端:
+- seeyon-m1-usertokenservice-rce
+GETSIMPLE-CMS:
+- getsimple-installation
+- CVE-2019-9915
+XXL-JOB-执行器:
+- xxl-job-executor-default-token-rce
+迪普VPN:
+- dptech-sslvpn-fileread
+HikVision-IVMS-8700:
+- hikvision-ivms-8700-upload-action-upload
+- hikvison-ivms-fileread
+- hikvision-ivms-8700-anyfile-download
+用友-ERP-NC:
+- CNVD-2021-30167
+- erp-nc-directory-traversal
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- wooyun-path-traversal
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-accept-fileupload
+Oracle-Access-Manager:
+- CVE-2021-35587
+PuneethReddyHC:
+- CVE-2021-41649
+- CVE-2021-41648
+H3C-Miniware-Webs:
+- h3c-miniware-web-disclosure
+TECLIB-GLPI:
+- glpi-status-ldap-domain-disclosure
+- CVE-2021-39211
+- CVE-2022-35914
+- glpi-panel
+- CVE-2021-43778
+- CVE-2019-10232
+- glpi-default-login
+- CVE-2020-11034
+- glpi-directory-listing
+FORTINET FortiNAC:
+- CVE-2022-39952
+H3C-下一代防火墙:
+- h3c-jquery-172-file-read
+TOTO_LINK-WIRELESS-ROUTER:
+- CVE-2023-30013
+- CVE-2022-25082
+- CVE-2019-19824
+- CVE-2021-42887
+Kong-Admin:
+- CVE-2020-11710
+Lantronix companies products:
+- CVE-2021-21881
+Wowza Streaming Engine Manager:
+- CVE-2018-19365
+Revive-Adserver:
+- CVE-2019-5434
+BULLWARK-Momentum:
+- bullwark-momentum-lfi
+B&E Tracker:
+- CVE-2021-40247
+Dubbo:
+- dubbo-admin-default-password
+OpenSMTPD:
+- CVE-2020-7247
+CISCO-CloudCenter-Suite:
+- cisco-cloudcenter-suite-log4j-rce
+企业微信:
+- tencent-wechat-agentinfo-disclosure
+Repetier-Server:
+- CVE-2023-31059
+LODOP-cloud printing:
+- clodop-printer-lfi
+科荣-AIO管理系统:
+- CVD-2023-1304
+Lansweeper:
+- lansweeper-login
+- unauthenticated-lansweeper
+- CVE-2019-13462
+Dell-iDRAC:
+- dell-idrac-default-login
+- dell-idrac9-default-password
+Kube-State-Metrics:
+- kube-state-metrics
+EAA益和应用接入系统:
+- eaa-app-lfi
+JAVA:
+- javamelody-detect
+Maltrail:
+- maltrail-rce
+金和网络-金和OA:
+- jinher-c6-getsqldata-sqli
+- jinher-oa-saveasotherformatservlet-fileupload
+- jinher-oa-default-login
+- jinher-c6-homeservice-sqli
+- jinher-oa-sap-b1config-unauth
+- jinhe-oa-c6-lfi
+Stackposts:
+- stackposts-sqli
+华夏-ERP:
+- CNVD-2020-63964
+MINIO-Console:
+- minio-default-login
+- CVE-2023-28432
+- CVE-2021-41266
+- CVE-2021-21287
+LG-NAS:
+- CVE-2018-10818
+PHP:
+- phpstudy-backdoor-rce
+- CVE-2017-9841
+- phpinfo-leak
+- phpinfo-files
+- php-xdebug-rce
+- CVE-2012-1823
+Ricoh:
+- ricoh-weak-password
+iKuai Networks:
+- ikuai-login-panel
+ZKTECO-时间精细化管理平台:
+- iclock-weaklogin
+Telos-Alliance-Omnia-MPX-Node:
+- CVE-2022-36642
+Adobe-ColdFusion:
+- adobe-coldfusion-error-detect
+- CVE-2023-29298
+- CVE-2023-29300
+- CVE-2021-21087
+- coldfusion-administrator-login
+- CVE-2018-15961
+- CVE-2010-2861
+- CVE-2023-38204
+- CVE-2023-26360
+- adobe-component-login
+- CVE-2023-38205
+- cold-fusion-cfcache-map
+- CVE-2009-1872
+- coldfusion-debug-xss
+BlogEngineNET:
+- CVE-2019-10717
+Apache Mod_jk:
+- CVE-2018-11759
+PhpCMS:
+- CVE-2018-19127
+CISCO-RV340W:
+- CVE-2023-20073
+vmware-NSX:
+- vmware-nsx-log4j
+- vmware-nsx-stream-rce
+Oracle-Business-Intelligence:
+- CVE-2019-2588
+- CVE-2019-2616
+- CVE-2019-2767
+- businessintelligence-default-login
+ManageEngine-Firewall-Analyzer:
+- CVE-2018-12998
+- CVE-2015-7780
+- CVE-2012-4889
+Microweber:
+- CVE-2022-1439
+- CVE-2022-0378
+- CVE-2022-0928
+- CVE-2022-0954
+- CVE-2022-0678
+- CVE-2022-0968
+- CVE-2022-0281
+- microweber-xss
+- CVE-2022-0963
+- CVE-2020-13405
+- CVE-2022-0660
+TamronOS IPTV系统:
+- tamronos-iptv-rce
+- tamron-os-iptv-ping-rce
+Kiwi-TCMS:
+- kiwitcms-json-rpc
+AudioCodes:
+- CVE-2018-10093
+- audiocodes-default-login
+飞企互联-FE业务协作平台:
+- fe-common-sort-tree-fileupload
+- feiqi-fe-officeserver-file-upload
+- feiqi-fe-showimageservlet-fileread
+Intellian-Aptus-Web:
+- intellian-aptus-panel
+- CVE-2020-7980
+ImpressCMS:
+- CVE-2021-26598
+PlaySMS:
+- CVE-2020-8644
+SysAid-Help-Desk:
+- CVE-2015-2996
+- CVE-2021-31862
+Honeywell PM43 Printers:
+- CVE-2023-3710
+IntelBras-video surveillance:
+- CVE-2017-7925
+小米路由器:
+- CVE-2019-18371
+Unraid:
+- CVE-2020-5847
+3CX-Phone-System-Management-Console:
+- 3cx-management-console
+Acrolinx-Dashboard:
+- acrolinx-dashboard
+- CVE-2018-7719
+中移铁通-禹路由:
+- china-mobile-simple-index-asp-unauth
+- china-mobile-exportsettings-info-leak
+- china-mobile-export-settings-info-leak
+ManageEngine:
+- CVE-2012-4889
+- manageengine-keymanagerplus
+- CVE-2021-44077
+- manageengine-analytics
+- manageengine-apex-helpdesk
+- manageengine-servicedesk
+- CVE-2022-47966
+- CVE-2021-44515
+- manageengine-opmanager
+- manageengine-network-config
+- CVE-2017-11512
+- CVE-2021-40539
+- CVE-2018-12998
+- CVE-2020-12116
+- CVE-2022-28219
+- CVE-2022-35405
+- manageengine-applications-manager
+- CVE-2022-24681
+- manageengine-assetexplorer
+- CVE-2015-7780
+- manageengine-adaudit
+- manageengine-supportcenter
+- manageengine-desktop
+- manageengine-adselfservice
+Commvault-backup system:
+- CVE-2020-25780
+NETGEAR-R6900:
+- CVE-2017-5521
+webEdition:
+- CVE-2014-5258
+Apache-Web-Server:
+- CVE-2021-41773
+- CVE-2021-42013
+- CVE-2021-40438
+Apache-Code42:
+- code42-log4j-rce
+GlassFish:
+- CVE-2017-1000028
+etcd:
+- etcd-unauthenticated-api
+NetMizer-日志管理系统:
+- netmizer-data-listing
+- netmizer-cmd-rce
+小猪CMS:
+- pigcms-file-upload
+网康-NS-ASG安全网关:
+- netentsec-ns-asg-rce
+- ns-asg-file-read
+Traggo-Server:
+- CVE-2023-34843
+Zyxel ZyWALL:
+- CVE-2022-30525
+- CVE-2022-0342
+phpMyAdmin:
+- CVE-2009-1151
+- CVE-2019-12616
+- CVE-2018-12613
+- phpmyadmin-misconfiguration
+- CVE-2019-6799
+- CVE-2022-23808
+- phpmyadmin-unauth
+- phpmyadmin-server-import
+- phpmyadmin-setup
+- phpmyadmin-setup-deserialization
+- phpmyadmin-panel
+- phpmyadmin-default-login
+ezEIP:
+- ezeip-info-leakage
+Flexnet:
+- flexnet-log4j-rce
+Xerox-Workcentre:
+- xerox-efi-lfi
+- xerox7-default-login
+- xerox-workcentre7-default-password
+三汇SMG-网关管理软件:
+- sanhui-smg-file-read
+RANCHER:
+- rancher-default-password
+Royal-Event-Management:
+- CVE-2022-28080
+- royalevent-management-xss
+- royalevent-stored-xss
+AWSTATS-Log Analysis:
+- awstats-listing
+- CVE-2012-4547
+- awstats-config
+- CVE-2009-5020
+- awstats-script
+Ruijie-EG易网关:
+- ruijie-eg-login-rce
+- ruijie-eg-rce
+RockMongo:
+- rockmongo-default-login
+- rockmongo-default-password
+- rockmongo-xss
+Kong:
+- CVE-2020-11710
+Ntopng:
+- CVE-2021-28073
+- ntopng-traffic-dashboard
+USG FLEX:
+- unauth-ztp-ping
+KubeOperator:
+- CVE-2023-22480
+ManageEngine-ServiceDesk:
+- CVE-2017-11512
+- CVE-2021-44077
+- CVE-2022-47966
+- CVE-2018-12998
+新软科技-极通EWEBS:
+- ewebs-arbitrary-file-reading
+oscommerce:
+- oscommerce-rce
+齐治科技-堡垒机:
+- qizhi-fortressaircraft-unauth
+Kanboard:
+- kanboard-default-login
+易思智能物流无人值守系统:
+- eosine-sysreportfile-fileupload
+APUSIC-Company Products:
+- kingdee-apusic-directory-traversal
+- jindie-oa-apusic-server-file-traversal
+Apache Hadoop:
+- hadoop-yarn-unauth
+- hadoop-disclosure
+ArcGIS-Company Products:
+- arcgis-datastore-detect
+- arcgis-rest-service-directory-traversal
+- arcgis-sharing-rest-login
+- arcgis-login
+- arcgis-default-password
+Virtua-Software:
+- CVE-2021-37589
+JumpServer:
+- CVE-2023-42442
+- jumpserver-unauth-rce
+碧海威L7:
+- bithighway-default-password
+EasyReport:
+- easyreport-shiro-default-key-cbc
+- easyreport-default-login
+Okta:
+- okta-log4j-rce
+天融信TopAPP负载均衡系统:
+- topsec-topacm-rce
+通达OA:
+- tongda-oa-logincode-any-user-login
+- tongda-contact-list-disclosure
+- tongda-v11-session-disclosure-login-bypass
+- tongda-oa-api-ali-upload
+- tongda-v2017-uploadfile
+- tongda-path-traversal
+- CVE-2023-4166
+- tongda-v2017-video-file-file-read
+- tongda-insert-sql-inject-getshell
+- tongda-oa-2017-auth-bypass
+- CVE-2023-4166-2
+- tongda-online-user-session-disclosure-login
+- tongda-v11-getdata-rce
+- tongda-report-bi-func-sql-inject
+- tongda-swfupload-new-sql-inject
+ARL-资产灯塔系统:
+- arl-default-password
+- arl-default-login
+Chyrp:
+- CVE-2011-2780
+- CVE-2011-2744
+APACHE-Zeppelin:
+- apache-zeppelin-unauth
+Grav-CMS:
+- CVE-2018-5233
+- CVE-2020-11529
+Intellian:
+- CVE-2020-7980
+Webgrind:
+- CVE-2018-12909
+ShopXO:
+- CNVD-2021-15822
+Sangfor-Data Center:
+- sangfor-dc-sangforindex-xxe
+Openfire:
+- CVE-2019-18394
+- CVE-2023-32315
+- openfire-default-password
+Struts2-Showcase:
+- apache-struts-showcase
+Huawei DG8045:
+- huawei-dg8045-home-gateway-password-leakage
+Linear-eMerge:
+- CVE-2019-7254
+- CVE-2022-31798
+- CVE-2022-31269
+- CVE-2019-7255
+- CVE-2019-7256
+- CVE-2022-31499
+- CVE-2022-46381
+Resin:
+- CVE-2021-44138
+- resin-viewfile-fileread
+- CNVD-200705-315
+- resin-inputfile-fileread
+- resin-viewfile-lfr
+- caucho-resin-info-disclosure
+- resin-cnnvd-200705-315
+GoCD:
+- gocd-unauth-dashboard
+- gocd-encryption-key
+- CVE-2021-43287
+- gocd-cruise-configuration
+WISEGIGA:
+- wisegiga-nas-lfi
+October-CMS:
+- octobercms-default-login
+- CVE-2022-21705
+Xceedium-Xsuite:
+- CVE-2015-4668
+- CVE-2015-4666
+Collibra:
+- collibra-properties
+Piwigo:
+- CVE-2023-37270
+TP-LINK:
+- CVE-2015-3035
+- CVE-2021-41653
+WSO2-Management-Console:
+- wso2-default-login
+- CVE-2022-29464
+HPE-ILO:
+- CVE-2017-12542
+Yonyou-KSOA:
+- yonyou-ksoa-dept-sqli
+- yonyou-ufida-ksoa-image-upload-file
+- yonyou-ksoa-paybill-sqi
+- yonyou-ksoa-servletimagefield-skeyvalue-sqli
+ToolJet:
+- tooljet-default-login
+RAILS-Framework:
+- CVE-2019-5418
+科迈 RAS:
+- maike-ras-cookie-bypass
+H5S视频平台:
+- CNVD-2020-67113
+SolarWinds-Orion:
+- CVE-2018-19386
+- solarwinds-default-login
+- solarwinds-orion
+- CVE-2020-10148
+SAP-management system:
+- CVE-2020-6207
+apilayer-Caddy:
+- CVE-2022-28923
+TCExam:
+- CVE-2021-20114
+Jetty:
+- CVE-2021-28164
+- CVE-2021-28169
+IBM-Maximo:
+- CVE-2020-4463
+Weaver E-Mobile:
+- CNVD-2017-03561
+- e-mobile-6.0-client-rce
+- emobile-lang2sql-file-upload
+- ecology-e-office-getselectlist-crm-sqli
+SangFor-EDR:
+- CNVD-2020-46552
+- sangfor-edr-arbitrary-admin-login
+- sangfor-edr-cssp-rce
+- sangfor-edr-auth-bypass
+- sangfor-edr-rce
+Alibaba-Nacos:
+- nacos-version
+- CVE-2021-29442
+- CVE-2021-29441
+- alibaba-nacos-default-token
+- nacos-authentication-bypass
+- nacos-default-login
+- springboot-env-all-check
+- nacos-jraftserver-deserialization-rce
+- alibaba-nacos-default-identity
+Yonyou-U8-Cloud:
+- yonyou-u8-cloud-fileupload
+- yonyou-u8-cloud-registerservlet-sqli
+- yonyou-u8-cloud-appletinvoke-cacheinvokeservlet-rce
+- yonyou-u8c-loginvideoservlet-rce
+- yonyou-u8c-registerservlet-sqli
+Mongo-Express:
+- CVE-2020-24391
+- CVE-2019-10758
+RANCHER-容器管理:
+- rancher-default-login
+Temporal-Web-UI:
+- unauth-temporal-web-ui
+Apache ActiveMQ:
+- activemq-default-password
+- activemq-path-disclosure
+- CVE-2016-3088
+CouchCMS:
+- CVE-2018-7662
+uWSGI:
+- CVE-2018-7490
+- uwsgi-ini
+SPON IP网络对讲广播系统:
+- spon-ip-intercom-ping-rce
+- spon-ip-intercom-file-read
+SangFor-行为感知系统/日志中心:
+- sangfor-logcent-rce
+骑士-74CMS:
+- CVE-2020-22210
+- CVE-2020-22209
+- CVE-2020-22211
+- 74cms-weixin-sqli
+- CVE-2020-22208
+- 74cms-sqli
+Liferay:
+- liferay-portal
+- liferay-jsonws
+- liferay-api
+- liferay-resource-leak
+- liferay-axis
+- CVE-2020-7961
+Primetek-Primefaces:
+- CVE-2017-1000486
+ATLASSIAN-JIRA:
+- servicedesk-login-panel
+- CVE-2019-8451
+- CVE-2018-20824
+- CVE-2017-9506
+- confluence-oauth-admin
+- jira-servicedesk-signup
+- jira-unauthenticated-projects
+- CVE-2020-29453
+- CVE-2019-8446
+- jira-unauthenticated-installed-gadgets
+- CVE-2019-8449
+- CVE-2023-26256
+- CVE-2020-36289
+- jira-unauthenticated-resolutions
+- CVE-2019-11581
+- CVE-2019-3403
+- CVE-2023-26255
+- jira-unauthenticated-adminprojects
+- jira-unauthenticated-projectcategories
+- jira-unauthenticated-user-picker
+- jira-serverinfo
+- CVE-2022-39960
+- CVE-2019-8442
+- jira-detect
+- CVE-2022-0540
+- CVE-2020-14181
+- CVE-2020-9344
+- CVE-2019-3401
+- CVE-2019-3402
+- jira-unauthenticated-screens
+- jira-unauthenticated-dashboards
+- CVE-2020-14179
+- CVE-2007-0885
+- CVE-2021-26086
+NocoDB:
+- CVE-2023-35843
+RackN-Digital-Rebar:
+- digitalrebar-default-login
+- digitalrebar-traversal
+APACHE-Solr:
+- CVE-2019-17558
+- solr-query-dashboard
+- CVE-2019-0193
+- apache-solr-file-read
+- apache-solr-log4j-rce
+- apache-solr-rce
+- CVE-2017-12629
+- CVE-2021-27905
+Yaws:
+- CVE-2017-10974
+Apache kylin:
+- CVE-2020-13937
+Natshell-router:
+- natshell-arbitrary-file-read
+Influxdb:
+- influxdb-unauth
+惠尔顿-网络安全审计:
+- wholeton-audit-fileread
+SSH:
+- CVE-2001-1473
+好视通-视频会议:
+- hanming-lfr
+influxdata-InfluxDB:
+- influxdb-panel
+- influxdb-version-detect
+- CVE-2019-20933
+Razer Sila:
+- CVE-2022-29013
+Grandnode:
+- CVE-2019-12276
+Imcat:
+- CVE-2018-20608
+用友-U8-CRM:
+- yonyou-u8-crm-fileupload
+- yonyou-u8-crm-solr-log-infoleak
+- yonyou-u8-crm-lfi
+- yonyou-turbo-crm-help-fileread
+- yonyou-turbo-crm-downloadfile-fileread
+- yonyou-turbo-crm-help2-fileread
+Gibbon:
+- CVE-2023-34598
+- CVE-2023-34599
+Sangfor NGAF:
+- sangfor-ngaf-fileread
+Copyparty:
+- CVE-2023-37474
+明源云-ERP:
+- mingyuan-erp-apiupdate-fileupload
+Azkaban-Web-Client:
+- azkaban-default-password
+- azkaban-default-login
+MetInfo:
+- CVE-2019-16996
+- CNVD-2018-13393
+- metinfo-file-read
+- metinfo-lfi
+- CVE-2019-16997
+- CVE-2019-17418
+致远互联-OA:
+- seeyon-config-exposure
+- seeyon-oa-fastjson-rce
+- seeyon-oa-saveexcelinbase-fileupload
+- CNVD-2019-19299
+- zhiyuan-oa-session-leak
+- zhiyuan-file-upload
+- seeyon-ajax-unauth
+- seeyon-wpsassistservlet-filetype-fileread
+- seeyon-initdata-exposure
+- seeyon-createmysql-exposure
+- seeyon-a8-default-login
+- seeyon-wpsassist-servlet-fileread
+- seeyon-oa-log4j
+- seeyon-oa-setextno-sqli
+- zhiyuan-oa-info-leak
+- seeyon-oa-sp2-file-upload
+- CNVD-2020-62422
+- seeyon-monitor-default-login
+- wooyun-2015-148227
+- seeyon-unauth
+- zhiyuan-oa-unauthorized
+Reolink:
+- CVE-2021-40150
+- CVE-2021-40149
+SonarQube:
+- CVE-2020-27986
+Maian-Cart:
+- CVE-2021-32172
+Apache OFBiz:
+- apache-ofbiz-log4j-rce
+- CVE-2021-30128
+- CVE-2023-49070
+- CVE-2018-8033
+- CVE-2020-9496
+- ofbiz-default-password
+Apache-JServ-Protocol:
+- CVE-2020-1938
+Cobbler:
+- cobbler-exposed-directory
+- cobbler-webgui
+- CNVD-2018-16876
+- cobbler-default-login
+FineReport:
+- fanruan-finereport-fr-log-rce
+- finereport-directory-traversal
+- fanruan-oa-v9-designsavevg-upload-file
+致远OA M1 Server:
+- seeyon-m1-usertokenservice-rce
+PHP-810-dev:
+- php-zerodium-backdoor
+- php-zerodium-backdoor-rce
+安恒明御WEB应用防火墙:
+- dbappsecurity-mingyu-report-user-bypass
+Ruijie-NBR路由器:
+- ruijie-nbr1300g-exposure
+- CNVD-2021-09650
+- ruijie-nbr-fileupload
+Crestron Device:
+- CVE-2022-23178
+OpenVPN:
+- openvpn-monitor-disclosure
+Hytec-Inter-HWL-2511-SS:
+- CVE-2022-36553
+Landray OA:
+- landray-oa-datajson-rce
+- landray-oa-treexml-rce
+- landray-oa-syssearchmain-rce
+- CNVD-2021-28277
+Graylog:
+- graylog-log4j
+Adiscon-LogAnalyzer:
+- adiscon-loganalyzer
+- CVE-2018-19877
+畅捷通-TPlus:
+- chanjet-tplus-file-read
+- chanjet-tplus-rce
+- chanjet-tplus-ufida-sqli
+- chanjet-tplus-fileupload
+- chanjet-tplus-checkmutex-sqli
+SOUND4-PULSE:
+- sound4-impact-password-auth-bypass
+- sound4-impact-auth-bypass
+DVR:
+- CVE-2018-9995
+Zimbra-Collaboration-Suite:
+- CVE-2020-7796
+- zimbra-web-login
+- CVE-2019-9670
+- zimbra-web-client
+- CVE-2023-34192
+- zimbra-preauth-ssrf
+- CVE-2022-37042
+- CVE-2013-7091
+- CVE-2018-14013
+IBM-Lotus-Domino:
+- CVE-2005-2428
+ACTi-视频监控:
+- acti-video-lfi
+C-Lodop打印服务系统:
+- c-lodop-read-file
+Crawlab:
+- crawlab-lfi
+- crawlab-any-adduser-and-anyfile-read
+百腾客户系统:
+- baiteng-default-login
+- baiteng-customer-relationship-system-weak-password
+EearCMS:
+- earcms-download-php-exec
+- earcms-index-uplog-php-file-upload
+浙大恩特客户资源管理系统:
+- entersoft-fileupload-upload
+- entersoft-customeraction-entphone-upload
+OpenEMR:
+- openemr-default-login
+- CVE-2019-14530
+- CVE-2012-0991
+NETGEAR-R8500:
+- CVE-2017-5521
+百度-UEditor:
+- ueditor-xss
+- ueditor-ssrf
+- ueditor-file-upload
+Apache Zeppelin:
+- zeppelin-unauth
+Wordpress:
+- CVE-2022-1390
+- CVE-2017-5487
+- CVE-2020-11738
+- wordpress-wpconfig-inclosure
+- wordpress-ext-adaptive-images-lfi
+- CVE-2022-41840
+- wordpress-login
+- CVE-2022-1119
+- CVE-2023-0236
+- CVE-2022-1020
+- wordpress-ext-mailpress-rce
+- CVE-2022-3982
+- CVE-2023-23492
+- CVE-2022-21661
+- CVE-2019-19985
+- CVE-2022-1950
+- CVE-2022-0434
+- wordpress-install
+- CVE-2022-31474
+FatPipe-MPVPN:
+- fatpipe-backdoor
+exacqVision-网络服务:
+- exacqvision-default-login
+- CVE-2020-9047
+Academy-LMS:
+- CVE-2023-4974
+Dongfang - Application Server Tongweb:
+- tongweb-selectapp-fileupload
+Lucee-Server:
+- lucee-stack-trace
+- lucee-xss
+- CVE-2021-21307
+JavaServer-Faces:
+- CVE-2020-6950
+DokuWiki:
+- CVE-2017-12583
+- dokuwiki-installer
+Prometheus:
+- CNVD-2021-101528
+ManageEngine-DeviceExpert:
+- CVE-2018-12998
+畅捷通:
+- yonyou-chanjet-tplus-file-upload
+- yonyou-chanjet-tplus-read-file
+- yonyou-chanjet-gnremote-sql-inject
+- CNVD-2022-60632
+- chanjet-tplus-rce
+- yonyou-chanjet-tplus-password-reset
+- chanjet-tplus-checkmutex-sqli
+易思无人值守智能物流系统:
+- eosine-reportfile-file-upload
+CxCMS:
+- cxcms-arbitrary-file-read
+ListSERV Maestro:
+- CVE-2010-1870
+Lightdash:
+- CVE-2023-35844
+MagicFlow-防火墙网关:
+- magicflow-main-xp-file-read
+- magicflow-lfi
+kingdee-EAS:
+- kingdee-eas-directory-traversal
+- kingdee-eas-extweb-fileread
+- kingdee-eas-uploadlogo-fileupload
+vmware-vRealize:
+- vmware-vrealize-detect
+- CVE-2021-21975
+- vrealize-loginsight-panel
+- vmware-operation-manager-log4j
+- vrealize-operations-log4j-rce
+- CVE-2022-31656
+CMA客诉管理系统:
+- cmakesu-upfile-ashx-anyfile-upload
+FiberHome-公司产品:
+- CVE-2017-15647
+WSO2:
+- wso2-default-login
+- CVE-2022-29464
+Yonyou-U8-CRM:
+- yonyou-u8-crm-getemaildata-fileupload
+- yonyou-u8-crm-getemaildata-fileread
+AntD-Admin:
+- CVE-2021-46371
+SANGFOR-AD:
+- sangfor-login-rce
+- sangfor-ad-infoleak
+- sangfor-reporter-anyfileread
+paYara-Server:
+- CVE-2021-41381
+MovableType- product:
+- movable-type-login
+- CVE-2021-20837
+Thinfinity-VirtualUI:
+- CVE-2021-44848
+- CVE-2021-45092
+Philip-M6:
+- philip-m6-salaryaccounting-sqli
+Cobbler-Web-Interface:
+- cobbler-exposed-directory
+- cobbler-version
+- CVE-2018-1000226
+- cobbler-webgui
+- CVE-2021-40323
+- cobbler-default-login
+企望制造ERP:
+- qiwang-erp-comboxstore-rce
+webui-js-OEM:
+- webui-js-oem-sslvpn-client-fileupload
+- webui-js-oem-file-read
+Cisco-Prime-Infrastructure:
+- CVE-2019-1821
+Mobotix-Camera:
+- mobotix-default-login
+Tiny-File-Manager:
+- tiny-file-manager-unauth
+- tiny-file-manager-default-login
+CaiMore-Gateway:
+- carmore-gateway-rce
+- caimore-gateway-rce
+- caimore-default-login
+Linkerd:
+- linkerd-ssrf
+- linkerd-ssrf-detect
+ShardingSphere ElasticJob:
+- CVE-2022-22733
+CISCO-RV345P:
+- CVE-2023-20073
+Piano-LED-Visualizer:
+- CVE-2022-24900
+RhaPHP:
+- rhaphp-universal-cookie
+Azure-Kubernetes:
+- azure-kubernetes-service
+- kube-api-secrets
+- kube-api-version
+- rancher-panel
+- kubernetes-resource-report
+- kube-api-pods
+- kubelet-runningpods
+- rancher-default-login
+- kubernetes-operational-view-detect
+- kubernetes-version
+- kubernetes-mirantis
+- kube-api-nodes
+- CVE-2018-18264
+- kubernetes-metrics
+- kubernetes-kustomization-disclosure
+- kubelet-pods
+- kube-api-deployments
+- CVE-2019-11248
+- kubernetes-web-view
+- CVE-2022-45933
+- argocd-login
+- kube-api-namespaces
+- kubelet-metrics
+- kubernetes-pods
+- kubernetes-enterprise-manager
+- kube-api-services
+- kubernetes-etcd-keys
+- kubelet-healthz
+- kubernetes-dashboard
+- kubelet-stats
+Ligeo:
+- CVE-2021-46107
+BigAnt-Server:
+- CVE-2022-23348
+- CVE-2022-23347
+YunGouCMS:
+- yungoucms-sqli
+Richmail 邮件系统:
+- richmail-infoleak
+Cisco-RV134W:
+- CVE-2018-0127
+科迈-RAS系统:
+- comai-ras-cookie-bypass
+Kubernetes:
+- kubernetes-enterprise-manager
+- kubernetes-unauth
+I-Doc-View:
+- idocview-url-fileread
+- idocview-2word-rce
+- idocview-cmd-rce
+Apache-Ranger:
+- ranger-default-login
+WiFisky-7 layer flow control router:
+- wifisky-default-login
+JBoss-AS:
+- CVE-2017-7504
+- jmx-default-login
+- CVE-2017-12149
+- jboss-jbpm-default-login
+- CVE-2017-7501
+快排CMS:
+- kpcms-socket-login-info-disclosure
+H3C-CVM-虚拟化管理平台:
+- h3c-cvm-arbitrary-file-upload
+- h3c-cvm-fileupload
+Rundeck:
+- rundeck-log4j
+Nagios XI:
+- CVE-2018-10736
+- CVE-2018-10735
+- CVE-2018-10737
+- CVE-2018-10738
+ZZCMS:
+- zzcms-zsmanage-sqli
+PHP-CGI:
+- CVE-2012-1823
+H3C Router Management:
+- h3c-information-leakage
+- CVE-2023-33629
+Plesk-Obsidian:
+- CVE-2023-24044
+速达软件-公司产品:
+- superdata-designreportsave-fileupload
+NETGEAR-DGN2200:
+- CVE-2016-5649
+Imgproxy:
+- CVE-2023-1496
+- CVE-2023-30019
+CmsEasy:
+- cmseasy-crossall-act-php-sql-injection
+- cmseasy-crossall-act-sqli
+SangFor- Behavioral Management or Identity Authentication System:
+- sangfor-cphp-rce
+- sangfor-ba-rce
+SDT-CW3B1:
+- CVE-2021-46422
+Panabit-iXCache:
+- panabit-ixcache-dateconfig-rce
+- panabit-ixcache-default-password
+极通EWEBS:
+- CNVD-2017-26282
+Fckeditor:
+- fckeditor
+open-Dreambox:
+- CVE-2017-15287
+- CVE-2017-14135
+Let me-CRM:
+- renwoxing-crm-smsdatalist-sqli
+NETGEAR-DGND3700:
+- CVE-2016-5649
+openSIS:
+- CVE-2021-40542
+- opensis-installer
+- CVE-2020-6637
+- opensis-lfi
+- opensis-panel
+- CVE-2021-41691
+Vitogate-300:
+- CVE-2023-45852
+HUAWEI-HG659:
+- huawei-home-gateway-hg659-fileread
+- huawei-hg659-lfi
+SolarWinds - Traffic Management:
+- CVE-2018-19386
+- solarwinds-default-login
+- CVE-2020-10148
+- solarwinds-servuftp-detect
+飞鱼星上网行为管理:
+- feiyuxing-info-leak
+nette-Framework:
+- CVE-2020-15227
+方维o2o商业系统:
+- fangweicms-sqli
+motionEye:
+- CVE-2022-25568
+Panabit-智能网关:
+- panabit-default-login
+ThinkCMF:
+- thinkcmf-arbitrary-code-execution
+- thinkcmf-rce
+- thinkcmf-lfi
+- thinkcmf-write-shell
+- thinkcmf-file-include
+Seagate-NAS:
+- CVE-2018-12300
+- CVE-2018-12296
+- CVE-2014-3206
+JBoss-EAP:
+- jmx-default-login
+- CVE-2010-1429
+- jboss-jbpm-default-login
+EasyGBS:
+- easygbs-userlist-infoleak
+Tenda-11N-Wireless-AP:
+- CVE-2022-42233
+GLPI:
+- CVE-2022-35914
+docker:
+- docker-remote-api-unauth
+Yonyou NC Cloud:
+- yonyou-nccloud-uploadchunk-fileupload
+- yonyou-cloud-jsinvoke-uploadfile
+- yonyou-nccloud-uapjs-upload-rce
+SourceBans:
+- CVE-2015-8349
+致翔软件-致翔OA:
+- zhixiang-oa-msglog-sqli
+- zhixiang-oa-msglog-aspx-sql-inject
+Byzoro-Smart:
+- byzoro-smart-importhtml-rce
+iXCache:
+- panabit-ixcache-rce
+蓝海卓越计费管理系统:
+- blue-ocean-excellence-lfi
+- natshell-path-traversal
+- lanhai-jifei-debug-rce
+- natshell-rce
+Anchor-CMS:
+- CVE-2018-7251
+Kyan设计:
+- kyan-credential-exposure
+Youyou-移动管理系统:
+- yonyou-upload
+- yonyou-mobile-uploadapk-fileupload
+Hikvision IP Camera:
+- CVE-2021-36260
+- CVE-2017-7921
+- hikvision-info-leak
+SonicWALL-SSL-VPN:
+- CVE-2023-0126
+- sonicwall-sslvpn-shellshock
+ZCMS:
+- zcms-v3-sqli
+Citrix-ShareFile-StorageZones-Controller:
+- CVE-2023-24489
+Apache-Ambari:
+- ambari-default-password
+- ambari-default-login
+Masa-CMS:
+- CVE-2022-47003
+- CVE-2022-47002
+华夏 ERP:
+- huaxia-jsherp-info-leak
+迅优CMS:
+- CNVD-2020-23735
+NETGEAR-R6700:
+- CVE-2017-5521
+Selea-ANPR-Camera:
+- selea-targa-camera-read-file
+- selea-targa-camera-lfi
+Reprise-License-Manager:
+- CVE-2022-28365
+- CVE-2021-44152
+- CVE-2022-28363
+KindEditor:
+- CVE-2019-7543
+Weaver OA:
+- CNVD-2021-33202
+- e-cology-springframework-directory-traversal
+- ecology-oa-database-info-leak
+- e-cology-v8-sqli
+- e-cology-syncuserinfo-sqli
+- weaver-ecology-oa-plugin-checkserver-setting-sqli
+- e-cology-verify-quick-login-user-login
+- e-cology-validate-sqli
+- e-cology-getsqldata-sql-inject
+- e-cology-jqueryfiletree-ile-inclusion
+- ecology-changeuserinfo-info-leak
+- ecology-HrmCareerApplyPerView-sqli
+- e-cology-arbitrary-file-upload
+- CNVD-2019-32204
+- ecology-ofslogin-aul
+- ecology-oa-deleteuserrequestinfobyxml-xxe
+- ecology-v9-sqli
+- e-cology-filedownload-directory-traversal
+- e-cology-oa-e-weaver-signature-download
+- CNVD-2023-12632
+- e-cology-workflowcentertreedata-sqli
+- ecology-ktreeuploadaction-upload
+- ecology-filedownloadforoutdoc-sqli
+- weaver-oa-workrelate-file-upload
+SpringBoot:
+- CVE-2020-5405
+- CVE-2022-22947
+- CVE-2017-8046
+- heapdump-detect
+- env-detect
+- CVE-2022-22963
+- CVE-2018-1273
+- CVE-2020-5410
+- CVE-2022-22965
+- springboot-h2-db-rce
+- springboot-admin-unauth
+- springboot-log4j-rce
+- CVE-2021-21234
+- CVE-2019-3799
+- CVE-2016-4977
+ATLASSIAN-Bitbucket:
+- bitbucket-pipelines
+- bitbucket-public-repository
+- bitbucket-auth-bypass
+- CVE-2022-36804
+UniFi-Network:
+- unifi-network-log4j-rce
+Car-Rental-Management-System:
+- CVE-2022-32025
+- CVE-2022-32024
+- CVE-2022-32026
+- CVE-2022-32022
+- CVE-2022-32028
+CasaOS:
+- CVE-2023-37265
+- CVE-2023-37266
+红帆OA:
+- hongfan-oa-iorepsavexml-file-upload
+- ioffice-oa-udfmr-asmx-sql-inject
+- ioffice-oa-iofileexport-read-file
+- hongfan-oa-ioassistance-rce
+MeterSphere:
+- CVE-2023-25573
+- metersphere-plugincontroller-rce
+Wavlink-WN530HG4:
+- CVE-2022-34045
+- CVE-2022-34049
+- CVE-2022-34047
+- CVE-2020-10973
+Modoboa:
+- CVE-2023-0777
+汉塔科技上网行为管理系统:
+- hanta-rce
+LiveZilla:
+- livezilla-login-panel
+- CVE-2019-12962
+Fortinet SSLVPN:
+- CVE-2018-13379
+- CVE-2022-40684
+PHPMyWind:
+- phpmywind-cms-id-sql-inject
+用友-TurboCRM:
+- yonyou-turbo-crm-downloadfile-fileread
+- yonyou-turbocrm-getemaildata-fileread
+- yonyou-turbo-crm-help-fileread
+- yonyou-turbo-crm-help2-fileread
+菠菜系统:
+- bocai-anyfile-upload
+- laojiumen-caipiao-rce
+AppWeb Authentication:
+- CVE-2018-8715
+vRealize-Log-Insight:
+- CVE-2023-20864
+百卓 Smart 多业务安全网关:
+- byzoro-smart-importhtml-rce
+F-Secure Policy Manager:
+- f-secure-policymanager-log4j-rce
+Ruby:
+- CVE-2018-3760
+MessageSolution Enterprise Email Archiving (EEA):
+- CNVD-2021-10543
+Roxy-WI:
+- roxyfileman-fileupload
+- roxy-fileman
+- CVE-2018-20526
+- CVE-2022-31126
+- CVE-2022-31137
+NUUO 摄像头:
+- CVE-2016-5674
+- nuuo-file-inclusion
+Jupyter-Notebook:
+- jupyter-notebook-rce
+- jupyter-notebooks-exposed
+nostromo:
+- CVE-2022-48253
+- CVE-2019-16278
+联软安界UniSDP:
+- unisdp-vpn-rce
+ICEFLOW-VPN:
+- iceflow-vpn-disclosure
+APACHE-ZooKeeper:
+- exposed-zookeeper
+O2OA:
+- o2oa-default-password
+- o2-default-password
+- o2oa-open-read-file
+- CNVD-2020-18740
+Western_Digital-MyBook:
+- western-digital-mycloud-multi-uploadify-file-upload
+CISCO-WebEx:
+- cisco-webex-log4j-rce
+DocCMS:
+- doc-cms-keyword-sql-injection
+IND780:
+- CVE-2021-40661
+Klog-Server:
+- CVE-2020-35729
+HARBOR:
+- CVE-2019-16097
+- harbor-panel
+- harbor-swaggerui-unauth
+- CVE-2022-46463
+DT8x-HTTP-Server:
+- CVE-2017-11165
+Fortinet FortiOS:
+- CVE-2022-40684
+SANGFOR-应用交付管理系统:
+- sangfor-login-rce
+Joomla:
+- CVE-2010-1308
+- CVE-2010-1217
+- CVE-2009-2015
+- CVE-2010-1475
+- CVE-2015-4074
+- CVE-2008-6222
+- CVE-2010-4719
+- CVE-2010-1219
+- CVE-2010-2050
+- CVE-2010-1352
+- CVE-2010-1714
+- CVE-2010-1981
+- CVE-2010-1955
+- CVE-2009-4202
+- CVE-2010-4769
+- CVE-2020-23972
+- joomla-com-booking-component
+- CNVD-2019-34135
+- CVE-2009-4679
+- CVE-2010-1532
+- CVE-2010-2122
+- joomla-solidres-xss
+- CVE-2010-1495
+- CVE-2010-1476
+- CVE-2010-5028
+- CVE-2010-3203
+- CVE-2010-1858
+- CVE-2010-1953
+- joomla-joombri-careers-xss
+- CVE-2010-0942
+- CVE-2010-1658
+- CVE-2010-1878
+- CVE-2015-7297
+- CVE-2010-1469
+- CVE-2010-1473
+- CVE-2010-1354
+- CVE-2010-1472
+- CVE-2009-3053
+- CVE-2010-1723
+- CVE-2010-2857
+- CVE-2018-6605
+- CVE-2009-1496
+- joomla-iproperty-real-estate-xss
+- CVE-2010-1314
+- CVE-2010-2036
+- CVE-2018-17254
+- CVE-2018-6008
+- CVE-2010-4977
+- CVE-2010-1601
+- CVE-2010-1471
+- CVE-2010-1340
+- CVE-2010-1659
+- CVE-2010-2035
+- CVE-2009-2100
+- CVE-2010-1304
+- CVE-2010-2034
+- CVE-2010-0982
+- CVE-2010-1302
+- CVE-2010-1952
+- CVE-2010-2682
+- CVE-2010-1535
+- CVE-2010-2918
+- CVE-2010-1607
+- CVE-2010-0944
+- CVE-2008-6172
+- CVE-2010-1979
+- CVE-2023-23752
+- CVE-2010-0759
+- CVE-2010-1602
+- CVE-2010-1461
+- CVE-2010-1478
+- CVE-2010-1983
+- CVE-2010-1982
+- CVE-2010-1957
+- CVE-2010-1533
+- CVE-2017-8917
+- CVE-2010-1715
+- CVE-2010-0972
+- CVE-2010-1977
+- CVE-2010-1653
+- CVE-2010-1306
+- CVE-2010-1722
+- CVE-2010-2033
+- CVE-2010-1717
+- CVE-2010-1540
+- CVE-2010-4617
+- CVE-2010-1657
+- CVE-2010-1954
+- CVE-2010-2507
+- CVE-2010-1875
+- CVE-2010-1603
+- CVE-2011-4804
+- CVE-2010-1345
+- joomla-jvehicles-lfi
+- CVE-2010-1312
+- CVE-2021-28377
+- CVE-2010-1315
+- CVE-2010-1719
+- CVE-2019-9922
+- CVE-2010-1491
+- CVE-2010-3426
+- CVE-2010-1305
+- CVE-2010-0157
+- CVE-2010-1470
+- CVE-2010-2128
+- CVE-2018-7314
+- CVE-2010-2259
+- CVE-2010-1494
+- CVE-2010-1718
+- CVE-2010-0467
+- CVE-2010-1980
+- CVE-2010-1313
+- CVE-2010-0696
+- joomla-marvikshop-xss
+- CVE-2010-0943
+- joomla-component-vreview-sql
+- CVE-2010-1956
+- CVE-2010-5286
+- CVE-2010-1531
+- CVE-2008-6080
+- CVE-2010-1353
+- rusty-joomla
+- CVE-2008-4764
+- CVE-2010-1056
+- CVE-2010-1534
+- CVE-2010-2045
+- CVE-2010-2680
+- joomla-jvtwitter-xss
+- joomla-department-sqli
+- CVE-2010-1081
+- CVE-2009-3318
+- joomla-marvikshop-sqli
+- CVE-2010-2037
+- CVE-2010-2920
+- CVE-2008-4668
+- CVE-2010-1307
+- CVE-2010-0985
+- CVE-2007-4504
+- CVE-2010-1474
+NETGEAR-R6250:
+- CVE-2016-6277
+- CVE-2017-5521
+ShowDoc:
+- showdoc-default-login
+- showdoc-default-password
+- showdoc-uploadfile
+GraphQL:
+- CVE-2021-4191
+- graphql-array-batching
+- graphql-get-method
+- CVE-2020-26413
+- hasura-graphql-psql-exec
+- graphql-field-suggestion
+- graphql-alias-batching
+- graphql-playground
+- hasura-graphql-ssrf
+WSO2-Carbon-Server:
+- CVE-2020-17453
+- CVE-2022-29464
+用友-时空KSOA:
+- CNVD-2021-30167
+- yonyou-ksoa-imageupload-fileupload
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- yonyou-nc-ncmessageservlet-rce
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- CNVD-C-2023-76801
+- yonyou-nc-accept-fileupload
+Samsung-AP-WEA453e:
+- samsung-wea453e-rce
+- samsung-wlan-ap-wea453e-lfi
+- samsung-wlan-default-login
+- samsung-wlan-ap-wea453e-rce
+- samsung-wea453e-default-pwd
+Travis-CI:
+- travis-ci-disclosure
+Smart-Office:
+- CVE-2022-47075
+Batflat-CMS:
+- batflat-default-login
+WatchGuard-Firewall:
+- watchguard-credentials-disclosure
+Oracle-GlassFish-Server-OSE-3.0.1:
+- CVE-2017-1000029
+Cobub Razor:
+- CVE-2018-8770
+Subrion-CMS:
+- CVE-2017-11444
+- subrion-login
+cgit:
+- CVE-2018-14912
+Shibboleth-Identity-Provider:
+- CVE-2022-24129
+Zeta Producer Desktop CMS:
+- CVE-2018-13980
+QNAP-PhotoStation:
+- CVE-2022-27593
+Evolucare-Ecsimaging:
+- evolucare-ecsimaging-rce
+- evolucare-ecsimaging-download-stats-dicom-anyfile-read
+- evolucare-ecsimaging-new-movie-rce
+- evolucare-ecsimaging-file-download
+用友-移动系统管理:
+- yonyou-mobile-maportal-unauth
+- yonyou-mobile-uploadapk-fileupload
+ASUS-GT-AC2900:
+- CVE-2021-32030
+WAVLINK-Wi-Fi-APP:
+- CVE-2020-12127
+- CVE-2022-48165
+- CVE-2022-34049
+- CVE-2022-30489
+- CVE-2022-31846
+- CVE-2022-34045
+- CVE-2022-34576
+- CVE-2022-31847
+- CVE-2020-13117
+- CVE-2022-2488
+- CVE-2022-34047
+- CVE-2022-2486
+- CVE-2022-34046
+- CVE-2022-31845
+- unauth-wavink-panel
+- CVE-2022-2487
+- CVE-2022-34048
+- CVE-2020-10973
+catfishcms:
+- CNVD-2019-06255
+畅捷CRM:
+- chanjet-crm-get-usedspace-sql-injection
+MCMS:
+- CVE-2022-23898
+- CVE-2022-25125
+Nuxeo-Platform:
+- nuxeo-platform-panel
+- CVE-2018-16341
+PegaRULES:
+- pega-log4j-rce
+Akamai-CDN:
+- akamai-detect
+- akamai-cloudtest
+- akamai-cache-detect
+- akamai-s3-cache-poisoning
+- akamai-arl-xss
+FUEL-CMS:
+- CVE-2020-17463
+- fuelcms-panel
+- CVE-2018-16763
+- fuelcms-default-login
+SonicWall-SMA:
+- CVE-2021-20038
+SAP-NetWeaver-Application-Server-Java:
+- CVE-2017-12637
+Huijietong:
+- huijietong-cloud-fileread
+Oracle-Secure-Global-Desktop:
+- CVE-2018-19439
+LimeSurvey:
+- CVE-2020-11455
+- limesurvey-installer
+Finetree 5MP Network Camera:
+- CNVD-2021-42372
+Node-RED-Admin:
+- CVE-2021-3223
+- CVE-2021-25864
+Seo-Panel:
+- CVE-2021-28419
+DotNetNuke:
+- CVE-2017-0929
+- CVE-2017-9822
+Milesight-VPN:
+- milesight-vpn-serverjs-fileread
+jfrog-Artifactory:
+- CVE-2019-9733
+- CVE-2019-17444
+RAINLOOP-WebMail:
+- rainloop-default-login
+Portal-do-Software-Publico-Brasileiro-i3geo:
+- CVE-2022-32409
+Chamilo:
+- CVE-2021-34187
+- chamilo-lms-sqli
+- CVE-2023-34960
+- chamilo-lms-xss
+齐治堡垒机:
+- qizhi-fortressaircraft-unauthorized
+Honeywell:
+- CVE-2023-3710
+REALOR-天翼应用虚拟化系统:
+- realor-gwt-system-sqli
+- realor-rapagent-sqli
+OpenTSDB:
+- CVE-2020-35476
+ZZZCMS:
+- zzzcms-parser-search-rce
+- zzzcms-ssrf
+- CVE-2019-9041
+- CVE-2022-23881
+- zzzcms-info-disclosure
+Yachtcontrol:
+- CVE-2019-17270
+惠尔顿-e地通VPN:
+- wholeton-vpn-info-leak
+OpenNMS-product:
+- opennms-log4j-jndi-rce
+Ciphertrust:
+- ciphertrust-default-login
+Alibaba-Druid:
+- druid-monitor
+- druid-default-login
+Sophos-UTM-Web-Protection:
+- CVE-2020-25223
+D_Link-DVG-N5402SP:
+- CVE-2015-7245
+泛微-协同办公OA:
+- CNVD-2021-33202
+- weaver-ecology-bshservlet-rce
+- weaver-sptmforportalthumbnail-lfi
+- ecology-syncuserinfo-sqli
+- ecology-info-leak
+- weaver-signaturedownload-lfi
+- ecology-ifnewscheckoutbycurrentuser-dwr-sqli
+- ecology-verifyquicklogin-auth-bypass
+- ecology-jqueryfiletree-traversal
+- weaver-uploadoperation-file-upload
+- ecology-arbitrary-file-upload
+- weaver-e-cology-workflowcentertreedata-sqli
+- ecology-oa-byxml-xxe
+- weaver-ecology-hrmcareer-sqli
+- ecology-dbconfigreader-info-leak
+- weaver-ecology-getsqldata-sqli
+- weaver-ktreeuploadaction-file-upload
+- CNVD-2019-32204
+- ecology-v8-sqli
+- ecology-springframework-directory-traversal
+- ecology-filedownload-directory-traversal
+- oa-v9-uploads-file
+- weaver-e-cology-validate-sqli
+- CNVD-2023-12632
+- ecology-oa-file-sqli
+- weaver-e-cology-getdata-sqli
+- weaver-checkserver-sqli
+ZK-Framework:
+- CVE-2022-36537
+FHEM:
+- CVE-2020-19360
+契约锁电子签章平台:
+- qiyuesuo-dzqz-upload
+SPIP:
+- CVE-2016-7981
+- CVE-2023-27372
+phpPgAdmin:
+- phppgadmin-panel
+- phppgadmin-version
+- CVE-2008-5587
+- CVE-2007-5728
+Samsung-WLAN-AP:
+- samsung-wlan-ap-rce
+- samsung-wlan-ap-xss
+- samsung-wlan-ap-lfi
+- samsung-wlan-default-login
+XenApp:
+- citrix-xenapp-log4j-rce
+Citrix-Access-Gateway:
+- CVE-2020-8191
+- CVE-2020-8193
+- CVE-2019-19781
+- CVE-2020-8194
+- CVE-2023-24488
+- CVE-2023-4966
+Movable-Default-Page:
+- movable-type-login
+- CVE-2021-20837
+SeedDMS:
+- seeddms-default-password
+- seeddms-default-login
+WUZHI-CMS:
+- wuzhicms-v410-sqli
+Empire Software - Empirecms:
+- CNVD-2021-15824
+安美数字-酒店宽带运营系统:
+- amtt-hiboss-language-sqli
+- amtt-hiboss-server-ping-rce
+ResourceSpace:
+- CVE-2021-41951
+- CVE-2015-3648
+致远OA-M3-Server:
+- seeyon-oa-m3-server-1sp1-rce
+NETGEAR-R7000:
+- CVE-2017-5521
+用友-U8:
+- CNVD-2021-30167
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-u8-oa-sqli
+- yonyou-nc-baseapp-deserialization
+- yonyou-nc-ncmessageservlet-rce
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-accept-fileupload
+好视通视频会议系统:
+- hanming-video-conferencing-file-read
+安恒信息-明御安全网关:
+- das-ngfw-aaa-rce
+用友-NC-Cloud:
+- CNVD-2021-30167
+- erp-nc-directory-traversal
+- yonyou-nc-oacontactsfuzzysearchservlet-rce
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- wooyun-path-traversal
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-jiuqiclientreqdispatch-rce
+- yonyou-nc-accept-fileupload
+AlphaWeb-XE:
+- alphaweb-default-login
+Oracle-FatWire-Content-Server:
+- oracle-fatwire-lfi
+Cogent-DataHub:
+- datahub-metadata-default-login
+GeoServer:
+- CVE-2023-25157
+- CVE-2022-24816
+- geoserver-default-login
+- CVE-2021-40822
+Trixbox:
+- CVE-2017-14535
+- CVE-2017-14537
+- CVE-2014-5111
+YCCMS:
+- yccms-rce
+Fastjson:
+- fastjson-1-2-41-rce
+- fastjson-1-2-43-rce
+- fastjson-1-2-42-rce
+- fastjson-1-2-62-rce
+- fastjson-1-2-24-rce
+- fastjson-1-2-67-rce
+- fastjson-1-2-47-rce
+- fastjson-version
+- fastjson-1-2-68-rce
+Alt-N-MDaemon-Security-Gateway:
+- CVE-2022-25356
+FreeRDP-WebConnect:
+- freerdp-webconnect-fileread
+imo云办公室:
+- imo-get-file-rce
+APACHE-Superset:
+- CVE-2021-44451
+- CVE-2023-27524
+OpenCATS:
+- CVE-2022-43018
+- opencats-default-login
+- CVE-2022-43015
+- CVE-2022-43017
+- CVE-2022-43014
+- CVE-2022-43016
+cPanel Login:
+- CVE-2023-29489
+D-Link-AC-集中管理平台:
+- dlink-centralized-default-login
+- dlink-ac-default-password
+Self-Logbase Log Management Integrated Audit System:
+- logbase-test-qrcide-b-rce
+万户 OA:
+- wanhu-oa-ezoffice-sql-inject
+- wanhu-defaultroot-sqli-2
+- wanhu-oa-download-old-file-read
+- wanhu-defaultroot-sqli
+- wanhu-oa-downloadhttp-file-read
+- wanhu-oa-attachmentserver-upload-file
+- wanhu-oa-downloadservlet-file-read
+- wanhu-oa-officeserver-upload-file
+- wanhu-oa-fileupload-controller-upload
+- wanhu-oa-smartupload-upload-file
+- wanhu-oa-download-ftp-file-read
+- wanhu-defaultroot-sqli-1
+- wanhu-defaultroot-sqli-3
+- wanhu-oa-documentedit-sqli
+- wanhu-oa-tele-conference-service-xxe
+SequoiaDB-True Database:
+- sequoiadb-default-login
+锐捷RG-UAC:
+- CNVD-2021-14536
+- ruijie-rg-uac-account-password-leakage
+- ruijie-rg-uac-nmc-sync-rce
+- CVE-2021-27648
+Axigen-Mail-Server:
+- axigen-webmail
+- CVE-2012-4940
+Zyxel-ATP700:
+- CVE-2022-30525
+Dahua-DSS:
+- dss-download-fileread
+- dahua-dss-s2-045-rce
+极限OA:
+- jixian-oa-video-file-file-read
+Kyan 监控设备:
+- kyan-network-module-php-rce
+- kyan-network-license-php-rce
+- kyan-network-monitoring-account-password-leakage
+- kyan-network-time-php-rce
+Dahua 智慧园区:
+- dahua-zhyq-getfacecapture-sqli
+- dahua-zhyq-pio-fileupload
+- CVE-2023-3836
+- dahua-zhyq-password-disclosure
+- dahua-zhyq-video-fileupload
+- dahua-ipms-rce
+- dahua-zhyq-create-user-unauth
+Agentejo-Cockpit:
+- CVE-2020-35848
+- CVE-2020-35847
+- CVE-2020-35846
+- CVE-2020-14408
+RaspAP:
+- CVE-2021-33357
+- CVE-2022-39986
+Cisco-IOS-12.2:
+- CVE-2017-3881
+Graphite-Browser:
+- CVE-2017-18638
+- graphite-browser
+COUCH-CMS:
+- CVE-2018-7662
+SangFor-SG上网优化管理系统:
+- sangfor-sg-catjs-fileread
+Next.js:
+- CVE-2018-6184
+- CVE-2020-5284
+- nextjs-redirect
+- CVE-2017-16877
+DomainMOD:
+- CVE-2018-19749
+- CVE-2020-20988
+- CVE-2018-20011
+- CVE-2018-19137
+- CVE-2018-19892
+- CVE-2019-15811
+- CVE-2018-19751
+- CVE-2018-20009
+- CVE-2018-19915
+- CVE-2018-19136
+- CVE-2018-19752
+- CVE-2018-19914
+- CVE-2018-20010
+- CVE-2018-1000856
+Oracle-Fusion-Middleware:
+- CVE-2019-2579
+- CVE-2020-14883
+- CVE-2020-14864
+- CVE-2018-2791
+- CVE-2019-2578
+- CVE-2018-3238
+Milesight-Routers:
+- CVE-2023-43261
+PHPOK:
+- phpok-sqli
+畅捷通-远程通:
+- chanjet-gnremote-sqli
+Konga:
+- CVE-2021-42192
+- konga-default-jwt-key
+JamF-Pro:
+- jamf-pro-log4j-rce
+- jamf-log4j-jndi-rce
+- jamf-blind-xxe
+Dahua DSS:
+- dahua-dss-file-read
+Linksys-IP-Cameras:
+- CVE-2009-1558
+- linksys-wifi-login
+- CVE-2020-35713
+HP-1820-8G-Switch-J9979A:
+- hp-switch-default-login
+Ruijie-RG-UAC:
+- CNVD-2021-14536
+- ruijie-password-leak
+Go-FastDfs:
+- CVE-2023-1800
+- go-fastdfs-unauth
+Apache APISIX:
+- CVE-2022-24112
+- CVE-2020-13945
+- apisix-default-login
+- CVE-2021-45232
+NETGEAR-Prosafe-Plus-Switch:
+- CVE-2020-26919
+YzmCMS:
+- yzmcms-installer
+LogonTracer:
+- CVE-2018-16167
+Jellyfin:
+- CVE-2021-21402
+- CVE-2021-29490
+- CVE-2020-26948
+Jenkins:
+- jenkins-default
+- jenkins-asyncpeople
+- jenkins-stack-trace
+- CVE-2018-1000861
+- jenkins-api-panel
+- unauthenticated-jenkins
+- jenkins-login
+- jenkins-openuser-register
+- CVE-2019-10405
+- jenkins-script
+- jenkins-unauthorized-access
+- CVE-2020-2140
+- CVE-2018-1000600
+- CVE-2022-36883
+- CVE-2020-2096
+- CVE-2020-2103
+- CVE-2019-10475
+Flyte-Console:
+- CVE-2022-24856
+KubeView:
+- CVE-2022-45933
+D-Link-DSL-28881A:
+- dlink-dsl-28881a-rce
+Zentao:
+- CNVD-2022-42853
+- zentao-misc-captcha-user-auth-bypass-to-rce
+- zentao-api-getmodel-api-getmethod-filepath-fileread
+YouPHPTube:
+- CVE-2019-5127
+- CVE-2019-5129
+QNAP PhotoStation:
+- CVE-2019-7192
+GenieACS:
+- genieacs-default-jwt
+- CVE-2021-46704
+Grafana_Labs-公司产品:
+- CVE-2021-27358
+- grafana-detect
+- grafana-file-read
+- CVE-2022-26148
+- CVE-2021-43798
+- grafana-default-login
+- CVE-2021-41174
+- grafana-public-signup
+- CVE-2021-39226
+- CVE-2020-11110
+网神SecGate 3600防火墙:
+- secworld-secgate3600-obj-area-import-save-fileupload
+- secworld-secgate3600-objappupfile-uploadfile
+- secworld-secgate3600-obj-area-export-save-fileread
+- secworld-secgate3600-obj-av-import-save-fileupload
+汇文软件-书目检索系统:
+- huiwen-book-config-properties-info-leak
+- huiwen-bibliographic-info-leak
+XploitSPY:
+- xploitspy-default-login
+TerraMaster-NAS:
+- CVE-2020-28188
+- CVE-2022-24990
+- CVE-2020-15568
+rConfig:
+- CVE-2020-10546
+- CVE-2023-39110
+- rconfig-default-login
+- CVE-2020-10220
+- rconfig-file-upload
+- CVE-2020-13638
+- CVE-2023-39109
+- CVE-2019-16663
+- CVE-2020-10548
+- CVE-2020-10547
+- CVE-2020-10549
+- CVE-2023-39108
+- CVE-2021-29006
+- CVE-2020-9425
+- CVE-2019-16662
+GoAdmin:
+- goadmin-default-login
+MobileIron:
+- mobileiron-log4j-jndi-rce
+Werkzeug:
+- CVE-2019-14322
+Atlassian-Crowd:
+- CVE-2019-11580
+ProFTPD:
+- CVE-2015-3306
+Appspace:
+- CVE-2021-27670
+CentOS-WebPanel:
+- CVE-2022-44877
+- cwp-webpanel
+- CVE-2018-18323
+帆软-FineReport:
+- fine-report-v9-file-upload
+- fanruanoa2012-detect
+- finereport-v8-arbitrary-file-read
+- finereport-v10-channel-deserialization
+- finereport-path-traversal
+- fanruanoa2012-disclosure
+Xibo-Digital-Signage:
+- CVE-2013-5979
+RubedoCMS:
+- CVE-2018-16836
+Advantech-R-SeeNet:
+- CVE-2021-21805
+- CVE-2021-21799
+- CVE-2021-21803
+- CVE-2021-21801
+- rseenet-default-password
+- CVE-2021-21800
+- CVE-2021-21802
+- rseenet-default-login
+泛微-EOffice:
+- weaver-office-server-file-upload
+- weaver-login-sessionkey
+- CVE-2023-2766
+- weaver-e-office-config-infoleak
+- CVE-2023-2648
+- weaver-eoffice-webservice-upload-fileupload
+- CVD-2022-5298
+- CVD-2022-1170
+- weaver-e-office-mobile-upload-save-arbitrary-file-upload
+- e-office-v10-sql-inject
+- ecology-mysql-config
+- weaver-jquery-file-upload
+- weaver-uploadify-file-upload
+- CNVD-2022-43245
+- weaver-userselect-unauth
+- weaver-officeserver-lfi
+- weaver-group-xml-sqli
+- CNVD-2021-49104
+- weaver-lazyuploadify-file-upload
+- ecology-e-office-getselectlist-crm-sqli
+- weaver-mysql-config-info-leak
+电信网关:
+- telecom-gateway-default-password
+亿赛通-电子文档安全管理系统:
+- esafenet-emailauditservice-xstream-deserialzation-rce
+- esafenet-dataimport-rce
+- esafenet-getvalidateloginuserservice-xstream-deserialzation-rce
+- esafenet-cdg-dbajax-jdbc-rce
+- esafenet-cdg-importfiletype-upload
+- esafenet-client-ajax-download
+- cdg-decryptapplicationservice2-arbitrary-file-upload
+- esafenet-checkclientservelt-xstream-deserialzation-rce
+- esafenet-update-sqli
+- cdg-uploadfilefromclientserviceforclient-file-upload
+- esafenet-xstream-deserialzation-rce
+- esafenet-cdg-user-fastjson-rce
+- esafenet-doc-management-rce
+- CNVD-2023-59457
+- esafenet-cdg-default-login
+- esafenet-uploadfilefromclientserviceforclient-fileupload
+NETGEAR-R6300v2:
+- CVE-2017-5521
+H3C/安博通/任子行/OEM系列安全产品:
+- h3c-jquery-172-file-read
+NETGEAR-RAX43:
+- CVE-2021-20167
+Microsoft-Skype-for-Business:
+- skype-blind-ssrf
+EnjoySCM:
+- enjoyscm-uploadfile
+- enjoyscm-file-upload
+NetMizer 日志管理系统:
+- netmizer-log-management-data-directory-traversal
+- netmizer-log-management-cmd-php-rce
+gSOAP:
+- gsoap-lfi
+时空智友:
+- shikongzhiyou-formservice-sqli
+- shikongzhiyou-formservice-upload-file
+- shikongzhiyou-login-fileread
+Gogs:
+- CVE-2014-8682
+- CVE-2022-0415
+- gogs-panel
+- CVE-2018-18925
+- CVE-2022-0870
+- CVE-2020-15867
+- gogs-installer
+1Panel-面板:
+- 1panel-loadfile-fileread
+Moveit-File-Transfer:
+- CVE-2023-34362
+ICewarp:
+- CVE-2023-39598
+- CVE-2021-36580
+- CVE-2023-39600
+- icewarp-webclient-basic-rce
+- icewarp-webclient-rce
+- CVE-2019-12593
+- CVE-2020-8512
+- CVE-2020-27982
+- icewarp-open-redirect
+- CVE-2023-40779
+- icewarp-panel-detect
+- CVE-2015-1503
+ZOHO ManageEngine Password Manager Pro:
+- CVE-2022-35405
+H3C IMC:
+- CVE-2023-34928
+- CNVD-2021-39067
+- h3c-imc-rce
+Zyxel-ATP200:
+- CVE-2022-30525
+sonarQube-代码管理:
+- sonarqube-token
+- sonarqube-projects-disclosure
+- sonarqube-public-projects
+- CVE-2020-27986
+TRS媒资管理系统:
+- trs-test-command-executor-rce
+TP_LINK-Enterprise Wireless Router:
+- tp-link-tl-r470gp-ac-default-login
+PHP-Fusion:
+- CVE-2020-24949
+Alibaba-Canal:
+- alibaba-canal-info-leak
+- alibaba-canal-default-password
+- alibaba-canal-config-leak
+- canal-default-login
+FTP:
+- vsftpd-backdoor
+- CVE-2011-2523
+VMware-HCX:
+- vmware-hcx-log4j
+ZTE-ZXA10F460:
+- china-telecom-f460-gateway-rce
+Jupyter Notebook:
+- jupyter-notebook-unauthorized-access
+- jupyter-notebook-rce
+JET_BRAINS-TeamCity:
+- CVE-2023-42793
+strapi-Headless-CMS:
+- CVE-2019-18818
+- strapi-page
+- strapi-panel
+- strapi-documentation
+Bonita-BPM-Portal:
+- CVE-2015-3897
+Wavlink-WiFi-Repeater:
+- CVE-2022-2488
+- CVE-2022-2487
+- CVE-2022-2486
+Ivanti-Landesk Cloud Service:
+- CVE-2023-35078
+- CVE-2021-44529
+elFinder:
+- CVE-2021-43421
+- elFinder-path-traversal
+- CVE-2021-32682
+- CVE-2022-26960
+xxljob:
+- xxljob-default-login
+- xxl-job-executor-rce
+HIKVISION-群组对讲服务配置平台:
+- hikvision-intercom-service-default-password
+VMware-Site-Recovery-Manager:
+- vmware-siterecovery-log4j-rce
+EasyImage-简单图床:
+- easyimage-downphp-lfi
+PHP-Proxy:
+- CVE-2018-19458
+Zyxel-USG-FLEX-100w:
+- CVE-2022-30525
+DedeCMS:
+- dedecms-guestbook-sqli
+- dedecms-config-xss
+- dedecms-openredirect
+- CVE-2018-18608
+- dedecms-carbuyaction-fileinclude
+- CVE-2017-17731
+- dedecms-url-redirection
+- dedecms-membergroup-sqli
+- CVE-2018-6910
+- dedecms-rce
+- CVE-2018-7700
+- dedecms-common-func-rce
+- dede-cms-radminpass-disclosure
+- dedecms-radminpass-disclosure
+BYZORO-安全网关:
+- byzoro-smart-importhtml-rce
+VICIdial:
+- CVE-2021-28854
+XXL-JOB:
+- xxljob-default-login
+Weaver E-Office:
+- CNVD-2021-49104
+Zyxel-USG-FLEX-200:
+- CVE-2022-30525
+狮子鱼CMS:
+- shiziyu-cms-apicontroller-sqli
+- shiziyu-cms-apigood-controller-sql-injection
+- lionfish-cms-wxapp-php-upload
+General-Poc-Shiro:
+- shiro-detect
+Docker-product:
+- exposed-docker-api
+HFS:
+- hfs-rce
+KEYCLOAK-身份认证系统:
+- keycloak-json
+- CVE-2021-20323
+- CVE-2020-10770
+- keycloak-xss
+- keycloak-openid-config
+RabbitMQ:
+- rabbitmq-detect
+- rabbitmq-default-password
+- rabbitmq-default-login
+- rabbitmq-exporter-metrics
+易软天创-禅道系统:
+- CNVD-2022-42853
+Apache-Shenyu:
+- CVE-2021-37580
+- CVE-2022-23944
+Tomcat-Login:
+- tomcat-default-login
+PowerJob:
+- CVE-2023-29923
+- powerjob-default-login
+- phpmyadmin-default-login
+- CVE-2023-29922
+Apache Flink:
+- CVE-2020-17519
+- flink-upload-rce
+- CVE-2020-17518
+红帆-ioffice:
+- hongfan-ioffice-rce
+- hongfan-ioffice-lfi
+- hongfan-ioffice-sqli
+- CVD-2023-1212
+Eyou-mail system:
+- CVE-2014-1203
+- CNVD-2021-26422
+HikVision-Company Products:
+- CVE-2021-36260
+- CVE-2017-7921
+- hikvision-info-leak
+网御星云-上网行为管理系统:
+- leadsec-acm-bottomframe-cgi-sqli
+HP-Aruba-Instant:
+- aruba-instant-default-login
+Gitblit:
+- CVE-2022-31268
+Wayos-AC Control Platform:
+- wayos-default-password
+Zyxel-USG-FLEX-50w:
+- CVE-2022-30525
+DotCMS:
+- CVE-2018-17422
+- CVE-2022-26352
+- dotcms-admin-panel
+ManageEngine-OpManager:
+- CVE-2020-12116
+- CVE-2018-12998
+鸿运主动安全监控云平台:
+- tongtianxing-findcompanylist-infoleak
+- hongyun-808gps-filedownload
+华天动力OA:
+- oa8000-workflowservice-sql-inject
+- huatian-oa8000-buffalo-rce
+- huatiandongli-oa-anyfile-upload
+VMware-VRealize-Network-Insight:
+- CVE-2023-20887
+XNAT:
+- xnat-default-login
+FatPipe-WARP:
+- fatpipe-auth-bypass
+- fatpipe-backdoor
+辰信景云终端安全管理系统:
+- v-secure-cloud-login-sqli
+H3C SecPath Firewall:
+- h3c-secpath-firewall-file-read
+网神-Secips:
+- secworld-secips-3600-debuginfo-readfile
+Ace-AceReporter:
+- CNVD-2021-41972
+Yonyou-UFIDA:
+- CNVD-2021-30167
+- yonyou-ufida-oa-uapws-xxe
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-accept-fileupload
+Franklin-Fueling:
+- CVE-2021-46417
+SeaCMS:
+- seacmsv645-command-exec
+- seacms-before-v992-rce
+- seacms-sqli
+- seacms-rce
+- seacms-v654-rce
+Samsung-Printer:
+- samsung-printer-default-login
+Micro Focus:
+- CVE-2020-11853
+- ucmdb-default-login
+- microfocus-filr-panel
+- microfocus-admin-server
+- CVE-2020-11854
+- microfocus-vibe-panel
+H2-Console:
+- h2-database-web-console-unauthorized-access
+- h2console-unauth
+Apache Axis2:
+- axis2-default-password
+Apache-OFBiz:
+- apache-ofbiz-log4j-rce
+- CVE-2021-30128
+- CVE-2023-49070
+- CVE-2018-8033
+- CVE-2020-1943
+- CVE-2021-26295
+- ofbiz-default-login
+- CVE-2020-9496
+- apache-ofbiz-programexport-rce
+vmware-SpringBoot-Framework:
+- springboot-conditions
+- CVE-2020-5405
+- CVE-2021-31602
+- CVE-2018-1273
+- jolokia-unauthenticated-lfi
+- springboot-log4j-rce
+- springboot-features
+- springboot-logfile
+- springboot-loggerconfig
+- springboot-loggers
+- CVE-2022-22963
+- swagger-api
+- CVE-2020-5412
+- CVE-2020-5410
+- springboot-caches
+- springboot-jolokia
+- springboot-metrics
+- CVE-2022-22965
+- jolokia-list
+- springboot-actuators-jolokia-xxe
+- springboot-scheduledtasks
+- springboot-threaddump
+- CVE-2022-22947
+- springboot-auditevents
+- CVE-2021-22053
+- springboot-status
+- exposed-alps-spring
+- springboot-autoconfig
+- springboot-env
+- springboot-h2-db-rce
+- CVE-2018-1271
+- springboot-gateway
+- springboot-info
+- springboot-flyway
+- CVE-2019-3799
+- jolokia-mbean-search
+- springboot-liquidbase
+- CVE-2016-4977
+- jolokia-info-disclosure
+- springboot-mappings
+- springboot-beans
+- springboot-heapdump
+- springboot-health
+- springboot-httptrace
+- springboot-configprops
+- springboot-dump
+- springboot-trace
+- spring-eureka
+- springboot-env-all-check
+- CVE-2021-21234
+Sophos-Safety Products:
+- sophos-mobile-panel
+- CVE-2022-1040
+- sophos-fw-version-detect
+- CVE-2020-25223
+- CVE-2022-3980
+NSFOCUS-SAS:
+- nsfocus-sas-localuser-login-anyuser
+- nsfocus-sas-getfile-readfile
+- nsfocus-sas-exec-rce
+phpMyChat-Plus:
+- CVE-2019-19908
+FUXA:
+- CVE-2023-33831
+用友-ECLIENT:
+- CNVD-2021-30167
+- erp-nc-directory-traversal
+- yonyou-filereceiveservlet-fileupload
+- yonyou-nc-dispatcher-fileupload
+- yonyou-nc-baseapp-deserialization
+- wooyun-path-traversal
+- yonyou-nc-ncmessageservlet-rce
+- yonyou-nc-grouptemplet-fileupload
+- wooyun-2015-148227
+- yonyou-nc-bshservlet-full-check
+- yonyou-nc-accept-fileupload
+FRP-Web:
+- unauthenticated-frp
+- frp-default-login
+LumisXP:
+- CVE-2021-27931
+Adminer:
+- CVE-2021-29625
+- CVE-2021-21311
+Oracle-PeopleSoft:
+- peoplesoft-default-login
+科达DVR接入网关:
+- kedacom-gateway-file-read
+Cartadis-Gespage:
+- CVE-2021-33807
+Microsoft IIS:
+- iis-put-getshell
+- CVE-2015-1635
+- iis-shortname
+- ms17-010
+Symantec-Messaging-Gateway:
+- symantec-messaging-gateway
+MkDocs:
+- CVE-2021-40978
+TVT-NVMS-1000:
+- CVE-2019-20085
+NETGEAR-WNR3500Lv2:
+- CVE-2017-5521
+OpenCTI:
+- opencti-lfi
+nginxWebUI:
+- nginxwebui-runcmd-rce
+- nginxwebui-rce
+Cherokee:
+- CVE-2006-1681
+SSLVPN:
+- sslvpn-client-rce
+任我行 CRM:
+- wecrm-smsdatalist-sqli
+pyspider:
+- pyspider-unauthorized-access
+Discuz:
+- wooyun-2010-080723
+- discuz-wechat-plugins-unauth
+- CNVD-2019-22239
+- discuz-v72-sqli
+- discuz-api-pathinfo
+Weaver E-Bridge:
+- weaver-ebridge-file-read
+- e-bridge-saveyzjfile-file-read
+Tencent-企业微信:
+- wechat-info-leak
+Metabase:
+- metabase-log4j
+- CVE-2021-41277
+- CVE-2023-38646
+Embedthis:
+- CVE-2017-17562
+GLPI-Status-Page:
+- glpi-status-ldap-domain-disclosure
+- CVE-2021-39211
+- CVE-2022-35914
+- CVE-2021-43778
+- CVE-2019-10232
+- glpi-default-login
+- CVE-2020-11034
+- glpi-directory-listing
+IBM-WebSphere:
+- CVE-2015-7450
+- ibm-friendly-path-exposure
+- CVE-2021-27748
+- ibm-websphere-admin-panel
+- ibm-websphere-panel
+- default-websphere-liberty
+Citrix-Netscaler:
+- CVE-2020-8191
+- CVE-2020-8193
+- CVE-2019-19781
+- CVE-2020-8194
+- CVE-2023-4966
+IceWarp-服务器:
+- CVE-2019-12593
+PrintMonitor:
+- CVE-2018-7282
+Microsoft-SharePoint:
+- CVE-2023-29357
+- CVE-2020-16952
+- exposed-sharepoint-list
+NETGEAR-R8300:
+- CVE-2017-5521
+极致CMS:
+- CNVD-2020-49710
+畅捷通-畅捷CRM:
+- CNVD-2021-12845
+- chanjetcrm-createsite-sqli
+Tamronos-IPTV system:
+- tamronos-rce
+- tamronos-user-creation
+APACHE-CouchDB:
+- couchdb-exposure
+- apache-couchdb-unauth
+- CVE-2022-24706
+- couchdb-adminparty
+- couchdb-fauxton
+- CVE-2017-12635
+ThinVNC:
+- CVE-2019-17662
+vmware-Workspace-ONE-Access:
+- CVE-2022-22972
+- CVE-2021-22054
+- CVE-2022-22954
+- CVE-2022-31656
+JeeSpringCloud:
+- jeespringcloud-uploadfile-fileupload
+Citrix-XenMobile:
+- CVE-2020-8209
+- xenmobile-server-log4j
+DataHub:
+- datahub-metadata-default-login

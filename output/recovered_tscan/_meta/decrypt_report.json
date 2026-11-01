@@ -1,0 +1,77 @@
+{
+  "root": "recovered_tscan",
+  "when": "2026-11-01T21:15:31",
+  "verify_only": false,
+  "steps": [
+    {
+      "step": "frontend-enc",
+      "items": [
+        {
+          "step": "frontend-enc",
+          "in": "frontend\\dist\\assets\\intranetPayloads.json.20a8838f.enc",
+          "out": "frontend\\dist\\assets\\intranetPayloads.json",
+          "ok": true,
+          "skipped": true,
+          "reason": "已存在"
+        },
+        {
+          "step": "frontend-enc",
+          "in": "frontend\\dist\\assets\\navigation.json.c618e9e5.enc",
+          "out": "frontend\\dist\\assets\\navigation.json",
+          "ok": true,
+          "skipped": true,
+          "reason": "已存在"
+        },
+        {
+          "step": "frontend-enc",
+          "in": "frontend\\dist\\assets\\toolCommands.json.96307052.enc",
+          "out": "frontend\\dist\\assets\\toolCommands.json",
+          "ok": true,
+          "skipped": true,
+          "reason": "已存在"
+        },
+        {
+          "step": "frontend-enc",
+          "in": "frontend\\dist\\assets\\toolNavigation.json.83da444d.enc",
+          "out": "frontend\\dist\\assets\\toolNavigation.json",
+          "ok": true,
+          "skipped": true,
+          "reason": "已存在"
+        },
+        {
+          "step": "frontend-enc",
+          "in": "frontend\\dist\\assets\\webPayloads.json.791901ee.enc",
+          "out": "frontend\\dist\\assets\\webPayloads.json",
+          "ok": true,
+          "skipped": true,
+          "reason": "已存在"
+        }
+      ]
+    },
+    {
+      "step": "poc-library",
+      "in": "_assets\\pocs",
+      "out": "_assets\\pocs.decrypted",
+      "ok": 0,
+      "skipped": 9060,
+      "missing": 0,
+      "fail": 0,
+      "out_bytes": 14587469,
+      "failed": [],
+      "yaml_parse_sample": true,
+      "key_sha256": "b079c282727376f518abffd46a12b190935291385a35edbb4541c8c8a9db3a00"
+    },
+    {
+      "step": "cfg-technologies",
+      "in": "_assets\\technologies.json",
+      "out": "_assets\\technologies.json.decrypted",
+      "ok": true,
+      "skipped": true,
+      "out_bytes": 3188052,
+      "sha256_out": "af063d01e388b82bb35ab7d697b2dc7392dec4b5d25efefd129de973ab03f13a",
+      "technologies": 22003,
+      "categories": 14,
+      "looks_json": true
+    }
+  ]
+}

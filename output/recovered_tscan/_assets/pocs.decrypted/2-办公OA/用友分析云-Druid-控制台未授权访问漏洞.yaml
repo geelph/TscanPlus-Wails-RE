@@ -1,0 +1,22 @@
+id: yonyou-analysis-cloud-druid-unauthorized-access
+info:
+  name: "用友分析云 Druid 控制台未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: Yonyou
+  
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/console/druid/index.html"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "Druid Stat Index"
+          - "View JSON API"
+          - "JavaVersion"
+        part: body

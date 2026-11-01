@@ -1,0 +1,72 @@
+id: redmine-default-admin-credential-detection
+
+info:
+  name: Redmine 默认管理员凭据利用检测
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 Redmine 项目管理应用使用了默认管理员凭据（admin:admin）。攻击者可能借此获得完全的管理权限，进而管理项目、用户及系统配置。
+  reference:
+    - https://www.redmine.org/projects/redmine/wiki/RedmineInstall
+    - https://www.simplified.guide/redmine/default-password
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: redmine
+    product: redmine
+    shodan-query: 'http.title:"Redmine"'
+    fofa-query: 'title="Redmine"'
+  tags: Redmine
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+  password: "admin"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /login HTTP/1.1
+        Host: {{Hostname}}
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "Redmine", "authenticity_token")'
+        condition: and
+    extractors:
+      - type: regex
+        name: csrf_token
+        part: body
+        group: 1
+        internal: true
+        regex:
+          - 'name="authenticity_token"[^>]+value="([^"]+)"'
+      - type: regex
+        name: session
+        part: header
+        group: 1
+        internal: true
+        regex:
+          - 'Set-Cookie: (_redmine_session=[^;]+)'
+  - raw:
+      - |
+        POST /login HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: {{session}}
+
+        authenticity_token={{url_encode(csrf_token)}}&username={{username}}&password={{password}}&login=Login
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 302'
+          - '!contains(to_lower(header), "/login")'
+          - 'contains_any(to_lower(header), "/my/page", "/my/account", "redmine")'
+          - 'contains(header, "_redmine_session")'
+        condition: and
+
+# digest: 4b0a0048304602210093ef8453e8b57f1b34bf1fe019a058bb943773b7185f43f5166d2ea9c29db316022100e956871a1f9387fa764805ef4b7a50626bd9549dfd83f4c566dd33e30d861a60:922c64590222798bb761d5b6d8e72950

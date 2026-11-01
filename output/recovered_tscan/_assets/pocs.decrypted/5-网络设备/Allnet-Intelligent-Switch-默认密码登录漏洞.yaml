@@ -1,0 +1,45 @@
+id: allnet-intelligent-switch-default-password-login
+info:
+  name: "Allnet Intelligent Switch 默认密码登录漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: allnet
+
+variables:
+  paths:
+    - "cmd=1"
+    - "cmd=3"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "/cgi-bin/dispatcher.cgi?cmd=0"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Login"
+
+  - method: POST
+    path:
+      - "/cgi-bin/dispatcher.cgi?{{paths}}"
+    headers:
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    body: "username=admin&password=admin&login=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - ">LOGOUT</a>"
+          - "REBOOT</a>"

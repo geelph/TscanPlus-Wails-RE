@@ -1,0 +1,23 @@
+id: apache-druid-noauth-identify
+info:
+  name: "Apache Druid 未授权访问检测"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: apache-druid
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/druid/indexer/v1/tasks"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "\"groupId\""
+          - "\"id\""
+          - "\"createdTime\""
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

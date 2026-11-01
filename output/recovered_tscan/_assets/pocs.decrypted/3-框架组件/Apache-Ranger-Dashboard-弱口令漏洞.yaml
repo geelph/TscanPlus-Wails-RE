@@ -1,0 +1,26 @@
+id: apache-ranger-weak-pass
+info:
+  name: "Apache Ranger Dashboard 弱口令漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Apache,Ranger
+
+variables:
+  r_username: "admin"
+  r_password: "admin"
+
+http:
+  - method: POST
+    path:
+      - "{{BaseURL}}/login"
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: "username={{r_username}}&password={{r_password}}"
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - '"statusCode":200'
+      - type: word
+        words:
+          - '"msgDesc":"Login Successful"'

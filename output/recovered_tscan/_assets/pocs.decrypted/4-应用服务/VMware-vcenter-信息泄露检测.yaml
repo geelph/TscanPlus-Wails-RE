@@ -1,0 +1,21 @@
+id: vmware-vcenter
+info:
+  name: "VMware vcenter 信息泄露检测"
+  author: cn-kali-team
+  tags: vmware,vcenter
+  severity: info
+  metadata:
+    product: vmware-vcenter
+    vendor: 00_unknown
+    verified: false
+http:
+- method: GET
+  path:
+  - '{{BaseURL}}/'
+  matchers:
+  - type: word
+    words:
+    - /converter/vmware-converter-client.exe
+    - /vmw_nsx_logo-black-triangle-500w.png
+    - content="vmware vcenter
+    case-insensitive: true

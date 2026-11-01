@@ -1,0 +1,22 @@
+id: kingdee-eas-sapputiljsp-anyfile-upload
+info:
+  name: "金蝶EAS appUtil.jsp 任意文件上传/下载漏洞"
+  author: ProjectDiscoveryAI
+  severity: critical
+  tags: kingdee-eas
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/easportal/tools/getenvs.jsp"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "programfiles(x86)"
+          - "ADMINCLASSPATH"
+          - "USE_HTTPSERVER_FOR_DOWNLOAD"

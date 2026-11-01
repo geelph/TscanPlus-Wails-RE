@@ -1,0 +1,54 @@
+id: homebridge-unfinished-installation-unauth-admin-takeover
+
+info:
+  name: Homebridge 未完成安装致未授权管理员接管漏洞
+  author: theamanrawat
+  severity: high
+  description: |
+    检测到 Homebridge 实例存在未完成的安装流程。其设置向导（setup wizard）对外暴露，任意攻击者均可借此创建首个管理员账户，从而完全控制该 Homebridge 实例。此漏洞可能导致智能家居设备被未授权访问，并进一步造成内网环境被渗透。
+  reference:
+    - https://homebridge.io/
+    - https://github.com/homebridge/homebridge-config-ui-x
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cwe-id: CWE-284
+  metadata:
+    verified: true
+    max-request: 2
+    shodan-query: title:"Homebridge"
+    fofa-query: title="Homebridge"
+  tags: Homebridge
+  remediation: >-
+    升级受影响产品至最新的厂商支持版本，并安装所有可用的安全补丁。如果暂时无法升级，应限制对受影响端点的访问，尽可能禁用存在风险的功能，并采取身份认证、网络隔离和请求过滤等补偿性措施。同时检查相关 日志，并轮换可能已暴露的凭据或密钥。
+
+flow: http(1) && http(2)
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains(body, "<title>Homebridge")'
+        condition: and
+        internal: true
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/auth/settings"
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '"setupWizardComplete":false'
+      - type: word
+        part: header
+        words:
+          - "application/json"
+      - type: status
+        status:
+          - 200
+        # digest: 4a0a00473045022100ec457e2253c6aae1597fcf466941656201145ab17038646500cc984359f34ea102200354115bbf9f0543c61934e8a6c1c5a54495bb9c61dcb0b964b614c25acd07a4:922c64590222798bb761d5b6d8e72950

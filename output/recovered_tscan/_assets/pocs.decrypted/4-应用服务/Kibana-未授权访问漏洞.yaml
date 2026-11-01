@@ -1,0 +1,15 @@
+id: kibana-unauthorized-access
+info:
+  name: "Kibana 未授权访问漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: kibana
+http:
+  - method: GET
+    path:
+      - "/app/kibana"
+    matchers:
+      - type: word
+        part: body
+        words:
+          - ".kibanaWelcomeView"

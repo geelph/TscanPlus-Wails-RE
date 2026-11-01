@@ -1,0 +1,27 @@
+id: wayos-firewall-account-password-leak
+info:
+  name: "Wayos Firewall 账号密码泄露漏洞"
+  author: ProjectDiscoveryAI
+  severity: medium
+  tags: wayos
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "\"name\""
+        part: body
+      - type: word
+        words:
+          - "var persons ="
+        part: body
+      - type: regex
+        regex:
+          - "\"password\":\"[0-9a-f]{32}\""
+        part: body

