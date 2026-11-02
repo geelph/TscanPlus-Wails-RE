@@ -16,7 +16,8 @@ check_publish.py —— 开源前自检
 
 用法
 ----
-    python tools/check_publish.py .            # 全量检查
+    python tools/check_publish.py .            # 只查"会被提交"的文件（git 忽略的不算）
+    python tools/check_publish.py . --all      # 连本地被忽略的文件一起查（发版前自查也常这么用）
     python tools/check_publish.py . --quiet    # 只打印结论
 退出码：0 = 可以发布；1 = 有硬失败项
 """
@@ -26,6 +27,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import subprocess
 import sys
 
 # ---------- A. 自有内容：作者个人信息 ----------
@@ -56,16 +58,33 @@ def is_authored(rel: str) -> bool:
         "samples", ".git")
 
 
+def git_visible(root: str) -> set[str] | None:
+    """git 眼里"会被提交"的文件集合（已跟踪 + 未跟踪且未被忽略）。不是 git 仓库就返回 None。"""
+    try:
+        out = subprocess.run(
+            ["git", "-C", root, "ls-files", "-co", "--exclude-standard"],
+            capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return {os.path.normpath(p) for p in out.stdout.splitlines() if p.strip()}
+
+
 def main(argv) -> int:
     ap = argparse.ArgumentParser(description="开源前自检：作者个人信息 + 不该入库的文件")
     ap.add_argument("root", nargs="?", default=".")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--all", action="store_true", help="连 .gitignore 忽略掉的本地文件一起查")
     args = ap.parse_args(argv)
     root = os.path.abspath(args.root)
+    visible = None if args.all else git_visible(root)
 
     priv = []        # A 类：自有内容里的个人信息（硬失败）
     data_hits = {"mobile": 0, "cred": 0, "path": 0}   # B 类：样本数据里的"疑似敏感"（仅统计）
     bins, junk, big = [], [], []
+    junk_dirs = []
     nfiles = nbytes = 0
 
     for dirpath, dirs, files in os.walk(root):
@@ -73,10 +92,12 @@ def main(argv) -> int:
             dirs.remove(".git")
         for name in list(dirs):
             if name in ("__pycache__", ".pytest_cache", "node_modules"):
-                junk.append(os.path.relpath(os.path.join(dirpath, name), root))
+                junk_dirs.append(os.path.relpath(os.path.join(dirpath, name), root))
         for name in files:
             p = os.path.join(dirpath, name)
             rel = os.path.relpath(p, root)
+            if visible is not None and os.path.normpath(rel) not in visible:
+                continue        # 被 .gitignore 挡住，不会进仓库
             nfiles += 1
             try:
                 size = os.path.getsize(p)
@@ -109,6 +130,14 @@ def main(argv) -> int:
                     priv.append((rel, "邮箱", m.group(0)))
             for m in RX_MACHINE.finditer(txt):
                 priv.append((rel, "机器名", m.group(0)))
+
+    # 目录级 junk：git 模式下只保留"真的会被提交"的那些
+    for d in junk_dirs:
+        if visible is not None:
+            prefix = os.path.normpath(d) + os.sep
+            if not any(v.startswith(prefix) for v in visible):
+                continue
+        junk.append(d)
 
     hard = []
     if big:

@@ -11,6 +11,8 @@
 | 对象 | 处理 | 原因 |
 |---|---|---|
 | `TscanPlus_Win_Amd64.exe`、`*_devtools.exe`、`*.zip` 样本包 | 不入库 | 二进制版权归原作者；README §1 给了官方下载地址 |
+| `output/run/*.exe`（开 CDP 的副本、`patch_unlock.py` 产出的解锁副本、`_orig_*` 回滚副本） | 不入库 | 属于"改过的厂商二进制"，仓库只给复现命令，不给成品 |
+| `output/license_recon/`（pclntab/xref 索引 + Frida/应用日志） | 不入库 | ~16 MB 派生物 + 本机运行日志，一条命令可重建（README §7） |
 | IDA 数据库、`webroot/` 等中间导出 | 不入库 | 与最终产物重复且体积大 |
 | `TscanPlus-Result.txt`（程序运行日志） | 不入库 | 里面是本机绝对路径 `<主目录>\.config\TscanPlus\…`，属于**作者环境信息**，与逆向结论无关 |
 | `__pycache__/`、`*.pyc` | 不入库 / 删除 | 缓存垃圾 |
@@ -50,6 +52,7 @@ git -c user.name="TscanPlus-Wails-RE" -c user.email="noreply@users.noreply.githu
 ## 4. 复查
 
 ```bash
-python tools/check_publish.py .     # A 类（作者信息）= 0 处；B 类（样本数据）= 只统计不判失败
+python tools/check_publish.py .     # 默认只看"会被提交"的文件（.gitignore 生效），应为 0 项硬失败
+python tools/check_publish.py . --all   # 连本地忽略的文件一起查（会看到样本 exe / 日志，属正常）
 git status --short                  # 确认没有把样本/日志/缓存带进来
 ```

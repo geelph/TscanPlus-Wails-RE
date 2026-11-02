@@ -26,3 +26,8 @@ out/
 tmp/
 *.log
 *.tmp
+
+# 授权逆向的派生产物（pclntab/xref 索引 + Hook 日志，可由 README §7 的命令重建）
+output/license_recon/
+# 打补丁/开调试的副本（*.exe 已在上面整体忽略，这里显式标一下目录用途）
+output/run/
